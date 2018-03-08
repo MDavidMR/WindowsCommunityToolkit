@@ -1,0 +1,31 @@
+﻿* Add m_issues messages about non-empty assets and anything else that should be in a Lottie file.
+* Add StopPlaying - should also get called when setting a file.
+* Finish the looping stuff in LottiePlayer- it currently doesn't handle having the looping state changed while playing.
+* Scrubbing (maybe only in Paused mode)
+* Speed (maybe only in Paused mode)
+* Make a playground that uses the web version with a web control next to our version so we can compare.
+* The AnimatableVector2 class probably shouldn't exist - it is a hack for the "split dimension stuff"
+* Save floating point numbers as doubles, not floats.
+* Remove the currentstrok, currentname, currentFill etc from JSONreader
+* If a layer doesn't need visibility, do not create the contents node (use the transform node)
+* There is a PathFillType, a FillRule, and another thing for Canvas*. Make them one and remove the dependency on the Win2D type except in interop.
+* AnimatableTransform is inconsistently named - Animatable* means something else.
+* Change the name from BM to Lottie
+* Remove all references to BodyMovin and replace with Lottie
+** Rename the solution and change the directory it is in.
+* Remove all the TODOs - replace with release notes.
+* Remove dead comments.
+* Fix all the places where we ignore errors, or just report them to debug.
+* Remove commented-out code
+* Add a validation pass
+** ParentId points to valid layers
+** No circular ParentId pointers
+
+* Remove dependency on Win2D so we can ship without needing new Win2D
+
+* Redo the codegen as C# and let Shell convert to C++.
+
+* Missing implementation
+** Precomp
+** Opacity
+** All of the missing code / TODOs.
