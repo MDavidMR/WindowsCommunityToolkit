@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E392BAD0-F936-4B64-A445-552597795CC7}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Lottie</RootNamespace>
+    <AssemblyName>Lottie</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17133.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17133.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowCrossPlatformRetargeting>false</AllowCrossPlatformRetargeting>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Lottie\CompositionLoadResult.cs" />
+    <Compile Include="Lottie\CompositionPlayer.cs" />
+    <Compile Include="LottieData\Animatable.cs" />
+    <Compile Include="LottieData\BlendMode.cs" />
+    <Compile Include="LottieData\Repeater.cs" />
+    <Compile Include="LottieData\Transform.cs" />
+    <Compile Include="LottieData\AnimatableVector3.cs" />
+    <Compile Include="LottieData\AnimatableXYZ.cs" />
+    <Compile Include="LottieData\Asset.cs" />
+    <Compile Include="LottieData\AssetCollection.cs" />
+    <Compile Include="LottieData\BezierSegment.cs" />
+    <Compile Include="LottieData\Color.cs" />
+    <Compile Include="LottieData\CubicBezierEasing.cs" />
+    <Compile Include="LottieData\Easing.cs" />
+    <Compile Include="LottieData\Ellipse.cs" />
+    <Compile Include="LottieData\Marker.cs" />
+    <Compile Include="LottieData\RadialGradientStroke.cs" />
+    <Compile Include="LottieData\LinearGradientStroke.cs" />
+    <Compile Include="LottieData\IAnimatableValue.cs" />
+    <Compile Include="LottieData\IAnimatableVector3.cs" />
+    <Compile Include="LottieData\ImageLayer.cs" />
+    <Compile Include="LottieData\KeyFrame.cs" />
+    <Compile Include="LottieData\Layer.cs" />
+    <Compile Include="LottieData\LayerCollection.cs" />
+    <Compile Include="LottieData\LayerCollectionAsset.cs" />
+    <Compile Include="LottieData\LinearEasing.cs" />
+    <Compile Include="LottieData\LinearGradientFill.cs" />
+    <Compile Include="LottieData\LottieComposition.cs" />
+    <Compile Include="LottieData\LottieCompositionValidator.cs" />
+    <Compile Include="LottieData\MergePaths.cs" />
+    <Compile Include="LottieData\NullLayer.cs" />
+    <Compile Include="LottieData\Optimization\Optimizer.cs" />
+    <Compile Include="LottieData\PathGeometry.cs" />
+    <Compile Include="LottieData\Path.cs" />
+    <Compile Include="LottieData\Polystar.cs" />
+    <Compile Include="LottieData\PreCompLayer.cs" />
+    <Compile Include="LottieData\RadialGradientFill.cs" />
+    <Compile Include="LottieData\Rectangle.cs" />
+    <Compile Include="LottieData\RoundedCorner.cs" />
+    <Compile Include="LottieData\ShapeGroup.cs" />
+    <Compile Include="LottieData\ShapeLayer.cs" />
+    <Compile Include="LottieData\ShapeLayerContent.cs" />
+    <Compile Include="LottieData\SolidColorFill.cs" />
+    <Compile Include="LottieData\SolidLayer.cs" />
+    <Compile Include="LottieData\HoldEasing.cs" />
+    <Compile Include="LottieData\SolidColorStroke.cs" />
+    <Compile Include="LottieData\TextLayer.cs" />
+    <Compile Include="LottieData\Serialization\LottieCompositionXmlSerializer.cs" />
+    <Compile Include="LottieData\TrimPath.cs" />
+    <Compile Include="LottieData\Vector3.cs" />
+    <Compile Include="LottieData\Serialization\CheckedWindowsDataJson.cs" />
+    <Compile Include="LottieData\Serialization\LottieCompositionJsonReader.cs" />
+    <Compile Include="LottieData\Serialization\LottieJsonReaderException.cs" />
+    <Compile Include="Lottie\CompositionPlayerSource.cs" />
+    <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
+    <Compile Include="Lottie\LottieCompositionOptions.cs" />
+    <Compile Include="Lottie\LottieComposition.cs" />
+    <Compile Include="Lottie\VisualInstantiator.cs" />
+    <Compile Include="Lottie\LottieToVisualTranslator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Lottie\AnimatedComposition.cs" />
+    <Compile Include="WinCompData\AnimationController.cs" />
+    <Compile Include="WinCompData\ColorKeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\CompositionAnimation.cs" />
+    <Compile Include="WinCompData\CompositionBrush.cs" />
+    <Compile Include="WinCompData\CompositionClip.cs" />
+    <Compile Include="WinCompData\CompositionColorBrush.cs" />
+    <Compile Include="WinCompData\CompositionContainerShape.cs" />
+    <Compile Include="WinCompData\CompositionEasingFunction.cs" />
+    <Compile Include="WinCompData\CompositionEllipseGeometry.cs" />
+    <Compile Include="WinCompData\CompositionGeometry.cs" />
+    <Compile Include="WinCompData\CompositionObject.cs" />
+    <Compile Include="WinCompData\CompositionPath.cs" />
+    <Compile Include="WinCompData\CompositionPathGeometry.cs" />
+    <Compile Include="WinCompData\CompositionPropertySet.cs" />
+    <Compile Include="WinCompData\CompositionRectangleGeometry.cs" />
+    <Compile Include="WinCompData\CompositionRoundedRectangleGeometry.cs" />
+    <Compile Include="WinCompData\CompositionShape.cs" />
+    <Compile Include="WinCompData\CompositionSpriteShape.cs" />
+    <Compile Include="WinCompData\CompositionStrokeCap.cs" />
+    <Compile Include="WinCompData\CompositionStrokeLineJoin.cs" />
+    <Compile Include="WinCompData\CompositionViewBox.cs" />
+    <Compile Include="WinCompData\Compositor.cs" />
+    <Compile Include="WinCompData\ConcreteClassType.cs" />
+    <Compile Include="WinCompData\ContainerVisual.cs" />
+    <Compile Include="WinCompData\CubicBezierEasingFunction.cs" />
+    <Compile Include="WinCompData\ExpressionAnimation.cs" />
+    <Compile Include="WinCompData\InsetClip.cs" />
+    <Compile Include="WinCompData\KeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\LinearEasingFunction.cs" />
+    <Compile Include="WinCompData\Mgcg\CanvasFigureLoop.cs" />
+    <Compile Include="WinCompData\Mgcg\CanvasFilledRegionDetermination.cs" />
+    <Compile Include="WinCompData\Mgcg\CanvasGeometry.cs" />
+    <Compile Include="WinCompData\Mgcg\CanvasGeometryCombine.cs" />
+    <Compile Include="WinCompData\Mgcg\CanvasPathBuilder.cs" />
+    <Compile Include="WinCompData\Mgc\CanvasDevice.cs" />
+    <Compile Include="WinCompData\PathKeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\ScalarKeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\Serialization\CompositionObjectXmlSerializer.cs" />
+    <Compile Include="WinCompData\ShapeVisual.cs" />
+    <Compile Include="WinCompData\Sn\Matrix3x2.cs" />
+    <Compile Include="WinCompData\Sn\Vector2.cs" />
+    <Compile Include="WinCompData\Sn\Vector3.cs" />
+    <Compile Include="WinCompData\StepEasingFunction.cs" />
+    <Compile Include="WinCompData\Tools\ListOfNeverNull.cs" />
+    <Compile Include="WinCompData\Vector2KeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\Vector3KeyFrameAnimation.cs" />
+    <Compile Include="WinCompData\Visual.cs" />
+    <Compile Include="WinCompData\Wg\IGeometrySource2D.cs" />
+    <Compile Include="WinCompData\Wui\Color.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Win2D.uwp">
+      <Version>1.23.0-local</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

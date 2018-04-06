@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Lottie\WinCompData\AnimationController.cs" Link="WinCompData\AnimationController.cs" />
+    <Compile Include="..\Lottie\WinCompData\ColorKeyFrameAnimation.cs" Link="WinCompData\ColorKeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionAnimation.cs" Link="WinCompData\CompositionAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionBrush.cs" Link="WinCompData\CompositionBrush.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionClip.cs" Link="WinCompData\CompositionClip.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionColorBrush.cs" Link="WinCompData\CompositionColorBrush.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionContainerShape.cs" Link="WinCompData\CompositionContainerShape.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionEasingFunction.cs" Link="WinCompData\CompositionEasingFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionEllipseGeometry.cs" Link="WinCompData\CompositionEllipseGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionGeometry.cs" Link="WinCompData\CompositionGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionObject.cs" Link="WinCompData\CompositionObject.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionPath.cs" Link="WinCompData\CompositionPath.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionPathGeometry.cs" Link="WinCompData\CompositionPathGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionPropertySet.cs" Link="WinCompData\CompositionPropertySet.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionRectangleGeometry.cs" Link="WinCompData\CompositionRectangleGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionRoundedRectangleGeometry.cs" Link="WinCompData\CompositionRoundedRectangleGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionShape.cs" Link="WinCompData\CompositionShape.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionSpriteShape.cs" Link="WinCompData\CompositionSpriteShape.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionStrokeCap.cs" Link="WinCompData\CompositionStrokeCap.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionStrokeLineJoin.cs" Link="WinCompData\CompositionStrokeLineJoin.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionViewBox.cs" Link="WinCompData\CompositionViewBox.cs" />
+    <Compile Include="..\Lottie\WinCompData\Compositor.cs" Link="WinCompData\Compositor.cs" />
+    <Compile Include="..\Lottie\WinCompData\ConcreteClassType.cs" Link="WinCompData\ConcreteClassType.cs" />
+    <Compile Include="..\Lottie\WinCompData\ContainerVisual.cs" Link="WinCompData\ContainerVisual.cs" />
+    <Compile Include="..\Lottie\WinCompData\CubicBezierEasingFunction.cs" Link="WinCompData\CubicBezierEasingFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\ExpressionAnimation.cs" Link="WinCompData\ExpressionAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\InsetClip.cs" Link="WinCompData\InsetClip.cs" />
+    <Compile Include="..\Lottie\WinCompData\KeyFrameAnimation.cs" Link="WinCompData\KeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\LinearEasingFunction.cs" Link="WinCompData\LinearEasingFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgcg\CanvasFigureLoop.cs" Link="WinCompData\Mgcg\CanvasFigureLoop.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgcg\CanvasFilledRegionDetermination.cs" Link="WinCompData\Mgcg\CanvasFilledRegionDetermination.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgcg\CanvasGeometry.cs" Link="WinCompData\Mgcg\CanvasGeometry.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgcg\CanvasGeometryCombine.cs" Link="WinCompData\Mgcg\CanvasGeometryCombine.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgcg\CanvasPathBuilder.cs" Link="WinCompData\Mgcg\CanvasPathBuilder.cs" />
+    <Compile Include="..\Lottie\WinCompData\Mgc\CanvasDevice.cs" Link="WinCompData\Mgc\CanvasDevice.cs" />
+    <Compile Include="..\Lottie\WinCompData\PathKeyFrameAnimation.cs" Link="WinCompData\PathKeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\ScalarKeyFrameAnimation.cs" Link="WinCompData\ScalarKeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\Serialization\CompositionObjectXmlSerializer.cs" Link="WinCompData\Serialization\CompositionObjectXmlSerializer.cs" />
+    <Compile Include="..\Lottie\WinCompData\ShapeVisual.cs" Link="WinCompData\ShapeVisual.cs" />
+    <Compile Include="..\Lottie\WinCompData\Sn\Matrix3x2.cs" Link="WinCompData\Sn\Matrix3x2.cs" />
+    <Compile Include="..\Lottie\WinCompData\Sn\Vector2.cs" Link="WinCompData\Sn\Vector2.cs" />
+    <Compile Include="..\Lottie\WinCompData\Sn\Vector3.cs" Link="WinCompData\Sn\Vector3.cs" />
+    <Compile Include="..\Lottie\WinCompData\StepEasingFunction.cs" Link="WinCompData\StepEasingFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\Vector2KeyFrameAnimation.cs" Link="WinCompData\Vector2KeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\Vector3KeyFrameAnimation.cs" Link="WinCompData\Vector3KeyFrameAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\Visual.cs" Link="WinCompData\Visual.cs" />
+    <Compile Include="..\Lottie\WinCompData\Wg\IGeometrySource2D.cs" Link="WinCompData\Wg\IGeometrySource2D.cs" />
+    <Compile Include="..\Lottie\WinCompData\Wui\Color.cs" Link="WinCompData\Wui\Color.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="WinCompData\Mgcg\" />
+    <Folder Include="WinCompData\Mgc\" />
+    <Folder Include="WinCompData\Serialization\" />
+    <Folder Include="WinCompData\Wg\" />
+    <Folder Include="WinCompData\Wui\" />
+  </ItemGroup>
+
+</Project>

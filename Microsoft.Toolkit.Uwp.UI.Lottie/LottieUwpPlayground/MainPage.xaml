@@ -4,34 +4,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:LottieUwpPlayground"
     xmlns:lottie="using:Lottie"
     mc:Ignorable="d">
 
-    <Grid Background="Gray" AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
+    <RelativePanel Background="Gray" AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
+        <RelativePanel.Resources>
+            <SolidColorBrush x:Name="BackgroundBrush" Color="{x:Bind backgroundColorPicker.Color, Mode=OneWay}" />
+        </RelativePanel.Resources>
 
-        <Grid x:Name="Host" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <lottie:LottiePlayer x:Name="lottiePlayer" 
-                    IsLoopingEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    BackgroundColor="{x:Bind backgroundColorPicker.Color, Mode=OneWay}"   
-                    AutoPlay="True"
-                             />
-            <StackPanel VerticalAlignment="Bottom">
-                <StackPanel.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                    </Style>
-                </StackPanel.Resources>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="{x:Bind lottiePlayer.FileName, Mode=OneWay}" TextAlignment="Right"/>
-                    <TextBlock Margin="10,0,0,0" Text="{x:Bind lottiePlayer.Duration, Mode=OneWay}" TextAlignment="Left"/>
-                </StackPanel>
-                <TextBlock Text="{x:Bind lottiePlayer.State, Mode=OneWay}" />
+        <Border Background="{x:Bind BackgroundBrush, Mode=OneWay}"
+              RelativePanel.RightOf="PlayerControls"  RelativePanel.LeftOf="Info"
+              RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+            <lottie:CompositionPlayer x:Name="_player"/>
+        </Border>
 
-                <TextBlock Text="{x:Bind lottiePlayer.Diagnostics, Mode=OneWay}" TextWrapping="Wrap" Height="Auto"/>
-            </StackPanel>
-        </Grid>
-
-        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" >
+        <StackPanel x:Name="PlayerControls" 
+                    Width="320"
+                    RelativePanel.AlignLeftWithPanel="True" 
+                    RelativePanel.AlignTopWithPanel="True" 
+                    RelativePanel.AlignBottomWithPanel="True"
+                    VerticalAlignment="Center">
             <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="Margin" Value="10"/>
@@ -45,6 +38,12 @@
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="LightGray"/>
                 </Style>
+                <Style TargetType="ToggleButton">
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="LightGray"/>
+                </Style>
                 <Style TargetType="Slider">
                     <Setter Property="Margin" Value="10"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -53,34 +52,119 @@
                 </Style>
             </StackPanel.Resources>
 
+            <!-- Lottie logo -->
+            <lottie:CompositionPlayer Source="ms-appx:///Assets/LottieLogo1.json" AutoPlay="True" 
+                                  Height="300" Margin="0,-475,0,-370">
+                <lottie:CompositionPlayer.Clip>
+                    <RectangleGeometry Rect="0,100,500,100"/>
+                </lottie:CompositionPlayer.Clip>
+            </lottie:CompositionPlayer>
 
-            <!--<Button Click="PickFile_Click">Pick Lottie file</Button>-->
+            <Button Click="PickFile_Click">Pick Lottie files</Button>
+            <TextBlock TextAlignment="Center" TextWrapping="Wrap">... or drag and drop Lottie files to play.</TextBlock>
+            <!-- PlayPause button -->
+            <ToggleButton x:Name="PlayPauseButton" 
+                          IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
+                          FontSize="20"
+                          Checked="PlayPause_Checked"
+                          Unchecked="PlayPause_Unchecked"
+                          >
+                <!-- Play button Lottie animation. -->
+                <lottie:CompositionPlayer x:Name="PlayButtonLottie" Source="ms-appx:///Assets/playButton.json" Width="80" Height="80" />
+            </ToggleButton>
+            <!-- Looping toggle -->
+            <ToggleSwitch x:Name="loopingSwitch" OnContent="Looping enabled" OffContent="Looping disabled" Toggled="Looping_Toggled" IsOn="True" />
 
-            <TextBlock TextAlignment="Center">Drag lottie file onto Window to play</TextBlock>
-            <!--<Button x:Name="PlayButton" Click="PlayButton_Click">Play</Button>-->
-
-            <!--<Button x:Name="PauseButton" Click="PauseButton_Click">Pause</Button>-->
-
-            <ToggleSwitch x:Name="LoopingSwitch"      
-                    OnContent="Looping enabled" OffContent="Looping disabled"
-                    IsOn="{x:Bind lottiePlayer.IsLoopingEnabled, Mode=TwoWay}"/>
-
-            <!--<Slider x:Name="SpeedSlider"
-                    Minimum="-2"
-                    Maximum="2"
-                    TickFrequency="0.5"/>-->
-
-            <!--<Slider x:Name="ProgressSlider" StepFrequency="0.01"/>-->
+            <!-- Scrubber -->
+            <Slider StepFrequency="0.001" Maximum="1" Minimum="0" 
+                    Value="{x:Bind _player.Progress, Mode=TwoWay}" 
+                    IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"  />
 
             <Grid>
                 <ColorPicker x:Name="backgroundColorPicker"
-                     ColorSpectrumShape="Box"
+                     ColorSpectrumShape="Ring"
                      IsColorPreviewVisible="False"
                      IsColorChannelTextInputVisible="False"
-                     IsHexInputVisible="False" />
-                <TextBlock IsHitTestVisible="False" >Background color</TextBlock>
+                     IsHexInputVisible="False"/>
+                <TextBlock IsHitTestVisible="False" >Background</TextBlock>
             </Grid>
         </StackPanel>
 
-    </Grid>
+        <Grid x:Name="Info" 
+                    MinWidth="360" Width="360"
+                    RelativePanel.AlignRightWithPanel="True" 
+                    RelativePanel.AlignBottomWithPanel ="True"  
+                    RelativePanel.AlignTopWithPanel="True"
+                    VerticalAlignment="Top"
+                    >
+            <Pivot DataContext="{Binding ElementName=_player}">
+                <Pivot.Resources>
+                    <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
+                </Pivot.Resources>
+
+                <PivotItem Header="Properties" x:Name="_properties" Content="{Binding}" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=CollapsedIfNull}" >
+                    <PivotItem.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <ListView ItemsSource="{Binding Converter={StaticResource formatter}, Path=Diagnostics, ConverterParameter=Properties}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="95"/>
+                                                    <ColumnDefinition Width="160"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Path=Item1}" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                                                <TextBlock TextAlignment="Right" Grid.Column="1" Text="{Binding Path=Item2}" Margin="0,0,5,0" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Path=Item3}"  />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <TextBlock Text="Parsing issues" FontWeight="SemiBold" Margin="0,10,0,0" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=ParsingIssues}"/>
+                                <ItemsControl ItemsSource="{Binding Converter={StaticResource formatter}, ConverterParameter=ParsingIssues, Path=Diagnostics}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock Text="Translation issues" FontWeight="SemiBold" Margin="0,10,0,0" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=TranslationIssues}"/>
+                                <ItemsControl ItemsSource="{Binding Converter={StaticResource formatter}, Path=Diagnostics, ConverterParameter=TranslationIssues}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </PivotItem.ContentTemplate>
+                </PivotItem>
+                <PivotItem Header="XML" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=CollapsedIfNull}">
+                    <Pivot>
+                        <PivotItem Header="Lottie" >
+                            <Grid>
+                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Click="LottieXmlCopyToClipboardButton_Click">Copy to clipboard</Button>
+                                <ScrollViewer Margin="0,45,0,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                                    <TextBlock Text="{Binding Path=Diagnostics.LottieXml}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </PivotItem>
+
+                        <PivotItem Header="WinComp">
+                            <Grid>
+                                <Button VerticalAlignment="Top" HorizontalAlignment="Center" Click="WinCompXmlCopyToClipboardButton_Click">Copy to clipboard</Button>
+                                <ScrollViewer Margin="0,45,0,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" >
+                                    <TextBlock Text="{Binding Path=Diagnostics.WinCompXml}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </PivotItem>
+                    </Pivot>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+    </RelativePanel>
 </Page>

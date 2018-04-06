@@ -1,0 +1,72 @@
+﻿0.2 TODO:
+Root-cause and fix the precomps that have missing content (e.g. Camera_debug.json)
+Support CreateEllipse and CreateRectangle on CanvasGeometry (currently returns null and blows up).
+Make the Play button work as expected.
+Implement IsHidden on everything - find out what it means.
+Support transforms in Lottie XML.
+Display color in SolidColorFill in Lottie XML.
+Support markers in Lottie XML.
+Add the Comp census to the properties viewer.
+Add the Visual-to-Shape optimzation so that Layers don't all have to be Visuals.
+Add markup extension support for LottieComposition.
+Use an ExpressionAnimation on a PropertySet to support multiplication of opacity when color and opacity are both animated.
+Inherit opacity through a precomp.
+Parse gradients.
+Draw gradient fills and strokes.
+Add ability to start at a particular place and play for a particular duration (possibly including looping).
+Add ability to play in reverse.
+Optimize layer visibility animations.
+Support transforms on solid layers.
+Parse repeaters.
+CodeGen
+Optimizer: Remove redundant containers.
+Get released Win2D
+Spatial beziers.
+Validation: precomp refid only refers to an asset that contains Layers.
+Validation: any refid refers to an asset that exist.
+Validation: supported features of the translator.
+
+Other:
+Unloading/disposing needs to stop the player and release all asyncs.
+PinJump isn't doing its keyframes correctly - small bead goes too quickly.
+Get repro of DWM crashing on Lottie input.
+
+
+- Add the markup extension, so Source will be specified as:
+  {lottie:LottieFile Path="Assets\foobar.json"}, and eliminate the attribute that makes this work
+  automatically.
+* Make sure we can specify a simple file path for the Source property - it should
+  imply the ms://appx thing.
+* Remove the Progress property. Add position parameters to Play(), and Pause().
+  -- Can we do a markup extension so that <Source> can be set with URIs that refer
+     to pre-translated code sometimes, and Json at other times?
+	  YES!: https://stackoverflow.com/questions/47156782/how-does-one-use-the-uwp-markupextension-class
+	  {lottie:JsonAsset Path="Assets\Foo"}
+	  {lottie:AnimatedVisualFactory Name="Foobar"}
+
+
+
+* Gradient fills and strokes:
+** A gradient is a list of p points, where each point has a progress value, a color with A=1.
+   There are also n opacities. Not clear if n == p
+   "g":{
+  "p":3,  // number of points
+  "k":{
+  "a":0, // 1 if animated
+  "k":[0,0.169,0.753,0.894,
+       0.5,0.543,0.839,0.835,
+       1,0.918,0.925,0.776,
+       stop, opacity,
+       stop, opacity, etc],
+  "ix":8}  // Property index
+ },
+
+
+
+
+
+
+
+
+
+

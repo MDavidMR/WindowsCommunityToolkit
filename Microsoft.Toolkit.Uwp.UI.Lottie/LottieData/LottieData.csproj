@@ -4,4 +4,67 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Lottie\LottieData\Animatable.cs" Link="LottieData\Animatable.cs" />
+    <Compile Include="..\Lottie\LottieData\AnimatableVector3.cs" Link="LottieData\AnimatableVector3.cs" />
+    <Compile Include="..\Lottie\LottieData\AnimatableXYZ.cs" Link="LottieData\AnimatableXYZ.cs" />
+    <Compile Include="..\Lottie\LottieData\Asset.cs" Link="LottieData\Asset.cs" />
+    <Compile Include="..\Lottie\LottieData\AssetCollection.cs" Link="LottieData\AssetCollection.cs" />
+    <Compile Include="..\Lottie\LottieData\BezierSegment.cs" Link="LottieData\BezierSegment.cs" />
+    <Compile Include="..\Lottie\LottieData\BlendMode.cs" Link="LottieData\BlendMode.cs" />
+    <Compile Include="..\Lottie\LottieData\Color.cs" Link="LottieData\Color.cs" />
+    <Compile Include="..\Lottie\LottieData\CubicBezierEasing.cs" Link="LottieData\CubicBezierEasing.cs" />
+    <Compile Include="..\Lottie\LottieData\Easing.cs" Link="LottieData\Easing.cs" />
+    <Compile Include="..\Lottie\LottieData\Ellipse.cs" Link="LottieData\Ellipse.cs" />
+    <Compile Include="..\Lottie\LottieData\HoldEasing.cs" Link="LottieData\HoldEasing.cs" />
+    <Compile Include="..\Lottie\LottieData\IAnimatableValue.cs" Link="LottieData\IAnimatableValue.cs" />
+    <Compile Include="..\Lottie\LottieData\IAnimatableVector3.cs" Link="LottieData\IAnimatableVector3.cs" />
+    <Compile Include="..\Lottie\LottieData\ImageLayer.cs" Link="LottieData\ImageLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\KeyFrame.cs" Link="LottieData\KeyFrame.cs" />
+    <Compile Include="..\Lottie\LottieData\Layer.cs" Link="LottieData\Layer.cs" />
+    <Compile Include="..\Lottie\LottieData\LayerCollection.cs" Link="LottieData\LayerCollection.cs" />
+    <Compile Include="..\Lottie\LottieData\LayerCollectionAsset.cs" Link="LottieData\LayerCollectionAsset.cs" />
+    <Compile Include="..\Lottie\LottieData\LinearEasing.cs" Link="LottieData\LinearEasing.cs" />
+    <Compile Include="..\Lottie\LottieData\LinearGradientFill.cs" Link="LottieData\LinearGradientFill.cs" />
+    <Compile Include="..\Lottie\LottieData\LinearGradientStroke.cs" Link="LottieData\LinearGradientStroke.cs" />
+    <Compile Include="..\Lottie\LottieData\LottieComposition.cs" Link="LottieData\LottieComposition.cs" />
+    <Compile Include="..\Lottie\LottieData\LottieCompositionValidator.cs" Link="LottieData\LottieCompositionValidator.cs" />
+    <Compile Include="..\Lottie\LottieData\Marker.cs" Link="LottieData\Marker.cs" />
+    <Compile Include="..\Lottie\LottieData\MergePaths.cs" Link="LottieData\MergePaths.cs" />
+    <Compile Include="..\Lottie\LottieData\NullLayer.cs" Link="LottieData\NullLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\Optimization\Optimizer.cs" Link="LottieData\Optimization\Optimizer.cs" />
+    <Compile Include="..\Lottie\LottieData\Path.cs" Link="LottieData\Path.cs" />
+    <Compile Include="..\Lottie\LottieData\PathGeometry.cs" Link="LottieData\PathGeometry.cs" />
+    <Compile Include="..\Lottie\LottieData\Polystar.cs" Link="LottieData\Polystar.cs" />
+    <Compile Include="..\Lottie\LottieData\PreCompLayer.cs" Link="LottieData\PreCompLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\RadialGradientFill.cs" Link="LottieData\RadialGradientFill.cs" />
+    <Compile Include="..\Lottie\LottieData\RadialGradientStroke.cs" Link="LottieData\RadialGradientStroke.cs" />
+    <Compile Include="..\Lottie\LottieData\Rectangle.cs" Link="LottieData\Rectangle.cs" />
+    <Compile Include="..\Lottie\LottieData\Repeater.cs" Link="LottieData\Repeater.cs" />
+    <Compile Include="..\Lottie\LottieData\RoundedCorner.cs" Link="LottieData\RoundedCorner.cs" />
+    <Compile Include="..\Lottie\LottieData\Serialization\LottieCompositionXmlSerializer.cs" Link="LottieData\Serialization\LottieCompositionXmlSerializer.cs" />
+    <Compile Include="..\Lottie\LottieData\ShapeGroup.cs" Link="LottieData\ShapeGroup.cs" />
+    <Compile Include="..\Lottie\LottieData\ShapeLayer.cs" Link="LottieData\ShapeLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\ShapeLayerContent.cs" Link="LottieData\ShapeLayerContent.cs" />
+    <Compile Include="..\Lottie\LottieData\SolidColorFill.cs" Link="LottieData\SolidColorFill.cs" />
+    <Compile Include="..\Lottie\LottieData\SolidColorStroke.cs" Link="LottieData\SolidColorStroke.cs" />
+    <Compile Include="..\Lottie\LottieData\SolidLayer.cs" Link="LottieData\SolidLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\TextLayer.cs" Link="LottieData\TextLayer.cs" />
+    <Compile Include="..\Lottie\LottieData\Transform.cs" Link="LottieData\Transform.cs" />
+    <Compile Include="..\Lottie\LottieData\TrimPath.cs" Link="LottieData\TrimPath.cs" />
+    <Compile Include="..\Lottie\LottieData\Vector3.cs" Link="LottieData\Vector3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LottieData\Serialization\" />
+    <Folder Include="LottieData\Optimization\" />
+  </ItemGroup>
 </Project>
