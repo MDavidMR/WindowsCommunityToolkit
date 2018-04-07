@@ -1,4 +1,7 @@
-﻿0.2 TODO:
+﻿Notes are now being kept on OneNote: https://microsoft.sharepoint.com/teams/osg_core_dep/comp/_layouts/OneNote.aspx?id=%2Fteams%2Fosg_core_dep%2Fcomp%2FShared%20Documents%2FTeam%20notes%20and%20decks%2FOSG%20Composition%20Dev&wd=target%28Lottie-Windows.one%7C456C78B9-BAF7-4546-BE85-4BF0A50BAAC8%2F%29
+
+
+0.2 TODO:
 Root-cause and fix the precomps that have missing content (e.g. Camera_debug.json)
 Support CreateEllipse and CreateRectangle on CanvasGeometry (currently returns null and blows up).
 Make the Play button work as expected.
