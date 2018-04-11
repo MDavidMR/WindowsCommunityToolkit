@@ -49,6 +49,8 @@
 
         public override ShapeContentType ContentType => ShapeContentType.Polystar;
 
+        public override LottieObjectType ObjectType => LottieObjectType.Polystar;
+
         public enum PolyStarType
         {
             Star,

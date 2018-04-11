@@ -15,6 +15,6 @@ namespace WinCompData
         public Vector2 ControlPoint1 { get; }
         public Vector2 ControlPoint2 { get; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CubicBezierEasingFunction;
+        public override CompositionObjectType Type => CompositionObjectType.CubicBezierEasingFunction;
     }
 }

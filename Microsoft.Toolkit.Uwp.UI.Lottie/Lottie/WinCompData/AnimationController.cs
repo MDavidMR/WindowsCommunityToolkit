@@ -15,6 +15,6 @@
         public string TargetProperty { get; }
         public void Pause() { }
 
-        public override ConcreteClassType Type => ConcreteClassType.AnimationController;
+        public override CompositionObjectType Type => CompositionObjectType.AnimationController;
     }
 }

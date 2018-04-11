@@ -37,8 +37,10 @@
 
         public Animatable<double> OpacityPercent { get; }
 
+        public bool IsAnimated => Anchor.IsAnimated || Position.IsAnimated || ScalePercent.IsAnimated || RotationDegrees.IsAnimated || OpacityPercent.IsAnimated;
+
         public override ShapeContentType ContentType => ShapeContentType.Transform;
 
-        public bool IsAnimated => Anchor.IsAnimated || Position.IsAnimated || ScalePercent.IsAnimated || RotationDegrees.IsAnimated || OpacityPercent.IsAnimated;
+        public override LottieObjectType ObjectType => LottieObjectType.Transform;
     }
 }

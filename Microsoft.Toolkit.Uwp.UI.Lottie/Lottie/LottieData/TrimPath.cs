@@ -11,7 +11,7 @@
             TrimType trimPathType,
             Animatable<double> startPercent,
             Animatable<double> endPercent,
-            Animatable<double> offsetDegrees) 
+            Animatable<double> offsetDegrees)
             : base(name, matchName)
         {
             TrimPathType = trimPathType;
@@ -30,6 +30,7 @@
 
         public override ShapeContentType ContentType => ShapeContentType.TrimPath;
 
+        public override LottieObjectType ObjectType => LottieObjectType.TrimPath;
         public enum TrimType
         {
             Simultaneously,

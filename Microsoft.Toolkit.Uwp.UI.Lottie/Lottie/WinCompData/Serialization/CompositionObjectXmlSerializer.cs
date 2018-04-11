@@ -46,64 +46,64 @@ namespace WinCompData.Tools
 #endif
             switch (obj.Type)
             {
-                case ConcreteClassType.AnimationController:
+                case CompositionObjectType.AnimationController:
                     yield return FromAnimationController((AnimationController)obj);
                     break;
-                case ConcreteClassType.ColorKeyFrameAnimation:
+                case CompositionObjectType.ColorKeyFrameAnimation:
                     yield return FromColorKeyFrameAnimation((ColorKeyFrameAnimation)obj);
                     break;
-                case ConcreteClassType.CompositionColorBrush:
+                case CompositionObjectType.CompositionColorBrush:
                     yield return FromCompositionColorBrush((CompositionColorBrush)obj);
                     break;
-                case ConcreteClassType.CompositionContainerShape:
+                case CompositionObjectType.CompositionContainerShape:
                     yield return FromCompositionContainerShape((CompositionContainerShape)obj);
                     break;
-                case ConcreteClassType.CompositionEllipseGeometry:
+                case CompositionObjectType.CompositionEllipseGeometry:
                     yield return FromCompositionEllipseGeometry((CompositionEllipseGeometry)obj);
                     break;
-                case ConcreteClassType.CompositionPathGeometry:
+                case CompositionObjectType.CompositionPathGeometry:
                     yield return FromCompositionPathGeometry((CompositionPathGeometry)obj);
                     break;
-                case ConcreteClassType.CompositionRectangleGeometry:
+                case CompositionObjectType.CompositionRectangleGeometry:
                     yield return FromCompositionRectangleGeometry((CompositionRectangleGeometry)obj);
                     break;
-                case ConcreteClassType.CompositionRoundedRectangleGeometry:
+                case CompositionObjectType.CompositionRoundedRectangleGeometry:
                     yield return FromCompositionRoundedRectangleGeometry((CompositionRoundedRectangleGeometry)obj);
                     break;
-                case ConcreteClassType.CompositionSpriteShape:
+                case CompositionObjectType.CompositionSpriteShape:
                     yield return FromCompositionSpriteShape((CompositionSpriteShape)obj);
                     break;
-                case ConcreteClassType.CompositionViewBox:
+                case CompositionObjectType.CompositionViewBox:
                     yield return FromCompositionViewBox((CompositionViewBox)obj);
                     break;
-                case ConcreteClassType.ContainerVisual:
+                case CompositionObjectType.ContainerVisual:
                     yield return FromContainerVisual((ContainerVisual)obj);
                     break;
-                case ConcreteClassType.CubicBezierEasingFunction:
+                case CompositionObjectType.CubicBezierEasingFunction:
                     yield return FromCubicBezierEasingFunction((CubicBezierEasingFunction)obj);
                     break;
-                case ConcreteClassType.ExpressionAnimation:
+                case CompositionObjectType.ExpressionAnimation:
                     yield return FromExpressionAnimation((ExpressionAnimation)obj);
                     break;
-                case ConcreteClassType.InsetClip:
+                case CompositionObjectType.InsetClip:
                     yield return FromInsetClip((InsetClip)obj);
                     break;
-                case ConcreteClassType.LinearEasingFunction:
+                case CompositionObjectType.LinearEasingFunction:
                     yield return FromLinearEasingFunction((LinearEasingFunction)obj);
                     break;
-                case ConcreteClassType.PathKeyFrameAnimation:
+                case CompositionObjectType.PathKeyFrameAnimation:
                     yield return FromPathKeyFrameAnimation((PathKeyFrameAnimation)obj);
                     break;
-                case ConcreteClassType.ScalarKeyFrameAnimation:
+                case CompositionObjectType.ScalarKeyFrameAnimation:
                     yield return FromScalarKeyFrameAnimation((ScalarKeyFrameAnimation)obj);
                     break;
-                case ConcreteClassType.ShapeVisual:
+                case CompositionObjectType.ShapeVisual:
                     yield return FromShapeVisual((ShapeVisual)obj);
                     break;
-                case ConcreteClassType.StepEasingFunction:
+                case CompositionObjectType.StepEasingFunction:
                     yield return FromStepEasingFunction((StepEasingFunction)obj);
                     break;
-                case ConcreteClassType.Vector2KeyFrameAnimation:
+                case CompositionObjectType.Vector2KeyFrameAnimation:
                     yield return FromVector2KeyFrameAnimation((Vector2KeyFrameAnimation)obj);
                     break;
                 default:
@@ -507,23 +507,27 @@ namespace WinCompData.Tools
             {
                 yield return item;
             }
-            foreach (var item in FromAnimatableVector2("CenterPoint", obj.Animators, obj.CenterPoint))
-            {
-                yield return item;
-            }
-            foreach (var item in FromAnimatableVector2("Offset", obj.Animators, obj.Offset))
+
+            foreach (var item in FromAnimatableVector2(nameof(obj.CenterPoint), obj.Animators, obj.CenterPoint))
             {
                 yield return item;
             }
 
-            if (obj.RotationAngleInDegrees.HasValue)
+            foreach (var item in FromAnimatableVector2(nameof(obj.Offset), obj.Animators, obj.Offset))
             {
-                yield return new XAttribute("RotationAngleInDegrees", obj.RotationAngleInDegrees.Value);
+                yield return item;
             }
-            if (obj.Scale.HasValue)
+
+            foreach (var item in FromAnimatableScalar(nameof(obj.RotationAngleInDegrees), obj.Animators, obj.RotationAngleInDegrees))
             {
-                yield return FromVector2("Scale", obj.Scale.Value);
+                yield return item;
             }
+
+            foreach (var item in FromAnimatableVector2(nameof(obj.Scale), obj.Animators, obj.Scale))
+            {
+                yield return item;
+            }
+
         }
 
         XElement FromIGeometrySource2D(Wg.IGeometrySource2D obj)
@@ -577,13 +581,13 @@ namespace WinCompData.Tools
         {
             switch (animation.Type)
             {
-                case ConcreteClassType.ExpressionAnimation:
+                case CompositionObjectType.ExpressionAnimation:
                     return FromExpressionAnimation((ExpressionAnimation)animation, name);
-                case ConcreteClassType.ColorKeyFrameAnimation:
-                case ConcreteClassType.PathKeyFrameAnimation:
-                case ConcreteClassType.ScalarKeyFrameAnimation:
-                case ConcreteClassType.Vector2KeyFrameAnimation:
-                case ConcreteClassType.Vector3KeyFrameAnimation:
+                case CompositionObjectType.ColorKeyFrameAnimation:
+                case CompositionObjectType.PathKeyFrameAnimation:
+                case CompositionObjectType.ScalarKeyFrameAnimation:
+                case CompositionObjectType.Vector2KeyFrameAnimation:
+                case CompositionObjectType.Vector3KeyFrameAnimation:
                     return FromKeyFrameAnimation(name, (KeyFrameAnimation<T>)animation, initialValue);
                 default:
                     throw new InvalidOperationException();

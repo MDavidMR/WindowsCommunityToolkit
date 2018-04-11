@@ -15,8 +15,10 @@
         }
 
         public MergeMode Mode { get; }
+
         public override ShapeContentType ContentType => ShapeContentType.MergePaths;
 
+        public override LottieObjectType ObjectType => LottieObjectType.MergePaths;
         public enum MergeMode
         {
             Merge,

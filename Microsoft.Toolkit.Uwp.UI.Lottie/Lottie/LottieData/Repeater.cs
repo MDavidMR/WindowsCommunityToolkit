@@ -13,5 +13,7 @@
         }
 
         public override ShapeContentType ContentType => ShapeContentType.Repeater;
+
+        public override LottieObjectType ObjectType => LottieObjectType.Repeater;
     }
 }

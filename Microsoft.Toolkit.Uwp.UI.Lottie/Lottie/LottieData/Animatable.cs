@@ -12,7 +12,7 @@ namespace LottieData
 #if !WINDOWS_UWP
     public
 #endif
-    class Animatable<T> : IAnimatableValue<T> where T: IEquatable<T>
+    class Animatable<T> : IAnimatableValue<T> where T : IEquatable<T>
     {
         internal static readonly IEnumerable<KeyFrame<T>> s_emptyKeyFrames = new KeyFrame<T>[0];
         readonly KeyFrame<T>[] _keyFrames;

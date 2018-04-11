@@ -16,7 +16,7 @@
 
         public string Expression { get; }
 
-        public override ConcreteClassType Type => ConcreteClassType.ExpressionAnimation;
+        public override CompositionObjectType Type => CompositionObjectType.ExpressionAnimation;
 
         internal override CompositionAnimation Clone() => new ExpressionAnimation(this, Expression);
 

@@ -10,6 +10,6 @@ namespace WinCompData
         internal CompositionViewBox() { }
         public Vector2 Size { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionViewBox;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionViewBox;
     }
 }

@@ -48,6 +48,7 @@ namespace LottieData
 
         public override ShapeContentType ContentType => ShapeContentType.SolidColorStroke;
 
+        public override LottieObjectType ObjectType => LottieObjectType.SolidColorStroke;
 
         public enum LineCapType
         {

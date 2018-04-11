@@ -16,8 +16,10 @@ namespace LottieData
             Items = items;
         }
 
+        public IEnumerable<ShapeLayerContent> Items { get; }
+
         public override ShapeContentType ContentType => ShapeContentType.Group;
 
-        public IEnumerable<ShapeLayerContent> Items { get; }
+        public override LottieObjectType ObjectType => LottieObjectType.ShapeGroup;
     }
 }

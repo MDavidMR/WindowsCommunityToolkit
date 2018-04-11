@@ -107,6 +107,10 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LottieData\LottieObject.cs" />
+    <Compile Include="LottieData\LottieObjectType.cs" />
+    <Compile Include="LottieData\ShapeContentType.cs" />
+    <Compile Include="LottieData\ShapeLayerContent.cs" />
     <Compile Include="Lottie\CompositionLoadResult.cs" />
     <Compile Include="Lottie\CompositionPlayer.cs" />
     <Compile Include="LottieData\Animatable.cs" />
@@ -140,7 +144,7 @@
     <Compile Include="LottieData\NullLayer.cs" />
     <Compile Include="LottieData\Optimization\Optimizer.cs" />
     <Compile Include="LottieData\PathGeometry.cs" />
-    <Compile Include="LottieData\Path.cs" />
+    <Compile Include="LottieData\Shape.cs" />
     <Compile Include="LottieData\Polystar.cs" />
     <Compile Include="LottieData\PreCompLayer.cs" />
     <Compile Include="LottieData\RadialGradientFill.cs" />
@@ -148,7 +152,6 @@
     <Compile Include="LottieData\RoundedCorner.cs" />
     <Compile Include="LottieData\ShapeGroup.cs" />
     <Compile Include="LottieData\ShapeLayer.cs" />
-    <Compile Include="LottieData\ShapeLayerContent.cs" />
     <Compile Include="LottieData\SolidColorFill.cs" />
     <Compile Include="LottieData\SolidLayer.cs" />
     <Compile Include="LottieData\HoldEasing.cs" />
@@ -190,7 +193,7 @@
     <Compile Include="WinCompData\CompositionStrokeLineJoin.cs" />
     <Compile Include="WinCompData\CompositionViewBox.cs" />
     <Compile Include="WinCompData\Compositor.cs" />
-    <Compile Include="WinCompData\ConcreteClassType.cs" />
+    <Compile Include="WinCompData\CompositionObjectType.cs" />
     <Compile Include="WinCompData\ContainerVisual.cs" />
     <Compile Include="WinCompData\CubicBezierEasingFunction.cs" />
     <Compile Include="WinCompData\ExpressionAnimation.cs" />

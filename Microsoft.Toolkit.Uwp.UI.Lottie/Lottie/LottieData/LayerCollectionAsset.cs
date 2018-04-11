@@ -1,5 +1,8 @@
 ﻿namespace LottieData
 {
+    /// <summary>
+    /// A <see cref="LayerCollection"/> stored in the assets section of a <see cref="LottieComposition"/>.
+    /// </summary>
 #if !WINDOWS_UWP
     public
 #endif

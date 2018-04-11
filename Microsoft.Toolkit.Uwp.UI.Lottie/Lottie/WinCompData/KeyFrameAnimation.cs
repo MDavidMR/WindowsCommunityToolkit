@@ -31,6 +31,11 @@ namespace WinCompData
 
         public void InsertKeyFrame(float progress, T value, CompositionEasingFunction easing)
         {
+            if (progress < 0 || progress > 1)
+            {
+                throw new ArgumentException($"Progress must be >=0 and <=1. Value: {progress}");
+            }
+
             _keyFrames.Add(progress, new KeyFrame { Progress = progress, Value = value, Easing = easing });
         }
 

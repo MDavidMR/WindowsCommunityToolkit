@@ -8,7 +8,7 @@
         internal ScalarKeyFrameAnimation() : base(null) { }
         ScalarKeyFrameAnimation(ScalarKeyFrameAnimation other) : base(other) { }
 
-        public override ConcreteClassType Type => ConcreteClassType.ScalarKeyFrameAnimation;
+        public override CompositionObjectType Type => CompositionObjectType.ScalarKeyFrameAnimation;
         internal override CompositionAnimation Clone() => new ScalarKeyFrameAnimation(this);
     }
 }

@@ -46,5 +46,7 @@ namespace LottieData
 
         public override LayerType Type => LayerType.Shape;
 
+        public override LottieObjectType ObjectType => LottieObjectType.ShapeLayer;
+
     }
 }

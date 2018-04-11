@@ -28,5 +28,7 @@
         public IAnimatableVector3 Position { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.Rectangle;
+
+        public override LottieObjectType ObjectType => LottieObjectType.Rectangle;
     }
 }

@@ -11,14 +11,69 @@ namespace LottieData.Tools
     sealed class LottieCompositionXmlSerializer
     {
         LottieCompositionXmlSerializer() { }
-        public static XDocument ToXml(LottieComposition lottieComposition)
+
+        public static XDocument ToXml(LottieObject lottieObject)
         {
-            return new LottieCompositionXmlSerializer().ToXDocument(lottieComposition);
+            return new LottieCompositionXmlSerializer().ToXDocument(lottieObject);
         }
 
-        XDocument ToXDocument(LottieComposition lottieComposition)
+        XDocument ToXDocument(LottieObject lottieObject)
         {
-            return new XDocument(FromLottieComposition(lottieComposition));
+            return new XDocument(FromLottieObject(lottieObject));
+        }
+
+        XElement FromLottieObject(LottieObject obj)
+        {
+            switch (obj.ObjectType)
+            {
+                case LottieObjectType.Ellipse:
+                    return FromEllipse((Ellipse)obj);
+                case LottieObjectType.ImageLayer:
+                    return FromImageLayer((ImageLayer)obj);
+                case LottieObjectType.LinearGradientFill:
+                    return FromLinearGradientFill((LinearGradientFill)obj);
+                case LottieObjectType.LinearGradientStroke:
+                    return FromLinearGradientStroke((LinearGradientStroke)obj);
+                case LottieObjectType.LottieComposition:
+                    return FromLottieComposition((LottieComposition)obj);
+                case LottieObjectType.MergePaths:
+                    return FromMergePaths((MergePaths)obj);
+                case LottieObjectType.NullLayer:
+                    return FromNullLayer((NullLayer)obj);
+                case LottieObjectType.Polystar:
+                    return FromPolystar((Polystar)obj);
+                case LottieObjectType.PreCompLayer:
+                    return FromPreCompLayer((PreCompLayer)obj);
+                case LottieObjectType.RadialGradientFill:
+                    return FromRadialGradientFill((RadialGradientFill)obj);
+                case LottieObjectType.RadialGradientStroke:
+                    return FromRadialGradientStroke((RadialGradientStroke)obj);
+                case LottieObjectType.Rectangle:
+                    return FromRectangle((Rectangle)obj);
+                case LottieObjectType.Repeater:
+                    return FromRepeater((Repeater)obj);
+                case LottieObjectType.RoundedCorner:
+                    return FromRoundedCorner((RoundedCorner)obj);
+                case LottieObjectType.Shape:
+                    return FromShape((Shape)obj);
+                case LottieObjectType.ShapeGroup:
+                    return FromShapeGroup((ShapeGroup)obj);
+                case LottieObjectType.ShapeLayer:
+                    return FromShapeLayer((ShapeLayer)obj);
+                case LottieObjectType.SolidColorFill:
+                    return FromSolidColorFill((SolidColorFill)obj);
+                case LottieObjectType.SolidColorStroke:
+                    return FromSolidColorStroke((SolidColorStroke)obj);
+                case LottieObjectType.SolidLayer:
+                    return FromSolidLayer((SolidLayer)obj);
+                case LottieObjectType.TextLayer:
+                    return FromTextLayer((TextLayer)obj);
+                case LottieObjectType.Transform:
+                    return FromTransform((Transform)obj);
+                case LottieObjectType.TrimPath:
+                    return FromTrimPath((TrimPath)obj);
+            }
+            throw new InvalidOperationException();
         }
 
         XElement FromLottieComposition(LottieComposition lottieComposition)
@@ -26,14 +81,17 @@ namespace LottieData.Tools
             return new XElement("LottieComposition", GetContents());
             IEnumerable<XObject> GetContents()
             {
+                yield return new XAttribute("Version", lottieComposition.Version.ToString());
                 if (!string.IsNullOrWhiteSpace(lottieComposition.Name))
                 {
                     yield return new XAttribute("Name", lottieComposition.Name);
                 }
                 yield return new XAttribute("Width", lottieComposition.Width);
                 yield return new XAttribute("Height", lottieComposition.Height);
+                yield return new XAttribute("InPoint", lottieComposition.InPoint);
+                yield return new XAttribute("OutPoint", lottieComposition.OutPoint);
                 yield return FromAssetCollection(lottieComposition.Assets);
-                yield return FromLayerCollection(lottieComposition.Layers);
+                yield return FromLayerComposition(lottieComposition.Layers);
             }
         }
 
@@ -63,12 +121,12 @@ namespace LottieData.Tools
 
         XElement FromLayersAsset(LayerCollectionAsset asset)
         {
-            return new XElement("LayerCollection",
+            return new XElement("LayerComposition",
                 new XAttribute("Id", asset.Id),
-                FromLayerCollection(asset.Layers));
+                FromLayerComposition(asset.Layers));
         }
 
-        XElement FromLayerCollection(LayerCollection layers)
+        XElement FromLayerComposition(LayerCollection layers)
         {
             return new XElement("Layers", GetContents());
             IEnumerable<XElement> GetContents()
@@ -105,11 +163,20 @@ namespace LottieData.Tools
         {
             yield return new XAttribute("Id", layer.Id);
             yield return new XAttribute("Name", layer.Name);
-            yield return new XAttribute("Hidden", layer.IsHidden);
+            if (layer.IsHidden)
+            {
+                yield return new XAttribute("Hidden", layer.IsHidden);
+            }
+            yield return new XAttribute("StartTime", layer.StartTime);
+            yield return new XAttribute("InPoint", layer.InPoint);
+            yield return new XAttribute("OutPoint", layer.OutPoint);
+
             if (layer.ParentId.HasValue)
             {
                 yield return new XAttribute("ParentId", layer.ParentId.Value);
             }
+            yield return FromTransform(layer.Transform);
+
         }
 
         XElement FromPreCompLayer(PreCompLayer layer)
@@ -139,6 +206,11 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return new XAttribute("Width", layer.Width);
+                yield return new XAttribute("Height", layer.Height);
+                // TODO - don't rely on ToString on color
+                yield return new XAttribute("Color", layer.Color);
             }
         }
 
@@ -199,37 +271,37 @@ namespace LottieData.Tools
         {
             switch (content.ContentType)
             {
-                case ShapeLayerContent.ShapeContentType.Group:
+                case ShapeContentType.Group:
                     return FromShapeGroup((ShapeGroup)content);
-                case ShapeLayerContent.ShapeContentType.SolidColorStroke:
+                case ShapeContentType.SolidColorStroke:
                     return FromSolidColorStroke((SolidColorStroke)content);
-                case ShapeLayerContent.ShapeContentType.LinearGradientStroke:
+                case ShapeContentType.LinearGradientStroke:
                     return FromLinearGradientStroke((LinearGradientStroke)content);
-                case ShapeLayerContent.ShapeContentType.RadialGradientStroke:
+                case ShapeContentType.RadialGradientStroke:
                     return FromRadialGradientStroke((RadialGradientStroke)content);
-                case ShapeLayerContent.ShapeContentType.SolidColorFill:
+                case ShapeContentType.SolidColorFill:
                     return FromSolidColorFill((SolidColorFill)content);
-                case ShapeLayerContent.ShapeContentType.LinearGradientFill:
+                case ShapeContentType.LinearGradientFill:
                     return FromLinearGradientFill((LinearGradientFill)content);
-                case ShapeLayerContent.ShapeContentType.RadialGradientFill:
+                case ShapeContentType.RadialGradientFill:
                     return FromRadialGradientFill((RadialGradientFill)content);
-                case ShapeLayerContent.ShapeContentType.Transform:
+                case ShapeContentType.Transform:
                     return FromTransform((Transform)content);
-                case ShapeLayerContent.ShapeContentType.Path:
+                case ShapeContentType.Path:
                     return FromPath((Shape)content);
-                case ShapeLayerContent.ShapeContentType.Ellipse:
+                case ShapeContentType.Ellipse:
                     return FromEllipse((Ellipse)content);
-                case ShapeLayerContent.ShapeContentType.Rectangle:
+                case ShapeContentType.Rectangle:
                     return FromRectangle((Rectangle)content);
-                case ShapeLayerContent.ShapeContentType.Polystar:
+                case ShapeContentType.Polystar:
                     return FromPolystar((Polystar)content);
-                case ShapeLayerContent.ShapeContentType.TrimPath:
+                case ShapeContentType.TrimPath:
                     return FromTrimPath((TrimPath)content);
-                case ShapeLayerContent.ShapeContentType.MergePaths:
+                case ShapeContentType.MergePaths:
                     return FromMergePaths((MergePaths)content);
-                case ShapeLayerContent.ShapeContentType.Repeater:
+                case ShapeContentType.Repeater:
                     return FromRepeater((Repeater)content);
-                case ShapeLayerContent.ShapeContentType.RoundedCorner:
+                case ShapeContentType.RoundedCorner:
                     return FromRoundedCorner((RoundedCorner)content);
                 default:
                     throw new InvalidOperationException();
@@ -298,6 +370,10 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return FromAnimatable("Color", content.Color);
+                yield return FromAnimatable("OpacityPercent", content.OpacityPercent);
+
             }
         }
 
@@ -334,8 +410,51 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return FromAnimatableVector3(nameof(content.ScalePercent), content.ScalePercent);
+                yield return FromAnimatableVector3(nameof(content.Position), content.Position);
+                yield return FromAnimatableVector3(nameof(content.Anchor), content.Anchor);
+                yield return FromAnimatable(nameof(content.OpacityPercent), content.OpacityPercent);
+                yield return FromAnimatable(nameof(content.RotationDegrees), content.RotationDegrees);
             }
         }
+
+        XObject FromAnimatableVector3(string name, IAnimatableVector3 animatable)
+        {
+            switch (animatable.Type)
+            {
+                case AnimatableVector3Type.Vector3:
+                    return FromAnimatable(name, (AnimatableVector3)animatable);
+                case AnimatableVector3Type.XYZ:
+                    {
+
+                        var xyz = (AnimatableXYZ)animatable;
+                        return new XElement(name,
+                            FromAnimatable(nameof(xyz.X), xyz.X),
+                            FromAnimatable(nameof(xyz.Y), xyz.Y),
+                            FromAnimatable(nameof(xyz.Z), xyz.Z));
+                    }
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        XObject FromAnimatable<T>(string name, Animatable<T> animatable) where T : IEquatable<T>
+        {
+            if (!animatable.IsAnimated)
+            {
+                // TODO - don't rely on tostring on the value.
+                return new XAttribute(name, $"{animatable.InitialValue}");
+            }
+            else
+            {
+                // TODO - don't rely on tostring on the value.
+                var keyframesString = $"{animatable.InitialValue}{string.Join("", animatable.KeyFrames.Select(kf => $", {kf.Value}@{kf.Frame}"))}";
+
+                return new XAttribute(name, keyframesString);
+            }
+        }
+
 
         XElement FromPath(Shape content)
         {
@@ -352,6 +471,20 @@ namespace LottieData.Tools
         XElement FromEllipse(Ellipse content)
         {
             return new XElement("Ellipse", GetContents());
+            IEnumerable<XObject> GetContents()
+            {
+                foreach (var item in GetShapeLayerContentContents(content))
+                {
+                    yield return item;
+                }
+                yield return FromAnimatableVector3(nameof(content.Diameter), content.Diameter);
+                yield return FromAnimatableVector3(nameof(content.Position), content.Position);
+            }
+        }
+
+        XElement FromShape(Shape content)
+        {
+            return new XElement("Shape", GetContents());
             IEnumerable<XObject> GetContents()
             {
                 foreach (var item in GetShapeLayerContentContents(content))

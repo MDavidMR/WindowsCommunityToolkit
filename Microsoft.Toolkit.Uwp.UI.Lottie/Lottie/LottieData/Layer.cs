@@ -10,7 +10,7 @@
 #if !WINDOWS_UWP
     public
 #endif
-    abstract class Layer
+    abstract class Layer : LottieObject
     {
         protected Layer(
             string name,
@@ -24,17 +24,16 @@
             double outFrame,
             BlendMode blendMode,
             bool is3d,
-            bool autoOrient)
+            bool autoOrient) : base(name)
         {
-            Name = name;
             Id = layerId;
             ParentId = parentId;
             IsHidden = isHidden;
             Transform = transform;
             TimeStretch = timeStretch;
-            StartFrame = startFrame;
-            InFrame = inFrame;
-            OutFrame = outFrame;
+            StartTime = startFrame;
+            InPoint = inFrame;
+            OutPoint = outFrame;
             BlendMode = blendMode;
             Is3d = is3d;
             AutoOrient = autoOrient;
@@ -43,15 +42,26 @@
         public bool AutoOrient { get; }
 
         public bool IsHidden { get; }
+
         public BlendMode BlendMode { get; }
-        public double InFrame { get; }
-        public double OutFrame { get; }
+
+        /// <summary>
+        /// The frame at which this <see cref="Layer"/> starts playing. May be negative.
+        /// </summary>
+        /// <remarks><see cref="Layer"/>s all start together.</remarks>
+        public double StartTime { get; }
+
+        /// <summary>
+        /// The frame at which this <see cref="Layer"/> becomes visible. <see cref="OutPoint"/>.
+        /// </summary>
+        public double InPoint { get; }
+
+        /// <summary>
+        /// The frame at which this <see cref="Layer"/> becomes invisible. <see cref="OutPoint"/>.
+        /// </summary>
+        public double OutPoint { get; }
 
         internal double TimeStretch { get; }
-
-        internal double StartFrame { get; }
-
-        public string Name { get; }
 
         public abstract LayerType Type { get; }
 

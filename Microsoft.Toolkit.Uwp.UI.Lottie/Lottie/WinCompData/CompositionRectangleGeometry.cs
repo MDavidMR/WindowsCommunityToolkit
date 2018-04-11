@@ -11,6 +11,6 @@ namespace WinCompData
 
         public Vector2 Size { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionRectangleGeometry;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionRectangleGeometry;
     }
 }

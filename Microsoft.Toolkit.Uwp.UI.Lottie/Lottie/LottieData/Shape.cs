@@ -17,9 +17,12 @@
         }
 
         public bool Direction { get; }
+
         public Animatable<PathGeometry> PathData { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.Path;
+
+        public override LottieObjectType ObjectType => LottieObjectType.Shape;
     }
 }
 

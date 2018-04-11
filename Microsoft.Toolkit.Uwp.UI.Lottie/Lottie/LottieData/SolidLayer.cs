@@ -48,5 +48,7 @@
 
         public override LayerType Type => LayerType.Solid;
 
+        public override LottieObjectType ObjectType => LottieObjectType.SolidLayer;
+
     }
 }

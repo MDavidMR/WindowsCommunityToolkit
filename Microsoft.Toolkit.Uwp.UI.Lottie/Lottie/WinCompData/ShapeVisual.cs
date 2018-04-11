@@ -13,6 +13,6 @@ namespace WinCompData
 
         public CompositionViewBox ViewBox { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.ShapeVisual;
+        public override CompositionObjectType Type => CompositionObjectType.ShapeVisual;
     }
 }

@@ -7,8 +7,14 @@
     xmlns:local="using:LottieUwpPlayground"
     xmlns:lottie="using:Lottie"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Color x:Key="BackgroundColor">Gray</Color>
+    </Page.Resources>
 
-    <RelativePanel Background="Gray" AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
+    <RelativePanel AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
+        <RelativePanel.Background>
+            <SolidColorBrush Color="{Binding Source={StaticResource BackgroundColor}}"/>
+        </RelativePanel.Background>
         <RelativePanel.Resources>
             <SolidColorBrush x:Name="BackgroundBrush" Color="{x:Bind backgroundColorPicker.Color, Mode=OneWay}" />
         </RelativePanel.Resources>
@@ -69,7 +75,7 @@
                           Checked="PlayPause_Checked"
                           Unchecked="PlayPause_Unchecked"
                           >
-                <!-- Play button Lottie animation. -->
+                <!--Play button Lottie animation.-->
                 <lottie:CompositionPlayer x:Name="PlayButtonLottie" Source="ms-appx:///Assets/playButton.json" Width="80" Height="80" />
             </ToggleButton>
             <!-- Looping toggle -->
@@ -85,7 +91,9 @@
                      ColorSpectrumShape="Ring"
                      IsColorPreviewVisible="False"
                      IsColorChannelTextInputVisible="False"
-                     IsHexInputVisible="False"/>
+                     IsHexInputVisible="False"
+                     Color="{Binding Source={StaticResource BackgroundColor}}"/>
+
                 <TextBlock IsHitTestVisible="False" >Background</TextBlock>
             </Grid>
         </StackPanel>

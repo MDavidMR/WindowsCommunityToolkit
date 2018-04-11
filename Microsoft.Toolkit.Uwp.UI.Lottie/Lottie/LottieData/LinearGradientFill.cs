@@ -26,5 +26,6 @@
 
         public override ShapeContentType ContentType => ShapeContentType.LinearGradientFill;
 
+        public override LottieObjectType ObjectType => LottieObjectType.LinearGradientFill;
     }
 }

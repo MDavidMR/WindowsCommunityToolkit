@@ -8,7 +8,7 @@
         internal PathKeyFrameAnimation() : base(null) { }
         PathKeyFrameAnimation(PathKeyFrameAnimation other) : base(other) { }
 
-        public override ConcreteClassType Type => ConcreteClassType.PathKeyFrameAnimation;
+        public override CompositionObjectType Type => CompositionObjectType.PathKeyFrameAnimation;
 
         internal override CompositionAnimation Clone() => new PathKeyFrameAnimation(this);
 

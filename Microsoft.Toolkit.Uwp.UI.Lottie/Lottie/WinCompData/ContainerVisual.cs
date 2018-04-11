@@ -12,7 +12,7 @@ namespace WinCompData
 
         public ListOfNeverNull<Visual> Children { get; } = new ListOfNeverNull<Visual>();
 
-        public override ConcreteClassType Type => ConcreteClassType.ContainerVisual;
+        public override CompositionObjectType Type => CompositionObjectType.ContainerVisual;
 
     }
 }

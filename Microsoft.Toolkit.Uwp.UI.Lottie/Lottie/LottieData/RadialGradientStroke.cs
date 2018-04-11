@@ -35,5 +35,7 @@ namespace LottieData
         public double MiterLimit { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.RadialGradientStroke;
+
+        public override LottieObjectType ObjectType => LottieObjectType.RadialGradientStroke;
     }
 }

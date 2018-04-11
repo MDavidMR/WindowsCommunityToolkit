@@ -9,7 +9,7 @@ namespace WinCompData
     {
         internal CompositionSpriteShape() { }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionSpriteShape;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionSpriteShape;
         public CompositionStrokeCap StrokeDashCap { get; set; } = CompositionStrokeCap.Flat;
         public CompositionBrush StrokeBrush { get; set; }
         public bool IsStrokeNonScaling { get; set; }

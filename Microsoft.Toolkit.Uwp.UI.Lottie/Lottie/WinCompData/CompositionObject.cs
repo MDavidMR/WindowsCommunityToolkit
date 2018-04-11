@@ -53,7 +53,7 @@ namespace WinCompData
         public AnimationController TryGetAnimationController(string target) =>
             _animators.Where(a => a.Target == target).Single().Controller;
 
-        public abstract ConcreteClassType Type { get; }
+        public abstract CompositionObjectType Type { get; }
         public void Dispose()
         {
         }

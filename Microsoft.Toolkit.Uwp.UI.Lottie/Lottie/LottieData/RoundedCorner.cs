@@ -17,5 +17,7 @@
         public Animatable<double> Radius { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.RoundedCorner;
+
+        public override LottieObjectType ObjectType => LottieObjectType.RoundedCorner;
     }
 }

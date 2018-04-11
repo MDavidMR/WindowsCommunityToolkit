@@ -35,5 +35,7 @@
         }
 
         public override LayerType Type => LayerType.Null;
+
+        public override LottieObjectType ObjectType => LottieObjectType.NullLayer;
     }
 }

@@ -12,7 +12,7 @@
         public float? BottomInset { get; set; }
         public float? TopInset { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.InsetClip;
+        public override CompositionObjectType Type => CompositionObjectType.InsetClip;
     }
 
 }

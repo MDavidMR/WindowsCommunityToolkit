@@ -37,11 +37,12 @@
     <Compile Include="..\Lottie\LottieData\LinearGradientStroke.cs" Link="LottieData\LinearGradientStroke.cs" />
     <Compile Include="..\Lottie\LottieData\LottieComposition.cs" Link="LottieData\LottieComposition.cs" />
     <Compile Include="..\Lottie\LottieData\LottieCompositionValidator.cs" Link="LottieData\LottieCompositionValidator.cs" />
+    <Compile Include="..\Lottie\LottieData\LottieObject.cs" Link="LottieData\LottieObject.cs" />
+    <Compile Include="..\Lottie\LottieData\LottieObjectType.cs" Link="LottieData\LottieObjectType.cs" />
     <Compile Include="..\Lottie\LottieData\Marker.cs" Link="LottieData\Marker.cs" />
     <Compile Include="..\Lottie\LottieData\MergePaths.cs" Link="LottieData\MergePaths.cs" />
     <Compile Include="..\Lottie\LottieData\NullLayer.cs" Link="LottieData\NullLayer.cs" />
     <Compile Include="..\Lottie\LottieData\Optimization\Optimizer.cs" Link="LottieData\Optimization\Optimizer.cs" />
-    <Compile Include="..\Lottie\LottieData\Path.cs" Link="LottieData\Path.cs" />
     <Compile Include="..\Lottie\LottieData\PathGeometry.cs" Link="LottieData\PathGeometry.cs" />
     <Compile Include="..\Lottie\LottieData\Polystar.cs" Link="LottieData\Polystar.cs" />
     <Compile Include="..\Lottie\LottieData\PreCompLayer.cs" Link="LottieData\PreCompLayer.cs" />
@@ -51,6 +52,8 @@
     <Compile Include="..\Lottie\LottieData\Repeater.cs" Link="LottieData\Repeater.cs" />
     <Compile Include="..\Lottie\LottieData\RoundedCorner.cs" Link="LottieData\RoundedCorner.cs" />
     <Compile Include="..\Lottie\LottieData\Serialization\LottieCompositionXmlSerializer.cs" Link="LottieData\Serialization\LottieCompositionXmlSerializer.cs" />
+    <Compile Include="..\Lottie\LottieData\Shape.cs" Link="LottieData\Shape.cs" />
+    <Compile Include="..\Lottie\LottieData\ShapeContentType.cs" Link="LottieData\ShapeContentType.cs" />
     <Compile Include="..\Lottie\LottieData\ShapeGroup.cs" Link="LottieData\ShapeGroup.cs" />
     <Compile Include="..\Lottie\LottieData\ShapeLayer.cs" Link="LottieData\ShapeLayer.cs" />
     <Compile Include="..\Lottie\LottieData\ShapeLayerContent.cs" Link="LottieData\ShapeLayerContent.cs" />

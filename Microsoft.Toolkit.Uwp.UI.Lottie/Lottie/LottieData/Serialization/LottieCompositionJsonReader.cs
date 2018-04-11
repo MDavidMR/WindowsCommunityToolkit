@@ -71,8 +71,8 @@ namespace LottieData.Serialization
         {
             int? width = null;
             int? height = null;
-            int? startFrame = null;
-            int? endFrame = null;
+            int? inPoint = null;
+            int? outPoint = null;
             double? frameRate = null;
             bool is3d = false;
             AssetCollection assets = null;
@@ -91,10 +91,10 @@ namespace LottieData.Serialization
                         is3d = field.Value.GetNumber() == 1;
                         break;
                     case "ip":
-                        startFrame = GetInt(field.Value);
+                        inPoint = GetInt(field.Value);
                         break;
                     case "op":
-                        endFrame = GetInt(field.Value);
+                        outPoint = GetInt(field.Value);
                         break;
                     case "h":
                         height = GetInt(field.Value);
@@ -152,12 +152,12 @@ namespace LottieData.Serialization
                 throw new LottieJsonReaderException("Height parameter not found.");
             }
 
-            if (!startFrame.HasValue)
+            if (!inPoint.HasValue)
             {
                 throw new LottieJsonReaderException("Start frame parameter not found.");
             }
 
-            if (!endFrame.HasValue)
+            if (!outPoint.HasValue)
             {
                 throw new LottieJsonReaderException("End frame parameter not found.");
             }
@@ -173,8 +173,8 @@ namespace LottieData.Serialization
                 name,
                 width.Value,
                 height.Value,
-                startFrame.Value,
-                endFrame.Value,
+                inPoint.Value,
+                outPoint.Value,
                 frameRate.Value,
                 is3d,
                 new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
@@ -442,7 +442,7 @@ namespace LottieData.Serialization
             var g = Convert.ToByte(hex.Substring(index, 2), 16);
             index += 2;
             var b = Convert.ToByte(hex.Substring(index, 2), 16);
-            return Color.FromArgb(a, r, g, b);
+            return Color.FromArgb(a / 255.0, r / 255.0, g / 255.0, b / 255.0);
         }
 
         ShapeLayerContent ReadShapeContent(JsonObject obj)
@@ -716,7 +716,7 @@ namespace LottieData.Serialization
             var name = ReadName(obj);
             var position = ReadAnimatableVector3(obj.GetNamedObject("p"));
             var diameter = ReadAnimatableVector3(obj.GetNamedObject("s"));
-            var direction = ReadBool(obj, "d") == true;            
+            var direction = ReadBool(obj, "d") == true;
             AssertAllFieldsRead(obj);
             return new Ellipse(name.Name, name.MatchName, direction, position, diameter);
         }

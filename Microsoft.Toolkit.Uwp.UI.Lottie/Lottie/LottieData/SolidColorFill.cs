@@ -27,6 +27,8 @@
 
         public override ShapeContentType ContentType => ShapeContentType.SolidColorFill;
 
+        public override LottieObjectType ObjectType => LottieObjectType.SolidColorFill;
+
         public enum PathFillType
         {
             EvenOdd,

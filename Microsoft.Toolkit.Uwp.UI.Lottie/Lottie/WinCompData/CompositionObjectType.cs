@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WinCompData
+﻿namespace WinCompData
 {
 #if !WINDOWS_UWP
     public
 #endif
-    enum ConcreteClassType
+    enum CompositionObjectType
     {
         AnimationController,
         ColorKeyFrameAnimation,

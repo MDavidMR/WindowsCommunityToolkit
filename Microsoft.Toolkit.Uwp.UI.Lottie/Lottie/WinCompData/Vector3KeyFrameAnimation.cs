@@ -10,7 +10,7 @@ namespace WinCompData
         internal Vector3KeyFrameAnimation() : base(null) { }
         Vector3KeyFrameAnimation(Vector3KeyFrameAnimation other) : base(other) { }
 
-        public override ConcreteClassType Type => ConcreteClassType.Vector3KeyFrameAnimation;
+        public override CompositionObjectType Type => CompositionObjectType.Vector3KeyFrameAnimation;
 
         internal override CompositionAnimation Clone() => new Vector3KeyFrameAnimation(this);
     }

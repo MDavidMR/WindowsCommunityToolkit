@@ -34,5 +34,7 @@
         public Animatable<double> OpacityPercent { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.RadialGradientFill;
+
+        public override LottieObjectType ObjectType => LottieObjectType.RadialGradientFill;
     }
 }

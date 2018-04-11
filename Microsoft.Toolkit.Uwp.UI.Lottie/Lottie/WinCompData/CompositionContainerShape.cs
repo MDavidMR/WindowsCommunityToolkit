@@ -12,6 +12,6 @@ namespace WinCompData
 
         public ListOfNeverNull<CompositionShape> Shapes { get; } = new ListOfNeverNull<CompositionShape>();
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionContainerShape;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionContainerShape;
     }
 }

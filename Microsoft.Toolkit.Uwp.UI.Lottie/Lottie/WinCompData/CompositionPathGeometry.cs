@@ -9,6 +9,6 @@
         internal CompositionPathGeometry(CompositionPath path) { Path = path; }
         public CompositionPath Path { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionPathGeometry;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionPathGeometry;
     }
 }

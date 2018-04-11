@@ -109,6 +109,11 @@ namespace Lottie
 
                 diagnostics.LottieDetails = DescribeLottieComposition(lottieComposition);
 
+                if (Options.HasFlag(LottieCompositionOptions.IncludeXmlToDiagnostics))
+                {
+                    diagnostics.LottieXml = LottieData.Tools.LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString();
+                }
+
                 // Validate the composition and report if issues are found.
                 diagnostics.LottieValidationIssues = LottieCompositionValidator.Validate(lottieComposition);
 
@@ -142,7 +147,6 @@ namespace Lottie
                 {
                     if (Options.HasFlag(LottieCompositionOptions.IncludeXmlToDiagnostics))
                     {
-                        diagnostics.LottieXml = LottieData.Tools.LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString();
                         diagnostics.WinCompXml = WinCompData.Tools.CompositionObjectXmlSerializer.ToXml(newLottieVisual).ToString();
                     }
                 }

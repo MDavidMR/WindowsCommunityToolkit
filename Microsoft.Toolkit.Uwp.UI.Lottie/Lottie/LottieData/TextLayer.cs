@@ -42,6 +42,7 @@
         public string RefId { get; }
 
         public override LayerType Type => LayerType.Text;
-       
+
+        public override LottieObjectType ObjectType => LottieObjectType.TextLayer;
     }
 }

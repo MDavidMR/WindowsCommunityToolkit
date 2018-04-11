@@ -49,5 +49,7 @@
         public double Height { get; }
 
         public override LayerType Type => LayerType.PreComp;
+
+        public override LottieObjectType ObjectType => LottieObjectType.PreCompLayer;
     }
 }

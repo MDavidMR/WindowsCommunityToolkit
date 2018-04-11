@@ -42,5 +42,7 @@
         public string RefId { get; }
 
         public override LayerType Type => LayerType.Image;
+
+        public override LottieObjectType ObjectType => LottieObjectType.ImageLayer;
     }
 }

@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace LottieData
 {
+    /// <summary>
+    /// A collection of <see cref="Layer"/>s in drawing order.
+    /// </summary>
 #if !WINDOWS_UWP
     public
 #endif

@@ -17,6 +17,6 @@
         public int FinalStep { get; set; }
         public bool IsFinalStepSingleFrame { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.StepEasingFunction;
+        public override CompositionObjectType Type => CompositionObjectType.StepEasingFunction;
     }
 }

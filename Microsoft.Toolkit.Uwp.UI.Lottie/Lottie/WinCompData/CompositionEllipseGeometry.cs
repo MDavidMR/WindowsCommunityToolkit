@@ -11,6 +11,6 @@ namespace WinCompData
         public Vector2 Center { get; set; }
         public Vector2 Radius { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionEllipseGeometry;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionEllipseGeometry;
     }
 }

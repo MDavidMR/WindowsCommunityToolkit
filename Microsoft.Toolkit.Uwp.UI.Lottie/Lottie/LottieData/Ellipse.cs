@@ -24,5 +24,7 @@
         public IAnimatableVector3 Diameter { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.Ellipse;
+
+        public override LottieObjectType ObjectType => LottieObjectType.Ellipse;
     }
 }

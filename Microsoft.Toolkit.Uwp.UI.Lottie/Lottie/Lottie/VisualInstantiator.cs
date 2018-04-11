@@ -243,47 +243,47 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.AnimationController:
+                case Wd.CompositionObjectType.AnimationController:
                     return GetAnimationController((Wd.AnimationController)obj);
-                case Wd.ConcreteClassType.ColorKeyFrameAnimation:
+                case Wd.CompositionObjectType.ColorKeyFrameAnimation:
                     return GetColorKeyFrameAnimation((Wd.ColorKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.CompositionColorBrush:
+                case Wd.CompositionObjectType.CompositionColorBrush:
                     return GetCompositionColorBrush((Wd.CompositionColorBrush)obj);
-                case Wd.ConcreteClassType.CompositionContainerShape:
+                case Wd.CompositionObjectType.CompositionContainerShape:
                     return GetCompositionContainerShape((Wd.CompositionContainerShape)obj);
-                case Wd.ConcreteClassType.CompositionEllipseGeometry:
+                case Wd.CompositionObjectType.CompositionEllipseGeometry:
                     return GetCompositionEllipseGeometry((Wd.CompositionEllipseGeometry)obj);
-                case Wd.ConcreteClassType.CompositionPathGeometry:
+                case Wd.CompositionObjectType.CompositionPathGeometry:
                     return GetCompositionPathGeometry((Wd.CompositionPathGeometry)obj);
-                case Wd.ConcreteClassType.CompositionRectangleGeometry:
+                case Wd.CompositionObjectType.CompositionRectangleGeometry:
                     return GetCompositionRectangleGeometry((Wd.CompositionRectangleGeometry)obj);
-                case Wd.ConcreteClassType.CompositionRoundedRectangleGeometry:
+                case Wd.CompositionObjectType.CompositionRoundedRectangleGeometry:
                     return GetCompositionRoundedRectangleGeometry((Wd.CompositionRoundedRectangleGeometry)obj);
-                case Wd.ConcreteClassType.CompositionSpriteShape:
+                case Wd.CompositionObjectType.CompositionSpriteShape:
                     return GetCompositionSpriteShape((Wd.CompositionSpriteShape)obj);
-                case Wd.ConcreteClassType.CompositionViewBox:
+                case Wd.CompositionObjectType.CompositionViewBox:
                     return GetCompositionViewBox((Wd.CompositionViewBox)obj);
-                case Wd.ConcreteClassType.ContainerVisual:
+                case Wd.CompositionObjectType.ContainerVisual:
                     return GetContainerVisual((Wd.ContainerVisual)obj);
-                case Wd.ConcreteClassType.CubicBezierEasingFunction:
+                case Wd.CompositionObjectType.CubicBezierEasingFunction:
                     return GetCubicBezierEasingFunction((Wd.CubicBezierEasingFunction)obj);
-                case Wd.ConcreteClassType.ExpressionAnimation:
+                case Wd.CompositionObjectType.ExpressionAnimation:
                     return GetExpressionAnimation((Wd.ExpressionAnimation)obj);
-                case Wd.ConcreteClassType.InsetClip:
+                case Wd.CompositionObjectType.InsetClip:
                     return GetInsetClip((Wd.InsetClip)obj);
-                case Wd.ConcreteClassType.LinearEasingFunction:
+                case Wd.CompositionObjectType.LinearEasingFunction:
                     return GetLinearEasingFunction((Wd.LinearEasingFunction)obj);
-                case Wd.ConcreteClassType.PathKeyFrameAnimation:
+                case Wd.CompositionObjectType.PathKeyFrameAnimation:
                     return GetPathKeyFrameAnimation((Wd.PathKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.ScalarKeyFrameAnimation:
+                case Wd.CompositionObjectType.ScalarKeyFrameAnimation:
                     return GetScalarKeyFrameAnimation((Wd.ScalarKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.ShapeVisual:
+                case Wd.CompositionObjectType.ShapeVisual:
                     return GetShapeVisual((Wd.ShapeVisual)obj);
-                case Wd.ConcreteClassType.StepEasingFunction:
+                case Wd.CompositionObjectType.StepEasingFunction:
                     return GetStepEasingFunction((Wd.StepEasingFunction)obj);
-                case Wd.ConcreteClassType.Vector2KeyFrameAnimation:
+                case Wd.CompositionObjectType.Vector2KeyFrameAnimation:
                     return GetVector2KeyFrameAnimation((Wd.Vector2KeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.Vector3KeyFrameAnimation:
+                case Wd.CompositionObjectType.Vector3KeyFrameAnimation:
                     return GetVector3KeyFrameAnimation((Wd.Vector3KeyFrameAnimation)obj);
                 default:
                     throw new InvalidOperationException();
@@ -294,9 +294,9 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.ContainerVisual:
+                case Wd.CompositionObjectType.ContainerVisual:
                     return GetContainerVisual((Wd.ContainerVisual)obj);
-                case Wd.ConcreteClassType.ShapeVisual:
+                case Wd.CompositionObjectType.ShapeVisual:
                     return GetShapeVisual((Wd.ShapeVisual)obj);
                 default:
                     throw new InvalidOperationException();
@@ -307,17 +307,17 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.ExpressionAnimation:
+                case Wd.CompositionObjectType.ExpressionAnimation:
                     return GetExpressionAnimation((Wd.ExpressionAnimation)obj);
-                case Wd.ConcreteClassType.ColorKeyFrameAnimation:
+                case Wd.CompositionObjectType.ColorKeyFrameAnimation:
                     return GetColorKeyFrameAnimation((Wd.ColorKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.PathKeyFrameAnimation:
+                case Wd.CompositionObjectType.PathKeyFrameAnimation:
                     return GetPathKeyFrameAnimation((Wd.PathKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.ScalarKeyFrameAnimation:
+                case Wd.CompositionObjectType.ScalarKeyFrameAnimation:
                     return GetScalarKeyFrameAnimation((Wd.ScalarKeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.Vector2KeyFrameAnimation:
+                case Wd.CompositionObjectType.Vector2KeyFrameAnimation:
                     return GetVector2KeyFrameAnimation((Wd.Vector2KeyFrameAnimation)obj);
-                case Wd.ConcreteClassType.Vector3KeyFrameAnimation:
+                case Wd.CompositionObjectType.Vector3KeyFrameAnimation:
                     return GetVector3KeyFrameAnimation((Wd.Vector3KeyFrameAnimation)obj);
                 default:
                     throw new InvalidOperationException();
@@ -419,11 +419,11 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.LinearEasingFunction:
+                case Wd.CompositionObjectType.LinearEasingFunction:
                     return GetLinearEasingFunction((Wd.LinearEasingFunction)obj);
-                case Wd.ConcreteClassType.StepEasingFunction:
+                case Wd.CompositionObjectType.StepEasingFunction:
                     return GetStepEasingFunction((Wd.StepEasingFunction)obj);
-                case Wd.ConcreteClassType.CubicBezierEasingFunction:
+                case Wd.CompositionObjectType.CubicBezierEasingFunction:
                     return GetCubicBezierEasingFunction((Wd.CubicBezierEasingFunction)obj);
                 default:
                     throw new InvalidOperationException();
@@ -521,9 +521,9 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.CompositionSpriteShape:
+                case Wd.CompositionObjectType.CompositionSpriteShape:
                     return GetCompositionSpriteShape((Wd.CompositionSpriteShape)obj);
-                case Wd.ConcreteClassType.CompositionContainerShape:
+                case Wd.CompositionObjectType.CompositionContainerShape:
                     return GetCompositionContainerShape((Wd.CompositionContainerShape)obj);
                 default:
                     throw new InvalidOperationException();
@@ -548,7 +548,7 @@ namespace Lottie
                     // the container isn't referenced by an animation.
 
                 }
-                else if (!child.Animators.Any() && child.Type == Wd.ConcreteClassType.CompositionContainerShape)
+                else if (!child.Animators.Any() && child.Type == Wd.CompositionObjectType.CompositionContainerShape)
                 {
                     // The child has no animations. It can be replaced with its parent as long
                     // as the parent doesn't animate any of the child's non-default properties
@@ -629,16 +629,16 @@ namespace Lottie
         {
             switch (obj.Type)
             {
-                case Wd.ConcreteClassType.CompositionPathGeometry:
+                case Wd.CompositionObjectType.CompositionPathGeometry:
                     return GetCompositionPathGeometry((Wd.CompositionPathGeometry)obj);
 
-                case Wd.ConcreteClassType.CompositionEllipseGeometry:
+                case Wd.CompositionObjectType.CompositionEllipseGeometry:
                     return GetCompositionEllipseGeometry((Wd.CompositionEllipseGeometry)obj);
 
-                case Wd.ConcreteClassType.CompositionRectangleGeometry:
+                case Wd.CompositionObjectType.CompositionRectangleGeometry:
                     return GetCompositionRectangleGeometry((Wd.CompositionRectangleGeometry)obj);
 
-                case Wd.ConcreteClassType.CompositionRoundedRectangleGeometry:
+                case Wd.CompositionObjectType.CompositionRoundedRectangleGeometry:
                     return GetCompositionRoundedRectangleGeometry((Wd.CompositionRoundedRectangleGeometry)obj);
 
                 default:

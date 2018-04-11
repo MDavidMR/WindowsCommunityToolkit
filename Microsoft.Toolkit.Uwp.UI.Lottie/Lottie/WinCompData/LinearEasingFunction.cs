@@ -7,6 +7,6 @@
     {
         internal LinearEasingFunction() { }
 
-        public override ConcreteClassType Type => ConcreteClassType.LinearEasingFunction;
+        public override CompositionObjectType Type => CompositionObjectType.LinearEasingFunction;
     }
 }

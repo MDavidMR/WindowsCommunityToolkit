@@ -16,6 +16,7 @@
     <Compile Include="..\Lottie\WinCompData\CompositionEllipseGeometry.cs" Link="WinCompData\CompositionEllipseGeometry.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionGeometry.cs" Link="WinCompData\CompositionGeometry.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionObject.cs" Link="WinCompData\CompositionObject.cs" />
+    <Compile Include="..\Lottie\WinCompData\CompositionObjectType.cs" Link="WinCompData\CompositionObjectType.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionPath.cs" Link="WinCompData\CompositionPath.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionPathGeometry.cs" Link="WinCompData\CompositionPathGeometry.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionPropertySet.cs" Link="WinCompData\CompositionPropertySet.cs" />
@@ -27,7 +28,6 @@
     <Compile Include="..\Lottie\WinCompData\CompositionStrokeLineJoin.cs" Link="WinCompData\CompositionStrokeLineJoin.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionViewBox.cs" Link="WinCompData\CompositionViewBox.cs" />
     <Compile Include="..\Lottie\WinCompData\Compositor.cs" Link="WinCompData\Compositor.cs" />
-    <Compile Include="..\Lottie\WinCompData\ConcreteClassType.cs" Link="WinCompData\ConcreteClassType.cs" />
     <Compile Include="..\Lottie\WinCompData\ContainerVisual.cs" Link="WinCompData\ContainerVisual.cs" />
     <Compile Include="..\Lottie\WinCompData\CubicBezierEasingFunction.cs" Link="WinCompData\CubicBezierEasingFunction.cs" />
     <Compile Include="..\Lottie\WinCompData\ExpressionAnimation.cs" Link="WinCompData\ExpressionAnimation.cs" />

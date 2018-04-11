@@ -8,6 +8,6 @@
         internal CompositionColorBrush(Wui.Color color) { Color = color; }
         public Wui.Color Color { get; set; }
 
-        public override ConcreteClassType Type => ConcreteClassType.CompositionColorBrush;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionColorBrush;
     }
 }
