@@ -107,9 +107,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Lottie\Lottie\AnimatedComposition.cs">
-      <Link>Lottie\AnimatedComposition.cs</Link>
-    </Compile>
     <Compile Include="..\Lottie\Lottie\CompositionLoadResult.cs">
       <Link>Lottie\CompositionLoadResult.cs</Link>
     </Compile>
@@ -130,6 +127,9 @@
     </Compile>
     <Compile Include="..\Lottie\Lottie\VisualInstantiator.cs">
       <Link>Lottie\VisualInstantiator.cs</Link>
+    </Compile>
+    <Compile Include="..\Lottie\Lottie\VisualPlayer.cs">
+      <Link>Lottie\VisualPlayer.cs</Link>
     </Compile>
     <Compile Include="Lottie\LottieCompositionReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

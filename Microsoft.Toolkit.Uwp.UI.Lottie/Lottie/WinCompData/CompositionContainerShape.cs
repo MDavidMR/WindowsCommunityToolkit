@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using WinCompData.Tools;
+﻿using WinCompData.Tools;
 
 namespace WinCompData
 {
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class CompositionContainerShape : CompositionShape
+    sealed class CompositionContainerShape : CompositionShape, IContainShapes
     {
         internal CompositionContainerShape() { }
 

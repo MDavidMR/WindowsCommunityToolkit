@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.UI.Composition;
 
 namespace Lottie
 {
     /// <summary>
-    /// A Visual tree configured with an animation.
+    /// A Visual tree configured with an animation that can be played, looped, paused, and stopped.
     /// </summary>
-    sealed class AnimatedComposition : IDisposable
+    sealed class VisualPlayer : IDisposable
     {
         readonly Compositor _compositor;
         readonly CompositionObject _animatedObject;
@@ -16,14 +17,16 @@ namespace Lottie
         PlayAsyncState _currentPlay;
         bool _isDisposed;
 
-        internal AnimatedComposition(
+        internal VisualPlayer(
             Visual rootVisual,
+            Vector2 size,
             CompositionObject animatedObject,
             string animatedPropertyName,
             TimeSpan animationDuration)
         {
             Root = rootVisual;
             _compositor = rootVisual.Compositor;
+            Size = size;
             AnimationDuration = animationDuration;
             _animatedObject = animatedObject;
             _animatedPropertyName = animatedPropertyName;
@@ -35,7 +38,7 @@ namespace Lottie
         public TimeSpan AnimationDuration { get; }
 
         /// <summary>
-        /// True if any <see cref="Task"/>s returned by <see cref="PlayAsync(bool)"/> 
+        /// True if any <see cref="Task"/>s returned by <see cref="PlayAsync(double, double, bool, bool)"/> 
         /// have not yet completed, i.e. if the animation is currently playing or paused.
         /// </summary>
         public bool IsPlaying => _currentPlay != null;
@@ -46,7 +49,12 @@ namespace Lottie
         public Visual Root { get; }
 
         /// <summary>
-        /// Convenience method for setting the position of the animation. This 
+        /// The size of the bounding box of the <see cref="VisualPlayer"/>.
+        /// </summary>
+        public Vector2 Size { get; }
+
+        /// <summary>
+        /// Convenience method for setting the progress of the animation. This 
         /// simply inserts a scalar value into the <see cref="Root"/>'s
         /// property set with the name of <see cref="PositionPropertyName"/>.
         /// </summary>
@@ -54,7 +62,7 @@ namespace Lottie
         /// The value must be 0 to 1. The animation must not be currently
         /// playing.
         /// </remarks>
-        public void SetPosition(double position)
+        public void SetProgress(double position)
         {
             AssertNotDisposed();
 
@@ -84,7 +92,7 @@ namespace Lottie
         /// Starts playing the animation. Completes when the animation completes
         /// or when <see cref="Stop"/> is called.
         /// </summary>
-        public Task PlayAsync(bool loop)
+        public Task PlayAsync(double fromProgress, double toProgress, bool loop, bool reversed)
         {
             AssertNotDisposed();
 
@@ -95,7 +103,11 @@ namespace Lottie
             Debug.Assert(_currentPlay == null);
 
             // Start the animation
-            StartAnimating(looped: loop);
+            StartAnimating(
+                fromProgress: ClampFloat0to1(fromProgress),
+                toProgress: ClampFloat0to1(toProgress),
+                looped: loop,
+                reversed: reversed);
 
             // Return a Task that will be completed when the play is stopped
             // or the animation batch completes.
@@ -141,14 +153,54 @@ namespace Lottie
         }
 
         // Starts animating.
-        void StartAnimating(bool looped)
+        void StartAnimating(float fromProgress, float toProgress, bool looped, bool reversed)
         {
             Debug.Assert(_currentPlay == null);
             var playAnimation = _compositor.CreateScalarKeyFrameAnimation();
+            var linearEasing = _compositor.CreateLinearEasingFunction();
 
-            playAnimation.Duration = AnimationDuration;
-            playAnimation.InsertKeyFrame(0, 0);
-            playAnimation.InsertKeyFrame(1, 1, _compositor.CreateLinearEasingFunction());
+            if (fromProgress < toProgress)
+            {
+                playAnimation.Duration = AnimationDuration * (toProgress - fromProgress);
+            }
+            else
+            {
+                playAnimation.Duration = AnimationDuration * ((1 - fromProgress) + toProgress);
+            }
+
+            if (playAnimation.Duration.TotalMilliseconds < 20)
+            {
+                throw new InvalidOperationException("Animation duration is too small.");
+            }
+
+            if (reversed)
+            {
+                // Play backwards from toProgress to fromProgress
+                playAnimation.InsertKeyFrame(0, toProgress);
+                if (fromProgress > toProgress)
+                {
+                    // Play to the beginning.
+                    var timeToBeginning = toProgress / (toProgress + (1 - fromProgress));
+                    playAnimation.InsertKeyFrame(timeToBeginning, 0, linearEasing);
+                    // Jump to the end.
+                    playAnimation.InsertKeyFrame(timeToBeginning + float.Epsilon, 1, linearEasing);
+                }
+                playAnimation.InsertKeyFrame(1, fromProgress, linearEasing);
+            }
+            else
+            {
+                // Play forwards from fromProgress to toProgress
+                playAnimation.InsertKeyFrame(0, fromProgress);
+                if (fromProgress > toProgress)
+                {
+                    // Play to the end
+                    var timeToEnd = (1 - fromProgress) / ((1 - fromProgress) + toProgress);
+                    playAnimation.InsertKeyFrame(timeToEnd, 1, linearEasing);
+                    // Jump to the beginning
+                    playAnimation.InsertKeyFrame(timeToEnd + float.Epsilon, 0, linearEasing);
+                }
+                playAnimation.InsertKeyFrame(1, toProgress, linearEasing);
+            }
 
             if (looped)
             {
@@ -170,7 +222,7 @@ namespace Lottie
             _animatedObject.StartAnimation(_animatedPropertyName, playAnimation);
 
             // Get a controller for the animation and save it in the PlayState.
-            var playState = _currentPlay = 
+            var playState = _currentPlay =
                 new PlayAsyncState(_animatedObject.TryGetAnimationController(_animatedPropertyName));
 
             //// Start from where it stopped last time.
@@ -191,18 +243,19 @@ namespace Lottie
 
         void _SetPosition(double progress)
         {
+            var floatProgress = ClampFloat0to1(progress);
+
             if (_currentPlay == null)
             {
-                _animatedObject.Properties.InsertScalar(_animatedPropertyName, (float)progress);
+                _animatedObject.Properties.InsertScalar(_animatedPropertyName, floatProgress);
 
                 return;
             }
 
             // Set the position.
             // TODO - can we do this if we're playing and not paused?
-            _currentPlay.Controller.Progress = (float)progress;
+            _currentPlay.Controller.Progress = floatProgress;
         }
-
 
         public void Dispose()
         {
@@ -236,10 +289,11 @@ namespace Lottie
         {
             if (_isDisposed)
             {
-                throw new ObjectDisposedException(nameof(AnimatedComposition));
+                throw new ObjectDisposedException(nameof(VisualPlayer));
             }
         }
 
+        static float ClampFloat0to1(double value) => (float)Math.Min(1, Math.Max(value, 0));
     }
 
 }

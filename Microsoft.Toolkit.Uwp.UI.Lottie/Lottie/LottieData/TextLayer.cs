@@ -7,8 +7,8 @@
     {
         public TextLayer(
             string name,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             double timeStretch,
@@ -21,8 +21,8 @@
             string refId)
             : base(
                  name,
-                 layerId,
-                 parentId,
+                 index,
+                 parent,
                  isHidden,
                  transform,
                  timeStretch,

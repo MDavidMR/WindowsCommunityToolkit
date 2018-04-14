@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Include="..\Lottie\WinCompData\AnimationController.cs" Link="WinCompData\AnimationController.cs" />
+    <Compile Include="..\Lottie\WinCompData\CodeGen\CompositionObjectFactoryGenerator.cs" Link="WinCompData\CodeGen\CompositionObjectFactoryGenerator.cs" />
     <Compile Include="..\Lottie\WinCompData\ColorKeyFrameAnimation.cs" Link="WinCompData\ColorKeyFrameAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionAnimation.cs" Link="WinCompData\CompositionAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionBrush.cs" Link="WinCompData\CompositionBrush.cs" />
@@ -31,6 +32,7 @@
     <Compile Include="..\Lottie\WinCompData\ContainerVisual.cs" Link="WinCompData\ContainerVisual.cs" />
     <Compile Include="..\Lottie\WinCompData\CubicBezierEasingFunction.cs" Link="WinCompData\CubicBezierEasingFunction.cs" />
     <Compile Include="..\Lottie\WinCompData\ExpressionAnimation.cs" Link="WinCompData\ExpressionAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\IContainShapes.cs" Link="WinCompData\IContainShapes.cs" />
     <Compile Include="..\Lottie\WinCompData\InsetClip.cs" Link="WinCompData\InsetClip.cs" />
     <Compile Include="..\Lottie\WinCompData\KeyFrameAnimation.cs" Link="WinCompData\KeyFrameAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\LinearEasingFunction.cs" Link="WinCompData\LinearEasingFunction.cs" />
@@ -56,11 +58,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="WinCompData\CodeGen\" />
     <Folder Include="WinCompData\Mgcg\" />
     <Folder Include="WinCompData\Mgc\" />
     <Folder Include="WinCompData\Serialization\" />
     <Folder Include="WinCompData\Wg\" />
     <Folder Include="WinCompData\Wui\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

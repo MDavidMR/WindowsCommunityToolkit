@@ -17,6 +17,11 @@ namespace Lottie
         /// </summary>
         IncludeXmlToDiagnostics = 1,
 
-        All = IncludeXmlToDiagnostics,
+        /// <summary>
+        /// Include the C# code that would generate the Composition objects for the Lottie.
+        /// </summary>
+        IncludeCSharpGeneratedCode = 2,
+
+        All = IncludeXmlToDiagnostics | IncludeCSharpGeneratedCode,
     }
 }

@@ -34,7 +34,6 @@ namespace Lottie
         readonly bool _annotate;
         readonly Compositor _c;
         readonly ContainerVisual _rootVisual;
-        readonly ContainerVisual _lottieCoordinateSpaceRoot;
         readonly Dictionary<ScaleAndOffset, ExpressionAnimation> _progressBindingAnimations = new Dictionary<ScaleAndOffset, ExpressionAnimation>();
         readonly CanvasDevice _canvasDevice;
         readonly Optimizer _lottieDataOptimizer = new Optimizer();
@@ -75,41 +74,6 @@ namespace Lottie
 
             // Add the master progress property to the visual.
             _rootVisual.Properties.InsertScalar(ProgressPropertyName, 0);
-
-            // Add a container below the root to translate between the coordinate space
-            // of the root and the Lottie coordinate space.
-            _lottieCoordinateSpaceRoot = CreateContainerVisual();
-            if (_annotate)
-            {
-                _lottieCoordinateSpaceRoot.Comment = "Lottie coordinate space root";
-            }
-            _rootVisual.Children.Add(_lottieCoordinateSpaceRoot);
-
-            // Add expressions to translate between coordinate spaces. This must
-            // be done with expressions because the root visual may be resized
-            // at any time.
-            _lottieCoordinateSpaceRoot.Size = Vector2(_lc.Width, _lc.Height);
-
-            // Scale the coordinate space visual so that both dimensions fit within the
-            // size of the root visual. This provides the same functionality as a ViewBox.
-            // This is a Uniform stretch.
-            // TODO - we could add a UniformScale property and change it depending on Uniform or UniformToFill
-            // TOOD - UniformToFill would require a clip.
-            var viewboxScaleExpression = CreateExpressionAnimation(
-                $"Vector3(root.Size.X/{_lc.Width} < root.Size.Y/{_lc.Height} ? root.Size.X/{_lc.Width} : root.Size.Y/{_lc.Height}," + // X
-                        $"root.Size.X/{_lc.Width} < root.Size.Y/{_lc.Height} ? root.Size.X/{_lc.Width} : root.Size.Y/{_lc.Height}," + // Y
-                        "1)" // Z
-                );
-            viewboxScaleExpression.SetReferenceParameter("root", _rootVisual);
-            _lottieCoordinateSpaceRoot.StartAnimation(nameof(_lottieCoordinateSpaceRoot.Scale), viewboxScaleExpression);
-
-            // Offset the coordinate space visual to keep it centered in the root visual.
-            var viewboxOffsetExpression = CreateExpressionAnimation(
-                $"Vector3((root.Size.X-({_lc.Width} * lc.Scale.X))/2," +
-                        $"(root.Size.Y-({_lc.Height} * lc.Scale.Y))/2, 0)");
-            viewboxOffsetExpression.SetReferenceParameter("root", _rootVisual);
-            viewboxOffsetExpression.SetReferenceParameter("lc", _lottieCoordinateSpaceRoot);
-            _lottieCoordinateSpaceRoot.StartAnimation(nameof(_lottieCoordinateSpaceRoot.Offset), viewboxOffsetExpression);
         }
 
         /// <summary>
@@ -174,25 +138,68 @@ namespace Lottie
         void Translate()
         {
             var context = new TranslationContext(_lc);
+            AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers);
+        }
 
-            // Get the layers in painting order.
+        void AddTranslatedLayersToContainerVisual(ContainerVisual container, TranslationContext context, LayerCollection layers)
+        {
             var translatedLayers =
-                (from layer in _lc.Layers.GetLayersBottomToTop()
+                (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select translatedLayer).ToArray();
+                 select translatedLayer);
 
-            foreach (var tl in translatedLayers)
+            var translatedAsVisuals = VisualsAndShapesToVisuals(context, translatedLayers);
+
+            container.Children.AddRange(translatedAsVisuals);
+        }
+
+        // Takes a list of Visuals and Shapes and returns a list of Visuals.
+        IEnumerable<Visual> VisualsAndShapesToVisuals(TranslationContext context, IEnumerable<CompositionObject> items)
+        {
+            ShapeVisual shapeVisual = null;
+
+            foreach (var item in items)
             {
-                _lottieCoordinateSpaceRoot.Children.Add(tl);
+                switch (item.Type)
+                {
+                    case CompositionObjectType.CompositionContainerShape:
+                    case CompositionObjectType.CompositionSpriteShape:
+                        if (shapeVisual == null)
+                        {
+                            shapeVisual = _c.CreateShapeVisual();
+                            // ShapeVisual clips to its size
+#if NoClipping
+                            shapeVisual.Size = Vector2(float.MaxValue);
+#else
+                            shapeVisual.Size = Vector2(context.Width, context.Height);
+#endif 
+                        }
+                        shapeVisual.Shapes.Add((CompositionShape)item);
+                        break;
+                    case CompositionObjectType.ContainerVisual:
+                    case CompositionObjectType.ShapeVisual:
+                        if (shapeVisual != null)
+                        {
+                            yield return shapeVisual;
+                            shapeVisual = null;
+                        }
+                        yield return (Visual)item;
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+
+            if (shapeVisual != null)
+            {
+                yield return shapeVisual;
             }
         }
 
-        // Translates a Lottie layer into a Visual or null. Visual is used instead of a
-        // CompositionContainerShape in order to support clipping that is required
-        // by PreComp layers.
+        // Translates a Lottie layer into null a Visual or a Shape. 
         // Note that ShapeVisual clips to its size.
-        Visual TranslateLayer(TranslationContext context, Layer layer)
+        CompositionObject TranslateLayer(TranslationContext context, Layer layer)
         {
             if (layer.IsHidden)
             {
@@ -202,31 +209,39 @@ namespace Lottie
             switch (layer.Type)
             {
                 case Layer.LayerType.Image:
-                    return TranslateImageLayerToVisual(context, (ImageLayer)layer);
+                    return TranslateImageLayer(context, (ImageLayer)layer);
                 case Layer.LayerType.Null:
                     // Null layers only exist to hold transforms when declared as parents of other layers.
                     return null;
                 case Layer.LayerType.PreComp:
                     return TranslatePreCompLayerToVisual(context, (PreCompLayer)layer);
                 case Layer.LayerType.Shape:
-                    return TranslateShapeLayerToVisual(context, (ShapeLayer)layer);
+                    return TranslateShapeLayer(context, (ShapeLayer)layer);
                 case Layer.LayerType.Solid:
-                    return TranslateSolidLayerToVisual(context, (SolidLayer)layer);
+                    return TranslateSolidLayer(context, (SolidLayer)layer);
                 case Layer.LayerType.Text:
-                    return TranslateTextLayerToVisual(context, (TextLayer)layer);
+                    return TranslateTextLayer(context, (TextLayer)layer);
                 default:
                     throw new InvalidOperationException();
             }
         }
 
-
-        // Returns a chain of ContainerShape that define the transforms for a layer.
-        // The top of the chain is the rootTransform, the bottom is the leafTransform.
-        void CreateContainerShapeTransformChain(
+        void CreateContainerTransformChain(
             TranslationContext context,
             Layer layer,
             out CompositionContainerShape rootNode,
             out CompositionContainerShape contentsNode)
+        {
+            CreateContainerShapeTransformChain(context, layer, out rootNode, out contentsNode);
+        }
+
+        // Returns a chain of ContainerShape that define the transforms for a layer.
+        // The top of the chain is the rootTransform, the bottom is the leafTransform.
+        void CreateContainerShapeTransformChain(
+        TranslationContext context,
+        Layer layer,
+        out CompositionContainerShape rootNode,
+        out CompositionContainerShape contentsNode)
         {
 
             // Create containers for the contents in the layer.
@@ -485,11 +500,11 @@ namespace Lottie
             }
         }
 
-
-        Visual TranslateImageLayerToVisual(TranslationContext context, ImageLayer layer)
+        Visual TranslateImageLayer(TranslationContext context, ImageLayer layer)
         {
             // Not yet implemented. Currently CompositionShape does not support SurfaceBrush as of RS4.
             // TODO - but this is a visual now, so we could support it.
+            Unsupported("Image layer");
             return null;
         }
 
@@ -520,20 +535,12 @@ namespace Lottie
                 case Asset.AssetType.LayerCollection:
                     var referencedLayers = ((LayerCollectionAsset)referencedLayersAsset).Layers;
                     // Push the reference layers onto the stack. These will be used to look up parent transforms for layers under this precomp.
-                    var ctxt = new TranslationContext(context, layer, referencedLayers);
-                    foreach (var subLayer in referencedLayers.GetLayersBottomToTop())
-                    {
-                        var translatedLayer = TranslateLayer(ctxt, subLayer);
-                        if (translatedLayer != null)
-                        {
-                            contentsNode.Children.Add(translatedLayer);
-                        }
-                    }
+                    var subContext = new TranslationContext(context, layer, referencedLayers);
+                    AddTranslatedLayersToContainerVisual(contentsNode, subContext, referencedLayers);
                     break;
                 default:
                     throw new InvalidOperationException();
             }
-
 
             return result;
         }
@@ -617,6 +624,12 @@ namespace Lottie
                 if (a.IsAnimated && b.IsAnimated)
                 {
                     _owner.Unsupported("Animation multiplication.");
+                    return a;
+                }
+
+                if (!a.IsAnimated && !b.IsAnimated)
+                {
+                    return new Animatable<double>(a.InitialValue * b.InitialValue, null);
                 }
 
                 if (a.IsAnimated)
@@ -647,9 +660,9 @@ namespace Lottie
         }
 
         // May return null if the layer does not produce any renderable content.
-        Visual TranslateShapeLayerToVisual(TranslationContext context, ShapeLayer layer)
+        CompositionShape TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
         {
-            CreateContainerShapeTransformChain(context, layer, out var rootNode, out var contentsNode);
+            CreateContainerTransformChain(context, layer, out var rootNode, out var contentsNode);
 
             var shapeContext = new ShapeContentContext(this);
             shapeContext.UpdateOpacityFromTransform(layer.Transform);
@@ -659,20 +672,12 @@ namespace Lottie
             {
                 contentsNode.Shapes.AddRange(contents);
 
-                var result = CreateShapeVisual();
                 if (_annotate)
                 {
-                    result.Comment = $"{layer.Type}Layer:'{layer.Name}'";
+                    rootNode.Comment = $"{layer.Type}Layer:'{layer.Name}'";
                 }
 
-                // ShapeVisual clips to its size, so if the size isn't set nothing will be visible.
-#if !NoClipping
-                result.Size = Vector2(context.Width, context.Height);
-#else
-                result.Size = Vector2(5000, 5000);
-#endif
-                result.Shapes.Add(rootNode);
-                return result;
+                return rootNode;
             }
             else
             {
@@ -686,6 +691,7 @@ namespace Lottie
             var compositionNode = CreateContainerShape();
 
             var contents = TranslateShapeLayerContents(context, shapeContext, group.Items, compositionNode).ToArray();
+
             if (contents.Length > 0)
             {
                 if (_annotate)
@@ -701,7 +707,11 @@ namespace Lottie
             }
         }
 
-        IEnumerable<CompositionShape> TranslateShapeLayerContents(TranslationContext context, ShapeContentContext shapeContext, IEnumerable<ShapeLayerContent> contents, CompositionContainerShape container)
+        IEnumerable<CompositionShape> TranslateShapeLayerContents<T>(
+            TranslationContext context,
+            ShapeContentContext shapeContext,
+            IEnumerable<ShapeLayerContent> contents,
+            T transformContainer) where T : CompositionObject, IContainShapes
         {
             // The Contents of a ShapeLayer is a list of instructions for a stack machine.
 
@@ -726,7 +736,17 @@ namespace Lottie
                 {
                     case ShapeContentType.Transform:
                         shapeContext.UpdateOpacityFromTransform((Transform)shapeContent);
-                        TranslateAndApplyTransform(context, (Transform)shapeContent, container);
+                        switch (transformContainer.Type)
+                        {
+                            case CompositionObjectType.ContainerVisual:
+                                TranslateAndApplyTransformToContainerVisual(context, (Transform)shapeContent, (ContainerVisual)(CompositionObject)transformContainer);
+                                break;
+                            case CompositionObjectType.CompositionContainerShape:
+                                TranslateAndApplyTransformToContainerShape(context, (Transform)shapeContent, (CompositionContainerShape)(CompositionObject)transformContainer);
+                                break;
+                            default:
+                                throw new InvalidOperationException();
+                        }
                         break;
 
                     case ShapeContentType.Group:
@@ -975,7 +995,7 @@ namespace Lottie
         {
             var compositionRectangle = CreateSpriteShape();
 
-            if (!shapeContent.CornerRadius.IsAnimated && shapeContent.CornerRadius.InitialValue == 0)
+            if (!shapeContent.CornerRadius.IsAnimated && shapeContent.CornerRadius.InitialValue == 0 && shapeContext.RoundedCorner == null)
             {
                 // Use a non-rounded rectangle geometry.
                 var geometry = CreateRectangleGeometry();
@@ -1137,14 +1157,16 @@ namespace Lottie
             return CreateAnimatedColorBrush(context, MultiplyAnimatableColorByAnimatableOpacityPercent(shapeFill.Color, shapeFill.OpacityPercent), opacityPercent);
         }
 
-
-        Visual TranslateSolidLayerToVisual(TranslationContext context, SolidLayer layer)
+        CompositionShape TranslateSolidLayer(TranslationContext context, SolidLayer layer)
         {
+            if (layer.IsHidden || (!layer.Transform.OpacityPercent.IsAnimated && layer.Transform.OpacityPercent.InitialValue == 0))
+            {
+                // The layer does not render anything. Nothing to translate. This can happen when someone
+                // creates a solid layer to act like a Null layer.
+                return null;
+            }
 
-            CreateContainerVisualTransformChain(context, layer, out var rootNode, out var contentsNode);
-
-            var shapeVisual = CreateShapeVisual();
-            contentsNode.Children.Add(shapeVisual);
+            CreateContainerTransformChain(context, layer, out var rootNode, out var contentsNode);
 
             var rectangleGeometry = CreateRectangleGeometry();
             rectangleGeometry.Size = Vector2(layer.Width, layer.Height);
@@ -1152,7 +1174,10 @@ namespace Lottie
             var rectangle = CreateSpriteShape();
             rectangle.Geometry = rectangleGeometry;
 
+            contentsNode.Shapes.Add(rectangle);
+
             // TODO - the opacity in the transform needs to be taken into consideration here
+            // TODO - the brush could be animated.
             var brush = CreateNonAnimatedColorBrush(layer.Color);
 
             rectangle.FillBrush = brush;
@@ -1165,17 +1190,16 @@ namespace Lottie
 
             if (_annotate)
             {
-                shapeVisual.Comment = $"{layer.Type}Layer:'{layer.Name}'";
+                rootNode.Comment = $"{layer.Type}Layer:'{layer.Name}'";
             }
 
-            shapeVisual.Size = Vector2(context.Width, context.Height);
-            shapeVisual.Shapes.Add(rectangle);
             return rootNode;
         }
 
-        Visual TranslateTextLayerToVisual(TranslationContext context, TextLayer layer)
+        Visual TranslateTextLayer(TranslationContext context, TextLayer layer)
         {
             // Text layers are not yet suported.
+            Unsupported("Text layer");
             return null;
         }
 
@@ -1192,7 +1216,7 @@ namespace Lottie
             leafTransformNode = CreateContainerVisual();
 
             // Apply the transform.
-            TranslateAndApplyTransform(context, layer.Transform, leafTransformNode);
+            TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
             if (_annotate)
             {
                 leafTransformNode.Comment = $"'{layer.Name}'.Transforms";
@@ -1202,9 +1226,9 @@ namespace Lottie
             rootTransformNode = leafTransformNode;
 #else
             // Translate the parent transform, if any.
-            if (layer.ParentId != null)
+            if (layer.Parent != null)
             {
-                var parentLayer = context.Layers.GetLayerById(layer.ParentId.Value);
+                var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerVisualForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
                 if (_annotate)
@@ -1234,7 +1258,7 @@ namespace Lottie
             leafTransformNode = CreateContainerShape();
 
             // Apply the transform from the layer.
-            TranslateAndApplyTransform(context, layer.Transform, leafTransformNode);
+            TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
             if (_annotate)
             {
                 leafTransformNode.Comment = $"'{layer.Name}'.Transforms";
@@ -1244,9 +1268,9 @@ namespace Lottie
             rootTransformNode = leafTransformNode;
 #else
             // Translate the parent transform, if any.
-            if (layer.ParentId != null)
+            if (layer.Parent != null)
             {
-                var parentLayer = context.Layers.GetLayerById(layer.ParentId.Value);
+                var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
                 if (_annotate)
@@ -1264,7 +1288,7 @@ namespace Lottie
         }
 
 
-        void TranslateAndApplyTransform(TranslationContext context, Transform transform, ContainerVisual container)
+        void TranslateAndApplyTransformToContainerVisual(TranslationContext context, Transform transform, ContainerVisual container)
         {
             var initialAnchor = Vector2(transform.Anchor.InitialValue);
             var initialPosition = Vector2(transform.Position.InitialValue);
@@ -1336,7 +1360,7 @@ namespace Lottie
             // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
         }
 
-        void TranslateAndApplyTransform(TranslationContext context, Transform transform, CompositionContainerShape container)
+        void TranslateAndApplyTransformToContainerShape(TranslationContext context, Transform transform, CompositionContainerShape container)
         {
             var initialAnchor = Vector2(transform.Anchor.InitialValue);
             var initialPosition = Vector2(transform.Position.InitialValue);
@@ -1435,11 +1459,11 @@ namespace Lottie
 
                 if (scale != 1)
                 {
-                    expr = $"{expr}*{scale.ToString("0.0###########")}";
+                    expr = $"{expr}*{scale.ToString("0.0########")}";
                 }
                 if (offset != 0)
                 {
-                    expr = $"{expr}+{offset.ToString("0.0###########")}";
+                    expr = $"{expr}+{offset.ToString("0.0########")}";
                 }
 
                 bindingAnimation = CreateExpressionAnimation(expr);
@@ -1639,7 +1663,7 @@ namespace Lottie
 
         float GetInPointProgress(TranslationContext context, Layer layer)
         {
-            var result = (layer.InPoint - context.StartTime)/ context.DurationInFrames;
+            var result = (layer.InPoint - context.StartTime) / context.DurationInFrames;
 
             return (float)result;
         }

@@ -27,27 +27,27 @@ namespace LottieData
         {
             var validator = new LottieCompositionValidator(lottieComposition);
 
-            validator.ValidateParentIdPointsToValidLayer();
-            validator.ValidateNoParentIdCycles();
+            validator.ValidateParentPointsToValidLayer();
+            validator.ValidateNoParentCycles();
             return validator._issues.ToArray();
         }
 
         /// <summary>
-        /// Validates that there are no cycles caused by ParentId references.
+        /// Validates that there are no cycles caused by Parent references.
         /// </summary>
-        void ValidateNoParentIdCycles()
+        void ValidateNoParentCycles()
         {
-            ValidateNoParentIdCycles(_lottieComposition.Layers);
+            ValidateNoParentCycles(_lottieComposition.Layers);
             foreach (var layersAsset in _lottieComposition.Assets.OfType<LayerCollectionAsset>())
             {
-                ValidateNoParentIdCycles(layersAsset.Layers);
+                ValidateNoParentCycles(layersAsset.Layers);
             }
         }
 
         /// <summary>
-        /// Validates that there are no cycles caused by ParentId references.
+        /// Validates that there are no cycles caused by Parent references.
         /// </summary>
-        void ValidateNoParentIdCycles(LayerCollection layers)
+        void ValidateNoParentCycles(LayerCollection layers)
         {
             // Holds the layers that are known to not be in a cycle.
             var notInCycles = new HashSet<Layer>();
@@ -58,12 +58,12 @@ namespace LottieData
             // Divide each layer into either notIn a cycle, or maybeIn a cycle.
             foreach (var layer in layers.GetLayersBottomToTop())
             {
-                if (layer.ParentId == null)
+                if (layer.Parent == null)
                 {
-                    // A layer with no ParentId is definitely notIn a cycle.
+                    // A layer with no Parent is definitely notIn a cycle.
                     notInCycles.Add(layer);
                 }
-                else if (notInCycles.Contains(layers.GetLayerById(layer.ParentId)))
+                else if (notInCycles.Contains(layers.GetLayerById(layer.Parent)))
                 {
                     // The layer has a parent that is not in a cycle, so the layer is
                     // not in a cycle.
@@ -82,7 +82,7 @@ namespace LottieData
             {
                 foreach (var layer in maybeInCycles)
                 {
-                    if (notInCycles.Contains(layers.GetLayerById(layer.ParentId)))
+                    if (notInCycles.Contains(layers.GetLayerById(layer.Parent)))
                     {
                         // The layer has a parent that is not in a cycle, so the layer
                         // is not in a cycle.
@@ -96,32 +96,32 @@ namespace LottieData
             // No more notIns were discovered. All the maybeIns are definitely in cycles.
             foreach (var layer in maybeInCycles)
             {
-                _issues.Add(@"Layer with ParentId {layer.ParentId} is in a cycle.");
+                _issues.Add($"Layer with Parent {layer.Parent} is in a cycle.");
             }
         }
 
         /// <summary>
-        /// Validates that all the ParentId references are either null or refer to a layer in the same collection.
+        /// Validates that all the Parent references are either null or refer to a layer in the same collection.
         /// </summary>
-        void ValidateParentIdPointsToValidLayer()
+        void ValidateParentPointsToValidLayer()
         {
-            ValidateParentIdPointsToValidLayer(_lottieComposition.Layers);
+            ValidateParentPointsToValidLayer(_lottieComposition.Layers);
             foreach (var layersAsset in _lottieComposition.Assets.OfType<LayerCollectionAsset>())
             {
-                ValidateNoParentIdCycles(layersAsset.Layers);
+                ValidateNoParentCycles(layersAsset.Layers);
             }
         }
 
         /// <summary>
-        /// Validates that all the ParentId references are either null or refer to a layer in the same collection.
+        /// Validates that all the Parent references are either null or refer to a layer in the same collection.
         /// </summary>
-        void ValidateParentIdPointsToValidLayer(LayerCollection layers)
+        void ValidateParentPointsToValidLayer(LayerCollection layers)
         {
             foreach (var layer in layers.GetLayersBottomToTop())
             {
-                if (layer.ParentId.HasValue && layers.GetLayerById(layer.ParentId) == null)
+                if (layer.Parent.HasValue && layers.GetLayerById(layer.Parent) == null)
                 {
-                    _issues.Add(@"Layer ParentId {layer.ParentId} is invalid.");
+                    _issues.Add($"Layer Parent {layer.Parent} is invalid.");
                 }
             }
         }

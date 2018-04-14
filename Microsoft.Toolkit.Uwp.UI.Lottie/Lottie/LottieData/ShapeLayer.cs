@@ -13,8 +13,8 @@ namespace LottieData
         public ShapeLayer(
             string name,
             IEnumerable<ShapeLayerContent> shapes,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             double timeStretch,
@@ -26,8 +26,8 @@ namespace LottieData
             bool autoOrient)
          : base(
              name,
-             layerId,
-             parentId,
+             index,
+             parent,
              isHidden,
              transform,
              timeStretch,

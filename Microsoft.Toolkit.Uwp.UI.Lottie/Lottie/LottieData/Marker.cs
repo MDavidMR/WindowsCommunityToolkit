@@ -3,20 +3,21 @@
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class Marker
+    sealed class Marker : LottieObject
     {
         public Marker(
-            double progress, 
+            double frame, 
             string name,
-            bool flag)
+            bool flag) : base(name)
         {
-            Progress = progress;
-            Name = name;
+            Frame = frame;
             Flag = flag;
         }
 
-        public double Progress { get; }
-        public string Name { get; }
+        public double Frame { get; }
+
         public bool Flag { get; }
+
+        public override LottieObjectType ObjectType => LottieObjectType.Marker;
     }
 }

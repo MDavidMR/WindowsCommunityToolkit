@@ -17,6 +17,11 @@ namespace LottieData
         /// <param name="inPoint">Frame at which animation begins as specified in AfterEffects.</param>
         /// <param name="outPoint">Frame at which animation ends as specified in AfterEffects.</param>
         /// <param name="framesPerSecond">FrameRate (frames per second) at which animation data was generated in AfterEffects.</param>
+        /// <param name="assets">Assets that are part of the composition.</param>
+        /// <param name="is3d">True if the composition is 3d.</param>
+        /// <param name="layers">The layers in the composition.</param>
+        /// <param name="version">The version of the schema of the composition.</param>
+        /// <param name="markers">Markers that define named portions of the composition.</param>
         public LottieComposition(
             string name,
             double width,
@@ -40,6 +45,7 @@ namespace LottieData
             Version = version;
             Layers = layers;
             Assets = assets;
+            Markers = markers;
         }
 
         public bool Is3d { get; }

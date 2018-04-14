@@ -14,8 +14,8 @@
     {
         protected Layer(
             string name,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             double timeStretch,
@@ -26,8 +26,8 @@
             bool is3d,
             bool autoOrient) : base(name)
         {
-            Id = layerId;
-            ParentId = parentId;
+            Index = index;
+            Parent = parent;
             IsHidden = isHidden;
             Transform = transform;
             TimeStretch = timeStretch;
@@ -68,16 +68,17 @@
         public Transform Transform { get; }
 
         public bool Is3d { get; }
+
         /// <summary>
         /// Used to uniquely identify a <see cref="Layer"/> within the owning <see cref="LayerContainer"/>.
         /// </summary>
-        internal int Id { get; }
+        internal int Index { get; }
 
         /// <summary>
-        /// Identifies the <see cref="Layer"/> from which transforms are inherited,
+        /// Identifies the index of the <see cref="Layer"/> from which transforms are inherited,
         /// or null if no transforms are inherited.
         /// </summary>
-        public int? ParentId { get; }
+        public int? Parent { get; }
 
         public enum LayerType
         {

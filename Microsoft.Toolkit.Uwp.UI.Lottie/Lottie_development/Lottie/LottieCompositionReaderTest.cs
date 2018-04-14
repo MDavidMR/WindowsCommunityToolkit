@@ -23,7 +23,7 @@ namespace Lottie
                 {
                     var contents = await FileIO.ReadTextAsync(file);
                     string[] readerIssues;
-                    var composition = LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(contents, out readerIssues);
+                    var composition = LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(contents, LottieCompositionJsonReader.Options.None, out readerIssues);
 
                     if (composition != null)
                     {

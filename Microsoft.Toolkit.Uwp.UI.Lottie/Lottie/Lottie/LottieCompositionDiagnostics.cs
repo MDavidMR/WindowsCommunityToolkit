@@ -12,6 +12,8 @@ namespace Lottie
 
         public TimeSpan Duration { get; internal set; }
 
+        public TimeSpan ReadTime { get; internal set; }
+
         public TimeSpan ParseTime { get; internal set; }
 
         public TimeSpan ValidationTime { get; internal set; }
@@ -26,11 +28,18 @@ namespace Lottie
 
         public IEnumerable<string> TranslationIssues { get; internal set; }
 
+        public double LottieWidth { get; internal set; }
+
+        public double LottieHeight { get; internal set; }
+
         public string LottieDetails { get; internal set; }
 
         public string LottieXml { get; internal set; }
 
         public string WinCompXml { get; internal set; }
 
+        public string WinCompCSharp { get; internal set; }
+
+        public KeyValuePair<string, double>[] Markers { get; internal set; }
     }
 }

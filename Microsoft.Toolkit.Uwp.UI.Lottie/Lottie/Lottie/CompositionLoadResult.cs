@@ -5,7 +5,7 @@ namespace Lottie
     {
         internal bool LoadSucceeded { get; set; }
 
-        internal AnimatedComposition Composition { get; set; }
+        internal VisualPlayer VisualPlayer { get; set; }
 
         /// <summary>
         /// Optional diagnostics information.

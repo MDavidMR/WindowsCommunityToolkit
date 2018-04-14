@@ -11,6 +11,7 @@ namespace LottieData
         LinearGradientFill,
         LinearGradientStroke,
         LottieComposition,
+        Marker,
         MergePaths,
         NullLayer,
         Polystar,

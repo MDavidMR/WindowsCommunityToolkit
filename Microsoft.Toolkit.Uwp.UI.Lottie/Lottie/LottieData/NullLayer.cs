@@ -7,8 +7,8 @@
     {
         public NullLayer(
             string name,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             double timeStretch,
@@ -20,8 +20,8 @@
             bool autoOrient)
             : base(
                  name,
-                 layerId,
-                 parentId,
+                 index,
+                 parent,
                  isHidden,
                  transform,
                  timeStretch,

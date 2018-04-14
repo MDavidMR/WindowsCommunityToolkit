@@ -7,8 +7,8 @@
     {
         public SolidLayer(
             string name,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             int width,
@@ -23,8 +23,8 @@
             bool autoOrient)
             : base(
              name,
-             layerId,
-             parentId,
+             index,
+             parent,
              isHidden,
              transform,
              timeStretch,

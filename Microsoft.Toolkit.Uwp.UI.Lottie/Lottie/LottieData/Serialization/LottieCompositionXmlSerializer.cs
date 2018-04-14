@@ -36,6 +36,8 @@ namespace LottieData.Tools
                     return FromLinearGradientStroke((LinearGradientStroke)obj);
                 case LottieObjectType.LottieComposition:
                     return FromLottieComposition((LottieComposition)obj);
+                case LottieObjectType.Marker:
+                    return FromMarker((Marker)obj);
                 case LottieObjectType.MergePaths:
                     return FromMergePaths((MergePaths)obj);
                 case LottieObjectType.NullLayer:
@@ -81,17 +83,21 @@ namespace LottieData.Tools
             return new XElement("LottieComposition", GetContents());
             IEnumerable<XObject> GetContents()
             {
-                yield return new XAttribute("Version", lottieComposition.Version.ToString());
+                yield return new XAttribute(nameof(lottieComposition.Version), lottieComposition.Version.ToString());
                 if (!string.IsNullOrWhiteSpace(lottieComposition.Name))
                 {
-                    yield return new XAttribute("Name", lottieComposition.Name);
+                    yield return new XAttribute(nameof(lottieComposition.Name), lottieComposition.Name);
                 }
-                yield return new XAttribute("Width", lottieComposition.Width);
-                yield return new XAttribute("Height", lottieComposition.Height);
-                yield return new XAttribute("InPoint", lottieComposition.InPoint);
-                yield return new XAttribute("OutPoint", lottieComposition.OutPoint);
+                yield return new XAttribute(nameof(lottieComposition.Width), lottieComposition.Width);
+                yield return new XAttribute(nameof(lottieComposition.Height), lottieComposition.Height);
+                yield return new XAttribute(nameof(lottieComposition.InPoint), lottieComposition.InPoint);
+                yield return new XAttribute(nameof(lottieComposition.OutPoint), lottieComposition.OutPoint);
                 yield return FromAssetCollection(lottieComposition.Assets);
-                yield return FromLayerComposition(lottieComposition.Layers);
+                yield return FromLayerCollection(lottieComposition.Layers);
+                if (lottieComposition.Markers.Any())
+                {
+                    yield return new XElement("Markers", lottieComposition.Markers.Select(FromMarker));
+                }
             }
         }
 
@@ -121,12 +127,12 @@ namespace LottieData.Tools
 
         XElement FromLayersAsset(LayerCollectionAsset asset)
         {
-            return new XElement("LayerComposition",
-                new XAttribute("Id", asset.Id),
-                FromLayerComposition(asset.Layers));
+            return new XElement(nameof(LayerCollectionAsset),
+                new XAttribute(nameof(asset.Id), asset.Id),
+                FromLayerCollection(asset.Layers));
         }
 
-        XElement FromLayerComposition(LayerCollection layers)
+        XElement FromLayerCollection(LayerCollection layers)
         {
             return new XElement("Layers", GetContents());
             IEnumerable<XElement> GetContents()
@@ -161,19 +167,22 @@ namespace LottieData.Tools
 
         IEnumerable<XObject> GetLayerContents(Layer layer)
         {
-            yield return new XAttribute("Id", layer.Id);
-            yield return new XAttribute("Name", layer.Name);
+            yield return new XAttribute(nameof(layer.Index), layer.Index);
+            foreach (var item in GetLottieObjectContents(layer))
+            {
+                yield return item;
+            }
             if (layer.IsHidden)
             {
-                yield return new XAttribute("Hidden", layer.IsHidden);
+                yield return new XAttribute(nameof(layer.IsHidden), layer.IsHidden);
             }
-            yield return new XAttribute("StartTime", layer.StartTime);
-            yield return new XAttribute("InPoint", layer.InPoint);
-            yield return new XAttribute("OutPoint", layer.OutPoint);
+            yield return new XAttribute(nameof(layer.StartTime), layer.StartTime);
+            yield return new XAttribute(nameof(layer.InPoint), layer.InPoint);
+            yield return new XAttribute(nameof(layer.OutPoint), layer.OutPoint);
 
-            if (layer.ParentId.HasValue)
+            if (layer.Parent.HasValue)
             {
-                yield return new XAttribute("ParentId", layer.ParentId.Value);
+                yield return new XAttribute(nameof(layer.Parent), layer.Parent.Value);
             }
             yield return FromTransform(layer.Transform);
 
@@ -188,11 +197,11 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
-                yield return new XAttribute("Width", layer.Width);
-                yield return new XAttribute("Height", layer.Height);
+                yield return new XAttribute(nameof(layer.Width), layer.Width);
+                yield return new XAttribute(nameof(layer.Height), layer.Height);
                 if (!string.IsNullOrWhiteSpace(layer.RefId))
                 {
-                    yield return new XAttribute("RefId", layer.RefId);
+                    yield return new XAttribute(nameof(layer.RefId), layer.RefId);
                 }
             }
         }
@@ -207,10 +216,9 @@ namespace LottieData.Tools
                     yield return item;
                 }
 
-                yield return new XAttribute("Width", layer.Width);
-                yield return new XAttribute("Height", layer.Height);
-                // TODO - don't rely on ToString on color
-                yield return new XAttribute("Color", layer.Color);
+                yield return new XAttribute(nameof(layer.Width), layer.Width);
+                yield return new XAttribute(nameof(layer.Height), layer.Height);
+                yield return new XAttribute(nameof(layer.Color), layer.Color);
             }
         }
 
@@ -334,6 +342,10 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return FromAnimatable(nameof(content.Color), content.Color);
+                yield return FromAnimatable(nameof(content.OpacityPercent), content.OpacityPercent);
+                yield return FromAnimatable(nameof(content.Thickness), content.Thickness);
             }
         }
 
@@ -411,20 +423,20 @@ namespace LottieData.Tools
                     yield return item;
                 }
 
-                yield return FromAnimatableVector3(nameof(content.ScalePercent), content.ScalePercent);
-                yield return FromAnimatableVector3(nameof(content.Position), content.Position);
-                yield return FromAnimatableVector3(nameof(content.Anchor), content.Anchor);
+                yield return FromAnimatable(nameof(content.ScalePercent), content.ScalePercent);
+                yield return FromAnimatable(nameof(content.Position), content.Position);
+                yield return FromAnimatable(nameof(content.Anchor), content.Anchor);
                 yield return FromAnimatable(nameof(content.OpacityPercent), content.OpacityPercent);
                 yield return FromAnimatable(nameof(content.RotationDegrees), content.RotationDegrees);
             }
         }
 
-        XObject FromAnimatableVector3(string name, IAnimatableVector3 animatable)
+        XObject FromAnimatable(string name, IAnimatableVector3 animatable)
         {
             switch (animatable.Type)
             {
                 case AnimatableVector3Type.Vector3:
-                    return FromAnimatable(name, (AnimatableVector3)animatable);
+                    return FromAnimatable<Vector3>(name, (AnimatableVector3)animatable);
                 case AnimatableVector3Type.XYZ:
                     {
 
@@ -443,12 +455,10 @@ namespace LottieData.Tools
         {
             if (!animatable.IsAnimated)
             {
-                // TODO - don't rely on tostring on the value.
                 return new XAttribute(name, $"{animatable.InitialValue}");
             }
             else
             {
-                // TODO - don't rely on tostring on the value.
                 var keyframesString = $"{animatable.InitialValue}{string.Join("", animatable.KeyFrames.Select(kf => $", {kf.Value}@{kf.Frame}"))}";
 
                 return new XAttribute(name, keyframesString);
@@ -477,8 +487,8 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
-                yield return FromAnimatableVector3(nameof(content.Diameter), content.Diameter);
-                yield return FromAnimatableVector3(nameof(content.Position), content.Position);
+                yield return FromAnimatable(nameof(content.Diameter), content.Diameter);
+                yield return FromAnimatable(nameof(content.Position), content.Position);
             }
         }
 
@@ -503,6 +513,10 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return FromAnimatable(nameof(content.Size), content.Size);
+                yield return FromAnimatable(nameof(content.Position), content.Position);
+                yield return FromAnimatable(nameof(content.CornerRadius), content.CornerRadius);
             }
         }
 
@@ -527,6 +541,19 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+            }
+        }
+
+        XElement FromMarker(Marker obj)
+        {
+            return new XElement(nameof(Marker), GetContents());
+            IEnumerable<XObject> GetContents()
+            {
+                foreach (var item in GetLottieObjectContents(obj))
+                {
+                    yield return item;
+                }
+                yield return new XAttribute(nameof(obj.Frame), obj.Frame);
             }
         }
 
@@ -567,14 +594,23 @@ namespace LottieData.Tools
 
         IEnumerable<XObject> GetShapeLayerContentContents(ShapeLayerContent content)
         {
-            if (!string.IsNullOrWhiteSpace(content.Name))
+            foreach (var item in GetLottieObjectContents(content))
             {
-                yield return new XAttribute("Name", content.Name);
+                yield return item;
             }
             if (!string.IsNullOrWhiteSpace(content.MatchName))
             {
-                yield return new XAttribute("MatchName", content.MatchName);
+                yield return new XAttribute(nameof(content.MatchName), content.MatchName);
             }
         }
+
+        IEnumerable<XObject> GetLottieObjectContents(LottieObject obj)
+        {
+            if (!string.IsNullOrWhiteSpace(obj.Name))
+            {
+                yield return new XAttribute(nameof(obj.Name), obj.Name);
+            }
+        }
+
     }
 }

@@ -7,8 +7,8 @@
     {
         public PreCompLayer(
             string name,
-            int layerId,
-            int? parentId,
+            int index,
+            int? parent,
             bool isHidden,
             Transform transform,
             double timeStretch,
@@ -23,8 +23,8 @@
             double height)
             : base(
                  name,
-                 layerId,
-                 parentId,
+                 index,
+                 parent,
                  isHidden,
                  transform,
                  timeStretch,

@@ -15,14 +15,14 @@ namespace LottieData
 
         public LayerCollection(IEnumerable<Layer> layers)
         {
-            _layersById = layers.ToDictionary(layer => layer.Id);
+            _layersById = layers.ToDictionary(layer => layer.Index);
         }
 
         /// <summary>
         /// Returns the <see cref="Layer"/>s in the <see cref="LayerContainer"/> in
         /// painting order.
         /// </summary>
-        public IEnumerable<Layer> GetLayersBottomToTop() => _layersById.Values.OrderByDescending(layer => layer.Id);
+        public IEnumerable<Layer> GetLayersBottomToTop() => _layersById.Values.OrderByDescending(layer => layer.Index);
 
         /// <summary>
         /// Returns the <see cref="Layer"/> with the given id, or null if no matching <see cref="Layer"/> is found.

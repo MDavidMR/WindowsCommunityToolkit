@@ -30,10 +30,28 @@ namespace LottieData.Serialization
 
         readonly HashSet<string> m_issues = new HashSet<string>();
 
+        Options _options;
+
+        /// <summary>
+        /// Specifies optional behavior for the reader.
+        /// </summary>
+        public enum Options
+        {
+            None = 0,
+            /// <summary>
+            /// Do not read the Name values.
+            /// </summary>
+            IgnoreNames,
+            /// <summary>
+            /// Do not read the Match Name values.
+            /// </summary>
+            IgnoreMatchNames,
+        }
+
         /// <summary>
         /// Parses a Json string to create a <see cref="LottieData.LottieComposition"/>.
         /// </summary>
-        public static LottieComposition ReadLottieCompositionFromJsonString(string json, out string[] issues)
+        public static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out string[] issues)
         {
             JsonObject obj;
             try
@@ -46,14 +64,14 @@ namespace LottieData.Serialization
                 return null;
             }
 
-            return ReadLottieCompositionFromJsonString(obj, out issues);
+            return ReadLottieCompositionFromJson(obj, options, out issues);
         }
 
-        LottieCompositionJsonReader() { }
+        LottieCompositionJsonReader(Options options) { _options = options; }
 
-        static LottieComposition ReadLottieCompositionFromJsonString(JsonObject obj, out string[] issues)
+        static LottieComposition ReadLottieCompositionFromJson(JsonObject obj, Options options, out string[] issues)
         {
-            var reader = new LottieCompositionJsonReader();
+            var reader = new LottieCompositionJsonReader(options);
             LottieComposition result = null;
             try
             {
@@ -180,7 +198,7 @@ namespace LottieData.Serialization
                 new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
                 assets,
                 layers,
-                markers);
+                markers ?? new Marker[0]);
 
             return lottieComposition;
         }
@@ -220,16 +238,13 @@ namespace LottieData.Serialization
             // Not clear whether we need to read these fields.
             IgnoreFieldThatIsNotYetSupported(obj, "bounds");
             IgnoreFieldThatIsNotYetSupported(obj, "masksProperties");
-            IgnoreFieldThatIsNotYetSupported(obj, "sc");
-            IgnoreFieldThatIsNotYetSupported(obj, "sh");
-            IgnoreFieldThatIsNotYetSupported(obj, "sw");
             IgnoreFieldThatIsNotYetSupported(obj, "sy");
             IgnoreFieldThatIsNotYetSupported(obj, "t");
             IgnoreFieldThatIsNotYetSupported(obj, "td");
 
             var name = obj.GetNamedString("nm");
-            var layerId = ReadInt(obj, "ind").Value;
-            var parentId = ReadInt(obj, "parent");
+            var layerIndex = ReadInt(obj, "ind").Value;
+            var parentIndex = ReadInt(obj, "parent");
             var is3d = ReadBool(obj, "ddd") == true;
             var autoOrient = ReadBool(obj, "ao") == true;
             var blendMode = BmToBlendMode(obj.GetNamedNumber("bm", 0));
@@ -291,11 +306,12 @@ namespace LottieData.Serialization
                         {
                             ReportIssue("Time remapping of PreComps is not supported.");
                         }
+
                         AssertAllFieldsRead(obj);
                         return new PreCompLayer(
                             name,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             timeStretch,
@@ -317,8 +333,8 @@ namespace LottieData.Serialization
                         AssertAllFieldsRead(obj);
                         return new SolidLayer(
                             name,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             solidWidth,
@@ -335,11 +351,12 @@ namespace LottieData.Serialization
                 case Layer.LayerType.Image:
                     {
                         var refId = obj.GetNamedString("refId", "");
+
                         AssertAllFieldsRead(obj);
                         return new ImageLayer(
                             name,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             timeStretch,
@@ -354,10 +371,11 @@ namespace LottieData.Serialization
                 case Layer.LayerType.Null:
                     {
                         AssertAllFieldsRead(obj);
+
                         return new NullLayer(
                             name,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             timeStretch,
@@ -390,8 +408,8 @@ namespace LottieData.Serialization
                         return new ShapeLayer(
                             name,
                             shapes,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             timeStretch,
@@ -409,8 +427,8 @@ namespace LottieData.Serialization
                         AssertAllFieldsRead(obj);
                         return new TextLayer(
                             name,
-                            layerId,
-                            parentId,
+                            layerIndex,
+                            parentIndex,
                             isHidden,
                             transform,
                             timeStretch,
@@ -1103,11 +1121,28 @@ namespace LottieData.Serialization
             internal string MatchName;
         }
 
-        AfterEffectsName ReadName(JsonObject obj) => new AfterEffectsName
+        AfterEffectsName ReadName(JsonObject obj)
         {
-            Name = obj.GetNamedString("nm", ""),
-            MatchName = obj.GetNamedString("mn", "")
-        };
+            var result = new AfterEffectsName();
+            if (_options.HasFlag(Options.IgnoreNames))
+            {
+                IgnoreFieldIntentionally(obj, "nm");
+            }
+            else
+            {
+                result.Name = obj.GetNamedString("nm", "");
+            }
+            if (_options.HasFlag(Options.IgnoreMatchNames))
+            {
+                IgnoreFieldIntentionally(obj, "mn");
+            }
+            else
+            {
+                result.MatchName = obj.GetNamedString("mn", "");
+            }
+
+            return result;
+        }
 
         void ReportIssue(string issue)
         {
@@ -1376,9 +1411,6 @@ namespace LottieData.Serialization
                 // which is a triple: {endValue, endTime, easingFunction}.
                 // An initial keyframe is created to describe the initial value. It has no easing function.
                 //
-                // If the preceding Lottie keyframe had a different endValue from the current startValue,
-                // an extra keyframe is inserted to indicate the change in value.
-                //
 
                 T endValue = default(T);
                 // The initial keyframe has the same value as the initial value. Easing therefore doesn't
@@ -1388,13 +1420,23 @@ namespace LottieData.Serialization
                 bool isHolding = true;
 
                 // NOTE: indexing an array with GetObjectAt is faster than enumerating.
-                // Get all except the last entry (which is special - it only has a startFrame value).
-                for (uint i = 0; i < count - 1; i++)
+                for (uint i = 0; i < count; i++)
                 {
                     var lottieKeyFrame = jsonArray.GetObjectAt(i);
 
                     // Read the start frame.
                     var startFrame = lottieKeyFrame.GetNamedNumber("t", 0);
+
+                    if (i == count - 1)
+                    {
+                        // This is the final frame. Final frames optionally don't have a value.
+                        if (!lottieKeyFrame.ContainsKey("s"))
+                        {
+                            // It has no value associated with it.
+                            yield return new KeyFrame<T>(startFrame, endValue, easing);
+                            break;
+                        }
+                    }
 
                     // Read the start value.
                     var startValue = _valueFactory(lottieKeyFrame.GetNamedValue("s"));
@@ -1405,6 +1447,7 @@ namespace LottieData.Serialization
                     {
                         throw new InvalidOperationException();
                     }
+
                     yield return new KeyFrame<T>(startFrame, startValue, easing);
 
                     // Get the easing to the end value, and get the end value.
@@ -1437,13 +1480,6 @@ namespace LottieData.Serialization
                         // the next pair is read.
                         endValue = _valueFactory(lottieKeyFrame.GetNamedValue("e"));
                     }
-                }
-
-                // Output the final KeyFrame.
-                if (count > 1)
-                {
-                    var finalFrameNumber = jsonArray.GetObjectAt(count - 1).GetNamedNumber("t", 0);
-                    yield return new KeyFrame<T>(finalFrameNumber, endValue, easing);
                 }
             }
         }
@@ -1619,6 +1655,14 @@ namespace LottieData.Serialization
         {
             obj._readFields.Add(fieldName);
         }
+
+        // Indicates that the given field is not read because we don't need to read it.
+        [Conditional("CheckForUnparsedFields")]
+        void IgnoreFieldIntentionally(CheckedJsonObject obj, string fieldName)
+        {
+            obj._readFields.Add(fieldName);
+        }
+
 
         // Reports an issue if the given JsonObject has fields that were not read.
         [Conditional("CheckForUnparsedFields")]
