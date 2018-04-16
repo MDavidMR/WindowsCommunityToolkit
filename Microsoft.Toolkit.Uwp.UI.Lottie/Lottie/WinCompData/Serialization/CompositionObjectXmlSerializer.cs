@@ -64,6 +64,9 @@ namespace WinCompData.Tools
                 case CompositionObjectType.CompositionPathGeometry:
                     yield return FromCompositionPathGeometry((CompositionPathGeometry)obj);
                     break;
+                case CompositionObjectType.CompositionPropertySet:
+                    yield return FromCompositionPropertySet((CompositionPropertySet)obj);
+                    break;
                 case CompositionObjectType.CompositionRectangleGeometry:
                     yield return FromCompositionRectangleGeometry((CompositionRectangleGeometry)obj);
                     break;
@@ -161,13 +164,25 @@ namespace WinCompData.Tools
             return new XElement(GetCompositionObjectName(obj), GetContents());
             IEnumerable<XObject> GetContents()
             {
+                foreach (var item in GetCompositionGeometryContents(obj))
+                {
+                    yield return item;
+                }
+                yield return FromVector2(nameof(obj.Center), obj.Center);
+                yield return FromVector2(nameof(obj.Radius), obj.Radius);
+            }
+        }
+
+
+        XElement FromCompositionPropertySet(CompositionPropertySet obj)
+        {
+            return new XElement("CompositionProperytSet", GetContents());
+            IEnumerable<XObject> GetContents()
+            {
                 foreach (var item in GetCompositionObjectContents(obj))
                 {
                     yield return item;
                 }
-
-                yield return FromVector2("Center", obj.Center);
-                yield return FromVector2("Radius", obj.Radius);
             }
         }
 
@@ -185,7 +200,7 @@ namespace WinCompData.Tools
             return new XElement(GetCompositionObjectName(obj), GetContents());
             IEnumerable<XObject> GetContents()
             {
-                foreach (var item in GetCompositionObjectContents(obj))
+                foreach (var item in GetCompositionGeometryContents(obj))
                 {
                     yield return item;
                 }
@@ -198,13 +213,11 @@ namespace WinCompData.Tools
             return new XElement(GetCompositionObjectName(obj), GetContents());
             IEnumerable<XObject> GetContents()
             {
-                foreach (var item in GetCompositionObjectContents(obj))
+                foreach (var item in GetCompositionGeometryContents(obj))
                 {
                     yield return item;
                 }
-
-                yield return new XAttribute("Width", obj.Size.X);
-                yield return new XAttribute("Height", obj.Size.Y);
+                yield return FromVector2(nameof(obj.Size), obj.Size);
             }
         }
 
@@ -213,13 +226,13 @@ namespace WinCompData.Tools
             return new XElement(GetCompositionObjectName(obj), GetContents());
             IEnumerable<XObject> GetContents()
             {
-                foreach (var item in GetCompositionObjectContents(obj))
+                foreach (var item in GetCompositionGeometryContents(obj))
                 {
                     yield return item;
                 }
 
-                yield return new XAttribute("Width", obj.Size.X);
-                yield return new XAttribute("Height", obj.Size.Y);
+                yield return FromVector2(nameof(obj.Size), obj.Size);
+                yield return FromVector2(nameof(obj.CornerRadius), obj.CornerRadius);
             }
         }
 
@@ -233,24 +246,21 @@ namespace WinCompData.Tools
                     yield return item;
                 }
 
-                if (obj.CenterPoint.HasValue)
-                {
-                    yield return FromVector2("CenterPoint", obj.CenterPoint.Value);
-                }
+                yield return FromVector2DefaultZero(nameof(obj.CenterPoint), obj.CenterPoint);
 
                 if (obj.FillBrush != null)
                 {
-                    yield return new XElement("FillBrush", FromCompositionObject(obj.FillBrush));
+                    yield return new XElement(nameof(obj.FillBrush), FromCompositionObject(obj.FillBrush));
                 }
 
                 if (obj.Geometry != null)
                 {
-                    yield return new XElement("Geometry", FromCompositionObject(obj.Geometry));
+                    yield return new XElement(nameof(obj.Geometry), FromCompositionObject(obj.Geometry));
                 }
 
                 if (obj.StrokeBrush != null)
                 {
-                    yield return new XElement("StrokeBrush", FromCompositionObject(obj.StrokeBrush));
+                    yield return new XElement(nameof(obj.StrokeBrush), FromCompositionObject(obj.StrokeBrush));
                 }
             }
         }
@@ -264,9 +274,7 @@ namespace WinCompData.Tools
                 {
                     yield return item;
                 }
-
-                yield return new XAttribute("Width", obj.Size.X);
-                yield return new XAttribute("Height", obj.Size.Y);
+                yield return FromVector2(nameof(obj.Size), obj.Size);
             }
         }
 
@@ -318,15 +326,8 @@ namespace WinCompData.Tools
                 yield return item;
             }
 
-            if (obj.CenterPoint.HasValue)
-            {
-                yield return FromVector2("CenterPoint", obj.CenterPoint.Value);
-            }
-
-            if (obj.Scale.HasValue)
-            {
-                yield return FromVector2("Scale", obj.Scale.Value);
-            }
+            yield return FromVector2DefaultZero(nameof(obj.CenterPoint), obj.CenterPoint);
+            yield return FromVector2DefaultOne(nameof(obj.Scale), obj.Scale);
         }
 
         XElement FromLinearEasingFunction(LinearEasingFunction obj)
@@ -451,6 +452,29 @@ namespace WinCompData.Tools
             }
         }
 
+        IEnumerable<XObject> GetCompositionGeometryContents(CompositionGeometry obj)
+        {
+            foreach (var item in GetCompositionObjectContents(obj))
+            {
+                yield return item;
+            }
+
+            foreach (var item in FromAnimatableScalar(nameof(obj.TrimStart), obj.Animators, obj.TrimStart))
+            {
+                yield return item;
+            }
+
+            foreach (var item in FromAnimatableScalar(nameof(obj.TrimEnd), obj.Animators, obj.TrimEnd))
+            {
+                yield return item;
+            }
+
+            foreach (var item in FromAnimatableScalar(nameof(obj.TrimOffset), obj.Animators, obj.TrimOffset))
+            {
+                yield return item;
+            }
+        }
+
         IEnumerable<XObject> GetVisualContents(Visual obj)
         {
             foreach (var item in GetCompositionObjectContents(obj))
@@ -458,8 +482,8 @@ namespace WinCompData.Tools
                 yield return item;
             }
 
-            yield return new XAttribute("Width", obj.Size.HasValue ? obj.Size.Value.X : 0);
-            yield return new XAttribute("Height", obj.Size.HasValue ? obj.Size.Value.Y : 0);
+
+            yield return FromVector2DefaultZero(nameof(obj.Size), obj.Size);
 
             foreach (var item in FromAnimatableVector3("Offset", obj.Animators, obj.Offset))
             {
@@ -666,7 +690,6 @@ namespace WinCompData.Tools
                 if (initialValue.HasValue)
                 {
                     yield return FromVector2(name, initialValue.Value);
-                    yield break;
                 }
             }
         }
@@ -694,19 +717,23 @@ namespace WinCompData.Tools
             return new XElement(name, new XAttribute("ScalarValue", value));
         }
 
+        XElement FromVector2DefaultZero(string name, Vector2? obj) => FromVector2(name, obj, new Vector2(0, 0));
+
+        XElement FromVector2DefaultOne(string name, Vector2? obj) => FromVector2(name, obj, new Vector2(1, 1));
+
+        XElement FromVector2(string name, Vector2? obj, Vector2 defaultIfNull)
+            => FromVector2(name, obj.HasValue ? obj.Value : defaultIfNull);
+
         XElement FromVector2(string name, Vector2 obj)
         {
-            return new XElement(name, new XAttribute("X", obj.X), new XAttribute("Y", obj.Y));
+            return new XElement(name, new XAttribute(nameof(obj.X), obj.X), new XAttribute(nameof(obj.Y), obj.Y));
         }
-
-        XElement FromVector2(Vector2 obj) => FromVector2("Vector2", obj);
 
         XElement FromVector3(string name, Vector3 obj)
         {
-            return new XElement(name, new XAttribute("X", obj.X), new XAttribute("Y", obj.Y), new XAttribute("Z", obj.Z));
+            return new XElement(name, new XAttribute(nameof(obj.X), obj.X), new XAttribute(nameof(obj.Y), obj.Y), new XAttribute(nameof(obj.Z), obj.Z));
         }
 
-        XElement FromVector3(Vector3 obj) => FromVector3("Vector3", obj);
     }
 }
 

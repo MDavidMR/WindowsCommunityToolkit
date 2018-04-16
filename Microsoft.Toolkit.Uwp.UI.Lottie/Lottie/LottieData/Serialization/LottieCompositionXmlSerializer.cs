@@ -541,6 +541,9 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+                yield return FromAnimatable(nameof(content.StartPercent), content.StartPercent);
+                yield return FromAnimatable(nameof(content.EndPercent), content.EndPercent);
+                yield return FromAnimatable(nameof(content.OffsetDegrees), content.OffsetDegrees);
             }
         }
 

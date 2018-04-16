@@ -134,7 +134,7 @@ namespace LottieUwpPlayground
             // Load the Lottie composition.
             return PlayLottieComposition(new LottieComposition()
             {
-                UriSource = uri.OriginalString,
+                UriSource = uri,
                 Options = LottieCompositionOptions.All
             });
         }

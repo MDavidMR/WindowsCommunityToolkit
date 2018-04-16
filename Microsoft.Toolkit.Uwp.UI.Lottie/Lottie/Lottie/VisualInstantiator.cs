@@ -31,7 +31,10 @@ namespace Lottie
         internal static Wc.Visual CreateVisual(Wc.Compositor compositor, Wd.Visual visual)
         {
             var converter = new VisualInstantiator(compositor);
-            return converter.GetVisual(visual);
+            var result = converter.GetVisual(visual);
+            // Trim any memory just used by Win2D.
+            converter._canvasDevice.Trim();
+            return result;
         }
 
         bool GetExisting<T>(object key, out T result)
@@ -48,7 +51,7 @@ namespace Lottie
             }
         }
 
-        T CacheAndInitialize<T>(Wd.CompositionObject key, T obj)
+        T CacheAndInitializeCompositionObject<T>(Wd.CompositionObject key, T obj)
             where T : Wc.CompositionObject
         {
             _cache.Add(key, obj);
@@ -59,8 +62,7 @@ namespace Lottie
         T CacheAndInitializeShape<T>(Wd.CompositionShape source, T target)
             where T : Wc.CompositionShape
         {
-            _cache.Add(source, target);
-            SetProperties(source, target);
+            CacheAndInitializeCompositionObject(source, target);
             if (source.CenterPoint.HasValue)
             {
                 target.CenterPoint = Vector2(source.CenterPoint);
@@ -83,8 +85,7 @@ namespace Lottie
         T CacheAndInitializeVisual<T>(Wd.Visual source, T target)
             where T : Wc.Visual
         {
-            _cache.Add(source, target);
-            SetProperties(source, target);
+            CacheAndInitializeCompositionObject(source, target);
             if (source.Clip != null)
             {
                 target.Clip = GetCompositionClip(source.Clip);
@@ -115,12 +116,11 @@ namespace Lottie
         T CacheAndInitializeAnimation<T>(Wd.CompositionAnimation source, T target)
             where T : Wc.CompositionAnimation
         {
-            _cache.Add(source, target);
+            CacheAndInitializeCompositionObject(source, target);
             foreach (var parameter in source.ReferenceParameters)
             {
                 target.SetReferenceParameter(parameter.Key, GetCompositionObject(parameter.Value));
             }
-            SetProperties(source, target);
             if (source.Target != null)
             {
                 target.Target = source.Target;
@@ -136,6 +136,25 @@ namespace Lottie
             return target;
         }
 
+        T CacheAndInitializeCompositionGeometry<T>(Wd.CompositionGeometry source, T target)
+            where T : Wc.CompositionGeometry
+        {
+            CacheAndInitializeCompositionObject(source, target);
+            if (source.TrimStart.HasValue)
+            {
+                target.TrimStart = source.TrimStart.Value;
+            }
+            if (source.TrimEnd.HasValue)
+            {
+                target.TrimEnd = source.TrimEnd.Value;
+            }
+            if (source.TrimOffset.HasValue)
+            {
+                target.TrimOffset = source.TrimOffset.Value;
+            }
+            return target;
+        }
+
         T Cache<T>(object key, T obj)
         {
             _cache.Add(key, obj);
@@ -148,7 +167,7 @@ namespace Lottie
             {
                 return result;
             }
-           
+
             result = CacheAndInitializeVisual(obj, _c.CreateShapeVisual());
 
             if (obj.ViewBox != null)
@@ -192,15 +211,14 @@ namespace Lottie
 
         void SetProperties(Wd.CompositionObject source, Wc.CompositionObject target)
         {
-            var propertySet = target.Properties;
-            foreach (var prop in source.Properties.ScalarProperties)
+            // Get the CompositionPropertySet on this object. This has the side-effect of initializing
+            // it and starting any animations.
+            // Prevent infinite recursion - the Properties on a CompositionPropertySet is itself.
+            if (source.Type != Wd.CompositionObjectType.CompositionPropertySet)
             {
-                propertySet.InsertScalar(prop.Key, prop.Value);
+                GetCompositionPropertySet(source.Properties);
             }
-            foreach (var prop in source.Properties.Vector2Properties)
-            {
-                propertySet.InsertVector2(prop.Key, Vector2(prop.Value));
-            }
+
             if (source.Comment != null)
             {
                 target.Comment = source.Comment;
@@ -234,7 +252,7 @@ namespace Lottie
             }
             var targetObject = GetCompositionObject(obj.TargetObject);
 
-            result = CacheAndInitialize(obj, targetObject.TryGetAnimationController(obj.TargetProperty));
+            result = CacheAndInitializeCompositionObject(obj, targetObject.TryGetAnimationController(obj.TargetProperty));
             StartAnimations(obj, result);
             return result;
         }
@@ -255,6 +273,8 @@ namespace Lottie
                     return GetCompositionEllipseGeometry((Wd.CompositionEllipseGeometry)obj);
                 case Wd.CompositionObjectType.CompositionPathGeometry:
                     return GetCompositionPathGeometry((Wd.CompositionPathGeometry)obj);
+                case Wd.CompositionObjectType.CompositionPropertySet:
+                    return GetCompositionPropertySet((Wd.CompositionPropertySet)obj);
                 case Wd.CompositionObjectType.CompositionRectangleGeometry:
                     return GetCompositionRectangleGeometry((Wd.CompositionRectangleGeometry)obj);
                 case Wd.CompositionObjectType.CompositionRoundedRectangleGeometry:
@@ -288,6 +308,40 @@ namespace Lottie
                 default:
                     throw new InvalidOperationException();
             }
+        }
+
+        Wc.CompositionPropertySet GetCompositionPropertySet(Wd.CompositionPropertySet obj)
+        {
+            if (GetExisting(obj, out Wc.CompositionPropertySet result))
+            {
+                return result;
+            }
+
+            // CompositionPropertySets are usually created implicitly by CompositionObjects that own them.
+            // If the CompositionPropertySet is not owned, then create it now.
+            if (obj.Owner == null)
+            {
+                result = _c.CreatePropertySet();
+            }
+            else
+            {
+                result = GetCompositionObject(obj.Owner).Properties;
+            }
+
+            result = CacheAndInitializeCompositionObject(obj, result);
+
+            foreach (var prop in obj.ScalarProperties)
+            {
+                result.InsertScalar(prop.Key, prop.Value);
+            }
+
+            foreach (var prop in obj.Vector2Properties)
+            {
+                result.InsertVector2(prop.Key, Vector2(prop.Value));
+            }
+
+            StartAnimations(obj, result);
+            return result;
         }
 
         Wc.Visual GetVisual(Wd.Visual obj)
@@ -442,7 +496,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitialize(obj, _c.CreateInsetClip());
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateInsetClip());
             if (obj.LeftInset != null)
             {
                 result.LeftInset = obj.LeftInset.Value;
@@ -471,7 +525,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitialize(obj, _c.CreateLinearEasingFunction());
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateLinearEasingFunction());
             StartAnimations(obj, result);
             return result;
         }
@@ -483,7 +537,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitialize(obj, _c.CreateStepEasingFunction());
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateStepEasingFunction());
             result.FinalStep = obj.FinalStep;
             result.InitialStep = obj.InitialStep;
             result.IsFinalStepSingleFrame = obj.IsFinalStepSingleFrame;
@@ -500,7 +554,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitialize(obj, _c.CreateCubicBezierEasingFunction(Vector2(obj.ControlPoint1), Vector2(obj.ControlPoint2)));
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateCubicBezierEasingFunction(Vector2(obj.ControlPoint1), Vector2(obj.ControlPoint2)));
             StartAnimations(obj, result);
             return result;
         }
@@ -511,7 +565,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitialize(obj, _c.CreateViewBox());
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateViewBox());
             result.Size = Vector2(obj.Size);
             StartAnimations(obj, result);
             return result;
@@ -652,7 +706,7 @@ namespace Lottie
             {
                 return result;
             }
-            result = CacheAndInitialize(obj, _c.CreateEllipseGeometry());
+            result = CacheAndInitializeCompositionGeometry(obj, _c.CreateEllipseGeometry());
             result.Radius = Vector2(obj.Radius);
             result.Center = Vector2(obj.Center);
             StartAnimations(obj, result);
@@ -665,7 +719,7 @@ namespace Lottie
             {
                 return result;
             }
-            result = CacheAndInitialize(obj, _c.CreateRectangleGeometry());
+            result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRectangleGeometry());
             result.Size = Vector2(obj.Size);
             StartAnimations(obj, result);
             return result;
@@ -677,7 +731,7 @@ namespace Lottie
             {
                 return result;
             }
-            result = CacheAndInitialize(obj, _c.CreateRoundedRectangleGeometry());
+            result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRoundedRectangleGeometry());
             result.Size = Vector2(obj.Size);
             result.CornerRadius = Vector2(obj.CornerRadius);
             StartAnimations(obj, result);
@@ -690,19 +744,7 @@ namespace Lottie
             {
                 return result;
             }
-            result = CacheAndInitialize(obj, _c.CreatePathGeometry(GetCompositionPath(obj.Path)));
-            if (obj.TrimStart.HasValue)
-            {
-                result.TrimStart = obj.TrimStart.Value;
-            }
-            if (obj.TrimEnd.HasValue)
-            {
-                result.TrimEnd = obj.TrimEnd.Value;
-            }
-            if (obj.TrimOffset.HasValue)
-            {
-                result.TrimOffset = obj.TrimOffset.Value;
-            }
+            result = CacheAndInitializeCompositionGeometry(obj, _c.CreatePathGeometry(GetCompositionPath(obj.Path)));
             StartAnimations(obj, result);
             return result;
         }
@@ -727,54 +769,66 @@ namespace Lottie
 
             var canvasGeometry = (Wd.Mgcg.CanvasGeometry)obj;
             var content = canvasGeometry.Content;
-            if (content is Wd.Mgcg.CanvasPathBuilder)
+            switch (canvasGeometry.Type)
             {
-                using (var builder = new CanvasPathBuilder(_canvasDevice))
-                {
-                    ConfigureBuilder(builder, (WinCompData.Mgcg.CanvasPathBuilder)content);
-                    return Cache(obj, CanvasGeometry.CreatePath(builder));
-                }
-            }
-            else if (content is Wd.Mgcg.CanvasGeometry.Combination)
-            {
-                var combination = (Wd.Mgcg.CanvasGeometry.Combination)content;
+                case Wd.Mgcg.CanvasGeometry.GeometryType.Combination:
+                    {
+                        var combination = (Wd.Mgcg.CanvasGeometry.Combination)content;
 
-                return Cache(obj, GetCanvasGeometry(combination.A).CombineWith(
-                    GetCanvasGeometry(combination.B),
-                    Matrix3x2(combination.Matrix),
-                    Combine(combination.CombineMode)));
-            }
-            else
-            {
-                // TODO
-                throw new InvalidOperationException();
+                        return Cache(obj, GetCanvasGeometry(combination.A).CombineWith(
+                            GetCanvasGeometry(combination.B),
+                            Matrix3x2(combination.Matrix),
+                            Combine(combination.CombineMode)));
+                    }
+                case Wd.Mgcg.CanvasGeometry.GeometryType.Ellipse:
+                    var ellipse = (Wd.Mgcg.CanvasGeometry.Ellipse)content;
+                    return CanvasGeometry.CreateEllipse(
+                        _canvasDevice,
+                        ellipse.X,
+                        ellipse.Y,
+                        ellipse.RadiusX,
+                        ellipse.RadiusY);
+                case Wd.Mgcg.CanvasGeometry.GeometryType.Path:
+                    using (var builder = new CanvasPathBuilder(_canvasDevice))
+                    {
+                        foreach (var command in ((WinCompData.Mgcg.CanvasPathBuilder)content).Commands)
+                        {
+                            switch (command.Type)
+                            {
+                                case Wd.Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
+                                    builder.BeginFigure(Vector2((Wd.Sn.Vector2)command.Args));
+                                    break;
+                                case Wd.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
+                                    builder.EndFigure(CanvasFigureLoop((Wd.Mgcg.CanvasFigureLoop)command.Args));
+                                    break;
+                                case Wd.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
+                                    var vectors = (Wd.Sn.Vector2[])command.Args;
+                                    builder.AddCubicBezier(Vector2(vectors[0]), Vector2(vectors[1]), Vector2(vectors[2]));
+                                    break;
+                                case Wd.Mgcg.CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
+                                    builder.SetFilledRegionDetermination(FilledRegionDetermination((Wd.Mgcg.CanvasFilledRegionDetermination)command.Args));
+                                    break;
+                                default:
+                                    throw new InvalidOperationException();
+                            }
+                        }
+                        return Cache(obj, CanvasGeometry.CreatePath(builder));
+                    }
+                case Wd.Mgcg.CanvasGeometry.GeometryType.RoundedRectangle:
+                    var roundedRectangle = (Wd.Mgcg.CanvasGeometry.RoundedRectangle)content;
+                    return CanvasGeometry.CreateRoundedRectangle(
+                        _canvasDevice,
+                        roundedRectangle.X,
+                        roundedRectangle.Y,
+                        roundedRectangle.W,
+                        roundedRectangle.H,
+                        roundedRectangle.RadiusX,
+                        roundedRectangle.RadiusY);
+                default:
+                    throw new InvalidOperationException();
             }
         }
 
-        static void ConfigureBuilder(CanvasPathBuilder builder, Wd.Mgcg.CanvasPathBuilder WinCompDataBuilder)
-        {
-            foreach (var command in WinCompDataBuilder.Commands)
-            {
-                switch (command.Type)
-                {
-                    case Wd.Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
-                        builder.BeginFigure(Vector2((Wd.Sn.Vector2)command.Args));
-                        break;
-                    case Wd.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
-                        builder.EndFigure(CanvasFigureLoop((Wd.Mgcg.CanvasFigureLoop)command.Args));
-                        break;
-                    case Wd.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
-                        var vectors = (Wd.Sn.Vector2[])command.Args;
-                        builder.AddCubicBezier(Vector2(vectors[0]), Vector2(vectors[1]), Vector2(vectors[2]));
-                        break;
-                    case Wd.Mgcg.CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                        builder.SetFilledRegionDetermination(FilledRegionDetermination((Wd.Mgcg.CanvasFilledRegionDetermination)command.Args));
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-        }
 
         Wc.CompositionBrush GetCompositionBrush(Wd.CompositionBrush obj)
         {
@@ -787,7 +841,7 @@ namespace Lottie
             {
                 return result;
             }
-            result = CacheAndInitialize(obj, _c.CreateColorBrush(Color(obj.Color)));
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateColorBrush(Color(obj.Color)));
             StartAnimations(obj, result);
             return result;
         }

@@ -80,19 +80,16 @@ namespace Lottie
         /// Attempts to translates the given <see cref="LottieData.LottieComposition"/>.
         /// </summary>
         /// <param name="lottieComposition">The <see cref="LottieData.LottieComposition"/> to translate.</param>
-        /// <param name="compositor">A <see cref="Compositor"/> used to create the <see cref="CompositionObject"/>s.</param>
         /// <param name="visual">The <see cref="Visual"/> that contains the translated Lottie.</param>
         /// <param name="resources">Resources that must be kept alive as long as <paramref name="visual"/> is alive, and should be Disposed when no longer required.</param>
         /// <param name="translationIssues">A list of issues that were encountered during the translation.</param>
         public static bool TryTranslateLottieComposition(
             LottieData.LottieComposition lottieComposition,
-            Windows.UI.Composition.Compositor compositor,
             bool strictTranslation,
             out Visual visual,
             out IEnumerable<string> translationIssues) =>
             TryTranslateLottieComposition(
                 lottieComposition,
-                compositor,
                 strictTranslation,
                 false,
                 out visual,
@@ -102,14 +99,12 @@ namespace Lottie
         /// Attempts to translates the given <see cref="LottieData.LottieComposition"/>.
         /// </summary>
         /// <param name="lottieComposition">The <see cref="LottieData.LottieComposition"/> to translate.</param>
-        /// <param name="compositor">A <see cref="Compositor"/> used to create the <see cref="CompositionObject"/>s.</param>
         /// <param name="annotateCompositionObjects">Add a string to the .Comment property of the <see cref="CompositionObjects"/>s to help with debugging.</param>
         /// <param name="visual">The <see cref="Visual"/> that contains the translated Lottie.</param>
         /// <param name="resources">Resources that must be kept alive as long as <paramref name="visual"/> is alive, and should be Disposed when no longer required.</param>
         /// <param name="translationIssues">A list of issues that were encountered during the translation.</param>
         public static bool TryTranslateLottieComposition(
             LottieData.LottieComposition lottieComposition,
-            Windows.UI.Composition.Compositor compositor,
             bool strictTranslation,
             bool annotateCompositionObjects,
             out Visual visual,
@@ -226,22 +221,13 @@ namespace Lottie
             }
         }
 
-        void CreateContainerTransformChain(
+        // Returns a chain of ContainerShape that define the transforms for a layer.
+        // The top of the chain is the rootTransform, the bottom is the leafTransform.
+        bool TryCreateContainerShapeTransformChain(
             TranslationContext context,
             Layer layer,
             out CompositionContainerShape rootNode,
             out CompositionContainerShape contentsNode)
-        {
-            CreateContainerShapeTransformChain(context, layer, out rootNode, out contentsNode);
-        }
-
-        // Returns a chain of ContainerShape that define the transforms for a layer.
-        // The top of the chain is the rootTransform, the bottom is the leafTransform.
-        void CreateContainerShapeTransformChain(
-        TranslationContext context,
-        Layer layer,
-        out CompositionContainerShape rootNode,
-        out CompositionContainerShape contentsNode)
         {
 
             // Create containers for the contents in the layer.
@@ -278,20 +264,26 @@ namespace Lottie
             // | content | | content | ...
             // +---------+ +---------+
             //
+
+            // Convert the layer's in point and out point into absolute progress (0..1) values.
+            var inProgress = GetInPointProgress(context, layer);
+            var outProgress = GetOutPointProgress(context, layer);
+            if (inProgress > 1 || outProgress < 0)
+            {
+                // The layer is never visible. Don't create anything.
+                rootNode = null;
+                contentsNode = null;
+                return false;
+            }
+
             TranslateTransformOnContainerShapeForLayer(context, layer, out rootNode, out var leafTransformNode);
             contentsNode = leafTransformNode;
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
             // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
-
-            // Convert the layer's in point and out point into absolute progress (0..1) values.
-            var inProgress = GetInPointProgress(context, layer);
-            var outProgress = GetOutPointProgress(context, layer);
-
             if (inProgress > 0 || outProgress < 1)
             {
                 // If it's ever visible.
-                // TODO - if not, don't create the layer.
                 if (inProgress < 1)
                 {
                     // Insert another node to hold the visiblity property.
@@ -367,12 +359,15 @@ namespace Lottie
             {
                 rootNode.Comment = string.Join(' ', $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
             }
+
+            return true;
         }
 
 
         // Returns a chain of ContainerVisual that define the transforms for a layer.
         // The top of the chain is the rootTransform, the bottom is the leafTransform.
-        void CreateContainerVisualTransformChain(
+        // Returns false if the layer is never visible.
+        bool TryCreateContainerVisualTransformChain(
             TranslationContext context,
             Layer layer,
             out ContainerVisual rootNode,
@@ -412,21 +407,27 @@ namespace Lottie
             // | content | | content | ...
             // +---------+ +---------+
             //
+
+            // Convert the layer's in point and out point into absolute progress (0..1) values.
+            var inProgress = GetInPointProgress(context, layer);
+            var outProgress = GetOutPointProgress(context, layer);
+            if (inProgress > 1 || outProgress < 0)
+            {
+                // The layer is never visible. Don't create anything.
+                rootNode = null;
+                contentsNode = null;
+                return false;
+            }
+
             TranslateTransformOnContainerVisualForLayer(context, layer, out rootNode, out var leafTransformNode);
             contentsNode = leafTransformNode;
 
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
             // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
-
-            // Convert the layer's in point and out point into absolute progress (0..1) values.
-            var inProgress = GetInPointProgress(context, layer);
-            var outProgress = GetOutPointProgress(context, layer);
-
             if (inProgress > 0 || outProgress < 1)
             {
                 // If it's ever visible.
-                // TODO - if not, don't create the layer.
                 if (inProgress < 1)
                 {
                     // Insert another node to hold the visiblity property.
@@ -498,6 +499,8 @@ namespace Lottie
 
                 rootNode.Comment = string.Join(' ', $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
             }
+
+            return true;
         }
 
         Visual TranslateImageLayer(TranslationContext context, ImageLayer layer)
@@ -511,7 +514,11 @@ namespace Lottie
         Visual TranslatePreCompLayerToVisual(TranslationContext context, PreCompLayer layer)
         {
             // Create the transform chain.
-            CreateContainerVisualTransformChain(context, layer, out var rootNode, out var contentsNode);
+            if (!TryCreateContainerVisualTransformChain(context, layer, out var rootNode, out var contentsNode))
+            {
+                // The layer is never visible.
+                return null;
+            }
 
             var result = CreateContainerVisual();
             if (_annotate)
@@ -662,7 +669,11 @@ namespace Lottie
         // May return null if the layer does not produce any renderable content.
         CompositionShape TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
         {
-            CreateContainerTransformChain(context, layer, out var rootNode, out var contentsNode);
+            if (!TryCreateContainerShapeTransformChain(context, layer, out var rootNode, out var contentsNode))
+            {
+                // The layer is never visible.
+                return null;
+            }
 
             var shapeContext = new ShapeContentContext(this);
             shapeContext.UpdateOpacityFromTransform(layer.Transform);
@@ -1005,7 +1016,7 @@ namespace Lottie
                 geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
 
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X - (my.Size.X/2), my.Position.Y - (my.Size.Y/2))");
+                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 compositionOffsetExpression.Target = "Offset";
                 StartAnimation(geometry, compositionOffsetExpression);
@@ -1027,7 +1038,7 @@ namespace Lottie
                 geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
 
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X - (my.Size.X/2), my.Position.Y - (my.Size.Y/2))");
+                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 compositionOffsetExpression.Target = "Offset";
                 StartAnimation(geometry, compositionOffsetExpression);
@@ -1092,6 +1103,87 @@ namespace Lottie
             TranslateAndApplyTrimPath(context, shapeContext.TrimPath, shape.Geometry);
         }
 
+        enum AnimatableOrder
+        {
+            Before,
+            After,
+            Equal,
+            BeforeAndAfter,
+        }
+
+        static AnimatableOrder GetValueOrder(double a, double b)
+        {
+            if (a == b)
+            {
+                return AnimatableOrder.Equal;
+            }
+            else if (a < b)
+            {
+                return AnimatableOrder.Before;
+            }
+            else
+            {
+                return AnimatableOrder.After;
+            }
+        }
+
+        static AnimatableOrder GetAnimatableOrder(Animatable<double> a, Animatable<double> b)
+        {
+            var initialA = a.InitialValue;
+            var initialB = b.InitialValue;
+
+            var initialOrder = GetValueOrder(initialA, initialB);
+            if (!a.IsAnimated && !b.IsAnimated)
+            {
+                return initialOrder;
+            }
+
+            // TODO - recognize more cases. For now just handle a is always before b
+            var aMin = initialA;
+            var aMax = initialA;
+            if (a.IsAnimated)
+            {
+                aMin = Math.Min(a.KeyFrames.Min(kf => kf.Value), initialA);
+                aMax = Math.Max(a.KeyFrames.Max(kf => kf.Value), initialA);
+            }
+
+            var bMin = initialB;
+            var bMax = initialB; 
+            if (b.IsAnimated)
+            {
+                bMin = Math.Min(b.KeyFrames.Min(kf => kf.Value), initialB);
+                bMax = Math.Max(b.KeyFrames.Max(kf => kf.Value), initialB);
+            }
+
+            switch (initialOrder)
+            {
+                case AnimatableOrder.Before:
+                    return aMax <= bMin ? initialOrder : AnimatableOrder.BeforeAndAfter;
+                case AnimatableOrder.After:
+                    return aMin >= bMax ? initialOrder : AnimatableOrder.BeforeAndAfter;
+                case AnimatableOrder.Equal:
+                    {
+                        if (aMin == aMax && bMin == bMax && aMin == bMax)
+                        {
+                            return AnimatableOrder.Equal;
+                        }
+                        else if (aMin < bMax)
+                        {
+                            // Might be before, unless they cross over.
+                            return bMin < initialA || aMax  > initialA ? AnimatableOrder.BeforeAndAfter : AnimatableOrder.Before;
+                        }
+                        else
+                        {
+                            // Might be after, unless they cross over.
+                            return bMin > aMax ? AnimatableOrder.BeforeAndAfter : AnimatableOrder.After;
+                        }
+                    }
+                case AnimatableOrder.BeforeAndAfter:
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
         void TranslateAndApplyTrimPath(TranslationContext context, TrimPath trimPath, CompositionGeometry geometry)
         {
             if (trimPath == null)
@@ -1099,11 +1191,56 @@ namespace Lottie
                 return;
             }
 
-            geometry.TrimStart = FloatDefaultIsZero(trimPath.StartPercent.InitialValue / 100);
-            ApplyScaledScalarKeyFrameAnimation(context, trimPath.StartPercent, 1 / 100.0, geometry, nameof(geometry.TrimStart));
+            var startPercent = _lottieDataOptimizer.GetOptimized(trimPath.StartPercent);
+            var endPercent = _lottieDataOptimizer.GetOptimized(trimPath.EndPercent);
 
-            geometry.TrimEnd = FloatDefaultIsOne(trimPath.EndPercent.InitialValue / 100);
-            ApplyScaledScalarKeyFrameAnimation(context, trimPath.EndPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd));
+            var order = GetAnimatableOrder(startPercent, endPercent);
+
+            switch (order)
+            {
+                case AnimatableOrder.Before:
+                case AnimatableOrder.Equal:
+                    break;
+                case AnimatableOrder.After:
+                    {
+                        // Swap is necessary to match the WinComp semantics.
+                        var temp = startPercent;
+                        startPercent = endPercent;
+                        endPercent = temp;
+                    }
+                    break;
+                case AnimatableOrder.BeforeAndAfter:
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+
+            if (order == AnimatableOrder.BeforeAndAfter)
+            {
+                // Add properties that will be animated. The TrimStart and TrimEnd properties
+                // will be set by these values through an expression.
+                geometry.Properties.InsertScalar("TStart", (float)(startPercent.InitialValue / 100));
+                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart");
+                var trimStartExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TStart:my.TEnd");
+                trimStartExpression.SetReferenceParameter("my", geometry);
+                trimStartExpression.Target = nameof(geometry.TrimStart);
+                StartAnimation(geometry, trimStartExpression);
+
+                geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
+                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd");
+                var trimEndExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TEnd:my.TStart");
+                trimEndExpression.SetReferenceParameter("my", geometry);
+                trimEndExpression.Target = nameof(geometry.TrimEnd);
+                StartAnimation(geometry, trimEndExpression);
+            }
+            else
+            {
+                geometry.TrimStart = FloatDefaultIsZero(startPercent.InitialValue / 100);
+                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry, nameof(geometry.TrimStart));
+
+                geometry.TrimEnd = FloatDefaultIsOne(endPercent.InitialValue / 100);
+                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd));
+            }
 
             geometry.TrimOffset = FloatDefaultIsZero(trimPath.OffsetDegrees.InitialValue / 360);
             ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset));
@@ -1166,7 +1303,11 @@ namespace Lottie
                 return null;
             }
 
-            CreateContainerTransformChain(context, layer, out var rootNode, out var contentsNode);
+            if (!TryCreateContainerShapeTransformChain(context, layer, out var rootNode, out var contentsNode))
+            {
+                // The layer is never visible.
+                return null;
+            }
 
             var rectangleGeometry = CreateRectangleGeometry();
             rectangleGeometry.Size = Vector2(layer.Width, layer.Height);
@@ -1302,7 +1443,7 @@ namespace Lottie
 
             if (transform.Anchor.IsAnimated)
             {
-                var centerPointExpression = CreateExpressionAnimation("Vector3(my.Anchor.X, my.Anchor.Y, 0)");
+                var centerPointExpression = CreateExpressionAnimation("Vector3(my.Anchor.X,my.Anchor.Y,0)");
                 centerPointExpression.SetReferenceParameter("my", container);
                 centerPointExpression.Target = nameof(container.CenterPoint);
                 StartAnimation(container, centerPointExpression);
@@ -1326,7 +1467,7 @@ namespace Lottie
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation("Vector3(my.Position.X - my.Anchor.X, my.Position.Y - my.Anchor.Y, 0)");
+                var offsetExpression = CreateExpressionAnimation("Vector3(my.Position.X-my.Anchor.X,my.Position.Y-my.Anchor.Y,0)");
                 offsetExpression.SetReferenceParameter("my", container);
                 offsetExpression.Target = nameof(container.Offset);
                 StartAnimation(container, offsetExpression);
@@ -1398,7 +1539,7 @@ namespace Lottie
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation("my.Position - my.Anchor");
+                var offsetExpression = CreateExpressionAnimation("my.Position-my.Anchor");
                 offsetExpression.SetReferenceParameter("my", container);
                 offsetExpression.Target = nameof(container.Offset);
                 StartAnimation(container, offsetExpression);
@@ -1748,7 +1889,9 @@ namespace Lottie
             }
             else
             {
-                return color;
+                // Multiply color by opacity
+                var nonAnimatedMultipliedColor = MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue);
+                return new Animatable<LottieData.Color>(nonAnimatedMultipliedColor, null);
             }
 
         }
@@ -1979,6 +2122,8 @@ namespace Lottie
             }
         }
 
+        static WinCompData.Wui.Color Color(LottieData.Color color) =>
+            WinCompData.Wui.Color.FromArgb((byte)(255 * color.A), (byte)(255 * color.R), (byte)(255 * color.G), (byte)(255 * color.B));
 
         static float? FloatDefaultIsZero(double value) => value == 0 ? null : (float?)value;
         static float? FloatDefaultIsOne(double value) => value == 1 ? null : (float?)value;
@@ -1987,34 +2132,29 @@ namespace Lottie
 
         static WinCompData.Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
         static WinCompData.Sn.Vector2 Vector2(double x, double y) => new WinCompData.Sn.Vector2((float)x, (float)y);
-        static WinCompData.Sn.Vector3 Vector3(double x, double y, double z) => new WinCompData.Sn.Vector3((float)x, (float)y, (float)z);
-        static WinCompData.Sn.Vector3 Vector3(LottieData.Vector3 vector3) => new WinCompData.Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z);
-
-        static WinCompData.Sn.Vector2? Vector2DefaultIsOne(LottieData.Vector3 vector2) =>
-            vector2.X == 1 && vector2.Y == 1 ? null : (WinCompData.Sn.Vector2?)Vector2(vector2);
-        static WinCompData.Sn.Vector2? Vector2DefaultIsZero(LottieData.Vector3 vector2) =>
-            vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector2?)Vector2(vector2);
-        static WinCompData.Sn.Vector2? Vector2DefaultIsZero(WinCompData.Sn.Vector2 vector2) =>
-            vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector2?)vector2;
-
-        static WinCompData.Sn.Vector2 ClampedVector2(LottieData.Vector3 vector3) => ClampedVector2((float)vector3.X, (float)vector3.Y);
-
-        static WinCompData.Sn.Vector2 ClampedVector2(float x, float y) => Vector2(Math.Clamp(x, 0, 1), Math.Clamp(y, 0, 1));
-
         static WinCompData.Sn.Vector2 Vector2(float x, float y) => new WinCompData.Sn.Vector2(x, y);
         static WinCompData.Sn.Vector2 Vector2(float x) => new WinCompData.Sn.Vector2(x, x);
+        static WinCompData.Sn.Vector2? Vector2DefaultIsOne(LottieData.Vector3 vector2) =>
+            vector2.X == 1 && vector2.Y == 1 ? null : (WinCompData.Sn.Vector2?)Vector2(vector2);
+        static WinCompData.Sn.Vector2? Vector2DefaultIsZero(WinCompData.Sn.Vector2 vector2) =>
+            vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector2?)vector2;
+        static WinCompData.Sn.Vector2 ClampedVector2(LottieData.Vector3 vector3) => ClampedVector2((float)vector3.X, (float)vector3.Y);
+        static WinCompData.Sn.Vector2 ClampedVector2(float x, float y) => Vector2(Clamp(x, 0, 1), Clamp(y, 0, 1));
 
+        static WinCompData.Sn.Vector3 Vector3(double x, double y, double z) => new WinCompData.Sn.Vector3((float)x, (float)y, (float)z);
+        static WinCompData.Sn.Vector3 Vector3(LottieData.Vector3 vector3) => new WinCompData.Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z);
         static WinCompData.Sn.Vector3? Vector3DefaultIsZero(WinCompData.Sn.Vector2 vector2) =>
                     vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector3?)Vector3(vector2);
         static WinCompData.Sn.Vector3? Vector3DefaultIsOne(WinCompData.Sn.Vector3 vector3) =>
                     vector3.X == 1 && vector3.Y == 1 && vector3.Z == 1 ? null : (WinCompData.Sn.Vector3?)vector3;
         static WinCompData.Sn.Vector3? Vector3DefaultIsOne(LottieData.Vector3 vector3) => Vector3DefaultIsOne(new WinCompData.Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z));
-
         static WinCompData.Sn.Vector3 Vector3(WinCompData.Sn.Vector2 vector2) => Vector3(vector2.X, vector2.Y, 0);
 
-
-        static WinCompData.Wui.Color Color(LottieData.Color color) =>
-            WinCompData.Wui.Color.FromArgb((byte)(255 * color.A), (byte)(255 * color.R), (byte)(255 * color.G), (byte)(255 * color.B));
+        static float Clamp(float value, float min, float max)
+        {
+            Debug.Assert(min <= max);
+            return Math.Min(Math.Max(min, value), max);
+        }
 
         void Unsupported(string details)
         {

@@ -21,7 +21,6 @@ namespace Lottie
     public sealed class LottieComposition : CompositionPlayerSource
     {
         readonly StorageFile _storageFile;
-        Uri _uriSource;
         WinCompData.Visual _wincompDataRootVisual;
         double _width;
         double _height;
@@ -36,7 +35,7 @@ namespace Lottie
 
         LottieComposition(Uri uriSource)
         {
-            _uriSource = uriSource;
+            UriSource = uriSource;
         }
 
         /// <summary>
@@ -44,7 +43,6 @@ namespace Lottie
         /// </summary>
         public LottieComposition(StorageFile storageFile)
         {
-            // TODO - convert the path of the storageFile to a uri so that the UriSource property can return something sensible.
             _storageFile = storageFile;
         }
 
@@ -53,28 +51,25 @@ namespace Lottie
         /// </summary>
         public static LottieComposition CreateFromString(string uri)
         {
-            if (!Uri.IsWellFormedUriString(uri, UriKind.RelativeOrAbsolute))
+            var uriUri = StringToUri(uri);
+            if (uriUri == null)
             {
                 // TODO - throw?
                 return null;
             }
-            return new LottieComposition(new Uri(uri));
+            return new LottieComposition(uriUri);
         }
 
         /// <summary>
         /// Gets or sets the Uniform Resource Identifier (URI) of the JSON source file that generated this <see cref="LottieComposition"/>.
         /// </summary>
-        public string UriSource
-        {
-            get { return _uriSource.OriginalString; }
-            set { _uriSource = new Uri(value); }
-        }
+        public Uri UriSource { get; set; }
 
         public LottieCompositionOptions Options { get; set; }
 
         internal override async Task<CompositionLoadResult> TryLoad(Compositor compositor)
         {
-            // TODO - if the storage file or _uriSource are not set, tell the CompositionPlayer to fire a CompositionPlayerFailed event.
+            // TODO - if the storage file or UriSource are not set, tell the CompositionPlayer to fire a CompositionPlayerFailed event.
             var sw = Stopwatch.StartNew();
 
             var diagnostics = new LottieCompositionDiagnostics();
@@ -173,7 +168,6 @@ namespace Lottie
                 {
                     translateSucceeded = LottieToVisualTranslator.TryTranslateLottieComposition(
                         lottieComposition,
-                        compositor,
                         false, // strictTranslation
                         true, // annotate
                         out _wincompDataRootVisual,
@@ -231,31 +225,36 @@ namespace Lottie
             return result;
         }
 
-        async Task<ValueTuple<string, string>> ReadFileAsync()
+        Task<ValueTuple<string, string>> ReadFileAsync()
+            => _storageFile != null 
+                ? ReadStorageFileAsync(_storageFile) 
+                : ReadUriAsync(UriSource);
+
+        async Task<ValueTuple<string, string>> ReadUriAsync(Uri uri)
         {
-            var storageFile = _storageFile;
-            if (storageFile != null || _uriSource.Scheme == "ms-appx")
+            var absoluteUri = GetAbsoluteUri(uri);
+            if (absoluteUri != null)
             {
-                if (storageFile == null)
+                if (absoluteUri.Scheme.StartsWith("ms-"))
                 {
-                    storageFile = await StorageFile.GetFileFromApplicationUriAsync(_uriSource);
+                    return await ReadStorageFileAsync(await StorageFile.GetFileFromApplicationUriAsync(absoluteUri));
                 }
-
-                if (storageFile == null)
+                else
                 {
-                    return ValueTuple.Create<string, string>(null, null);
+                    var winrtClient = new Windows.Web.Http.HttpClient();
+                    var response = await winrtClient.GetAsync(absoluteUri);
+                    var result = await response.Content.ReadAsStringAsync();
+                    return ValueTuple.Create(absoluteUri.LocalPath, result);
                 }
+            }
+            return ValueTuple.Create<string, string>(null, null);
+        }
 
-                var result = await FileIO.ReadTextAsync(storageFile);
-                return ValueTuple.Create(storageFile.Name, result);
-            }
-            else
-            {
-                var winrtClient = new Windows.Web.Http.HttpClient();
-                var response = await winrtClient.GetAsync(_uriSource);
-                var result = await response.Content.ReadAsStringAsync();
-                return ValueTuple.Create(_uriSource.LocalPath, result);
-            }
+        async Task<ValueTuple<string, string>> ReadStorageFileAsync(StorageFile storageFile)
+        {
+            Debug.Assert(storageFile != null);
+            var result = await FileIO.ReadTextAsync(storageFile);
+            return ValueTuple.Create(storageFile.Name, result);
         }
 
         // Creates a string that describes the given LottieComposition for diagnostics purposes.
@@ -305,6 +304,33 @@ namespace Lottie
 
             return $"LottieComposition w={lottieComposition.Width} h={lottieComposition.Height} " +
                 $"layers: precomp={precompLayerCount} solid={solidLayerCount} image={imageLayerCount} null={nullLayerCount} shape={shapeLayerCount} text={textLayerCount}";
+        }
+
+        // Parses a string into an absolute URI, or null if the string is malformed.
+        static Uri StringToUri(string uri)
+        {
+            if (!Uri.IsWellFormedUriString(uri, UriKind.RelativeOrAbsolute))
+            {
+                return null;
+            }
+
+            return GetAbsoluteUri(new Uri(uri, UriKind.RelativeOrAbsolute));
+        }
+
+        // Returns an absolute URI. Relative URIs are made relative to ms-appx:///
+        static Uri GetAbsoluteUri(Uri uri)
+        {
+            if (uri == null)
+            {
+                return null;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                return uri;
+            }
+
+            return new Uri($"ms-appx:///{uri}", UriKind.Absolute);
         }
 
         #region DEBUG

@@ -8,11 +8,17 @@ namespace WinCompData
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class CompositionPropertySet
+    sealed class CompositionPropertySet : CompositionObject
     {
         readonly Dictionary<string, float> _scalarProperties = new Dictionary<string, float>();
         readonly Dictionary<string, Vector2> _vector2Properties = new Dictionary<string, Vector2>();
 
+        internal CompositionPropertySet(CompositionObject owner) 
+        {
+            Owner = owner;
+        }
+
+        public CompositionObject Owner { get; }
         public void InsertScalar(string name, float value) => _scalarProperties.Add(name, value);
 
         public void InsertVector2(string name, Vector2 value) => _vector2Properties.Add(name, value);
@@ -24,5 +30,7 @@ namespace WinCompData
         internal IEnumerable<string> PropertyNames => _scalarProperties.Keys.Concat(_vector2Properties.Keys);
 
         internal bool IsEmpty => !PropertyNames.Any();
+
+        public override CompositionObjectType Type => CompositionObjectType.CompositionPropertySet;
     }
 }

@@ -27,6 +27,6 @@ function GetCards($pageNumber)
 
 '{ "entries":[ '
 
-(1..51 | %{ GetCards($_) | %{GetTitleAndLink($_)} }) -join ','
+(1..60 | %{ GetCards($_) | %{GetTitleAndLink($_)} }) -join ','
 
 ']}'

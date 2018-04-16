@@ -102,16 +102,12 @@ namespace Lottie
 
             Debug.Assert(_currentPlay == null);
 
-            // Start the animation
-            StartAnimating(
+            // Start the animation.
+            return StartAnimating(
                 fromProgress: ClampFloat0to1(fromProgress),
                 toProgress: ClampFloat0to1(toProgress),
                 looped: loop,
                 reversed: reversed);
-
-            // Return a Task that will be completed when the play is stopped
-            // or the animation batch completes.
-            return _currentPlay.PlayCompletedSource.Task;
         }
 
         /// <summary>
@@ -153,25 +149,28 @@ namespace Lottie
         }
 
         // Starts animating.
-        void StartAnimating(float fromProgress, float toProgress, bool looped, bool reversed)
+        Task StartAnimating(float fromProgress, float toProgress, bool looped, bool reversed)
         {
             Debug.Assert(_currentPlay == null);
+
+            if (fromProgress == toProgress)
+            {
+                // Nothing to play.
+                return Task.CompletedTask;
+            }
+
+            var duration = AnimationDuration * (fromProgress < toProgress ? (toProgress - fromProgress) : ((1 - fromProgress) + toProgress));
+
+            if (duration.TotalMilliseconds < 20)
+            {
+                // Nothing to play.
+                SetProgress(fromProgress);
+                return Task.CompletedTask;
+            }
             var playAnimation = _compositor.CreateScalarKeyFrameAnimation();
+            playAnimation.Duration = duration;
             var linearEasing = _compositor.CreateLinearEasingFunction();
 
-            if (fromProgress < toProgress)
-            {
-                playAnimation.Duration = AnimationDuration * (toProgress - fromProgress);
-            }
-            else
-            {
-                playAnimation.Duration = AnimationDuration * ((1 - fromProgress) + toProgress);
-            }
-
-            if (playAnimation.Duration.TotalMilliseconds < 20)
-            {
-                throw new InvalidOperationException("Animation duration is too small.");
-            }
 
             if (reversed)
             {
@@ -225,10 +224,6 @@ namespace Lottie
             var playState = _currentPlay =
                 new PlayAsyncState(_animatedObject.TryGetAnimationController(_animatedPropertyName));
 
-            //// Start from where it stopped last time.
-            //_target.Properties.TryGetScalar(_progressPropertyName, out var currentPosition);
-            //playState._animationController.Progress = currentPosition;
-
             if (batch != null)
             {
                 batch.Completed += (sender, args) =>
@@ -239,6 +234,8 @@ namespace Lottie
                 };
                 batch.End();
             }
+
+            return playState.PlayCompletedSource.Task;
         }
 
         void _SetPosition(double progress)

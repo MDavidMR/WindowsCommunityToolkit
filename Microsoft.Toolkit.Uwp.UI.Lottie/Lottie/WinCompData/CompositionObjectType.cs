@@ -11,6 +11,7 @@
         CompositionContainerShape,
         CompositionEllipseGeometry,
         CompositionPathGeometry,
+        CompositionPropertySet,
         CompositionRectangleGeometry,
         CompositionRoundedRectangleGeometry,
         CompositionSpriteShape,

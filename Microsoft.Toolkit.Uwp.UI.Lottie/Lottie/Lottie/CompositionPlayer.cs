@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+// If uncommented, outputs measure and arrange info.
+#define DebugMeasureAndArrange
+#endif // DEBUG
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -36,7 +40,7 @@ namespace Lottie
 
         #region Dependency properties
         public static DependencyProperty AutoPlayProperty { get; } =
-            RegisterDP(nameof(AutoPlay), false,
+            RegisterDP(nameof(AutoPlay), true,
                 (owner, oldValue, newValue) => owner.HandleAutoPlayPropertyChanged(oldValue, newValue));
 
         public static DependencyProperty DiagnosticsProperty { get; } =
@@ -82,6 +86,9 @@ namespace Lottie
 
             // Ensure the content can't render outside the bounds of the element.
             _rootVisual.Clip = compositor.CreateInsetClip();
+
+            // Ensure the resources get cleaned up when the element is unloaded.
+            Unloaded += (sender, e) => UnloadVisualPlayer();
         }
 
         #region Properties
@@ -243,7 +250,7 @@ namespace Lottie
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            Debug.WriteLine($"Measure availableSize: {availableSize} Stretch: {Stretch}");
+            DebugMeasureAndArrange($"Measure availableSize: {availableSize} Stretch: {Stretch}");
 
             Size measuredSize;
 
@@ -347,13 +354,13 @@ namespace Lottie
                 }
             }
 
-            Debug.WriteLine($"Measure returning: {measuredSize}");
+            DebugMeasureAndArrange($"Measure returning: {measuredSize}");
             return measuredSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            Debug.WriteLine($"Arrange finalSize: {finalSize} Stretch: {Stretch}");
+            DebugMeasureAndArrange($"Arrange finalSize: {finalSize} Stretch: {Stretch}");
 
             if (_visualPlayer == null)
             {
@@ -428,13 +435,14 @@ namespace Lottie
                 {
                     // Adjust the position of the clip.
                     _rootVisual.Clip.Offset = new Vector2((float)(-xOffset / widthScale), (float)(-yOffset / heightScale));
-                } else
+                }
+                else
                 {
                     _rootVisual.Clip.Offset = Vector2.Zero;
                 }
             }
 
-            Debug.WriteLine($"Arrange: final {finalSize} scale: {widthScale}x{heightScale}  offset: {xOffset},{yOffset} clip size: {_rootVisual.Size}");
+            DebugMeasureAndArrange($"Arrange: final {finalSize} scale: {widthScale}x{heightScale}  offset: {xOffset},{yOffset} clip size: {_rootVisual.Size}");
             return finalSize;
         }
 
@@ -467,15 +475,7 @@ namespace Lottie
         {
             // Clear out the command queue. Any commands that were
             // enqueued before the Source was set are irrelevant.
-            foreach (var command in _commands)
-            {
-                if (command.Type == Command.CommandType.PlayAsync)
-                {
-                    // Complete the PlayAsync task.
-                    ((PlayAsyncCommand)command).CompleteTask();
-                }
-            }
-            _commands.Clear();
+            ClearCommandQueue();
 
             if (newValue == null)
             {
@@ -499,7 +499,27 @@ namespace Lottie
         {
             if (_visualPlayer != null)
             {
+                DebugMeasureAndArrange("Invalidating measure.");
                 InvalidateMeasure();
+            }
+        }
+
+        // Removes all the enqueued commands and completes any PlayAsync commands.
+        void ClearCommandQueue()
+        {
+            // Copy the commands so that the queue can be emptied before any PlayAsyncs
+            // get completed. This is necessary because completing a PlayAsync may cause
+            // an immediate callback and reentrance.
+            var commands = _commands.ToArray();
+            _commands.Clear();
+
+            foreach (var command in commands)
+            {
+                if (command.Type == Command.CommandType.PlayAsync)
+                {
+                    // Complete the PlayAsync task.
+                    ((PlayAsyncCommand)command).CompleteTask();
+                }
             }
         }
 
@@ -511,7 +531,12 @@ namespace Lottie
             // Attempt to load the VisualPlayer from the source.
             var loadResult = await source.TryLoad(Window.Current.Compositor);
 
-            if (loadResult.LoadSucceeded)
+            if (!loadResult.LoadSucceeded)
+            {
+                // Load failed. Clear out the queued commands and complete the plays.
+                ClearCommandQueue();
+            }
+            else
             {
                 _visualPlayer = loadResult.VisualPlayer;
 
@@ -520,6 +545,7 @@ namespace Lottie
                 _rootVisual.Children.InsertAtTop(_visualPlayer.Root);
 
                 // The element needs to be measured again for the new content.
+                DebugMeasureAndArrange("Invalidating measure.");
                 InvalidateMeasure();
 
                 // Play back any commands that were enqueued during loading.
@@ -532,7 +558,11 @@ namespace Lottie
                 }
                 else
                 {
-                    foreach (var command in _commands)
+                    // Process all the commands in the queue. Copy and clear the queue first
+                    // in case handling one of the commands causes reentrance.
+                    var commands = _commands.ToArray();
+                    _commands.Clear();
+                    foreach (var command in commands)
                     {
                         switch (command.Type)
                         {
@@ -567,12 +597,10 @@ namespace Lottie
                         }
                     }
                 }
-                // All command have been processed.
-                _commands.Clear();
 
                 SetValue(DurationProperty, _visualPlayer.AnimationDuration);
-                SetValue(DiagnosticsProperty, loadResult.Diagnostics);
             }
+            SetValue(DiagnosticsProperty, loadResult.Diagnostics);
         }
 
         void UnloadVisualPlayer()
@@ -581,7 +609,6 @@ namespace Lottie
             {
                 _rootVisual.Children.RemoveAll();
 
-                // TODO - also call dispose when this control is unloaded.
                 _visualPlayer.Dispose();
                 _visualPlayer = null;
 
@@ -654,5 +681,8 @@ namespace Lottie
             }
             internal double Progress { get; }
         }
+
+        [Conditional("DebugMeasureAndArrange")]
+        static void DebugMeasureAndArrange(string line) => Debug.WriteLine(line);
     }
 }

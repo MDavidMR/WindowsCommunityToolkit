@@ -24,7 +24,7 @@
         <Border Background="{x:Bind BackgroundBrush, Mode=OneWay}" 
               RelativePanel.RightOf="PlayerControls"  RelativePanel.LeftOf="Info"
               RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-            <lottie:CompositionPlayer x:Name="_player" Margin="10"/>
+            <lottie:CompositionPlayer x:Name="_player" Margin="10" AutoPlay="False"/>
         </Border>
 
         <StackPanel x:Name="PlayerControls" 
@@ -60,7 +60,7 @@
 
             <!-- Lottie logo -->
             <Border BorderBrush="Black" BorderThickness="2" Height="190" Margin="0,0,0,20" >
-                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" AutoPlay="True" Stretch="UniformToFill" />
+                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" />
             </Border>
 
             <Button Click="PickFile_Click" >Pick Lottie files ...</Button>
@@ -99,7 +99,7 @@
                     VerticalAlignment="Top"
                     >
             <StackPanel>
-                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" AutoPlay="True" Stretch="UniformToFill" Height="160" Margin="10"/>
+                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" Height="160" Margin="10"/>
 
                 <Pivot DataContext="{Binding ElementName=_player}">
                     <Pivot.Resources>

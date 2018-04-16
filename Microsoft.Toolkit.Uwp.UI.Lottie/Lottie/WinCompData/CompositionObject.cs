@@ -13,12 +13,22 @@ namespace WinCompData
         readonly ListOfNeverNull<Animator> _animators = new ListOfNeverNull<Animator>();
         CompositionPropertySet _propertySet;
 
+        internal CompositionObject()
+        {
+            if (Type == CompositionObjectType.CompositionPropertySet)
+            {
+                // The property set on a property set is itself. 
+                _propertySet = (CompositionPropertySet)this;
+            }
+        }
+
         public string Comment { get; set; }
+
         public CompositionPropertySet Properties
         {
             get
             {
-                if (_propertySet == null) { _propertySet = new CompositionPropertySet(); }
+                if (_propertySet == null) { _propertySet = new CompositionPropertySet(this); }
                 return _propertySet;
             }
         }
@@ -63,7 +73,6 @@ namespace WinCompData
             public string Target { get; internal set; }
             public CompositionAnimation Animation { get; internal set; }
             public AnimationController Controller { get; internal set; }
-
             public override string ToString() => $"{Animation.Type} bound to {Target}";
         }
     }
