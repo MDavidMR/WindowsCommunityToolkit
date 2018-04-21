@@ -138,7 +138,7 @@ namespace LottieData.Serialization
                         break;
                     case "layers":
                         layers = field.Value.ValueType == JsonValueType.Array
-                            ? new LayerCollection(field.Value.GetArray().Select(a => ReadLayer(a.GetObject())))
+                            ? new LayerCollection(field.Value.GetArray().Select(a => ReadLayer(a.GetObject())).Where(a => a != null))
                             : null;
                         break;
                     case "nm":
@@ -207,32 +207,52 @@ namespace LottieData.Serialization
         {
             var tm = obj.GetNamedNumber("tm");
             var cm = obj.GetNamedString("cm");
-            var dr = ReadBool(obj, "dr") == true;
+            var dr = obj.GetNamedNumber("dr");
             AssertAllFieldsRead(obj);
             return new Marker(tm, cm, dr);
         }
 
         Asset ReadAsset(JsonObject obj)
         {
-            var id = obj.GetNamedString("id");
+            // Older Lottie's use a string for the id. Newer Lotties use a number.
+            // Convert either to a string.
+            var idObj = obj.GetNamedValue("id");
+            var id = idObj.ValueType == JsonValueType.Number 
+                ? idObj.GetNumber().ToString() 
+                : idObj.GetString();
 
+            // Try to parse as a layers asset.
             var layersArray = obj.GetNamedArray("layers", null);
             if (layersArray != null)
             {
                 var layers = from val in layersArray
-                             select ReadLayer(val.GetObject());
+                             let layer = ReadLayer(val.GetObject())
+                             where layer != null
+                             select layer;
 
                 AssertAllFieldsRead(obj);
                 return new LayerCollectionAsset(id, new LayerCollection(layers));
             }
             else
             {
-                ReportIssue("Unsupported asset type.");
-                AssertAllFieldsRead(obj);
-                return null;
+                // Try to parse as an image asset.
+                var w = obj.GetNamedNumber("w", double.NaN);
+                var h = obj.GetNamedNumber("h", double.NaN);
+                var u = obj.GetNamedString("u");
+                var p = obj.GetNamedString("p");
+
+                if (double.IsNaN(w) || double.IsNaN(h) || u == null || p == null)
+                {
+                    ReportIssue("Unsupported asset type.");
+                    AssertAllFieldsRead(obj);
+                    return null;
+                }
+
+                return new ImageAsset(id, w, h, u, p);
             }
         }
 
+        // May return null if there was a problem reading the layer.
         Layer ReadLayer(JsonObject obj)
         {
             // Not clear whether we need to read these fields.
@@ -249,7 +269,14 @@ namespace LottieData.Serialization
             var autoOrient = ReadBool(obj, "ao") == true;
             var blendMode = BmToBlendMode(obj.GetNamedNumber("bm", 0));
             var isHidden = ReadBool(obj, "hd") == true;
+            var render = ReadBool(obj, "render") != false;
 
+            if (!render)
+            {
+                ReportIssue("Layer with render:false");
+                return null;
+            }
+            
             // Warnings
             if (name.EndsWith(".ai") || obj.GetNamedString("cl", "") == "ai")
             {

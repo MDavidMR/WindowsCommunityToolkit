@@ -12,24 +12,24 @@ namespace Lottie
     sealed class VisualPlayer : IDisposable
     {
         readonly Compositor _compositor;
-        readonly CompositionObject _animatedObject;
-        readonly string _animatedPropertyName;
+        readonly CompositionPropertySet _progressPropertySet;
+        readonly string _progressPropertyName;
         PlayAsyncState _currentPlay;
         bool _isDisposed;
 
-        internal VisualPlayer(
+        public VisualPlayer(
             Visual rootVisual,
             Vector2 size,
-            CompositionObject animatedObject,
-            string animatedPropertyName,
+            CompositionPropertySet progressPropertySet,
+            string progressPropertyName,
             TimeSpan animationDuration)
         {
             Root = rootVisual;
             _compositor = rootVisual.Compositor;
             Size = size;
             AnimationDuration = animationDuration;
-            _animatedObject = animatedObject;
-            _animatedPropertyName = animatedPropertyName;
+            _progressPropertySet = progressPropertySet;
+            _progressPropertyName = progressPropertyName;
         }
 
         /// <summary>
@@ -62,16 +62,16 @@ namespace Lottie
         /// The value must be 0 to 1. The animation must not be currently
         /// playing.
         /// </remarks>
-        public void SetProgress(double position)
+        public void SetProgress(double progress)
         {
             AssertNotDisposed();
 
-            if (position < 0 || position > 1)
+            if (progress < 0 || progress > 1)
             {
-                throw new ArgumentException($"{nameof(position)} must be >= 0 and <= 1.");
+                throw new ArgumentException($"{nameof(progress)} must be >= 0 and <= 1.");
             }
 
-            _animatedObject.Properties.InsertScalar(_animatedPropertyName, (float)position);
+            _progressPropertySet.InsertScalar(_progressPropertyName, (float)progress);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Lottie
                 _currentPlay = null;
 
                 // Stop the animation.
-                _animatedObject.StopAnimation(_animatedPropertyName);
+                _progressPropertySet.StopAnimation(_progressPropertyName);
 
                 // Use TrySet because it may have been completed by the Batch.Completed callback already.
                 // Batch.Completed can not be relied on for looping animations as it fires immediately.
@@ -218,11 +218,11 @@ namespace Lottie
                 ? null
                 : _compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
 
-            _animatedObject.StartAnimation(_animatedPropertyName, playAnimation);
+            _progressPropertySet.StartAnimation(_progressPropertyName, playAnimation);
 
             // Get a controller for the animation and save it in the PlayState.
             var playState = _currentPlay =
-                new PlayAsyncState(_animatedObject.TryGetAnimationController(_animatedPropertyName));
+                new PlayAsyncState(_progressPropertySet.TryGetAnimationController(_progressPropertyName));
 
             if (batch != null)
             {
@@ -244,7 +244,7 @@ namespace Lottie
 
             if (_currentPlay == null)
             {
-                _animatedObject.Properties.InsertScalar(_animatedPropertyName, floatProgress);
+                _progressPropertySet.Properties.InsertScalar(_progressPropertyName, floatProgress);
 
                 return;
             }

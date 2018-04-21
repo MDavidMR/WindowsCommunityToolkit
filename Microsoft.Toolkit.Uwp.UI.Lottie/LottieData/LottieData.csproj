@@ -27,6 +27,7 @@
     <Compile Include="..\Lottie\LottieData\HoldEasing.cs" Link="LottieData\HoldEasing.cs" />
     <Compile Include="..\Lottie\LottieData\IAnimatableValue.cs" Link="LottieData\IAnimatableValue.cs" />
     <Compile Include="..\Lottie\LottieData\IAnimatableVector3.cs" Link="LottieData\IAnimatableVector3.cs" />
+    <Compile Include="..\Lottie\LottieData\ImageAsset.cs" Link="LottieData\ImageAsset.cs" />
     <Compile Include="..\Lottie\LottieData\ImageLayer.cs" Link="LottieData\ImageLayer.cs" />
     <Compile Include="..\Lottie\LottieData\KeyFrame.cs" Link="LottieData\KeyFrame.cs" />
     <Compile Include="..\Lottie\LottieData\Layer.cs" Link="LottieData\Layer.cs" />

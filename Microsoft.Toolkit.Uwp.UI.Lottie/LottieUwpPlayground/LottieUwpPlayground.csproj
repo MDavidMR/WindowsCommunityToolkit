@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Compositions\LoadingAnimation.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -105,6 +106,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Assets\LottieLogo1.json" />
+    <Content Include="Assets\simple_loader.json" />
     <None Include="LottieUwpPlayground_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +140,7 @@
       <Name>Lottie</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

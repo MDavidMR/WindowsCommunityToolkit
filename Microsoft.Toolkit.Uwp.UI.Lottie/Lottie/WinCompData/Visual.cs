@@ -10,8 +10,8 @@ namespace WinCompData
         internal Visual() { }
         public Vector3? CenterPoint { get; set; }
         public CompositionClip Clip { get; set; }
-        public float? RotationAngleInDegrees { get; set; }
         public Vector3? Offset { get; set; }
+        public float? RotationAngleInDegrees { get; set; }
         public Vector3? Scale { get; set; }
         public Vector2? Size { get; set; }
     }

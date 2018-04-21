@@ -9,18 +9,19 @@ namespace WinCompData
     {
         internal CompositionSpriteShape() { }
 
-        public override CompositionObjectType Type => CompositionObjectType.CompositionSpriteShape;
-        public CompositionStrokeCap StrokeDashCap { get; set; } = CompositionStrokeCap.Flat;
-        public CompositionBrush StrokeBrush { get; set; }
-        public bool IsStrokeNonScaling { get; set; }
-        public CompositionGeometry Geometry { get; set; }
         public CompositionBrush FillBrush { get; set; }
-        public float StrokeThickness { get; set; } = 1;
-        public CompositionStrokeCap StrokeStartCap { get; set; } = CompositionStrokeCap.Flat;
-        public float StrokeMiterLimit { get; set; } = 1;
-        public CompositionStrokeLineJoin StrokeLineJoin { get; set; } = CompositionStrokeLineJoin.Miter;
-        public CompositionStrokeCap StrokeEndCap { get; set; } = CompositionStrokeCap.Flat;
+        public CompositionGeometry Geometry { get; set; }
+        public bool IsStrokeNonScaling { get; set; }
+        public CompositionBrush StrokeBrush { get; set; }
+        public CompositionStrokeCap StrokeDashCap { get; set; } = CompositionStrokeCap.Flat;
         public float StrokeDashOffset { get; set; }
         public List<float> StrokeDashArray { get; } = new List<float>();
+        public CompositionStrokeCap StrokeEndCap { get; set; } = CompositionStrokeCap.Flat;
+        public CompositionStrokeLineJoin StrokeLineJoin { get; set; } = CompositionStrokeLineJoin.Miter;
+        public CompositionStrokeCap StrokeStartCap { get; set; } = CompositionStrokeCap.Flat;
+        public float StrokeMiterLimit { get; set; } = 1;
+        public float StrokeThickness { get; set; } = 1;
+        public override CompositionObjectType Type => CompositionObjectType.CompositionSpriteShape;
+
     }
 }

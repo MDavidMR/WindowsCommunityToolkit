@@ -129,11 +129,17 @@ namespace Lottie
             return true;
         }
 
-
         void Translate()
         {
             var context = new TranslationContext(_lc);
             AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers);
+            if (_lc.Is3d)
+            {
+                if (_lc.Is3d)
+                {
+                    Unsupported("3d composition");
+                }
+            }
         }
 
         void AddTranslatedLayersToContainerVisual(ContainerVisual container, TranslationContext context, LayerCollection layers)
@@ -196,6 +202,11 @@ namespace Lottie
         // Note that ShapeVisual clips to its size.
         CompositionObject TranslateLayer(TranslationContext context, Layer layer)
         {
+            if (layer.Is3d)
+            {
+                Unsupported("3d layer");
+            }
+
             if (layer.IsHidden)
             {
                 return null;
@@ -280,7 +291,7 @@ namespace Lottie
             contentsNode = leafTransformNode;
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
-            // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
+            // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
                 // If it's ever visible.
@@ -303,8 +314,7 @@ namespace Lottie
                             var stepAnimation = CreateScalarKeyFrameAnimation();
                             stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
                             stepAnimation.Duration = _lc.Duration;
-                            stepAnimation.Target = "Visibility";
-                            StartAnimation(contentsNode, stepAnimation);
+                            StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                         }
                     }
@@ -325,9 +335,8 @@ namespace Lottie
                             stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
                         }
                         stepAnimation.Duration = _lc.Duration;
-                        stepAnimation.Target = "Visibility";
 #if !NoInvisibility
-                        StartAnimation(contentsNode, stepAnimation);
+                        StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                     }
 
@@ -337,9 +346,7 @@ namespace Lottie
                     // degenerate.
                     var compositionMatrixAnim = CreateExpressionAnimation("Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)");
                     compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                    compositionMatrixAnim.Target = "TransformMatrix";
-
-                    StartAnimation(contentsNode, compositionMatrixAnim);
+                    StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
                 }
                 else
                 {
@@ -357,7 +364,7 @@ namespace Lottie
             // Return the root of the chain of transforms (might be the same as the contents node)
             if (_annotate)
             {
-                rootNode.Comment = string.Join(' ', $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
+                rootNode.Comment = string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
             }
 
             return true;
@@ -424,7 +431,7 @@ namespace Lottie
 
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
-            // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
+            // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
                 // If it's ever visible.
@@ -447,8 +454,7 @@ namespace Lottie
                             var stepAnimation = CreateScalarKeyFrameAnimation();
                             stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
                             stepAnimation.Duration = _lc.Duration;
-                            stepAnimation.Target = "Visibility";
-                            StartAnimation(contentsNode, stepAnimation);
+                            StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                         }
                     }
@@ -469,9 +475,8 @@ namespace Lottie
                             stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
                         }
                         stepAnimation.Duration = _lc.Duration;
-                        stepAnimation.Target = "Visibility";
 #if !NoInvisibility
-                        StartAnimation(contentsNode, stepAnimation);
+                        StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                     }
 
@@ -481,9 +486,7 @@ namespace Lottie
                     // degenerate.
                     var compositionMatrixAnim = CreateExpressionAnimation("Matrix4x4(contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility)");
                     compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                    compositionMatrixAnim.Target = "TransformMatrix";
-
-                    StartAnimation(contentsNode, compositionMatrixAnim);
+                    StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
                 }
                 else
                 {
@@ -497,7 +500,7 @@ namespace Lottie
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                     : $"'{layer.Name}'.Contents";
 
-                rootNode.Comment = string.Join(' ', $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
+                rootNode.Comment = string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
             }
 
             return true;
@@ -544,6 +547,9 @@ namespace Lottie
                     // Push the reference layers onto the stack. These will be used to look up parent transforms for layers under this precomp.
                     var subContext = new TranslationContext(context, layer, referencedLayers);
                     AddTranslatedLayersToContainerVisual(contentsNode, subContext, referencedLayers);
+                    break;
+                case Asset.AssetType.Image:
+                    Unsupported("Image assets.");
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -594,7 +600,14 @@ namespace Lottie
                             _owner.Unsupported("Gradient fill");
                             break;
                         case ShapeContentType.TrimPath:
-                            TrimPath = (TrimPath)popped;
+                            if (TrimPath != null)
+                            {
+                                TrimPath = CombineTrimPaths(TrimPath, (TrimPath)popped);
+                            }
+                            else
+                            {
+                                TrimPath = (TrimPath)popped;
+                            }
                             break;
 
                         case ShapeContentType.RoundedCorner:
@@ -603,6 +616,76 @@ namespace Lottie
                         default: return;
                     }
                     stack.Pop();
+                }
+            }
+
+            // Attempt to combine 2 trim paths. This only works under very specific circumstances
+            // but covers a common case.
+            TrimPath CombineTrimPaths(TrimPath a, TrimPath b)
+            {
+                bool success = true;
+
+                // If one startPercent is 0, use the other.
+                Animatable<double> startPercent;
+                if (!a.StartPercent.IsAnimated && a.StartPercent.InitialValue == 0)
+                {
+                    startPercent = b.StartPercent;
+                }
+                else if (!b.StartPercent.IsAnimated && b.StartPercent.InitialValue == 0)
+                {
+                    startPercent = a.StartPercent;
+                }
+                else
+                {
+                    startPercent = null;
+                    success = false;
+                }
+
+                // If one endPercent is 100, use the other.
+                Animatable<double> endPercent;
+                if (!a.EndPercent.IsAnimated && a.EndPercent.InitialValue == 100)
+                {
+                    endPercent = b.EndPercent;
+                }
+                else if (!b.EndPercent.IsAnimated && b.EndPercent.InitialValue == 100)
+                {
+                    endPercent = a.EndPercent;
+                }
+                else
+                {
+                    endPercent = null;
+                    success = false;
+                }
+
+                // If one offsetDegrees is 0, use the other.
+                Animatable<double> offsetDegrees;
+                if (!a.OffsetDegrees.IsAnimated && a.OffsetDegrees.InitialValue == 0)
+                {
+                    offsetDegrees = b.OffsetDegrees;
+                }
+                else if (!b.OffsetDegrees.IsAnimated && b.OffsetDegrees.InitialValue == 0)
+                {
+                    offsetDegrees = a.OffsetDegrees;
+                }
+                else
+                {
+                    offsetDegrees = null;
+                    success = false;
+                }
+
+                if (a.TrimPathType != b.TrimPathType)
+                {
+                    success = false;
+                }
+
+                if (success)
+                {
+                    return new TrimPath(a.Name + b.Name, a.MatchName + b.MatchName, a.TrimPathType, startPercent, endPercent, offsetDegrees);
+                }
+                else
+                {
+                    _owner.Unsupported("Multiple trim paths");
+                    return a;
                 }
             }
 
@@ -1018,8 +1101,7 @@ namespace Lottie
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
                 var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                compositionOffsetExpression.Target = "Offset";
-                StartAnimation(geometry, compositionOffsetExpression);
+                StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
                 ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
 
@@ -1040,8 +1122,7 @@ namespace Lottie
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
                 var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                compositionOffsetExpression.Target = "Offset";
-                StartAnimation(geometry, compositionOffsetExpression);
+                StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
                 ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position");
 
@@ -1060,7 +1141,23 @@ namespace Lottie
                 }
             }
 
-            TranslateAndApplyShapeContentContext(context, shapeContext, compositionRectangle);
+            // Lottie rectangles have 0,0 at top right. That causes problems for TrimPath which expects 0,0 to be top left.
+            // Add an offset.
+            // TODO - this only works correctly if Size and TrimOffset are not animated. A complete solution requires
+            //        adding another property. 
+            var isPartialTrimPath = shapeContext.TrimPath != null &&
+                (shapeContext.TrimPath.StartPercent.IsAnimated || shapeContext.TrimPath.EndPercent.IsAnimated || shapeContext.TrimPath.OffsetDegrees.IsAnimated ||
+                shapeContext.TrimPath.StartPercent.InitialValue != 0 || shapeContext.TrimPath.EndPercent.InitialValue != 100);
+
+            if (shapeContent.Size.IsAnimated && isPartialTrimPath)
+            {
+                // Warn that we might be getting things wrong
+                Unsupported("Rectangle with animated size or TrimPath may produce incorrect result.");
+            }
+            var width = shapeContent.Size.InitialValue.X;
+            var height = shapeContent.Size.InitialValue.Y;
+            var trimOffsetDegrees = (width / (2 * (width + height))) * 360;
+            TranslateAndApplyShapeContentContext(context, shapeContext, compositionRectangle, trimOffsetDegrees: trimOffsetDegrees);
 
             if (_annotate)
             {
@@ -1091,16 +1188,16 @@ namespace Lottie
 
             ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path");
 
-            TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape);
+            TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape, 0);
 
             return compositionSpriteShape;
         }
 
-        void TranslateAndApplyShapeContentContext(TranslationContext context, ShapeContentContext shapeContext, CompositionSpriteShape shape)
+        void TranslateAndApplyShapeContentContext(TranslationContext context, ShapeContentContext shapeContext, CompositionSpriteShape shape, double trimOffsetDegrees = 0)
         {
             shape.FillBrush = TranslateShapeFill(context, shapeContext.Fill, shapeContext.OpacityPercent);
             TranslateAndApplyStroke(context, shapeContext.Stroke, shape, shapeContext.OpacityPercent);
-            TranslateAndApplyTrimPath(context, shapeContext.TrimPath, shape.Geometry);
+            TranslateAndApplyTrimPath(context, shapeContext.TrimPath, shape.Geometry, trimOffsetDegrees);
         }
 
         enum AnimatableOrder
@@ -1148,7 +1245,7 @@ namespace Lottie
             }
 
             var bMin = initialB;
-            var bMax = initialB; 
+            var bMax = initialB;
             if (b.IsAnimated)
             {
                 bMin = Math.Min(b.KeyFrames.Min(kf => kf.Value), initialB);
@@ -1170,7 +1267,7 @@ namespace Lottie
                         else if (aMin < bMax)
                         {
                             // Might be before, unless they cross over.
-                            return bMin < initialA || aMax  > initialA ? AnimatableOrder.BeforeAndAfter : AnimatableOrder.Before;
+                            return bMin < initialA || aMax > initialA ? AnimatableOrder.BeforeAndAfter : AnimatableOrder.Before;
                         }
                         else
                         {
@@ -1184,7 +1281,7 @@ namespace Lottie
             }
         }
 
-        void TranslateAndApplyTrimPath(TranslationContext context, TrimPath trimPath, CompositionGeometry geometry)
+        void TranslateAndApplyTrimPath(TranslationContext context, TrimPath trimPath, CompositionGeometry geometry, double trimOffsetDegrees)
         {
             if (trimPath == null)
             {
@@ -1223,15 +1320,13 @@ namespace Lottie
                 ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart");
                 var trimStartExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TStart:my.TEnd");
                 trimStartExpression.SetReferenceParameter("my", geometry);
-                trimStartExpression.Target = nameof(geometry.TrimStart);
-                StartAnimation(geometry, trimStartExpression);
+                StartAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
 
                 geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd");
                 var trimEndExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TEnd:my.TStart");
                 trimEndExpression.SetReferenceParameter("my", geometry);
-                trimEndExpression.Target = nameof(geometry.TrimEnd);
-                StartAnimation(geometry, trimEndExpression);
+                StartAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
             }
             else
             {
@@ -1242,8 +1337,24 @@ namespace Lottie
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd));
             }
 
-            geometry.TrimOffset = FloatDefaultIsZero(trimPath.OffsetDegrees.InitialValue / 360);
-            ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset));
+            if (trimOffsetDegrees != 0 && !trimPath.OffsetDegrees.IsAnimated)
+            {
+                // Rectangle shapes are treated specially here to account for Lottie rectangle 0,0 being
+                // top right and WinComp rectangle 0,0 being top left. As long as the TrimOffset isn't
+                // being animated we can simply add an offset to the trim path.
+                geometry.TrimOffset = (float)((trimPath.OffsetDegrees.InitialValue + trimOffsetDegrees) / 360);
+            }
+            else
+            {
+                if (trimOffsetDegrees != 0)
+                {
+                    // TODO - we can handle this with another properyt.
+                    Unsupported("Animated trim offset with static trim offset.");
+                }
+
+                geometry.TrimOffset = FloatDefaultIsZero(trimPath.OffsetDegrees.InitialValue / 360);
+                ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset));
+            }
         }
 
         void TranslateAndApplyStroke(TranslationContext context, SolidColorStroke shapeStroke, CompositionSpriteShape sprite, Animatable<double> opacityPercent)
@@ -1445,8 +1556,7 @@ namespace Lottie
             {
                 var centerPointExpression = CreateExpressionAnimation("Vector3(my.Anchor.X,my.Anchor.Y,0)");
                 centerPointExpression.SetReferenceParameter("my", container);
-                centerPointExpression.Target = nameof(container.CenterPoint);
-                StartAnimation(container, centerPointExpression);
+                StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
             else
             {
@@ -1469,8 +1579,7 @@ namespace Lottie
             {
                 var offsetExpression = CreateExpressionAnimation("Vector3(my.Position.X-my.Anchor.X,my.Position.Y-my.Anchor.Y,0)");
                 offsetExpression.SetReferenceParameter("my", container);
-                offsetExpression.Target = nameof(container.Offset);
-                StartAnimation(container, offsetExpression);
+                StartAnimation(container, nameof(container.Offset), offsetExpression);
             }
             else
             {
@@ -1517,8 +1626,7 @@ namespace Lottie
             {
                 var centerPointExpression = CreateExpressionAnimation("my.Anchor");
                 centerPointExpression.SetReferenceParameter("my", container);
-                centerPointExpression.Target = nameof(container.CenterPoint);
-                StartAnimation(container, centerPointExpression);
+                StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
             else
             {
@@ -1541,8 +1649,7 @@ namespace Lottie
             {
                 var offsetExpression = CreateExpressionAnimation("my.Position-my.Anchor");
                 offsetExpression.SetReferenceParameter("my", container);
-                offsetExpression.Target = nameof(container.Offset);
-                StartAnimation(container, offsetExpression);
+                StartAnimation(container, nameof(container.Offset), offsetExpression);
             }
             else
             {
@@ -1573,23 +1680,23 @@ namespace Lottie
             // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
         }
 
-        void StartAnimation(CompositionObject compObject, ExpressionAnimation animation)
+        void StartAnimation(CompositionObject compObject, string target, ExpressionAnimation animation)
         {
             // Start the animation.
-            compObject.StartAnimation(animation.Target, animation);
+            compObject.StartAnimation(target, animation);
         }
 
-        void StartAnimation(CompositionObject compObject, KeyFrameAnimation_ animation, double scale = 1, double offset = 0)
+        void StartAnimation(CompositionObject compObject, string target, KeyFrameAnimation_ animation, double scale = 1, double offset = 0)
         {
             Debug.Assert(offset >= 0);
             Debug.Assert(scale <= 1);
 
             // Start the animation ...
-            compObject.StartAnimation(animation.Target, animation);
+            compObject.StartAnimation(target, animation);
 
             // ... but pause it immediately so that it doesn't react to time. Instead, bind
             // its progress to the progress of the composition.
-            var controller = compObject.TryGetAnimationController(animation.Target);
+            var controller = compObject.TryGetAnimationController(target);
             controller.Pause();
 
             // Bind it to the root visual's Progress property, scaling and offsetting if necessary.
@@ -1747,7 +1854,6 @@ namespace Lottie
         {
             var compositionAnimation = compositionAnimationFactory();
             compositionAnimation.Duration = _lc.Duration;
-            compositionAnimation.Target = targetPropertyName;
 
             // Get only the key frames that exist from at or just before the animation starts, and end at or just after the animation ends.
             var trimmedKeyFrames = _lottieDataOptimizer.GetTrimmed(value.KeyFrames, context.StartTime, context.EndTime).ToArray();
@@ -1798,7 +1904,7 @@ namespace Lottie
             }
 
             // Start the animation scaled and offset.
-            StartAnimation(targetObject, compositionAnimation, scale, offset);
+            StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
         }
 
 

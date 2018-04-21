@@ -4,24 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LottieTest"
     xmlns:lottie="using:Lottie"
+    xmlns:compositions="using:Compositions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-        
-            <lottie:CompositionPlayer >
-                <lottie:CompositionPlayer.Source>
-                    <lottie:LottieComposition UriSource="ms-appx:///Assets/LottieLogo1.json" />
-                </lottie:CompositionPlayer.Source>
+        <Grid Background="Black">
+
+            <lottie:CompositionPlayer Stretch="UniformToFill">
+                <compositions:MyComposition/>
             </lottie:CompositionPlayer>
 
-            <Image Stretch="Uniform">
-                <Image.Source>
-                    <BitmapImage UriSource="Assets/LockScreenLogo.scale-200.png" ></BitmapImage>
-                </Image.Source>
-            </Image>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Page>

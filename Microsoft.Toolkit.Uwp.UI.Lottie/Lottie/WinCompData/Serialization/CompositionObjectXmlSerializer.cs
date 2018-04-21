@@ -594,9 +594,9 @@ namespace WinCompData.Tools
         string GetCompositionObjectName(CompositionObject obj)
         {
             var name = obj.Type.ToString();
-            if (name.StartsWith("Composition"))
+            if (name.StartsWith("CompositionPlayer"))
             {
-                name = name.Substring("Composition".Length);
+                name = name.Substring("CompositionPlayer".Length);
             }
             return name;
         }

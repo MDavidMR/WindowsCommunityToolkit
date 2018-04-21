@@ -80,7 +80,7 @@ namespace LottieData.Tools
 
         XElement FromLottieComposition(LottieComposition lottieComposition)
         {
-            return new XElement("LottieComposition", GetContents());
+            return new XElement("LottieCompositionSource", GetContents());
             IEnumerable<XObject> GetContents()
             {
                 yield return new XAttribute(nameof(lottieComposition.Version), lottieComposition.Version.ToString());
@@ -120,6 +120,8 @@ namespace LottieData.Tools
             {
                 case Asset.AssetType.LayerCollection:
                     return FromLayersAsset((LayerCollectionAsset)asset);
+                case Asset.AssetType.Image:
+                    return FromImageAsset((ImageAsset)asset);
                 default:
                     throw new InvalidOperationException();
             }
@@ -132,6 +134,16 @@ namespace LottieData.Tools
                 FromLayerCollection(asset.Layers));
         }
 
+        XElement FromImageAsset(ImageAsset asset)
+        {
+            return new XElement(nameof(ImageAsset),
+                new XAttribute(nameof(asset.Id), asset.Id), 
+                new XAttribute(nameof(asset.Width), asset.Width),
+                new XAttribute(nameof(asset.Height), asset.Height),
+                new XAttribute(nameof(asset.Path), asset.Path),
+                new XAttribute(nameof(asset.FileName), asset.FileName));
+
+        }
         XElement FromLayerCollection(LayerCollection layers)
         {
             return new XElement("Layers", GetContents());
@@ -230,6 +242,10 @@ namespace LottieData.Tools
                 foreach (var item in GetLayerContents(layer))
                 {
                     yield return item;
+                }
+                if (!string.IsNullOrWhiteSpace(layer.RefId))
+                {
+                    yield return new XAttribute(nameof(layer.RefId), layer.RefId);
                 }
             }
         }

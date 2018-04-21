@@ -26,7 +26,7 @@
 
         public Animatable<double> OffsetDegrees { get; }
 
-        internal TrimType TrimPathType { get; }
+        public TrimType TrimPathType { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.TrimPath;
 

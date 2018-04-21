@@ -51,6 +51,7 @@ namespace WinCompData
             Duration = other.Duration;
             Target = other.Target;
         }
+
         public sealed class KeyFrame
         {
             public float Progress { get; internal set; }

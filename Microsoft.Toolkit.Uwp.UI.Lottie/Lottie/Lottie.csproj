@@ -107,11 +107,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LottieData\ImageAsset.cs" />
     <Compile Include="LottieData\LottieObject.cs" />
     <Compile Include="LottieData\LottieObjectType.cs" />
     <Compile Include="LottieData\ShapeContentType.cs" />
     <Compile Include="LottieData\ShapeLayerContent.cs" />
-    <Compile Include="Lottie\CompositionLoadResult.cs" />
     <Compile Include="Lottie\CompositionPlayer.cs" />
     <Compile Include="LottieData\Animatable.cs" />
     <Compile Include="LottieData\BlendMode.cs" />
@@ -163,15 +163,17 @@
     <Compile Include="LottieData\Serialization\CheckedWindowsDataJson.cs" />
     <Compile Include="LottieData\Serialization\LottieCompositionJsonReader.cs" />
     <Compile Include="LottieData\Serialization\LottieJsonReaderException.cs" />
-    <Compile Include="Lottie\CompositionPlayerSource.cs" />
+    <Compile Include="Lottie\ICompositionSink.cs" />
+    <Compile Include="Lottie\ICompositionSource.cs" />
     <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
     <Compile Include="Lottie\LottieCompositionOptions.cs" />
-    <Compile Include="Lottie\LottieComposition.cs" />
-    <Compile Include="Lottie\VisualInstantiator.cs" />
+    <Compile Include="Lottie\LottieCompositionSource.cs" />
+    <Compile Include="Lottie\CompositionObjectFactory.cs" />
     <Compile Include="Lottie\LottieToVisualTranslator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lottie\VisualPlayer.cs" />
     <Compile Include="WinCompData\AnimationController.cs" />
+    <Compile Include="WinCompData\CodeGen\CodeBuilder.cs" />
     <Compile Include="WinCompData\CodeGen\CompositionObjectFactoryGenerator.cs" />
     <Compile Include="WinCompData\ColorKeyFrameAnimation.cs" />
     <Compile Include="WinCompData\CompositionAnimation.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="WinCompData\Sn\Vector3.cs" />
     <Compile Include="WinCompData\StepEasingFunction.cs" />
     <Compile Include="WinCompData\Tools\ListOfNeverNull.cs" />
+    <Compile Include="WinCompData\Tools\ObjectGraph.cs" />
     <Compile Include="WinCompData\Vector2KeyFrameAnimation.cs" />
     <Compile Include="WinCompData\Vector3KeyFrameAnimation.cs" />
     <Compile Include="WinCompData\Visual.cs" />

@@ -52,7 +52,7 @@ namespace LottieUwpPlayground
             {
                 // Clear out the currently playing file so the user can see immediately that
                 // the play has started, otherwise they might be waiting while the file loads.
-                _player.Source = null;
+                _playerSource.UriSource = null;
 
                 if (files.Skip(1).Any())
                 {
@@ -67,7 +67,7 @@ namespace LottieUwpPlayground
                         {
                             while (true)
                             {
-                                await PlayFile(file);
+                                await PlayFile(file, playVersion);
                                 if (_playVersion != playVersion)
                                 {
                                     goto PlayNotCurrent;
@@ -106,49 +106,107 @@ namespace LottieUwpPlayground
                     {
                         _playControl.IsOn = false;
                     }
-                    await PlayFile(files.First());
+                    await PlayFile(files.First(), playVersion);
                 }
             }
         }
 
-        Task PlayFile(StorageFile file)
+        async Task PlayFile(StorageFile file, int playVersion)
         {
-            // Load the Lottie composition.
-            return PlayLottieComposition(new LottieComposition(file)
+            using (new LoadingAnimationHandler(this))
             {
-                Options = LottieCompositionOptions.All
-            });
-        }
+                try
+                {
+                    // Load the Lottie composition.
+                    await _playerSource.SetSourceAsync(file);
+                }
+                catch (Exception)
+                {
+                    // Failed to load.
+                    return;
+                }
 
-        Task PlaySingleUri(Uri uri)
-        {
-            // Turn on looping.
-            _player.LoopAnimation = true;
-
-            // If we were in manual play control, turn it back to automatic.
-            if (_playControl.IsOn)
-            {
-                _playControl.IsOn = false;
+                // Reset the scrubber to the 0 position. 
+                _scrubber.Value = 0;
             }
 
-            // Load the Lottie composition.
-            return PlayLottieComposition(new LottieComposition()
+            if (playVersion != _playVersion)
             {
-                UriSource = uri,
-                Options = LottieCompositionOptions.All
-            });
+                return;
+            }
+
+            if (_player.IsCompositionLoaded)
+            {
+                // Play the file.
+                await _player.PlayAsync();
+            }
         }
 
-        async Task PlayLottieComposition(LottieComposition composition)
+        async Task PlaySingleUri(Uri uri)
         {
-            _player.Source = composition;
-            // Reset the scrubber to the 0 position. 
-            _scrubber.Value = 0;
+            var playVersion = ++_playVersion;
+
+            using (new LoadingAnimationHandler(this))
+            {
+                // Turn on looping.
+                _player.LoopAnimation = true;
+
+                // If we were in manual play control, turn it back to automatic.
+                if (_playControl.IsOn)
+                {
+                    _playControl.IsOn = false;
+                }
+
+                // Load the Lottie composition.
+                await _playerSource.SetSourceAsync(uri);
+
+                // Reset the scrubber to the 0 position. 
+                _scrubber.Value = 0;
+            }
+
+            if (playVersion != _playVersion)
+            {
+                return;
+            }
 
             // Play the file.
             await _player.PlayAsync();
-
         }
+
+        sealed class LoadingAnimationHandler : IDisposable
+        {
+            readonly MainPage _owner;
+            readonly Task _task;
+            bool _isDisposed;
+
+            internal LoadingAnimationHandler(MainPage owner)
+            {
+                _owner = owner;
+                _task = Start();
+            }
+
+            async Task Start()
+            {
+                _owner._player.Visibility = Visibility.Collapsed;
+
+                // Wait for 300 mS.
+                await Task.Delay(300);
+                if (!_isDisposed)
+                {
+                    _owner._loadingAnimation.Play();
+                    _owner._loadingAnimation.Visibility = Visibility.Visible;
+                }
+            }
+            public void Dispose()
+            {
+                _isDisposed = true;
+                // Hide and stop the loading animation.
+                _owner._loadingAnimation.Visibility = Visibility.Collapsed;
+                _owner._loadingAnimation.Stop();
+                _owner._player.Visibility = Visibility.Visible;
+            }
+        }
+
         #region DragNDrop
         async void LottieDragOverHandler(object sender, DragEventArgs e)
         {
@@ -265,10 +323,9 @@ namespace LottieUwpPlayground
                 return;
             }
 
-            var uri = new Uri(url);
-            if (uri.IsWellFormedOriginalString())
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
-                await PlaySingleUri(uri);
+                await PlaySingleUri(new Uri(url));
             }
         }
         void TextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -335,11 +392,13 @@ namespace LottieUwpPlayground
             yield return Tuple.Create("File name", diagnostics.FileName);
             yield return Tuple.Create("Duration", $"{diagnostics.Duration.TotalSeconds.ToString("#,##0.000")} secs");
             yield return Tuple.Create("Size", $"{diagnostics.LottieWidth} x {diagnostics.LottieHeight}");
+            yield return Tuple.Create("Version", diagnostics.LottieVersion);
             yield return Tuple.Create("Read", MSecs(diagnostics.ReadTime));
             yield return Tuple.Create("Parse", MSecs(diagnostics.ParseTime));
             yield return Tuple.Create("Validation", MSecs(diagnostics.ValidationTime));
             yield return Tuple.Create("Translation", MSecs(diagnostics.TranslationTime));
             yield return Tuple.Create("Instantiation", MSecs(diagnostics.InstantiationTime));
+
             foreach (var marker in diagnostics.Markers)
             {
                 yield return Tuple.Create("Marker", $"{marker.Key}: {marker.Value.ToString("0.0###")}");

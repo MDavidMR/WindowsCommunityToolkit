@@ -107,17 +107,17 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Lottie\Lottie\CompositionLoadResult.cs">
-      <Link>Lottie\CompositionLoadResult.cs</Link>
+    <Compile Include="..\Lottie\Lottie\CompositionObjectFactory.cs">
+      <Link>Lottie\CompositionObjectFactory.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\CompositionPlayer.cs">
       <Link>Lottie\CompositionPlayer.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\CompositionPlayerSource.cs">
-      <Link>Lottie\CompositionPlayerSource.cs</Link>
+    <Compile Include="..\Lottie\Lottie\ICompositionSink.cs">
+      <Link>Lottie\ICompositionSink.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\LottieComposition.cs">
-      <Link>Lottie\LottieComposition.cs</Link>
+    <Compile Include="..\Lottie\Lottie\ICompositionSource.cs">
+      <Link>Lottie\ICompositionSource.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\LottieCompositionDiagnostics.cs">
       <Link>Lottie\LottieCompositionDiagnostics.cs</Link>
@@ -125,8 +125,8 @@
     <Compile Include="..\Lottie\Lottie\LottieCompositionOptions.cs">
       <Link>Lottie\LottieCompositionOptions.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\VisualInstantiator.cs">
-      <Link>Lottie\VisualInstantiator.cs</Link>
+    <Compile Include="..\Lottie\Lottie\LottieCompositionSource.cs">
+      <Link>Lottie\LottieCompositionSource.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\VisualPlayer.cs">
       <Link>Lottie\VisualPlayer.cs</Link>

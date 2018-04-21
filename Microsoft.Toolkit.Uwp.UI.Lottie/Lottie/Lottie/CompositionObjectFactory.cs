@@ -12,13 +12,13 @@ namespace Lottie
     /// Creates instances of a <see cref="Windows.UI.Composition.Visual"/> tree from a description
     /// of the tree.
     /// </summary>
-    sealed class VisualInstantiator
+    sealed class CompositionObjectFactory
     {
         readonly Wc.Compositor _c;
         readonly CanvasDevice _canvasDevice;
         readonly Dictionary<object, object> _cache = new Dictionary<object, object>(new ReferenceEqualsComparer());
 
-        VisualInstantiator(Wc.Compositor compositor)
+        CompositionObjectFactory(Wc.Compositor compositor)
         {
             _c = compositor;
             _canvasDevice = CanvasDevice.GetSharedDevice();
@@ -30,7 +30,7 @@ namespace Lottie
         /// </summary>
         internal static Wc.Visual CreateVisual(Wc.Compositor compositor, Wd.Visual visual)
         {
-            var converter = new VisualInstantiator(compositor);
+            var converter = new CompositionObjectFactory(compositor);
             var result = converter.GetVisual(visual);
             // Trim any memory just used by Win2D.
             converter._canvasDevice.Trim();
@@ -121,7 +121,7 @@ namespace Lottie
             {
                 target.SetReferenceParameter(parameter.Key, GetCompositionObject(parameter.Value));
             }
-            if (source.Target != null)
+            if (!string.IsNullOrWhiteSpace(source.Target))
             {
                 target.Target = source.Target;
             }
@@ -538,11 +538,26 @@ namespace Lottie
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateStepEasingFunction());
-            result.FinalStep = obj.FinalStep;
-            result.InitialStep = obj.InitialStep;
-            result.IsFinalStepSingleFrame = obj.IsFinalStepSingleFrame;
-            result.IsInitialStepSingleFrame = obj.IsInitialStepSingleFrame;
-            result.StepCount = obj.StepCount;
+            if (obj.FinalStep != 1)
+            {
+                result.FinalStep = obj.FinalStep;
+            }
+            if (obj.InitialStep != 0)
+            {
+                result.InitialStep = obj.InitialStep;
+            }
+            if (obj.IsFinalStepSingleFrame)
+            {
+                result.IsFinalStepSingleFrame = obj.IsFinalStepSingleFrame;
+            }
+            if (obj.IsInitialStepSingleFrame)
+            {
+                result.IsInitialStepSingleFrame = obj.IsInitialStepSingleFrame;
+            }
+            if (obj.StepCount != 1)
+            {
+                result.StepCount = obj.StepCount;
+            }
             StartAnimations(obj, result);
             return result;
         }
@@ -862,6 +877,7 @@ namespace Lottie
                     throw new InvalidOperationException();
             }
         }
+
         static Wc.CompositionStrokeCap StrokeCap(Wd.CompositionStrokeCap value)
         {
             switch (value)

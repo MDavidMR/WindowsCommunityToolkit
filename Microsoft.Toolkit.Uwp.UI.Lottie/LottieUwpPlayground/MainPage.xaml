@@ -6,10 +6,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:LottieUwpPlayground"
     xmlns:lottie="using:Lottie"
+    xmlns:compositions="using:Compositions"
     mc:Ignorable="d">
     <Page.Resources>
         <Color x:Key="BackgroundColor">Gray</Color>
-        <lottie:LottieComposition x:Key="LottieLogo" UriSource="ms-appx:///Assets/LottieLogo1.json"/>
+        <lottie:LottieCompositionSource x:Key="LottieLogo" UriSource="ms-appx:///Assets/LottieLogo1.json"/>
     </Page.Resources>
 
     <RelativePanel AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
@@ -20,11 +21,19 @@
             <SolidColorBrush x:Name="BackgroundBrush" Color="{x:Bind backgroundColorPicker.Color, Mode=OneWay}" />
         </RelativePanel.Resources>
 
-
+        <!-- The stage. This is where the Lotties are displayed. -->
         <Border Background="{x:Bind BackgroundBrush, Mode=OneWay}" 
               RelativePanel.RightOf="PlayerControls"  RelativePanel.LeftOf="Info"
               RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-            <lottie:CompositionPlayer x:Name="_player" Margin="10" AutoPlay="False"/>
+            <Grid Margin="10">
+                <lottie:CompositionPlayer x:Name="_player" AutoPlay="False">
+                    <lottie:LottieCompositionSource x:Name="_playerSource" Options="All"/>
+                </lottie:CompositionPlayer>
+                <lottie:CompositionPlayer x:Name="_loadingAnimation" Visibility="Collapsed" AutoPlay="False">
+                    <!--<lottie:LottieCompositionSource UriSource="ms-appx:///Assets/simple_loader.json"/>-->
+                    <compositions:LoadingAnimation/>
+                </lottie:CompositionPlayer>
+            </Grid>
         </Border>
 
         <StackPanel x:Name="PlayerControls" 
@@ -98,7 +107,14 @@
                     RelativePanel.AlignTopWithPanel="True"
                     VerticalAlignment="Top"
                     >
-            <StackPanel>
+            <StackPanel Padding="5">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="Background" Value="LightGray"/>
+                    </Style>
+                </StackPanel.Resources>
                 <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" Height="160" Margin="10"/>
 
                 <Pivot DataContext="{Binding ElementName=_player}">
@@ -116,10 +132,10 @@
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="95"/>
-                                                        <ColumnDefinition Width="220"/>
+                                                        <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="{Binding Path=Item1}" Margin="0,0,10,0" FontWeight="SemiBold"/>
-                                                    <TextBlock TextAlignment="Right" Grid.Column="1" Text="{Binding Path=Item2}" Margin="0,0,5,0" />
+                                                    <TextBlock TextAlignment="Right" Grid.Column="1" Text="{Binding Path=Item2}"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -141,40 +157,14 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="WinCompCSharpCopyToClipboardButton_Click">Copy C# code to clipboard</Button>
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="LottieXmlCopyToClipboardButton_Click">Copy Lottie XML to clipboard</Button>
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="WinCompXmlCopyToClipboardButton_Click">Copy WinComp XML to clipboard</Button>
+
                                 </StackPanel>
                             </DataTemplate>
                         </PivotItem.ContentTemplate>
-                    </PivotItem>
-                    <PivotItem Header="Code" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=CollapsedIfNull}">
-                        <Pivot>
-                            <PivotItem Header="Lottie" >
-                                <Grid>
-                                    <Button HorizontalAlignment="Center" VerticalAlignment="Top" Click="LottieXmlCopyToClipboardButton_Click">Copy to clipboard</Button>
-                                    <ScrollViewer Margin="0,45,0,0" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-                                        <TextBlock Text="{Binding Path=Diagnostics.LottieXml}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
-                                    </ScrollViewer>
-                                </Grid>
-                            </PivotItem>
-
-                            <PivotItem Header="WinComp">
-                                <Grid>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Center" Click="WinCompXmlCopyToClipboardButton_Click">Copy to clipboard</Button>
-                                    <ScrollViewer Margin="0,45,0,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" >
-                                        <TextBlock Text="{Binding Path=Diagnostics.WinCompXml}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
-                                    </ScrollViewer>
-                                </Grid>
-                            </PivotItem>
-
-                            <PivotItem Header="C#">
-                                <Grid>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Center" Click="WinCompCSharpCopyToClipboardButton_Click">Copy to clipboard</Button>
-                                    <ScrollViewer Margin="0,45,0,0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" >
-                                        <TextBlock Text="{Binding Path=Diagnostics.WinCompCSharp}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
-                                    </ScrollViewer>
-                                </Grid>
-                            </PivotItem>
-
-                        </Pivot>
                     </PivotItem>
                 </Pivot>
             </StackPanel>

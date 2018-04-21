@@ -9,7 +9,7 @@ namespace LottieData
     sealed class LottieComposition : LottieObject
     {
         /// <summary>
-        /// Creates a Lottie Composition object. 
+        /// Creates a Lottie CompositionPlayer object. 
         /// </summary>
         /// <param name="name">The name of the composition</param>
         /// <param name="width">Width of animation canvas as specified in AfterEffects.</param>
@@ -71,6 +71,6 @@ namespace LottieData
         /// <summary>
         /// Lottie version.
         /// </summary>
-        internal Version Version { get; }
+        public Version Version { get; }
     }
 }

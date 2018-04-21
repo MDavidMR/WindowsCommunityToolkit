@@ -8,15 +8,15 @@
         public Marker(
             double frame, 
             string name,
-            bool flag) : base(name)
+            double durationSeconds) : base(name)
         {
             Frame = frame;
-            Flag = flag;
+            DurationSeconds = durationSeconds;
         }
 
         public double Frame { get; }
 
-        public bool Flag { get; }
+        public double DurationSeconds { get; }
 
         public override LottieObjectType ObjectType => LottieObjectType.Marker;
     }

@@ -17,6 +17,7 @@
         public enum AssetType
         {
             LayerCollection,
+            Image,
         }
     }
 }

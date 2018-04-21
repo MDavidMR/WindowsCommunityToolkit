@@ -12,6 +12,7 @@ using Windows.Foundation;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 
 namespace Lottie
@@ -19,7 +20,8 @@ namespace Lottie
     /// <summary>
     /// A XAML element that displays and controls an animated composition.
     /// </summary>
-    public sealed class CompositionPlayer : FrameworkElement
+    [ContentProperty(Name = nameof(CompositionPlayer.Source))]
+    public sealed class CompositionPlayer : FrameworkElement, ICompositionSink
     {
         // The Visual to which the current composition will be attached.
         readonly ContainerVisual _rootVisual;
@@ -65,7 +67,7 @@ namespace Lottie
             RegisterDP(nameof(ReverseAnimation), false);
 
         public static DependencyProperty SourceProperty { get; } =
-            RegisterDP(nameof(Source), (CompositionPlayerSource)null,
+            RegisterDP(nameof(Source), (ICompositionSource)null,
                 (owner, oldValue, newValue) => owner.HandleSourcePropertyChanged(oldValue, newValue));
 
         public static DependencyProperty StretchProperty { get; } =
@@ -139,9 +141,9 @@ namespace Lottie
             set => SetValue(ReverseAnimationProperty, value);
         }
 
-        public CompositionPlayerSource Source
+        public ICompositionSource Source
         {
-            get => (CompositionPlayerSource)GetValue(SourceProperty);
+            get => (ICompositionSource)GetValue(SourceProperty);
             set => SetValue(SourceProperty, value);
         }
 
@@ -228,21 +230,15 @@ namespace Lottie
         {
             if (_visualPlayer == null)
             {
-                return EnqueuePlayAsync(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
+                var playCommand = new PlayAsyncCommand(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
+                _commands.Add(playCommand);
+                return playCommand.Task;
             }
             else
             {
                 _requestSeen = true;
                 return _visualPlayer.PlayAsync(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
             }
-        }
-
-        Task EnqueuePlayAsync(double fromProgress, double toProgress, bool loopAnimation, bool reverseAnimation)
-        {
-            Debug.Assert(_visualPlayer == null);
-            var playCommand = new PlayAsyncCommand(fromProgress, toProgress, loopAnimation, reverseAnimation);
-            _commands.Add(playCommand);
-            return playCommand.Task;
         }
 
         // Converts infinity to double.MaxValue so as to avoid needing special handling for infinite values.
@@ -471,28 +467,25 @@ namespace Lottie
         }
 
         // Called when the Source property is updated.
-        void HandleSourcePropertyChanged(CompositionPlayerSource oldValue, CompositionPlayerSource newValue)
+        void HandleSourcePropertyChanged(ICompositionSource oldValue, ICompositionSource newValue)
         {
             // Clear out the command queue. Any commands that were
             // enqueued before the Source was set are irrelevant.
             ClearCommandQueue();
 
-            if (newValue == null)
+            if (oldValue != null)
             {
-                UnloadVisualPlayer();
-                SetValue(IsCompositionLoadedProperty, false);
+                // Disconnect from the old source.
+                oldValue.DisconnectSink(this);
             }
-            else
+
+            if (newValue != null)
             {
-                if (AutoPlay)
-                {
-                    // Auto-play is enabled. Enqueue an AutoPlay command.
-                    _commands.Add(Command.AutoPlay);
-                }
-                LoadVisualPlayer(newValue);
-                SetValue(IsCompositionLoadedProperty, true);
+                // Register to receive VisualPlayers from the source.
+                newValue.ConnectSink(this);
             }
         }
+
 
         // Called when the Stretch property is updated.
         void HandleStretchPropertyChanged(Stretch oldValue, Stretch newValue)
@@ -523,22 +516,42 @@ namespace Lottie
             }
         }
 
-        async void LoadVisualPlayer(CompositionPlayerSource source)
+
+        // Method called by the current ICompositionSource when it has new content
+        // or the existing content is no longer valid.
+        void ICompositionSink.SetContent(
+            Visual rootVisual, 
+            Vector2 size, 
+            CompositionPropertySet progressPropertySet, 
+            string progressPropertyName, 
+            TimeSpan duration, 
+            object diagnostics)
+        {
+            var visualPlayer = rootVisual == null 
+                ? null : 
+                new VisualPlayer(rootVisual, size, progressPropertySet, progressPropertyName, duration);
+            SetVisualPlayer(visualPlayer, diagnostics);
+        }
+
+        void SetVisualPlayer(VisualPlayer visualPlayer, object diagnostics)
         {
             // Unloading will ensure that any new play/pause/resume/stop requests will be enqueued.
             UnloadVisualPlayer();
 
-            // Attempt to load the VisualPlayer from the source.
-            var loadResult = await source.TryLoad(Window.Current.Compositor);
-
-            if (!loadResult.LoadSucceeded)
+            if (visualPlayer == null)
             {
                 // Load failed. Clear out the queued commands and complete the plays.
                 ClearCommandQueue();
             }
             else
             {
-                _visualPlayer = loadResult.VisualPlayer;
+                if (AutoPlay)
+                {
+                    // Auto-play is enabled. Enqueue an AutoPlay command.
+                    _commands.Add(Command.AutoPlay);
+                }
+
+                _visualPlayer = visualPlayer;
 
                 Debug.Assert(_rootVisual.Children.Count == 0);
 
@@ -600,8 +613,10 @@ namespace Lottie
 
                 SetValue(DurationProperty, _visualPlayer.AnimationDuration);
             }
-            SetValue(DiagnosticsProperty, loadResult.Diagnostics);
+            SetValue(DiagnosticsProperty, diagnostics);
+            SetValue(IsCompositionLoadedProperty, true);
         }
+
 
         void UnloadVisualPlayer()
         {
@@ -614,6 +629,7 @@ namespace Lottie
 
                 SetValue(DurationProperty, null);
                 SetValue(DiagnosticsProperty, null);
+                SetValue(IsCompositionLoadedProperty, false);
             }
         }
 
