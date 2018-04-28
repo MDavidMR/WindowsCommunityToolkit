@@ -35,7 +35,6 @@ namespace Lottie
         readonly Compositor _c;
         readonly ContainerVisual _rootVisual;
         readonly Dictionary<ScaleAndOffset, ExpressionAnimation> _progressBindingAnimations = new Dictionary<ScaleAndOffset, ExpressionAnimation>();
-        readonly CanvasDevice _canvasDevice;
         readonly Optimizer _lottieDataOptimizer = new Optimizer();
         // Holds CubicBezierEasingFunctions for reuse when they have the same parameters.
         readonly Dictionary<CubicBezierEasing, CubicBezierEasingFunction> _cubicBezierEasingFunctions = new Dictionary<CubicBezierEasing, CubicBezierEasingFunction>();
@@ -63,7 +62,6 @@ namespace Lottie
             _c = compositor;
             _strictTranslation = strictTranslation;
             _annotate = annotateCompositionObjects;
-            _canvasDevice = CanvasDevice.GetSharedDevice();
 
             // Create the root.
             _rootVisual = CreateContainerVisual();
@@ -205,6 +203,16 @@ namespace Lottie
             if (layer.Is3d)
             {
                 Unsupported("3d layer");
+            }
+
+            if (layer.BlendMode != BlendMode.Normal)
+            {
+                Unsupported($"Blend mode: {layer.BlendMode}");
+            }
+
+            if (layer.TimeStretch != 1)
+            {
+                Unsupported($"Time stretch: {layer.TimeStretch}");
             }
 
             if (layer.IsHidden)
@@ -452,7 +460,7 @@ namespace Lottie
                         {
 #if !NoInvisibility
                             var stepAnimation = CreateScalarKeyFrameAnimation();
-                            stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
+                            stepAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
                             stepAnimation.Duration = _lc.Duration;
                             StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
@@ -727,7 +735,12 @@ namespace Lottie
                     var bScale = b.InitialValue;
                     return new Animatable<double>(
                         initialValue: a.InitialValue * bScale,
-                        keyFrames: a.KeyFrames.Select(kf => new KeyFrame<double>(kf.Frame, kf.Value * bScale, kf.Easing)),
+                        keyFrames: a.KeyFrames.Select(kf => new KeyFrame<double>(
+                            kf.Frame, 
+                            kf.Value * bScale, 
+                            kf.SpatialControlPoint1,
+                            kf.SpatialControlPoint2,
+                            kf.Easing)),
                         propertyIndex: null);
                 }
                 else
@@ -993,7 +1006,7 @@ namespace Lottie
             var pathData = path.PathData.InitialValue;
             var beziers = pathData.Beziers.ToArray();
 
-            using (var builder = new CanvasPathBuilder(_canvasDevice))
+            using (var builder = new CanvasPathBuilder(null))
             {
                 builder.SetFilledRegionDetermination(FilledRegionDetermination(fillType));
                 if (beziers.Length == 0)
@@ -1028,7 +1041,7 @@ namespace Lottie
             var yRadius = ellipseDiameter.InitialValue.Y / 2;
 
             return CanvasGeometry.CreateEllipse(
-                _canvasDevice,
+                null,
                 (float)(ellipsePosition.InitialValue.X - (xRadius / 2)),
                 (float)(ellipsePosition.InitialValue.Y - (yRadius / 2)),
                 (float)xRadius,
@@ -1052,7 +1065,7 @@ namespace Lottie
             var radius = cornerRadius.InitialValue;
 
             return CanvasGeometry.CreateRoundedRectangle(
-                _canvasDevice,
+                null,
                 (float)(position.InitialValue.X - (width / 2)),
                 (float)(position.InitialValue.Y - (height / 2)),
                 (float)width,
@@ -1318,22 +1331,22 @@ namespace Lottie
                 // will be set by these values through an expression.
                 geometry.Properties.InsertScalar("TStart", (float)(startPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart");
-                var trimStartExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TStart:my.TEnd");
+                var trimStartExpression = CreateExpressionAnimation("Min(my.TStart,my.TEnd)");
                 trimStartExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
 
                 geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd");
-                var trimEndExpression = CreateExpressionAnimation("my.TStart<my.TEnd?my.TEnd:my.TStart");
+                var trimEndExpression = CreateExpressionAnimation("Max(my.TStart,my.TEnd)");
                 trimEndExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
             }
             else
             {
-                geometry.TrimStart = FloatDefaultIsZero(startPercent.InitialValue / 100);
+                geometry.TrimStart = Float(startPercent.InitialValue / 100);
                 ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry, nameof(geometry.TrimStart));
 
-                geometry.TrimEnd = FloatDefaultIsOne(endPercent.InitialValue / 100);
+                geometry.TrimEnd = Float(endPercent.InitialValue / 100);
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd));
             }
 
@@ -1352,7 +1365,7 @@ namespace Lottie
                     Unsupported("Animated trim offset with static trim offset.");
                 }
 
-                geometry.TrimOffset = FloatDefaultIsZero(trimPath.OffsetDegrees.InitialValue / 360);
+                geometry.TrimOffset = Float(trimPath.OffsetDegrees.InitialValue / 360);
                 ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset));
             }
         }
@@ -1606,6 +1619,10 @@ namespace Lottie
             container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
             ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees));
 
+            if (transform.OpacityPercent.IsAnimated || transform.OpacityPercent.InitialValue != 100)
+            {
+                // TODO - apply opacity to the visual, and ensure it doesn't get pushed to brushes
+            }
             // set Skew and Skew Axis
             // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
         }
@@ -1898,6 +1915,11 @@ namespace Lottie
             // progress values are scaled appropriately.
             foreach (var keyFrame in trimmedKeyFrames)
             {
+                if (keyFrame.SpatialControlPoint1 != default(Vector3) || keyFrame.SpatialControlPoint2 != default(Vector3))
+                {
+                    Unsupported("Spatial beziers");
+                }
+
                 var adjustedProgress = (keyFrame.Frame - animationStartTime) / animationDuration;
 
                 insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
@@ -1926,7 +1948,7 @@ namespace Lottie
 
         CompositionPath CompositionPathFromPathGeometry(PathGeometry pathGeometry, SolidColorFill.PathFillType fillType)
         {
-            using (var builder = new CanvasPathBuilder(_canvasDevice))
+            using (var builder = new CanvasPathBuilder(null))
             {
                 var canvasFilledRegionDetermination = FilledRegionDetermination(fillType);
 
@@ -1970,7 +1992,12 @@ namespace Lottie
                     return new Animatable<Color>(
                         initialValue: MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue),
                         keyFrames: color.KeyFrames.Select(kf =>
-                            new KeyFrame<Color>(kf.Frame, MultiplyColorByOpacityPercent(kf.Value, opacityPercent.InitialValue), kf.Easing)),
+                            new KeyFrame<Color>(
+                                kf.Frame, 
+                                MultiplyColorByOpacityPercent(kf.Value, opacityPercent.InitialValue), 
+                                kf.SpatialControlPoint1, 
+                                kf.SpatialControlPoint2, 
+                                kf.Easing)),
                         propertyIndex: null);
                 }
             }
@@ -1988,7 +2015,12 @@ namespace Lottie
                     return new Animatable<Color>(
                         initialValue: MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue),
                         keyFrames: opacityPercent.KeyFrames.Select(kf =>
-                            new KeyFrame<Color>(kf.Frame, MultiplyColorByOpacityPercent(color.InitialValue, kf.Value), kf.Easing)),
+                            new KeyFrame<Color>(
+                                kf.Frame, 
+                                MultiplyColorByOpacityPercent(color.InitialValue, kf.Value), 
+                                kf.SpatialControlPoint1,
+                                kf.SpatialControlPoint2,
+                                kf.Easing)),
                         propertyIndex: null);
 
                 }
@@ -2033,10 +2065,8 @@ namespace Lottie
             return result;
         }
 
-
         public void Dispose()
         {
-            _canvasDevice.Dispose();
         }
 
         CompositionEllipseGeometry CreateEllipseGeometry()
@@ -2230,6 +2260,8 @@ namespace Lottie
 
         static WinCompData.Wui.Color Color(LottieData.Color color) =>
             WinCompData.Wui.Color.FromArgb((byte)(255 * color.A), (byte)(255 * color.R), (byte)(255 * color.G), (byte)(255 * color.B));
+
+        static float Float(double value) => (float)value;
 
         static float? FloatDefaultIsZero(double value) => value == 0 ? null : (float?)value;
         static float? FloatDefaultIsOne(double value) => value == 1 ? null : (float?)value;

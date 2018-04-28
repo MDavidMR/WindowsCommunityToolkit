@@ -1,6 +1,6 @@
 ﻿#if DEBUG
 // If uncommented, outputs measure and arrange info.
-#define DebugMeasureAndArrange
+//#define DebugMeasureAndArrange
 #endif // DEBUG
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Hosting;
@@ -20,16 +21,24 @@ namespace Lottie
     /// <summary>
     /// A XAML element that displays and controls an animated composition.
     /// </summary>
-    [ContentProperty(Name = nameof(CompositionPlayer.Source))]
+    [ContentProperty(Name = nameof(Source))]
     public sealed class CompositionPlayer : FrameworkElement, ICompositionSink
     {
+        // The name of the property in the _progressPropertySet that 
+        // controls the progress of the animation.
+        const string c_progressPropertyName = "Progress";
+
         // The Visual to which the current composition will be attached.
-        readonly ContainerVisual _rootVisual;
+        readonly SpriteVisual _rootVisual;
+
+        // The PropertySet that is animated as the progress of the player advances.
+        // The the current composition's progress is synched to this.
+        readonly CompositionPropertySet _progressPropertySet;
 
         // Commands (Pause/Play/Resume/Stop) that were requested before
-        // the VisualPlayer was fully loaded. These will be played back
+        // the composition was fully loaded. These will be played back
         // when the load completes.
-        readonly List<Command> _commands = new List<Command>();
+        readonly List<Command> _queuedCommands = new List<Command>();
 
         // Set true when a play/resume/stop/pause request is made
         // for a new Source. This is used to control the AutoPlay
@@ -37,13 +46,23 @@ namespace Lottie
         // have been no explicit requests yet.
         bool _requestSeen;
 
-        // The current Lottie composition translated to a WinComp visual.
-        VisualPlayer _visualPlayer;
+        // The root visual of the current composition.
+        Visual _compositionRoot;
+
+        // The size of the current composition. Only valid if _compositionRoot is not null.
+        Vector2 _compositionSize;
+
+        // If a PlayAsync is active, its state.
+        PlayAsyncState _currentPlay;
 
         #region Dependency properties
         public static DependencyProperty AutoPlayProperty { get; } =
             RegisterDP(nameof(AutoPlay), true,
                 (owner, oldValue, newValue) => owner.HandleAutoPlayPropertyChanged(oldValue, newValue));
+
+        public static DependencyProperty BackgroundColorProperty { get; } =
+            RegisterDP(nameof(BackgroundColor), Colors.Transparent,
+                (owner, oldValue, newValue) => owner.HandleBackgroundColorPropertyChanged(oldValue, newValue));
 
         public static DependencyProperty DiagnosticsProperty { get; } =
             RegisterDP(nameof(Diagnostics), (object)null);
@@ -66,6 +85,10 @@ namespace Lottie
         public static DependencyProperty ReverseAnimationProperty { get; } =
             RegisterDP(nameof(ReverseAnimation), false);
 
+        public static DependencyProperty SpeedProperty { get; } =
+            RegisterDP(nameof(Speed), 1.0,
+                (owner, oldValue, newValue) => owner.HandleSpeedChanged(oldValue, newValue));
+
         public static DependencyProperty SourceProperty { get; } =
             RegisterDP(nameof(Source), (ICompositionSource)null,
                 (owner, oldValue, newValue) => owner.HandleSourcePropertyChanged(oldValue, newValue));
@@ -79,18 +102,31 @@ namespace Lottie
 
         #endregion Dependency properties
 
+        /// <summary>
+        /// A <see cref="CompositionObject"/> that will be animated along with 
+        /// the progress of the <see cref="CompositionPlayer"/>.
+        /// This is exposed to support advanced scenarios where other <see cref="CompositionObject"/>s
+        /// are animated at the same rate as the <see cref="CompositionPlayer"/>.
+        /// </summary>
+        public CompositionObject ProgressObject => _progressPropertySet;
+
         public CompositionPlayer()
         {
-            // Create a visual to parent the content.
+            // Create a visual to parent, clip, and center the content,
+            // and to host the Progress property
             var compositor = Window.Current.Compositor;
-            _rootVisual = compositor.CreateContainerVisual();
+            _rootVisual = compositor.CreateSpriteVisual();
+            _progressPropertySet = _rootVisual.Properties;
             ElementCompositionPreview.SetElementChildVisual(this, _rootVisual);
+
+            // Set an initial value for the Progress property.
+            _progressPropertySet.InsertScalar(c_progressPropertyName, 0);
 
             // Ensure the content can't render outside the bounds of the element.
             _rootVisual.Clip = compositor.CreateInsetClip();
 
             // Ensure the resources get cleaned up when the element is unloaded.
-            Unloaded += (sender, e) => UnloadVisualPlayer();
+            Unloaded += (sender, e) => UnloadComposition();
         }
 
         #region Properties
@@ -100,6 +136,11 @@ namespace Lottie
             set => SetValue(AutoPlayProperty, value);
         }
 
+        public Color BackgroundColor
+        {
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
+        }
         /// <summary>
         /// Contains optional diagnostics information about the composition.
         /// </summary>
@@ -141,6 +182,12 @@ namespace Lottie
             set => SetValue(ReverseAnimationProperty, value);
         }
 
+        public double Speed
+        {
+            get => (double)GetValue(SpeedProperty);
+            set => SetValue(SpeedProperty, value);
+        }
+
         public ICompositionSource Source
         {
             get => (ICompositionSource)GetValue(SourceProperty);
@@ -170,57 +217,85 @@ namespace Lottie
 
         public void SetProgress(double progress)
         {
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
-                _commands.Add(new SetProgressCommand(progress));
+                _queuedCommands.Add(new SetProgressCommand(progress));
             }
             else
             {
                 _requestSeen = true;
-                _visualPlayer.Pause();
-                _visualPlayer.SetProgress(progress);
+                Pause();
+                var floatProgress = ClampFloat0to1(progress);
+                if (_currentPlay == null)
+                {
+                    _progressPropertySet.InsertScalar(c_progressPropertyName, floatProgress);
+                }
+                else
+                {
+                    Pause();
+                    _currentPlay.Controller.Progress = floatProgress;
+                }
             }
-
-            Pause();
-            // Set the value, either directly or as a command.
         }
 
         public void Stop()
         {
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
-                _commands.Add(Command.Stop);
+                _queuedCommands.Add(Command.Stop);
             }
             else
             {
                 _requestSeen = true;
-                _visualPlayer.Stop();
+
+                var playBeingStopped = _currentPlay;
+
+                // Stop the current play.
+                if (playBeingStopped != null)
+                {
+                    _currentPlay = null;
+
+                    // Stop the animation.
+                    _progressPropertySet.StopAnimation(c_progressPropertyName);
+
+                    // Use TrySet because it may have been completed by the Batch.Completed callback already.
+                    // Batch.Completed can not be relied on for looping animations as it fires immediately.
+                    playBeingStopped.PlayCompletedSource.TrySetResult(true);
+                }
             }
         }
 
         public void Pause()
         {
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
-                _commands.Add(Command.Pause);
+                _queuedCommands.Add(Command.Pause);
             }
             else
             {
                 _requestSeen = true;
-                _visualPlayer.Pause();
+                if (_currentPlay != null && !_currentPlay.IsPaused)
+                {
+                    _currentPlay.IsPaused = true;
+                    _currentPlay.Controller.Pause();
+                }
             }
         }
 
         public void Resume()
         {
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
-                _commands.Add(Command.Resume);
+                _queuedCommands.Add(Command.Resume);
             }
             else
             {
                 _requestSeen = true;
-                _visualPlayer.Resume();
+                if (_currentPlay != null && _currentPlay.IsPaused)
+                {
+                    _currentPlay.IsPaused = false;
+                    _currentPlay.Controller.Resume();
+                }
             }
         }
 
@@ -228,16 +303,17 @@ namespace Lottie
         // that completes when the animation completes.
         Task _PlayAsync()
         {
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
+                // Enqueue a command.
                 var playCommand = new PlayAsyncCommand(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
-                _commands.Add(playCommand);
+                _queuedCommands.Add(playCommand);
                 return playCommand.Task;
             }
             else
             {
                 _requestSeen = true;
-                return _visualPlayer.PlayAsync(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
+                return RunAnimationAsync(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
             }
         }
 
@@ -251,9 +327,9 @@ namespace Lottie
             Size measuredSize;
 
             // No Width or Height are specified.
-            if (_visualPlayer == null || _visualPlayer.Size.ToSize().IsEmpty)
+            if (_compositionRoot == null || _compositionSize.ToSize().IsEmpty)
             {
-                // No VisualPlayer is loaded or it has a 0 size, so it will take up no space.
+                // No composition is loaded or it has a 0 size, so it will take up no space.
                 // It's not valid to return Size.Empty (it will cause a div/0 in the caller),
                 // so return the smallest possible size.
                 measuredSize = new Size(double.Epsilon, double.Epsilon);
@@ -265,10 +341,10 @@ namespace Lottie
                 {
                     case Stretch.None:
                         {
-                            if (_visualPlayer.Size.X < AbstractInfinity(availableSize.Width) && _visualPlayer.Size.Y < AbstractInfinity(availableSize.Height))
+                            if (_compositionSize.X < AbstractInfinity(availableSize.Width) && _compositionSize.Y < AbstractInfinity(availableSize.Height))
                             {
-                                // The native size of the _visualPlayer will fit inside the available size.
-                                measuredSize = _visualPlayer.Size.ToSize();
+                                // The native size of the composition will fit inside the available size.
+                                measuredSize = _compositionSize.ToSize();
                             }
                             else if (double.IsInfinity(availableSize.Width))
                             {
@@ -281,13 +357,13 @@ namespace Lottie
                                 else
                                 {
                                     // Just the width is infinite. The native height fits.
-                                    measuredSize = new Size(_visualPlayer.Size.X, availableSize.Height);
+                                    measuredSize = new Size(_compositionSize.X, availableSize.Height);
                                 }
                             }
                             else if (double.IsInfinity(availableSize.Height))
                             {
                                 // Just the height is infinite. The native width fits.
-                                measuredSize = new Size(availableSize.Width, _visualPlayer.Size.Y);
+                                measuredSize = new Size(availableSize.Width, _compositionSize.Y);
                             }
                             else
                             {
@@ -319,8 +395,8 @@ namespace Lottie
                         else
                         {
                             // Scale so there is no space around the edge.
-                            var widthScale = availableSize.Width / _visualPlayer.Size.X;
-                            var heightScale = availableSize.Height / _visualPlayer.Size.Y;
+                            var widthScale = availableSize.Width / _compositionSize.X;
+                            var heightScale = availableSize.Height / _compositionSize.Y;
                             if (widthScale < heightScale)
                             {
                                 heightScale = widthScale;
@@ -329,8 +405,8 @@ namespace Lottie
                             {
                                 widthScale = heightScale;
                             }
-                            var measuredX = Math.Min(_visualPlayer.Size.X * widthScale, availableSize.Width);
-                            var measuredY = Math.Min(_visualPlayer.Size.Y * heightScale, availableSize.Height);
+                            var measuredX = Math.Min(_compositionSize.X * widthScale, availableSize.Width);
+                            var measuredY = Math.Min(_compositionSize.Y * heightScale, availableSize.Height);
 
                             measuredSize = new Size(measuredX, measuredY);
                         }
@@ -338,11 +414,11 @@ namespace Lottie
                     case Stretch.Uniform:
                         {
                             // Scale so that one dimension fits exactly and no dimension exceeds the boundary.
-                            var widthScale = AbstractInfinity(availableSize.Width) / _visualPlayer.Size.X;
-                            var heightScale = AbstractInfinity(availableSize.Height) / _visualPlayer.Size.Y;
+                            var widthScale = AbstractInfinity(availableSize.Width) / _compositionSize.X;
+                            var heightScale = AbstractInfinity(availableSize.Height) / _compositionSize.Y;
                             measuredSize = (heightScale > widthScale)
-                                ? new Size(availableSize.Width, _visualPlayer.Size.Y * widthScale)
-                                : new Size(_visualPlayer.Size.X * heightScale, availableSize.Height);
+                                ? new Size(availableSize.Width, _compositionSize.Y * widthScale)
+                                : new Size(_compositionSize.X * heightScale, availableSize.Height);
                         }
                         break;
                     default:
@@ -358,7 +434,7 @@ namespace Lottie
         {
             DebugMeasureAndArrange($"Arrange finalSize: {finalSize} Stretch: {Stretch}");
 
-            if (_visualPlayer == null)
+            if (_compositionRoot == null)
             {
                 // No content, nothing to do.
                 return finalSize;
@@ -374,13 +450,13 @@ namespace Lottie
                     // Do not scale, do not center.
                     break;
                 case Stretch.Fill:
-                    widthScale = finalSize.Width / _visualPlayer.Size.X;
-                    heightScale = finalSize.Height / _visualPlayer.Size.Y;
+                    widthScale = finalSize.Width / _compositionSize.X;
+                    heightScale = finalSize.Height / _compositionSize.Y;
                     break;
                 case Stretch.Uniform:
                     {
-                        widthScale = finalSize.Width / _visualPlayer.Size.X;
-                        heightScale = finalSize.Height / _visualPlayer.Size.Y;
+                        widthScale = finalSize.Width / _compositionSize.X;
+                        heightScale = finalSize.Height / _compositionSize.Y;
                         if (widthScale < heightScale)
                         {
                             heightScale = widthScale;
@@ -394,8 +470,8 @@ namespace Lottie
                 case Stretch.UniformToFill:
                     {
 
-                        widthScale = finalSize.Width / _visualPlayer.Size.X;
-                        heightScale = finalSize.Height / _visualPlayer.Size.Y;
+                        widthScale = finalSize.Width / _compositionSize.X;
+                        heightScale = finalSize.Height / _compositionSize.Y;
                         if (widthScale > heightScale)
                         {
                             heightScale = widthScale;
@@ -416,9 +492,9 @@ namespace Lottie
             var yOffset = 0.0;
 
             // A size needs to be set because there's an InsetClip applied, and without a size it will clip everything.
-            var scaledWidth = _visualPlayer.Size.X * widthScale;
-            var scaledHeight = _visualPlayer.Size.Y * heightScale;
-            _rootVisual.Size = new Vector2((float)Math.Min(finalSize.Width / widthScale, _visualPlayer.Size.X), (float)Math.Min(finalSize.Height / heightScale, _visualPlayer.Size.Y));
+            var scaledWidth = _compositionSize.X * widthScale;
+            var scaledHeight = _compositionSize.Y * heightScale;
+            _rootVisual.Size = new Vector2((float)Math.Min(finalSize.Width / widthScale, _compositionSize.X), (float)Math.Min(finalSize.Height / heightScale, _compositionSize.Y));
 
             // Center the animation.
             if (Stretch != Stretch.None)
@@ -447,9 +523,9 @@ namespace Lottie
         {
             if (newValue)
             {
-                if (_visualPlayer == null)
+                if (_compositionRoot == null)
                 {
-                    _commands.Add(Command.AutoPlay);
+                    _queuedCommands.Add(Command.AutoPlay);
                 }
                 else
                 {
@@ -462,7 +538,22 @@ namespace Lottie
             else
             {
                 // Ensure there are no auto-play commands enqueued.
-                while (_commands.Remove(Command.AutoPlay)) { }
+                while (_queuedCommands.Remove(Command.AutoPlay)) { }
+            }
+        }
+
+        // Called when the BackgroundColor properyt is updated.
+        void HandleBackgroundColorPropertyChanged(Color oldValue, Color newValue)
+        {
+            _rootVisual.Brush = Window.Current.Compositor.CreateColorBrush(newValue);
+        }
+
+        // Called when the Speed property is updated.
+        void HandleSpeedChanged(double oldValue, double newValue)
+        {
+            if (_currentPlay != null)
+            {
+                _currentPlay.Controller.PlaybackRate = (float)newValue;
             }
         }
 
@@ -481,16 +572,21 @@ namespace Lottie
 
             if (newValue != null)
             {
-                // Register to receive VisualPlayers from the source.
+#if DEBUG
+                var sw = Stopwatch.StartNew();
+#endif // DEBUG
+                // Register to receive content from the source.
                 newValue.ConnectSink(this);
+#if DEBUG
+                Debug.WriteLine($"ConnectSink on {newValue} took {sw.Elapsed}");
+#endif // DEBUG
             }
         }
-
 
         // Called when the Stretch property is updated.
         void HandleStretchPropertyChanged(Stretch oldValue, Stretch newValue)
         {
-            if (_visualPlayer != null)
+            if (_compositionRoot != null)
             {
                 DebugMeasureAndArrange("Invalidating measure.");
                 InvalidateMeasure();
@@ -503,8 +599,8 @@ namespace Lottie
             // Copy the commands so that the queue can be emptied before any PlayAsyncs
             // get completed. This is necessary because completing a PlayAsync may cause
             // an immediate callback and reentrance.
-            var commands = _commands.ToArray();
-            _commands.Clear();
+            var commands = _queuedCommands.ToArray();
+            _queuedCommands.Clear();
 
             foreach (var command in commands)
             {
@@ -516,54 +612,54 @@ namespace Lottie
             }
         }
 
-
         // Method called by the current ICompositionSource when it has new content
         // or the existing content is no longer valid.
         void ICompositionSink.SetContent(
-            Visual rootVisual, 
-            Vector2 size, 
-            CompositionPropertySet progressPropertySet, 
-            string progressPropertyName, 
-            TimeSpan duration, 
+            Visual rootVisual,
+            Vector2 size,
+            CompositionPropertySet progressPropertySet,
+            string progressPropertyName,
+            TimeSpan duration,
             object diagnostics)
         {
-            var visualPlayer = rootVisual == null 
-                ? null : 
-                new VisualPlayer(rootVisual, size, progressPropertySet, progressPropertyName, duration);
-            SetVisualPlayer(visualPlayer, diagnostics);
-        }
+            // Unload the old composition (if any).
+            UnloadComposition();
 
-        void SetVisualPlayer(VisualPlayer visualPlayer, object diagnostics)
-        {
-            // Unloading will ensure that any new play/pause/resume/stop requests will be enqueued.
-            UnloadVisualPlayer();
+            _compositionRoot = rootVisual;
+            _compositionSize = size;
 
-            if (visualPlayer == null)
+            SetValue(DurationProperty, duration);
+            SetValue(DiagnosticsProperty, diagnostics);
+
+            if (rootVisual == null)
             {
                 // Load failed. Clear out the queued commands and complete the plays.
                 ClearCommandQueue();
             }
             else
             {
+                // Connect the content's progress property to our progress property.
+                var progressAnimation = Window.Current.Compositor.CreateExpressionAnimation($"my.{c_progressPropertyName}");
+                progressAnimation.SetReferenceParameter("my", _progressPropertySet);
+                progressPropertySet.StartAnimation(progressPropertyName, progressAnimation);
+
                 if (AutoPlay)
                 {
                     // Auto-play is enabled. Enqueue an AutoPlay command.
-                    _commands.Add(Command.AutoPlay);
+                    _queuedCommands.Add(Command.AutoPlay);
                 }
-
-                _visualPlayer = visualPlayer;
 
                 Debug.Assert(_rootVisual.Children.Count == 0);
 
-                _rootVisual.Children.InsertAtTop(_visualPlayer.Root);
+                _rootVisual.Children.InsertAtTop(_compositionRoot);
 
                 // The element needs to be measured again for the new content.
                 DebugMeasureAndArrange("Invalidating measure.");
                 InvalidateMeasure();
 
                 // Play back any commands that were enqueued during loading.
-                if (_commands.Where(cmd => cmd.Type == Command.CommandType.AutoPlay).Any() &&
-                    !_commands.Where(cmd => cmd.Type != Command.CommandType.AutoPlay).Any())
+                if (_queuedCommands.Where(cmd => cmd.Type == Command.CommandType.AutoPlay).Any() &&
+                    !_queuedCommands.Where(cmd => cmd.Type != Command.CommandType.AutoPlay).Any())
                 {
                     // AutoPlay was enabled when loading was enabled or since loading started,
                     // AND there were no other requests. Auto-play.
@@ -573,8 +669,8 @@ namespace Lottie
                 {
                     // Process all the commands in the queue. Copy and clear the queue first
                     // in case handling one of the commands causes reentrance.
-                    var commands = _commands.ToArray();
-                    _commands.Clear();
+                    var commands = _queuedCommands.ToArray();
+                    _queuedCommands.Clear();
                     foreach (var command in commands)
                     {
                         switch (command.Type)
@@ -582,9 +678,9 @@ namespace Lottie
                             case Command.CommandType.PlayAsync:
                                 {
                                     // Hook up the TaskCompletionSource to complete the 
-                                    // original play request when _PlayAsync completes.
+                                    // original play request when the animation completes.
                                     var playCommand = (PlayAsyncCommand)command;
-                                    _visualPlayer.PlayAsync(playCommand.FromProgress, playCommand.ToProgress, playCommand.Loop, playCommand.Reverse).
+                                    RunAnimationAsync(playCommand.FromProgress, playCommand.ToProgress, playCommand.Loop, playCommand.Reverse).
                                         GetAwaiter().
                                             OnCompleted(playCommand.CompleteTask);
                                 }
@@ -610,22 +706,122 @@ namespace Lottie
                         }
                     }
                 }
-
-                SetValue(DurationProperty, _visualPlayer.AnimationDuration);
             }
-            SetValue(DiagnosticsProperty, diagnostics);
-            SetValue(IsCompositionLoadedProperty, true);
+
+            SetValue(IsCompositionLoadedProperty, _compositionRoot != null);
         }
 
-
-        void UnloadVisualPlayer()
+        // Creates and starts an animation on the progress property. The task completes
+        // when the animation is stopped or completes.
+        Task RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
         {
-            if (_visualPlayer != null)
+            // Cause any other tasks waiting in this method to return. The most
+            // recent request always wins.
+            Stop();
+
+            Debug.Assert(_currentPlay == null);
+
+            var from = ClampFloat0to1(fromProgress);
+            var to = ClampFloat0to1(toProgress);
+
+            if (from == to)
             {
+                // Nothing to play.
+                return Task.CompletedTask;
+            }
+
+            var duration = Duration * (from < to ? (to - from) : ((1 - from) + to));
+
+            if (duration.TotalMilliseconds < 20)
+            {
+                // Nothing to play.
+                SetProgress(from);
+                return Task.CompletedTask;
+            }
+            var compositor = Window.Current.Compositor;
+            var playAnimation = compositor.CreateScalarKeyFrameAnimation();
+            playAnimation.Duration = duration;
+            var linearEasing = compositor.CreateLinearEasingFunction();
+
+            if (reversed)
+            {
+                // Play backwards from toProgress to fromProgress
+                playAnimation.InsertKeyFrame(0, to);
+                if (from > to)
+                {
+                    // Play to the beginning.
+                    var timeToBeginning = to / (to + (1 - from));
+                    playAnimation.InsertKeyFrame(timeToBeginning, 0, linearEasing);
+                    // Jump to the end.
+                    playAnimation.InsertKeyFrame(timeToBeginning + float.Epsilon, 1, linearEasing);
+                }
+                playAnimation.InsertKeyFrame(1, from, linearEasing);
+            }
+            else
+            {
+                // Play forwards from fromProgress to toProgress
+                playAnimation.InsertKeyFrame(0, from);
+                if (from > to)
+                {
+                    // Play to the end
+                    var timeToEnd = (1 - from) / ((1 - from) + to);
+                    playAnimation.InsertKeyFrame(timeToEnd, 1, linearEasing);
+                    // Jump to the beginning
+                    playAnimation.InsertKeyFrame(timeToEnd + float.Epsilon, 0, linearEasing);
+                }
+                playAnimation.InsertKeyFrame(1, to, linearEasing);
+            }
+
+            if (looped)
+            {
+                playAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+            }
+            else
+            {
+                playAnimation.IterationBehavior = AnimationIterationBehavior.Count;
+                playAnimation.IterationCount = 1;
+            }
+
+            // Create a batch so that we can know when the animation finishes. This only
+            // works for non-looping animations (the batch will complete immediately
+            // for looping animations).
+            CompositionScopedBatch batch = looped
+                ? null
+                : compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+
+            _progressPropertySet.StartAnimation(c_progressPropertyName, playAnimation);
+
+            // Get a controller for the animation and save it in the PlayState.
+            var playState = _currentPlay =
+                new PlayAsyncState(_progressPropertySet.TryGetAnimationController(c_progressPropertyName));
+
+            // Set the speed.
+            _currentPlay.Controller.PlaybackRate = (float)Speed;
+
+            if (batch != null)
+            {
+                batch.Completed += (sender, args) =>
+                {
+                    // Signal the task that created the animation that it has finished.
+                    // Use TrySet because it may have been completed by the Stop() method already.
+                    playState.PlayCompletedSource.TrySetResult(true);
+                };
+                batch.End();
+            }
+
+            return playState.PlayCompletedSource.Task;
+        }
+
+        void UnloadComposition()
+        {
+            if (_compositionRoot != null)
+            {
+                Stop();
+
                 _rootVisual.Children.RemoveAll();
 
-                _visualPlayer.Dispose();
-                _visualPlayer = null;
+                _compositionRoot.Dispose(); ;
+                _compositionRoot = null;
 
                 SetValue(DurationProperty, null);
                 SetValue(DiagnosticsProperty, null);
@@ -643,6 +839,25 @@ namespace Lottie
                 new PropertyMetadata(defaultValue, (d, e) => callback(((CompositionPlayer)d), (T)e.OldValue, (T)e.NewValue)));
 
         #endregion DependencyProperty helpers
+
+        static float ClampFloat0to1(double value) => (float)Math.Min(1, Math.Max(value, 0));
+
+        sealed class PlayAsyncState
+        {
+            internal PlayAsyncState(AnimationController controller)
+            {
+                Controller = controller;
+                PlayCompletedSource = new TaskCompletionSource<bool>();
+            }
+
+            readonly internal AnimationController Controller;
+
+            // Used to signal that the play has finished, either through
+            // the animation batch completing, or through Stop() being called.
+            readonly internal TaskCompletionSource<bool> PlayCompletedSource;
+
+            internal bool IsPaused;
+        }
 
         class Command
         {

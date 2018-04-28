@@ -313,12 +313,9 @@ namespace LottieData.Serialization
             // Time when the layer starts
             var startFrame = obj.GetNamedNumber("st");
 
-            // Bodymovin pre-scales the in frame and out frame by the time stretch. However, that will
-            // cause the stretch to be double counted since the in out animation gets treated the same
-            // as all other animations and will have stretch applied to it again.
             // Time when the layer becomes visible.
-            var inFrame = obj.GetNamedNumber("ip") / timeStretch;
-            var outFrame = obj.GetNamedNumber("op") / timeStretch;
+            var inFrame = obj.GetNamedNumber("ip");
+            var outFrame = obj.GetNamedNumber("op");
 
 
             switch (TyToLayerType(obj.GetNamedNumber("ty", double.NaN)))
@@ -1372,7 +1369,7 @@ namespace LottieData.Serialization
                                     var kArray = k.GetArray();
                                     if (HasKeyframes(kArray))
                                     {
-                                        keyFrames = ReadKeyFrames(kArray).ToArray();
+                                        keyFrames = ReadKeyFrames(reader, kArray).ToArray();
                                         initialValue = keyFrames.First().Value;
                                     }
                                 }
@@ -1415,7 +1412,7 @@ namespace LottieData.Serialization
                 return firstItem.ValueType == JsonValueType.Object && firstItem.GetObject().ContainsKey("t");
             }
 
-            IEnumerable<KeyFrame<T>> ReadKeyFrames(JsonArray jsonArray)
+            IEnumerable<KeyFrame<T>> ReadKeyFrames(LottieCompositionJsonReader reader, JsonArray jsonArray)
             {
                 uint count = (uint)jsonArray.Count;
 
@@ -1451,6 +1448,19 @@ namespace LottieData.Serialization
                 {
                     var lottieKeyFrame = jsonArray.GetObjectAt(i);
 
+                    // "n" is a name on the keyframe. Never seems to be useful.
+                    reader.IgnoreFieldIntentionally(lottieKeyFrame, "n");
+
+                    // SpatialBeziers.
+                    var ti = default(Vector3);
+                    var to = default(Vector3);
+
+                    if (lottieKeyFrame.ContainsKey("ti"))
+                    {
+                        ti = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("ti"));
+                        to = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("to"));
+                    }
+
                     // Read the start frame.
                     var startFrame = lottieKeyFrame.GetNamedNumber("t", 0);
 
@@ -1460,7 +1470,7 @@ namespace LottieData.Serialization
                         if (!lottieKeyFrame.ContainsKey("s"))
                         {
                             // It has no value associated with it.
-                            yield return new KeyFrame<T>(startFrame, endValue, easing);
+                            yield return new KeyFrame<T>(startFrame, endValue, ti, to, easing);
                             break;
                         }
                     }
@@ -1475,7 +1485,7 @@ namespace LottieData.Serialization
                         throw new InvalidOperationException();
                     }
 
-                    yield return new KeyFrame<T>(startFrame, startValue, easing);
+                    yield return new KeyFrame<T>(startFrame, startValue, ti, to, easing);
 
                     // Get the easing to the end value, and get the end value.
                     if (ReadBool(lottieKeyFrame, "h") == true)
@@ -1507,6 +1517,8 @@ namespace LottieData.Serialization
                         // the next pair is read.
                         endValue = _valueFactory(lottieKeyFrame.GetNamedValue("e"));
                     }
+
+                    reader.AssertAllFieldsRead(lottieKeyFrame);
                 }
             }
         }

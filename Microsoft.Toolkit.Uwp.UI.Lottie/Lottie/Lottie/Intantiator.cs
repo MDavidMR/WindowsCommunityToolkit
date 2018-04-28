@@ -1,4 +1,6 @@
-﻿using Microsoft.Graphics.Canvas;
+﻿#define ReuseExpressionAnimation
+
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Collections.Generic;
@@ -12,16 +14,21 @@ namespace Lottie
     /// Creates instances of a <see cref="Windows.UI.Composition.Visual"/> tree from a description
     /// of the tree.
     /// </summary>
-    sealed class CompositionObjectFactory
+    sealed class Instantiator
     {
         readonly Wc.Compositor _c;
-        readonly CanvasDevice _canvasDevice;
         readonly Dictionary<object, object> _cache = new Dictionary<object, object>(new ReferenceEqualsComparer());
+#if ReuseExpressionAnimation
+        // The one and only ExpressionAnimation - reset and reparameterized for each time we need one.
+        readonly Wc.ExpressionAnimation _expressionAnimation;
+#endif
 
-        CompositionObjectFactory(Wc.Compositor compositor)
+        Instantiator(Wc.Compositor compositor)
         {
             _c = compositor;
-            _canvasDevice = CanvasDevice.GetSharedDevice();
+#if ReuseExpressionAnimation
+            _expressionAnimation = _c.CreateExpressionAnimation();
+#endif
         }
 
         /// <summary>
@@ -30,10 +37,8 @@ namespace Lottie
         /// </summary>
         internal static Wc.Visual CreateVisual(Wc.Compositor compositor, Wd.Visual visual)
         {
-            var converter = new CompositionObjectFactory(compositor);
+            var converter = new Instantiator(compositor);
             var result = converter.GetVisual(visual);
-            // Trim any memory just used by Win2D.
-            converter._canvasDevice.Trim();
             return result;
         }
 
@@ -55,7 +60,7 @@ namespace Lottie
             where T : Wc.CompositionObject
         {
             _cache.Add(key, obj);
-            SetProperties(key, obj);
+            InitializeCompositionObject(key, obj);
             return obj;
         }
 
@@ -140,17 +145,17 @@ namespace Lottie
             where T : Wc.CompositionGeometry
         {
             CacheAndInitializeCompositionObject(source, target);
-            if (source.TrimStart.HasValue)
+            if (source.TrimStart != 0)
             {
-                target.TrimStart = source.TrimStart.Value;
+                target.TrimStart = source.TrimStart;
             }
-            if (source.TrimEnd.HasValue)
+            if (source.TrimEnd != 1)
             {
-                target.TrimEnd = source.TrimEnd.Value;
+                target.TrimEnd = source.TrimEnd;
             }
-            if (source.TrimOffset.HasValue)
+            if (source.TrimOffset != 0)
             {
-                target.TrimOffset = source.TrimOffset.Value;
+                target.TrimOffset = source.TrimOffset;
             }
             return target;
         }
@@ -209,7 +214,7 @@ namespace Lottie
         }
 
 
-        void SetProperties(Wd.CompositionObject source, Wc.CompositionObject target)
+        void InitializeCompositionObject(Wd.CompositionObject source, Wc.CompositionObject target)
         {
             // Get the CompositionPropertySet on this object. This has the side-effect of initializing
             // it and starting any animations.
@@ -230,7 +235,7 @@ namespace Lottie
             foreach (var animator in source.Animators)
             {
                 var animation = GetCompositionAnimation(animator.Animation);
-                target.StartAnimation(animator.Target, animation);
+                target.StartAnimation(animator.AnimatedProperty, animation);
                 var controller = animator.Controller;
                 if (controller != null)
                 {
@@ -380,13 +385,35 @@ namespace Lottie
 
         Wc.ExpressionAnimation GetExpressionAnimation(Wd.ExpressionAnimation obj)
         {
+#if ReuseExpressionAnimation
+            // Reset and reuse the same ExpressionAnimation each time.
+            var result = _expressionAnimation;
+            result.Comment = obj.Comment ?? "";
+
+            // If there is a Target set it. Note however that the Target isn't used for anything
+            // interesting in this scenario, and there is no way to reset the Target to an
+            // empty string (the Target API disallows empty). In reality, for all our uses
+            // the Target will not be set and it doesn't matter if it was set previously.
+            if (!string.IsNullOrWhiteSpace(obj.Target))
+            {
+                result.Target = obj.Target;
+            }
+            result.Expression = obj.Expression;
+            result.ClearAllParameters();
+            foreach (var parameter in obj.ReferenceParameters)
+            {
+                result.SetReferenceParameter(parameter.Key, GetCompositionObject(parameter.Value));
+            }
+#else
             if (GetExisting(obj, out Wc.ExpressionAnimation result))
             {
                 return result;
             }
             result = CacheAndInitializeAnimation(obj, _c.CreateExpressionAnimation(obj.Expression));
+#endif
             StartAnimations(obj, result);
             return result;
+
         }
 
         Wc.ColorKeyFrameAnimation GetColorKeyFrameAnimation(Wd.ColorKeyFrameAnimation obj)
@@ -497,21 +524,31 @@ namespace Lottie
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateInsetClip());
-            if (obj.LeftInset != null)
+            // CompositionClip properties
+            if (obj.CenterPoint.X != 0 || obj.CenterPoint.Y != 0)
             {
-                result.LeftInset = obj.LeftInset.Value;
+                result.CenterPoint = Vector2(obj.CenterPoint);
             }
-            if (obj.RightInset != null)
+            if (obj.Scale.X != 1 || obj.Scale.Y != 1)
             {
-                result.RightInset = obj.RightInset.Value;
+                result.Scale = Vector2(obj.Scale);
             }
-            if (obj.TopInset != null)
+            // InsetClip properties
+            if (obj.LeftInset != 0)
             {
-                result.TopInset = obj.TopInset.Value;
+                result.LeftInset = obj.LeftInset;
             }
-            if (obj.BottomInset != null)
+            if (obj.RightInset != 0)
             {
-                result.BottomInset = obj.BottomInset.Value;
+                result.RightInset = obj.RightInset;
+            }
+            if (obj.TopInset != 0)
+            {
+                result.TopInset = obj.TopInset;
+            }
+            if (obj.BottomInset != 0)
+            {
+                result.BottomInset = obj.BottomInset;
             }
             StartAnimations(obj, result);
             return result;
@@ -783,12 +820,11 @@ namespace Lottie
             }
 
             var canvasGeometry = (Wd.Mgcg.CanvasGeometry)obj;
-            var content = canvasGeometry.Content;
             switch (canvasGeometry.Type)
             {
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Combination:
                     {
-                        var combination = (Wd.Mgcg.CanvasGeometry.Combination)content;
+                        var combination = (Wd.Mgcg.CanvasGeometry.Combination)canvasGeometry;
 
                         return Cache(obj, GetCanvasGeometry(combination.A).CombineWith(
                             GetCanvasGeometry(combination.B),
@@ -796,17 +832,17 @@ namespace Lottie
                             Combine(combination.CombineMode)));
                     }
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Ellipse:
-                    var ellipse = (Wd.Mgcg.CanvasGeometry.Ellipse)content;
+                    var ellipse = (Wd.Mgcg.CanvasGeometry.Ellipse)canvasGeometry;
                     return CanvasGeometry.CreateEllipse(
-                        _canvasDevice,
+                        null,
                         ellipse.X,
                         ellipse.Y,
                         ellipse.RadiusX,
                         ellipse.RadiusY);
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Path:
-                    using (var builder = new CanvasPathBuilder(_canvasDevice))
+                    using (var builder = new CanvasPathBuilder(null))
                     {
-                        foreach (var command in ((WinCompData.Mgcg.CanvasPathBuilder)content).Commands)
+                        foreach (var command in ((WinCompData.Mgcg.CanvasGeometry.Path)canvasGeometry).PathBuilder.Commands)
                         {
                             switch (command.Type)
                             {
@@ -830,9 +866,9 @@ namespace Lottie
                         return Cache(obj, CanvasGeometry.CreatePath(builder));
                     }
                 case Wd.Mgcg.CanvasGeometry.GeometryType.RoundedRectangle:
-                    var roundedRectangle = (Wd.Mgcg.CanvasGeometry.RoundedRectangle)content;
+                    var roundedRectangle = (Wd.Mgcg.CanvasGeometry.RoundedRectangle)canvasGeometry;
                     return CanvasGeometry.CreateRoundedRectangle(
-                        _canvasDevice,
+                        null,
                         roundedRectangle.X,
                         roundedRectangle.Y,
                         roundedRectangle.W,

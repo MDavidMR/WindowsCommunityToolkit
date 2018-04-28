@@ -7,28 +7,23 @@
     xmlns:local="using:LottieUwpPlayground"
     xmlns:lottie="using:Lottie"
     xmlns:compositions="using:Compositions"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Visibility="Visible" RequestedTheme="Default">
     <Page.Resources>
-        <Color x:Key="BackgroundColor">Gray</Color>
         <lottie:LottieCompositionSource x:Key="LottieLogo" UriSource="ms-appx:///Assets/LottieLogo1.json"/>
+        <local:VisiblityConverter x:Key="VisibilityConverter"/>
+        <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
     </Page.Resources>
 
-    <RelativePanel AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler">
-        <RelativePanel.Background>
-            <SolidColorBrush Color="{Binding Source={StaticResource BackgroundColor}}"/>
-        </RelativePanel.Background>
-        <RelativePanel.Resources>
-            <SolidColorBrush x:Name="BackgroundBrush" Color="{x:Bind backgroundColorPicker.Color, Mode=OneWay}" />
-        </RelativePanel.Resources>
-
+    <RelativePanel AllowDrop="True" DragOver="LottieDragOverHandler" Drop="LottieDropHandler" Background="{StaticResource StageBackgroundBrush}">
         <!-- The stage. This is where the Lotties are displayed. -->
-        <Border Background="{x:Bind BackgroundBrush, Mode=OneWay}" 
+        <Border Background="{StaticResource StageBackgroundBrush}" 
               RelativePanel.RightOf="PlayerControls"  RelativePanel.LeftOf="Info"
-              RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-            <Grid Margin="10">
-                <lottie:CompositionPlayer x:Name="_player" AutoPlay="False">
-                    <lottie:LottieCompositionSource x:Name="_playerSource" Options="All"/>
-                </lottie:CompositionPlayer>
+              RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="Controls">
+
+            <Grid Margin="20" >
+                    <lottie:CompositionPlayer x:Name="_player" AutoPlay="False" BackgroundColor="White">
+                        <lottie:LottieCompositionSource x:Name="_playerSource" Options="All"/>
+                    </lottie:CompositionPlayer>
                 <lottie:CompositionPlayer x:Name="_loadingAnimation" Visibility="Collapsed" AutoPlay="False">
                     <!--<lottie:LottieCompositionSource UriSource="ms-appx:///Assets/simple_loader.json"/>-->
                     <compositions:LoadingAnimation/>
@@ -40,9 +35,11 @@
                     Width="340"
                     RelativePanel.AlignLeftWithPanel="True" 
                     RelativePanel.AlignTopWithPanel="True" 
-                    RelativePanel.AlignBottomWithPanel="True"
-                    VerticalAlignment="Center"
+                    RelativePanel.Above="Controls"
+                    VerticalAlignment="Bottom"
                     Padding="5"
+                    Visibility="Collapsed"
+                    Background="{StaticResource ToolsBackgroundBrush}"
                     >
             <StackPanel.Resources>
                 <Style TargetType="Button">
@@ -67,34 +64,13 @@
                 </Style>
             </StackPanel.Resources>
 
-            <!-- Lottie logo -->
-            <Border BorderBrush="Black" BorderThickness="2" Height="190" Margin="0,0,0,20" >
-                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" />
-            </Border>
-
-            <Button Click="PickFile_Click" >Pick Lottie files ...</Button>
-            <TextBlock TextAlignment="Center" TextWrapping="Wrap">... or drag and drop or ...</TextBlock>
-            <TextBox x:Name="_urlPicker" LostFocus="TextBox_LostFocus" AcceptsReturn="False" 
-                     PlaceholderText="Enter a Lottie file url ..." 
-                     InputScope="Url" 
-                     KeyDown="TextBox_KeyDown"
-                     />
-
-            <ToggleSwitch Margin="0,20,0,0" x:Name="_playControl" Header="Play control" OffContent="Automatic"  OnContent="Manual" Toggled="_playControl_Toggled"
-                          IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
-                          />
-
-            <!-- Scrubber -->
-            <Slider Header="Manual play progress" x:Name="_scrubber" StepFrequency="0.001" Maximum="1" Minimum="0" ValueChanged="ProgressSliderChanged"
-                    IsEnabled="{x:Bind _playControl.IsOn, Mode=OneWay}"  />
-
             <Grid>
-                <ColorPicker x:Name="backgroundColorPicker"
+                <ColorPicker x:Name="BackgroundBrushPicker"
                      ColorSpectrumShape="Ring"
-                     IsColorPreviewVisible="False"
+                     IsColorPreviewVisible="True"
                      IsColorChannelTextInputVisible="False"
                      IsHexInputVisible="False"
-                     Color="{Binding Source={StaticResource BackgroundColor}}" />
+                     Color="{Binding Source={StaticResource BackgroundBrush}, Path=Color}" IsColorSpectrumVisible="True" IsColorSliderVisible="True" ColorSpectrumComponents="HueSaturation"  />
 
                 <TextBlock IsHitTestVisible="False" >Background</TextBlock>
             </Grid>
@@ -103,71 +79,161 @@
         <Grid x:Name="Info" 
                     MinWidth="360" Width="360"
                     RelativePanel.AlignRightWithPanel="True" 
-                    RelativePanel.AlignBottomWithPanel ="True"  
                     RelativePanel.AlignTopWithPanel="True"
-                    VerticalAlignment="Top"
+                    RelativePanel.Above="Controls"
+                    VerticalAlignment="Stretch" Background="{StaticResource ToolsBackgroundBrush}"
                     >
-            <StackPanel Padding="5">
+            <ScrollViewer>
+                <StackPanel Padding="5" >
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="LightGray"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" Height="160" Margin="10"/>
+
+                    <StackPanel
+                    Visibility="{x:Bind _player.IsCompositionLoaded, Converter={StaticResource VisibilityConverter}, Mode=OneWay}"  >
+                        <ListView ItemsSource="{Binding ElementName=_player, Path=Diagnostics,  Converter={StaticResource formatter}, ConverterParameter=Properties}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="95"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Path=Item1}" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                                        <TextBlock TextAlignment="Right" Grid.Column="1" Text="{Binding Path=Item2}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <TextBlock Text="Parsing issues" 
+                               FontWeight="SemiBold" 
+                               Margin="0,10,0,0" 
+                               Visibility="{Binding ElementName=_player, Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=ParsingIssues}"/>
+                        <ItemsControl ItemsSource="{Binding ElementName=_player, Path=Diagnostics,  Converter={StaticResource formatter}, ConverterParameter=ParsingIssues}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="Translation issues" FontWeight="SemiBold" Margin="0,10,0,0" 
+                               Visibility="{Binding ElementName=_player, Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=TranslationIssues}"/>
+                        <ItemsControl ItemsSource="{Binding ElementName=_player, Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=TranslationIssues}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Controls at the bottom of the window -->
+        <Grid x:Name="Controls" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
+              Height="65"
+              Background="{Binding Source={StaticResource BackgroundBrush}}" >
+            <Grid.ColumnDefinitions>
+                <!-- Buttons for opening a file, selecting background .-->
+                <ColumnDefinition MinWidth="80" Width="1*"></ColumnDefinition>
+                <ColumnDefinition MinWidth="200" Width="3*"></ColumnDefinition>
+                <ColumnDefinition MinWidth="80" Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                 <StackPanel.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="BorderBrush" Value="Black"/>
-                        <Setter Property="Background" Value="LightGray"/>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource ControlsTextBlockStyle}" >
+                        <Setter Property="Padding" Value="30,0,30,0"/>
                     </Style>
                 </StackPanel.Resources>
-                <lottie:CompositionPlayer Source="{Binding Source={StaticResource LottieLogo}}" Stretch="UniformToFill" Height="160" Margin="10"/>
 
-                <Pivot DataContext="{Binding ElementName=_player}">
-                    <Pivot.Resources>
-                        <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
-                    </Pivot.Resources>
+                <!-- Open file -->
+                <Button Style="{StaticResource ControlsButtonStyle}" Click="PickFile_Click" >&#xf12b;</Button>
+                <!-- Open folder -->
+                <!--<TextBlock>&#xe8da;</TextBlock>-->
+                <!--<TextBlock>&#xe8e5;</TextBlock>-->
 
-                    <PivotItem Header="Properties" x:Name="_properties" Content="{Binding}" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=CollapsedIfNull}" >
-                        <PivotItem.ContentTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <ListView ItemsSource="{Binding Converter={StaticResource formatter}, Path=Diagnostics, ConverterParameter=Properties}">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="95"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding Path=Item1}" Margin="0,0,10,0" FontWeight="SemiBold"/>
-                                                    <TextBlock TextAlignment="Right" Grid.Column="1" Text="{Binding Path=Item2}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                    <TextBlock Text="Parsing issues" FontWeight="SemiBold" Margin="0,10,0,0" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=ParsingIssues}"/>
-                                    <ItemsControl ItemsSource="{Binding Converter={StaticResource formatter}, ConverterParameter=ParsingIssues, Path=Diagnostics}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-
-                                    <TextBlock Text="Translation issues" FontWeight="SemiBold" Margin="0,10,0,0" Visibility="{Binding Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=TranslationIssues}"/>
-                                    <ItemsControl ItemsSource="{Binding Converter={StaticResource formatter}, Path=Diagnostics, ConverterParameter=TranslationIssues}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock TextWrapping="Wrap" Text="{Binding}"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="WinCompCSharpCopyToClipboardButton_Click">Copy C# code to clipboard</Button>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="LottieXmlCopyToClipboardButton_Click">Copy Lottie XML to clipboard</Button>
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5" Click="WinCompXmlCopyToClipboardButton_Click">Copy WinComp XML to clipboard</Button>
-
-                                </StackPanel>
-                            </DataTemplate>
-                        </PivotItem.ContentTemplate>
-                    </PivotItem>
-                </Pivot>
+                <!-- Paint palette -->
+                <Button Style="{StaticResource ControlsButtonStyle}"
+                        Opacity="0"
+                        IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
+                        >&#xe790;</Button>
             </StackPanel>
+
+            <RelativePanel Grid.Column="1">
+
+                <!-- Play/stop button -->
+                <ToggleButton x:Name="_playStopButton" Style="{StaticResource ControlsToggleButtonStyle}"
+                              RelativePanel.AlignLeftWithPanel="True"
+                              RelativePanel.AlignTopWithPanel="True"
+                              RelativePanel.AlignBottomWithPanel="True"
+                              Checked="_playControl_Toggled"
+                              Unchecked="_playControl_Toggled"
+                              IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
+                              >
+                    <Grid>
+                        <!-- Play -->
+                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, ConverterParameter=not, Mode=OneWay}">&#xedb5;</TextBlock>
+                        <!-- Stop -->
+                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Height="34" VerticalAlignment="Bottom">&#xe71a;</TextBlock>
+                    </Grid>
+                </ToggleButton>
+
+                <!-- Scrubber -->
+                <!--IsEnabled="{x:Bind _playStopButton.IsChecked, Mode=OneWay}"-->
+                <local:Scrubber x:Name="_scrubber" ValueChanged="ProgressSliderChanged"
+                        IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
+                        RelativePanel.RightOf="_playStopButton"
+                        RelativePanel.LeftOf="_loopButton"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignBottomWithPanel="True" />
+
+                <!-- Loop or play again or something-->
+                <!-- Currently hidden through opacity - not clear that we want a loop button -->
+                <ToggleButton x:Name="_loopButton" Style="{StaticResource ControlsToggleButtonStyle}" 
+                        Opacity="0"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignBottomWithPanel="True">
+                    <Grid>
+                        <!-- Play to end -->
+                        <TextBlock Visibility="{x:Bind _loopButton.IsChecked, Converter={StaticResource VisibilityConverter}, ConverterParameter=not, Mode=OneWay}">&#xe9ac;</TextBlock>
+                        <!-- Repeat -->
+                        <TextBlock Visibility="{x:Bind _loopButton.IsChecked, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">&#xe8ee;</TextBlock>
+                    </Grid>
+                </ToggleButton>
+
+            </RelativePanel>
+
+            <!-- Status indicators and buttons for saving content -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource ControlsTextBlockStyle}" >
+                        <Setter Property="Padding" Value="20,0,20,0"/>
+                    </Style>
+                </StackPanel.Resources>
+
+                <!-- Flag -->
+                <!--
+                <TextBlock Grid.Column="5">&#xe7c1;</TextBlock>-->
+                <!-- Bang -->
+                <!--<TextBlock Grid.Column="6" Foreground="Orange" >&#xe8c9;</TextBlock>-->
+                <!-- Wrench: &#xe90f;-->
+                <TextBlock Visibility="{Binding ElementName=_player, Path=Diagnostics, Converter={StaticResource formatter}, ConverterParameter=VisibleIfIssues}" Foreground="Orange" >&#xe7ba;</TextBlock>
+                <!-- Save as -->
+                <Button Style="{StaticResource ControlsButtonStyle}" 
+                    IsEnabled="{x:Bind _player.IsCompositionLoaded, Mode=OneWay}"
+                    Click="SaveFile_Click" >&#xe792;</Button>
+
+            </StackPanel>
+
         </Grid>
     </RelativePanel>
 </Page>

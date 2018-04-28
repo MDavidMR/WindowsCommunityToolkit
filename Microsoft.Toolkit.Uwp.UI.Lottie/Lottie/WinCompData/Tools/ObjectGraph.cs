@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using WinCompData.Mgcg;
 
 namespace WinCompData.Tools
 {
@@ -12,44 +13,33 @@ namespace WinCompData.Tools
     {
         internal Graph() { }
 
-        public class Node : INodePrivate
+       
+        public class Node<T> : INodePrivate<T> where T : Node<T>, new()
         {
-            List<Node> _inReferences;
-            List<Node> _outReferences;
+            static readonly T[] s_emptyArray = new T[0];
+
+            List<T> _inReferences;
 
             public object Object;
-            public Node[] InReferences => _inReferences == null ? null : _inReferences.ToArray();
-            public Node[] OutReferences => _outReferences == null ? null : _outReferences.ToArray();
+            public T[] InReferences => _inReferences == null ? s_emptyArray : _inReferences.ToArray();
 
             public int ReferenceCount => InReferences.Length;
 
             public NodeType Type { get; private set; }
 
-            List<Node> INodePrivate.InReferences
+            List<T> INodePrivate<T>.InReferences
             {
                 get
                 {
                     if (_inReferences == null)
                     {
-                        _inReferences = new List<Node>();
+                        _inReferences = new List<T>();
                     }
                     return _inReferences;
                 }
             }
 
-            List<Node> INodePrivate.OutReferences
-            {
-                get
-                {
-                    if (_outReferences == null)
-                    {
-                        _outReferences = new List<Node>();
-                    }
-                    return _outReferences;
-                }
-            }
-
-            void INodePrivate.Initialize(NodeType type)
+            void INodePrivate<T>.Initialize(NodeType type)
             {
                 Type = type;
             }
@@ -59,42 +49,45 @@ namespace WinCompData.Tools
         {
             CompositionObject,
             CompositionPath,
+            CanvasGeometry,
         }
 
 
-        protected void InitializeNode(Node node, NodeType type)
+        protected void InitializeNode<T>(T node, NodeType type) where T : Node<T>, new()
             => NodePrivate(node).Initialize(type);
 
-        protected void AddVertex(Node from, Node to)
+        protected void AddVertex<T>(T from, T to) where T : Node<T>, new()
         {
-            var fromNode = NodePrivate(from);
             var toNode = NodePrivate(to);
-
-            fromNode.OutReferences.Add(to);
             toNode.InReferences.Add(from);
         }
 
-        static INodePrivate NodePrivate(Node node) => node;
+        static INodePrivate<T> NodePrivate<T>(T node) where T : Node<T>, new()
+        {
+            return node;
+        }
 
         // Private inteface that allows ObjectGraph to modify Nodes.
-        interface INodePrivate
+        interface INodePrivate<T> where T : Node<T>, new()
         {
             void Initialize(NodeType type);
-            List<Node> InReferences { get; }
-            List<Node> OutReferences { get; }
+            List<T> InReferences { get; }
         }
     }
 
+    /// <summary>
+    /// The graph of creatable objects reachable from a <see cref="CompositionObject"/>.
+    /// </summary>
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class ObjectGraph<T> : Graph, IEnumerable<T> where T : Graph.Node, new()
+    sealed class ObjectGraph<T> : Graph, IEnumerable<T> where T : Graph.Node<T>, new()
     {
         readonly bool _includeVertices;
         readonly Dictionary<object, T> _references = new Dictionary<object, T>();
         readonly Dictionary<CompositionObjectType, int> _compositionObjectCounter = new Dictionary<CompositionObjectType, int>();
 
-        internal ObjectGraph(bool includeVertices)
+        ObjectGraph(bool includeVertices)
         {
             _includeVertices = includeVertices;
         }
@@ -138,23 +131,9 @@ namespace WinCompData.Tools
                 return true;
             }
 
-            // Object has not been seen before. Count it, register it, and visit it.
-
-            // Count the types.
-            if (!_compositionObjectCounter.TryGetValue(obj.Type, out var counter))
-            {
-                _compositionObjectCounter.Add(obj.Type, 1);
-            }
-            else
-            {
-                _compositionObjectCounter[obj.Type] = counter + 1;
-            }
-
+            // Object has not been seen before. Register it, and visit it.
             // Create a node for the object.
-            node = new T
-            {
-                Object = obj,
-            };
+            node = new T { Object = obj };
 
             InitializeNode(node, NodeType.CompositionObject);
 
@@ -164,7 +143,6 @@ namespace WinCompData.Tools
                 AddVertex(from, node);
             }
             _references.Add(obj, node);
-
 
             switch (obj.Type)
             {
@@ -217,6 +195,87 @@ namespace WinCompData.Tools
             }
         }
 
+        bool Reference(T from, CompositionPath obj)
+        {
+            if (_references.TryGetValue(obj, out var node))
+            {
+                AddVertex(from, node);
+                return true;
+            }
+            else
+            {
+                node = new T { Object = obj };
+                InitializeNode(node, NodeType.CompositionPath);
+                AddVertex(from, node);
+                _references.Add(obj, node);
+            }
+            Reference(node, (CanvasGeometry)obj.Source);
+            return true;
+        }
+
+        bool Reference(T from, CanvasGeometry obj)
+        {
+            if (_references.TryGetValue(obj, out var node))
+            {
+                AddVertex(from, node);
+                return true;
+            }
+            else
+            {
+                node = new T { Object = obj };
+                InitializeNode(node, NodeType.CanvasGeometry);
+                AddVertex(from, node);
+                _references.Add(obj, node);
+            }
+
+            switch (obj.Type)
+            {
+                case CanvasGeometry.GeometryType.Combination:
+                    return VisitCombination((CanvasGeometry.Combination)obj, node);
+                case CanvasGeometry.GeometryType.Ellipse:
+                    return VisitEllipse((CanvasGeometry.Ellipse)obj, node);
+                case CanvasGeometry.GeometryType.Path:
+                    return VisitPath((CanvasGeometry.Path)obj, node);
+                case CanvasGeometry.GeometryType.RoundedRectangle:
+                    return VisitRoundedRectangle((CanvasGeometry.RoundedRectangle)obj, node);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        bool VisitAnimationController(AnimationController obj, T node)
+        {
+            VisitCompositionObject(obj, node);
+            return true;
+        }
+
+        bool VisitCanvasGeometry(CanvasGeometry obj, T node)
+        {
+            return true;
+        }
+
+        bool VisitCombination(CanvasGeometry.Combination obj, T node)
+        {
+            Reference(node, obj.A);
+            Reference(node, obj.B);
+            return VisitCanvasGeometry(obj, node);
+        }
+
+        bool VisitEllipse(CanvasGeometry.Ellipse obj, T node)
+        {
+            return VisitCanvasGeometry(obj, node);
+        }
+
+        bool VisitPath(CanvasGeometry.Path obj, T node)
+        {
+            return VisitCanvasGeometry(obj, node);
+        }
+
+        bool VisitRoundedRectangle(CanvasGeometry.RoundedRectangle obj, T node)
+        {
+            return VisitCanvasGeometry(obj, node);
+        }
+
         bool VisitCompositionObject(CompositionObject obj, T node)
         {
             // Prevent infinite recursion on CompositionPropertySet (its Properties
@@ -262,12 +321,6 @@ namespace WinCompData.Tools
         bool VisitInsetClip(InsetClip obj, T node)
         {
             return VisitCompositionClip(obj, node);
-        }
-        bool VisitAnimationController(AnimationController obj, T node)
-        {
-            VisitCompositionObject(obj, node);
-            Reference(node, obj.TargetObject);
-            return true;
         }
 
         bool VisitCompositionEasingFunction(CompositionEasingFunction obj, T node)
@@ -351,26 +404,6 @@ namespace WinCompData.Tools
             return VisitCompositionGeometry(obj, node);
         }
 
-        bool Reference(T from, CompositionPath obj)
-        {
-            if (_references.TryGetValue(obj, out var node))
-            {
-                AddVertex(from, node);
-                return true;
-            }
-            else
-            {
-                node = new T
-                {
-                    Object = obj,
-                };
-                InitializeNode(node, NodeType.CompositionPath);
-                AddVertex(from, node);
-                _references.Add(obj, node);
-            }
-
-            return true;
-        }
 
         bool VisitCompositionPathGeometry(CompositionPathGeometry obj, T node)
         {
@@ -446,5 +479,6 @@ namespace WinCompData.Tools
             }
             return true;
         }
+
     }
 }

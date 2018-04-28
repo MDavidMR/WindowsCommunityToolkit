@@ -6,9 +6,15 @@
     abstract class CompositionGeometry : CompositionObject
     {
         internal CompositionGeometry() { }
-        public float? TrimEnd { get; set; } = 1;
-        public float? TrimOffset { get; set; }
-        public float? TrimStart { get; set; }
+
+        // Default = 1
+        public float TrimEnd { get; set; } = 1;
+
+        // Default = 0
+        public float TrimOffset { get; set; }
+
+        // Default = 0
+        public float TrimStart { get; set; }
 
     }
 }

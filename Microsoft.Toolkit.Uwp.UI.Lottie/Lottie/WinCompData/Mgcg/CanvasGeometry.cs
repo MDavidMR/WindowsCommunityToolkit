@@ -7,13 +7,9 @@ namespace WinCompData.Mgcg
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class CanvasGeometry : IGeometrySource2D
+    abstract class CanvasGeometry : IGeometrySource2D
     {
-        CanvasGeometry(GeometryType type, object state)
-        {
-            Type = type;
-            Content = state;
-        }
+        CanvasGeometry() { }
 
         public enum GeometryType
         {
@@ -24,56 +20,71 @@ namespace WinCompData.Mgcg
         }
 
         public static CanvasGeometry CreatePath(CanvasPathBuilder pathBuilder)
-        {
-            return new CanvasGeometry(GeometryType.Path, pathBuilder);
-        }
+            => new Path
+            {
+                PathBuilder = pathBuilder
+            };
 
         public static CanvasGeometry CreateRoundedRectangle(CanvasDevice device, float x, float y, float w, float h, float radiusX, float radiusY)
-        {
-            return new CanvasGeometry(
-                GeometryType.RoundedRectangle,
-                new RoundedRectangle { X = x, Y = y, W = w, H = h, RadiusX = radiusX, RadiusY = radiusY }
-                );
-
-        }
+            => new RoundedRectangle
+            {
+                X = x,
+                Y = y,
+                W = w,
+                H = h,
+                RadiusX = radiusX,
+                RadiusY = radiusY
+            };
 
         public static CanvasGeometry CreateEllipse(CanvasDevice device, float x, float y, float radiusX, float radiusY)
-        {
-            return new CanvasGeometry(
-                GeometryType.Ellipse,
-                new Ellipse { X = x, Y = y, RadiusX = radiusX, RadiusY = radiusY }
-                );
-        }
+            => new Ellipse
+            {
+                X = x,
+                Y = y,
+                RadiusX = radiusX,
+                RadiusY = radiusY
+            };
 
         public CanvasGeometry CombineWith(CanvasGeometry other, Matrix3x2 matrix, CanvasGeometryCombine combineMode)
-        {
-            return new CanvasGeometry(
-                GeometryType.Combination,
-                new Combination { A = this, B = other, Matrix = matrix, CombineMode = combineMode }
-                );
-        }
+         => new Combination
+         {
+             A = this,
+             B = other,
+             Matrix = matrix,
+             CombineMode = combineMode
+         };
 
-        public object Content { get; }
 
-        public GeometryType Type { get; }
+        public abstract GeometryType Type { get; }
 
-        public sealed class Combination
+        public sealed class Combination : CanvasGeometry
         {
             public CanvasGeometry A { get; internal set; }
             public CanvasGeometry B { get; internal set; }
             public Matrix3x2 Matrix { get; internal set; }
             public CanvasGeometryCombine CombineMode { get; internal set; }
+            public override GeometryType Type => GeometryType.Combination;
         }
 
-        public sealed class Ellipse
+        public sealed class Ellipse : CanvasGeometry
         {
+            internal Ellipse() { }
             public float X { get; internal set; }
             public float Y { get; internal set; }
             public float RadiusX { get; internal set; }
             public float RadiusY { get; internal set; }
+
+            public override GeometryType Type => GeometryType.Ellipse;
         }
 
-        public sealed class RoundedRectangle
+        public sealed class Path : CanvasGeometry
+        {
+            public CanvasPathBuilder PathBuilder { get; internal set; }
+
+            public override GeometryType Type => GeometryType.Path;
+        }
+
+        public sealed class RoundedRectangle : CanvasGeometry
         {
             public float X { get; internal set; }
             public float Y { get; internal set; }
@@ -81,6 +92,7 @@ namespace WinCompData.Mgcg
             public float H { get; internal set; }
             public float RadiusX { get; internal set; }
             public float RadiusY { get; internal set; }
+            public override GeometryType Type => GeometryType.RoundedRectangle;
         }
     }
 }

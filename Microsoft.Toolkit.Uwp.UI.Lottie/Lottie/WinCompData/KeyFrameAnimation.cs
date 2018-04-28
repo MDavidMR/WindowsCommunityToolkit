@@ -41,6 +41,8 @@ namespace WinCompData
 
         public IEnumerable<KeyFrame> KeyFrames => _keyFrames.Values.OrderBy(kf => kf.Progress);
 
+        public int KeyFrameCount => _keyFrames.Count;
+
         void CopyStateFrom(KeyFrameAnimation<T> other)
         {
             _keyFrames.Clear();

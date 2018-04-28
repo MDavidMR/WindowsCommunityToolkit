@@ -11,11 +11,13 @@ namespace LottieData
 #endif
     sealed class KeyFrame<T> : IEquatable<KeyFrame<T>> where T : IEquatable<T>
     {
-        public KeyFrame(double frame, T value, Easing easing)
+        public KeyFrame(double frame, T value, Vector3 spatialControlPoint1, Vector3 spatialControlPoint2, Easing easing)
         {
-            Value = value;
-            Easing = easing;
             Frame = frame;
+            Value = value;
+            SpatialControlPoint1 = spatialControlPoint1;
+            SpatialControlPoint2 = spatialControlPoint2;
+            Easing = easing;
         }
 
         /// <summary>
@@ -27,6 +29,10 @@ namespace LottieData
         /// The frame at which the animation should have the <see cref="Value"/>.
         /// </summary>
         public double Frame { get; }
+
+        public Vector3 SpatialControlPoint1 { get; }
+
+        public Vector3 SpatialControlPoint2 { get; }
 
         /// <summary>
         /// The easing function used to interpolate from the previous value.

@@ -191,7 +191,10 @@ namespace LottieData.Tools
             yield return new XAttribute(nameof(layer.StartTime), layer.StartTime);
             yield return new XAttribute(nameof(layer.InPoint), layer.InPoint);
             yield return new XAttribute(nameof(layer.OutPoint), layer.OutPoint);
-
+            if (layer.TimeStretch != 1)
+            {
+                yield return new XAttribute(nameof(layer.TimeStretch), layer.TimeStretch);
+            }
             if (layer.Parent.HasValue)
             {
                 yield return new XAttribute(nameof(layer.Parent), layer.Parent.Value);
@@ -572,7 +575,7 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
-                yield return new XAttribute(nameof(obj.Frame), obj.Frame);
+                yield return new XAttribute(nameof(obj.Progress), obj.Progress);
             }
         }
 

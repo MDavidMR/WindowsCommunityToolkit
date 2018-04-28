@@ -300,21 +300,21 @@ namespace WinCompData.Tools
                     yield return item;
                 }
 
-                if (obj.LeftInset.HasValue)
+                if (obj.LeftInset != 0)
                 {
-                    yield return new XAttribute("LeftInset", obj.LeftInset.Value);
+                    yield return new XAttribute("LeftInset", obj.LeftInset);
                 }
-                if (obj.TopInset.HasValue)
+                if (obj.TopInset != 0)
                 {
-                    yield return new XAttribute("TopInset", obj.TopInset.Value);
+                    yield return new XAttribute("TopInset", obj.TopInset);
                 }
-                if (obj.RightInset.HasValue)
+                if (obj.RightInset != 0)
                 {
-                    yield return new XAttribute("RightInset", obj.RightInset.Value);
+                    yield return new XAttribute("RightInset", obj.RightInset);
                 }
-                if (obj.BottomInset.HasValue)
+                if (obj.BottomInset != 0)
                 {
-                    yield return new XAttribute("BottomInset", obj.BottomInset.Value);
+                    yield return new XAttribute("BottomInset", obj.BottomInset);
                 }
             }
         }
@@ -443,7 +443,7 @@ namespace WinCompData.Tools
             var propertySetAnimators =
                 from pn in obj.Properties.PropertyNames
                 from an in obj.Animators
-                where an.Target == pn
+                where an.AnimatedProperty == pn
                 select an;
 
             if (!obj.Properties.IsEmpty)
@@ -661,7 +661,7 @@ namespace WinCompData.Tools
 
         IEnumerable<XObject> FromAnimatableScalar(string name, IEnumerable<CompositionObject.Animator> animators, float? initialValue)
         {
-            var animation = animators.Where(a => a.Target == name).FirstOrDefault()?.Animation;
+            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
 
             if (animation != null)
             {
@@ -679,7 +679,7 @@ namespace WinCompData.Tools
 
         IEnumerable<XObject> FromAnimatableVector2(string name, IEnumerable<CompositionObject.Animator> animators, Vector2? initialValue)
         {
-            var animation = animators.Where(a => a.Target == name).FirstOrDefault()?.Animation;
+            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
 
             if (animation != null)
             {
@@ -696,7 +696,7 @@ namespace WinCompData.Tools
 
         IEnumerable<XObject> FromAnimatableVector3(string name, IEnumerable<CompositionObject.Animator> animators, Vector3? initialValue)
         {
-            var animation = animators.Where(a => a.Target == name).FirstOrDefault()?.Animation;
+            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
 
             if (animation != null)
             {

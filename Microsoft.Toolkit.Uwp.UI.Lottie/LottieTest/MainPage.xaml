@@ -10,10 +10,10 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid Background="Black">
+        <Grid Background="Green">
 
             <lottie:CompositionPlayer Stretch="UniformToFill">
-                <compositions:MyComposition/>
+                <compositions:BatteryComposition/>
             </lottie:CompositionPlayer>
 
         </Grid>

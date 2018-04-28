@@ -61,7 +61,7 @@
         /// </summary>
         public double OutPoint { get; }
 
-        internal double TimeStretch { get; }
+        public double TimeStretch { get; }
 
         public abstract LayerType Type { get; }
 

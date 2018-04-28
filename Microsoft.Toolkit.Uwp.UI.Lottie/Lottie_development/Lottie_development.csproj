@@ -107,9 +107,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Lottie\Lottie\CompositionObjectFactory.cs">
-      <Link>Lottie\CompositionObjectFactory.cs</Link>
-    </Compile>
     <Compile Include="..\Lottie\Lottie\CompositionPlayer.cs">
       <Link>Lottie\CompositionPlayer.cs</Link>
     </Compile>
@@ -118,6 +115,9 @@
     </Compile>
     <Compile Include="..\Lottie\Lottie\ICompositionSource.cs">
       <Link>Lottie\ICompositionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\Lottie\Lottie\Intantiator.cs">
+      <Link>Lottie\Intantiator.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\LottieCompositionDiagnostics.cs">
       <Link>Lottie\LottieCompositionDiagnostics.cs</Link>
@@ -128,9 +128,6 @@
     <Compile Include="..\Lottie\Lottie\LottieCompositionSource.cs">
       <Link>Lottie\LottieCompositionSource.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\VisualPlayer.cs">
-      <Link>Lottie\VisualPlayer.cs</Link>
-    </Compile>
     <Compile Include="Lottie\LottieCompositionReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -139,7 +136,7 @@
       <Version>6.0.8</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
-      <Version>1.23.0-local</Version>
+      <Version>1.22.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

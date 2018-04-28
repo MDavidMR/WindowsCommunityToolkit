@@ -3,6 +3,9 @@ using System.Text;
 
 namespace WinCompData.CodeGen
 {
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class CodeBuilder
     {
         const int c_indentSize = 4;

@@ -7,7 +7,10 @@
   <ItemGroup>
     <Compile Include="..\Lottie\WinCompData\AnimationController.cs" Link="WinCompData\AnimationController.cs" />
     <Compile Include="..\Lottie\WinCompData\CodeGen\CodeBuilder.cs" Link="WinCompData\CodeGen\CodeBuilder.cs" />
-    <Compile Include="..\Lottie\WinCompData\CodeGen\CompositionObjectFactoryGenerator.cs" Link="WinCompData\CodeGen\CompositionObjectFactoryGenerator.cs" />
+    <Compile Include="..\Lottie\WinCompData\CodeGen\CppStringifier.cs" Link="WinCompData\CodeGen\CppStringifier.cs" />
+    <Compile Include="..\Lottie\WinCompData\CodeGen\CSharpInstantiatorGenerator.cs" Link="WinCompData\CodeGen\CSharpInstantiatorGenerator.cs" />
+    <Compile Include="..\Lottie\WinCompData\CodeGen\CxInstantiatorGenerator.cs" Link="WinCompData\CodeGen\CxInstantiatorGenerator.cs" />
+    <Compile Include="..\Lottie\WinCompData\CodeGen\InstantiatorGeneratorBase.cs" Link="WinCompData\CodeGen\InstantiatorGeneratorBase.cs" />
     <Compile Include="..\Lottie\WinCompData\ColorKeyFrameAnimation.cs" Link="WinCompData\ColorKeyFrameAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionAnimation.cs" Link="WinCompData\CompositionAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\CompositionBrush.cs" Link="WinCompData\CompositionBrush.cs" />
@@ -51,6 +54,8 @@
     <Compile Include="..\Lottie\WinCompData\Sn\Vector2.cs" Link="WinCompData\Sn\Vector2.cs" />
     <Compile Include="..\Lottie\WinCompData\Sn\Vector3.cs" Link="WinCompData\Sn\Vector3.cs" />
     <Compile Include="..\Lottie\WinCompData\StepEasingFunction.cs" Link="WinCompData\StepEasingFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\Tools\CanonicalizedNode.cs" Link="WinCompData\Tools\CanonicalizedNode.cs" />
+    <Compile Include="..\Lottie\WinCompData\Tools\Canonicalizer.cs" Link="WinCompData\Tools\Canonicalizer.cs" />
     <Compile Include="..\Lottie\WinCompData\Tools\ObjectGraph.cs" Link="WinCompData\Tools\ObjectGraph.cs" />
     <Compile Include="..\Lottie\WinCompData\Vector2KeyFrameAnimation.cs" Link="WinCompData\Vector2KeyFrameAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\Vector3KeyFrameAnimation.cs" Link="WinCompData\Vector3KeyFrameAnimation.cs" />

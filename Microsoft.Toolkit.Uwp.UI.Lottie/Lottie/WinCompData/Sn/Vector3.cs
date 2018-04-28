@@ -1,9 +1,11 @@
-﻿namespace WinCompData.Sn
+﻿using System;
+
+namespace WinCompData.Sn
 {
 #if !WINDOWS_UWP
     public
 #endif
-    struct Vector3
+    struct Vector3 : IEquatable<Vector3>
     {
         public Vector3(float x, float y, float z)
         {
@@ -17,6 +19,14 @@
         public float Z { get; }
 
         public override string ToString() => $"{{{X},{Y},{Z}}}";
+
+        public bool Equals(Vector3 other) => X == other.X && Y == other.Y && Z == other.Z;
+        public override bool Equals(object obj) => obj is Vector3 && Equals((Vector3)obj);
+        public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+
+        public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
+        public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
+
 
         public static Vector3 One { get; } = new Vector3(1, 1, 1);
 

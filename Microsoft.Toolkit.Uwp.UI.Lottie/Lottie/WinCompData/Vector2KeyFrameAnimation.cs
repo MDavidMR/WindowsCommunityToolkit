@@ -1,4 +1,6 @@
-﻿using WinCompData.Sn;
+﻿using System;
+using System.Collections.Generic;
+using WinCompData.Sn;
 
 namespace WinCompData
 {

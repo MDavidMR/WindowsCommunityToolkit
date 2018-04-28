@@ -44,8 +44,9 @@ namespace WinCompData
             var clone = animation.Clone();
             var animator = new Animator
             {
-                Target = target,
-                Animation = clone
+                Animation = clone,
+                AnimatedProperty = target,
+                AnimatedObject = this,
             };
 
             if (!(animation is ExpressionAnimation))
@@ -61,7 +62,7 @@ namespace WinCompData
         public IEnumerable<Animator> Animators => _animators;
 
         public AnimationController TryGetAnimationController(string target) =>
-            _animators.Where(a => a.Target == target).Single().Controller;
+            _animators.Where(a => a.AnimatedProperty == target).Single().Controller;
 
         public abstract CompositionObjectType Type { get; }
         public void Dispose()
@@ -70,10 +71,17 @@ namespace WinCompData
 
         public sealed class Animator
         {
-            public string Target { get; internal set; }
+            /// <summary>
+            /// The property being animated by this animator.
+            /// </summary>
+            public string AnimatedProperty { get; internal set; }
+            /// <summary>
+            /// The object whose property is being animated by this animator.
+            /// </summary>
+            public CompositionObject AnimatedObject { get; internal set; }
             public CompositionAnimation Animation { get; internal set; }
             public AnimationController Controller { get; internal set; }
-            public override string ToString() => $"{Animation.Type} bound to {Target}";
+            public override string ToString() => $"{Animation.Type} bound to {AnimatedProperty}";
         }
     }
 }

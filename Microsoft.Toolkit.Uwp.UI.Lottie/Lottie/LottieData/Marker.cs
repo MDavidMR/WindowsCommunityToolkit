@@ -6,15 +6,19 @@
     sealed class Marker : LottieObject
     {
         public Marker(
-            double frame, 
+            double progress, 
             string name,
             double durationSeconds) : base(name)
         {
-            Frame = frame;
+            Progress = progress;
             DurationSeconds = durationSeconds;
         }
 
-        public double Frame { get; }
+        /// <summary>
+        /// The time value of the marker. This value must be multipled by the composition
+        /// duration to get the actualy time.
+        /// </summary>
+        public double Progress { get; }
 
         public double DurationSeconds { get; }
 

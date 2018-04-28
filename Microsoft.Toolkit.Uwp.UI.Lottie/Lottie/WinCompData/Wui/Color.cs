@@ -1,9 +1,11 @@
-﻿namespace WinCompData.Wui
+﻿using System;
+
+namespace WinCompData.Wui
 {
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class Color
+    struct Color : IEquatable<Color>
     {
         Color(byte a, byte r, byte g, byte b) { A = a; R = r; G = g; B = b; }
 
@@ -21,5 +23,11 @@
 
         static string ToHex(byte value) => value.ToString("X2");
 
+        public bool Equals(Color other) => A == other.A && R == other.R && G == other.G && B == other.B;
+        public override bool Equals(object obj) => obj is Color && Equals((Color)obj);
+        public override int GetHashCode() => A * R * G * B;
+
+        public static bool operator ==(Color left, Color right) => left.Equals(right);
+        public static bool operator !=(Color left, Color  right) => !left.Equals(right);
     }
 }

@@ -132,7 +132,7 @@ namespace Lottie
             // Instantiate content for each registered CompositionPlayer
             foreach (var sink in _sinks)
             {
-                _contentFactory.InstantiateContentForSink(sink);
+                contentFactory.InstantiateContentForSink(sink);
             }
 
             if (!contentFactory.CanInstantiate)
@@ -155,17 +155,26 @@ namespace Lottie
             // Asynchronously loads WinCompData from a Lottie file.
             public async Task<ContentFactory> Load(LottieCompositionOptions Options)
             {
-                var diagnostics = new LottieCompositionDiagnostics();
-                diagnostics.Options = Options;
+                LottieCompositionDiagnostics diagnostics = null;
+                Stopwatch sw = null;
+                if (Options.HasFlag(LottieCompositionOptions.IncludeDiagnostics))
+                {
+                    sw = Stopwatch.StartNew();
+                    diagnostics = new LottieCompositionDiagnostics();
+                    diagnostics.Options = Options;
+                }
 
                 var result = new ContentFactory(diagnostics);
 
-                var sw = Stopwatch.StartNew();
-
                 // Get the file name and contents.
                 (var fileName, var jsonString) = await ReadFileAsync();
-                diagnostics.FileName = fileName;
-                diagnostics.ReadTime = sw.Elapsed;
+
+                if (diagnostics != null)
+                {
+                    diagnostics.FileName = fileName;
+                    diagnostics.ReadTime = sw.Elapsed;
+                    sw.Restart();
+                }
 
                 if (string.IsNullOrWhiteSpace(jsonString))
                 {
@@ -173,7 +182,6 @@ namespace Lottie
                     return result;
                 }
 
-                sw.Restart();
 
                 // Parsing large Lottie files can take significant time. Do it on
                 // another thread.
@@ -186,11 +194,17 @@ namespace Lottie
                             LottieCompositionJsonReader.Options.IgnoreMatchNames,
                             out var readerIssues);
 
-                    diagnostics.JsonParsingIssues = readerIssues;
+                    if (diagnostics != null)
+                    {
+                        diagnostics.JsonParsingIssues = readerIssues;
+                    }
                 }));
 
-                diagnostics.ParseTime = sw.Elapsed;
-                sw.Restart();
+                if (diagnostics != null)
+                {
+                    diagnostics.ParseTime = sw.Elapsed;
+                    sw.Restart();
+                }
 
                 if (lottieComposition == null)
                 {
@@ -198,37 +212,29 @@ namespace Lottie
                     return result;
                 }
 
-                if (Options.HasFlag(LottieCompositionOptions.DiagnosticsIncludeXml) ||
-                    Options.HasFlag(LottieCompositionOptions.DiagnosticsIncludeCSharpGeneratedCode))
+                if (diagnostics != null)
                 {
                     // Save the LottieComposition in the diagnostics so that the xml and codegen
                     // code can be derived from it.
                     diagnostics.LottieComposition = lottieComposition;
+                    
+                    // For each marker, normalize to a progress value by subtracting the InPoint (so it is relative to the start of the animation)
+                    // and dividing by OutPoint - InPoint
+                    diagnostics.Markers = lottieComposition.Markers.Select(m =>
+                    {
+                        return new KeyValuePair<string, double>(m.Name, (m.Progress * lottieComposition.FramesPerSecond) / lottieComposition.Duration.TotalSeconds);
+                    }).ToArray();
+
+                    // Validate the composition and report if issues are found.
+                    diagnostics.LottieValidationIssues = LottieCompositionValidator.Validate(lottieComposition);
+                    diagnostics.ValidationTime = sw.Elapsed;
+                    sw.Restart();
                 }
 
+                result.SetDimensions(width: lottieComposition.Width,
+                                     height: lottieComposition.Height,
+                                     duration: lottieComposition.Duration);
 
-                diagnostics.LottieVersion = lottieComposition.Version.ToString();
-                diagnostics.LottieDetails = DescribeLottieComposition(lottieComposition);
-
-                // For each marker, normalize to a progress value by subtracting the InPoint (so it is relative to the start of the animation)
-                // and dividing by OutPoint - InPoint
-                diagnostics.Markers = lottieComposition.Markers.Select(m =>
-                {
-                    // Normalize the marker InPoint value to a progress (0..1) value.
-                    var markerProgress = (m.Frame - lottieComposition.InPoint) / (lottieComposition.OutPoint - lottieComposition.InPoint);
-                    return new KeyValuePair<string, double>(m.Name, markerProgress);
-                }).ToArray();
-
-                result.SetDimensions(width: diagnostics.LottieWidth = lottieComposition.Width,
-                                     height: diagnostics.LottieHeight = lottieComposition.Height,
-                                     duration: diagnostics.Duration = lottieComposition.Duration);
-
-
-                // Validate the composition and report if issues are found.
-                diagnostics.LottieValidationIssues = LottieCompositionValidator.Validate(lottieComposition);
-
-                diagnostics.ValidationTime = sw.Elapsed;
-                sw.Restart();
 
                 // Translating large Lotties can take significant time. Do it on another thread.
                 bool translateSucceeded = false;
@@ -242,11 +248,17 @@ namespace Lottie
                         out wincompDataRootVisual,
                         out var translationIssues);
 
-                    diagnostics.TranslationIssues = translationIssues;
+                    if (diagnostics != null)
+                    {
+                        diagnostics.TranslationIssues = translationIssues;
+                    }
                 }));
 
-                diagnostics.TranslationTime = sw.Elapsed;
-                sw.Restart();
+                if (diagnostics != null)
+                {
+                    diagnostics.TranslationTime = sw.Elapsed;
+                    sw.Restart();
+                }
 
                 if (!translateSucceeded)
                 {
@@ -255,8 +267,7 @@ namespace Lottie
                 }
                 else
                 {
-                    if (Options.HasFlag(LottieCompositionOptions.DiagnosticsIncludeXml) ||
-                        Options.HasFlag(LottieCompositionOptions.DiagnosticsIncludeCSharpGeneratedCode))
+                    if (diagnostics != null)
                     {
                         // Save the root visual so diagnostics can generate XML and codegen.
                         diagnostics.RootVisual = wincompDataRootVisual;
@@ -297,55 +308,6 @@ namespace Lottie
                 var result = await FileIO.ReadTextAsync(storageFile);
                 return ValueTuple.Create(storageFile.Name, result);
             }
-        }
-
-        // Creates a string that describes the given LottieCompositionSource for diagnostics purposes.
-        static string DescribeLottieComposition(LottieData.LottieComposition lottieComposition)
-        {
-            int precompLayerCount = 0;
-            int solidLayerCount = 0;
-            int imageLayerCount = 0;
-            int nullLayerCount = 0;
-            int shapeLayerCount = 0;
-            int textLayerCount = 0;
-
-            // Get the layers stored in assets.
-            var layersInAssets =
-                from asset in lottieComposition.Assets
-                where asset.Type == Asset.AssetType.LayerCollection
-                let layerCollection = (LayerCollectionAsset)asset
-                from layer in layerCollection.Layers.GetLayersBottomToTop()
-                select layer;
-
-            foreach (var layer in lottieComposition.Layers.GetLayersBottomToTop().Concat(layersInAssets))
-            {
-                switch (layer.Type)
-                {
-                    case Layer.LayerType.PreComp:
-                        precompLayerCount++;
-                        break;
-                    case Layer.LayerType.Solid:
-                        solidLayerCount++;
-                        break;
-                    case Layer.LayerType.Image:
-                        imageLayerCount++;
-                        break;
-                    case Layer.LayerType.Null:
-                        nullLayerCount++;
-                        break;
-                    case Layer.LayerType.Shape:
-                        shapeLayerCount++;
-                        break;
-                    case Layer.LayerType.Text:
-                        textLayerCount++;
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-
-            return $"LottieCompositionSource w={lottieComposition.Width} h={lottieComposition.Height} " +
-                $"layers: precomp={precompLayerCount} solid={solidLayerCount} image={imageLayerCount} null={nullLayerCount} shape={shapeLayerCount} text={textLayerCount}";
         }
 
         // Parses a string into an absolute URI, or null if the string is malformed.
@@ -413,20 +375,30 @@ namespace Lottie
                 Windows.UI.Composition.CompositionPropertySet progressPropertySet = null;
                 string progressPropertyName = LottieToVisualTranslator.ProgressPropertyName;
                 TimeSpan duration = _duration;
-                var diags = _diagnostics.Clone();
+                LottieCompositionDiagnostics diags = _diagnostics != null ? _diagnostics.Clone() : null;
                 object diagnostics = diags;
 
                 if (_wincompDataRootVisual != null)
                 {
                     var sw = Stopwatch.StartNew();
 
-                    rootVisual = CompositionObjectFactory.CreateVisual(Window.Current.Compositor, _wincompDataRootVisual);
+                    rootVisual = Instantiator.CreateVisual(Window.Current.Compositor, _wincompDataRootVisual);
                     progressPropertySet = rootVisual.Properties;
 
-                    diags.InstantiationTime = sw.Elapsed;
+                    if (diags != null)
+                    {
+                        diags.InstantiationTime = sw.Elapsed;
+                    }
                 }
                 sink.SetContent(rootVisual, size, progressPropertySet, progressPropertyName, duration, diagnostics);
             }
+        }
+
+        public override string ToString()
+        {
+            // TODO - if there's a _contentFactory, it should store the identity and report here
+            var identity = (_storageFile != null) ? _storageFile.Name : _uriSource?.ToString() ?? "";
+            return $"LottieCompositionSource({identity})";
         }
 
         #region DEBUG

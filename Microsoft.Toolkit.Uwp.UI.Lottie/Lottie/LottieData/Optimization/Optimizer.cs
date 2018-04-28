@@ -80,7 +80,12 @@ namespace LottieData.Optimization
                     // simplest so always use Linear when the value isn't changing.
                     if (currentKeyFrame.Easing.Type != Easing.EasingType.Linear)
                     {
-                        currentKeyFrame = new KeyFrame<T>(currentKeyFrame.Frame, currentKeyFrame.Value, LinearEasing.Instance);
+                        currentKeyFrame = new KeyFrame<T>(
+                            currentKeyFrame.Frame, 
+                            currentKeyFrame.Value, 
+                            currentKeyFrame.SpatialControlPoint1, 
+                            currentKeyFrame.SpatialControlPoint2, 
+                            LinearEasing.Instance);
                     }
                     yield return currentKeyFrame;
                     atLeastOneWasOutput = true;

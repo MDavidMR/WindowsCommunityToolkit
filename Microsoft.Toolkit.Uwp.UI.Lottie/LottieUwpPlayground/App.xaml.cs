@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Compositions;
+using Lottie;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,13 +36,33 @@ namespace LottieUwpPlayground
             this.Suspending += OnSuspending;
         }
 
+        // Starts the animated splash screen as content for the current window. The
+        // returned IAsyncAction completes when the animation finishes.
+        IAsyncAction StartAnimatedSplashScreenAsync()
+        {
+            var compositionPlayer = new CompositionPlayer
+            {
+                Stretch = Stretch.UniformToFill,
+                AutoPlay = false,
+                LoopAnimation = false,
+                FromProgress = 0,
+                ToProgress = 0.595,
+                Source = new LottieLogo1Composition()
+            };
+            Window.Current.Content = compositionPlayer;
+            // Start playing.
+            return compositionPlayer.PlayAsync();
+        }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            InitializeTitleBarColors();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -59,17 +83,38 @@ namespace LottieUwpPlayground
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (!e.PrelaunchActivated)
             {
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
+                // Start the splash screen animation. This will replace the window content.
+                var splashScreenTask = StartAnimatedSplashScreenAsync().AsTask();
+
                 // Ensure the current window is active
                 Window.Current.Activate();
+
+                // Start navigation to the first page. This will continue
+                // while the splash screen finishes animating.
+                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+
+                // Wait for the animation to finish.
+                await splashScreenTask;
+
+                // Replace the splash screen animation with the frame.
+                Window.Current.Content = rootFrame;
+            }
+
+        }
+
+        void InitializeTitleBarColors()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (titleBar != null)
+            {
+                var backgroundColor = (SolidColorBrush)Current.Resources["BackgroundBrush"];
+                var foregroundColor = (SolidColorBrush)Current.Resources["ForegroundBrush"];
+                titleBar.ButtonBackgroundColor = backgroundColor.Color;
+                titleBar.ButtonForegroundColor = foregroundColor.Color;
+                titleBar.BackgroundColor = backgroundColor.Color;
+                titleBar.ForegroundColor = foregroundColor.Color;
             }
         }
 
