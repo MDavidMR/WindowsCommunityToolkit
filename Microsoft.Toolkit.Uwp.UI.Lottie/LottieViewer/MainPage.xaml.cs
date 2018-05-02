@@ -2,20 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
-namespace LottieUwpPlayground
+namespace LottieViewer
 {
     public sealed partial class MainPage : Page
     {
@@ -24,22 +21,16 @@ namespace LottieUwpPlayground
         public MainPage()
         {
             InitializeComponent();
-#if DEBUG
-            var binding = new Binding();
-            _player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, (dobj, dprop) =>
-                Debug.WriteLine($"IsCompositionLoaded set to {_player.IsCompositionLoaded}"));
-
-            _player.RegisterPropertyChangedCallback(CompositionPlayer.IsPlayingProperty, (dobj, dprop) =>
-                Debug.WriteLine($"IsPlaying set to {_player.IsPlaying}"));
-#endif
 
             // Connect the player's progress to the scrubber's progress.
-            _scrubber.SetAnimatedCompositionObject(_player.ProgressObject);
+            _scrubber.SetAnimatedCompositionObject(_stage.Player.ProgressObject);
+
         }
+
 
         async void SaveFile_Click(object sender, RoutedEventArgs e)
         {
-            var diagnostics = _player.Diagnostics as LottieCompositionDiagnostics;
+            var diagnostics = _stage.Player.Diagnostics as LottieCompositionDiagnostics;
             if (diagnostics == null)
             {
                 return;
@@ -48,7 +39,7 @@ namespace LottieUwpPlayground
             var filePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-                SuggestedFileName = diagnostics?.SuggestedName ?? "Composition",
+                SuggestedFileName = diagnostics.SuggestedName,
             };
 
             // Dropdown of file types the user can save the file as
@@ -72,21 +63,17 @@ namespace LottieUwpPlayground
             switch (pickedFile.FileType)
             {
                 case ".cs":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.WinCompCSharp);
+                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode(Path.GetFileNameWithoutExtension(pickedFile.Name)));
                     break;
                 case ".cpp":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.WinCompCpp);
+                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCxCode(Path.GetFileNameWithoutExtension(pickedFile.Name)));
                     break;
-                // cppwinrt not yet implemented
-                //case ".cpp":
-                //    await FileIO.WriteTextAsync(pickedFile, diagnostics.WinCompCpp);
-                //    break;
                 case ".xml":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.LottieXml);
+                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateLottieXml());
                     break;
                 // Can only have one .xml.
                 //case ".xml":
-                //    await FileIO.WriteTextAsync(pickedFile, diagnostics.WinCompXml);
+                //    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateWinCompXml());
                 //    break;
                 default:
                     throw new InvalidOperationException();
@@ -95,102 +82,21 @@ namespace LottieUwpPlayground
 
         async void PickFile_Click(object sender, RoutedEventArgs e)
         {
+            var playVersion = ++_playVersion;
+
             var filePicker = new FileOpenPicker
             {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.ComputerFolder,
             };
             filePicker.FileTypeFilter.Add(".json");
-            Play(await filePicker.PickMultipleFilesAsync());
-        }
 
-        TaskCompletionSource<bool> _jukeboxWaitingForManualMode;
+            var file = await filePicker.PickSingleFileAsync();
 
-        async void Play(IEnumerable<StorageFile> files)
-        {
-            // Used to detect overlapping calls to this method.
-            var playVersion = ++_playVersion;
-
-            if (files != null && files.Any())
+            if (file == null)
             {
-                // Clear out the currently playing file so the user can see immediately that
-                // the play has started, otherwise they might be waiting while the file loads.
-                _playerSource.UriSource = null;
-
-                if (files.Skip(1).Any())
-                {
-                    // Multiple files. Jukebox mode.
-
-                    // Turn off looping, otherwise we'll never get to the second item.
-                    _player.LoopAnimation = false;
-
-                    while (true)
-                    {
-                        foreach (var file in files)
-                        {
-                            while (true)
-                            {
-                                await PlayFile(file, playVersion);
-                                if (_playVersion != playVersion)
-                                {
-                                    goto PlayNotCurrent;
-                                }
-
-                                if (_playStopButton.IsChecked.Value)
-                                {
-                                    // We're in manual mode. Wait until we're out of manual mode and play again.
-                                    _jukeboxWaitingForManualMode = new TaskCompletionSource<bool>();
-                                    await _jukeboxWaitingForManualMode.Task;
-
-                                    if (_playVersion != playVersion)
-                                    {
-                                        goto PlayNotCurrent;
-                                    }
-                                }
-                                else
-                                {
-                                    // In automatic mode. Keep going to the next file.
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    PlayNotCurrent:;
-                }
-                else
-                {
-                    // Single file. 
-
-                    // Turn on looping.
-                    _player.LoopAnimation = true;
-
-                    // If we were stopped in manual play control, turn it back to automatic.
-                    if (!_playStopButton.IsChecked.Value)
-                    {
-                        _playStopButton.IsChecked = true;
-                    }
-                    await PlayFile(files.First(), playVersion);
-                }
-            }
-        }
-
-        async Task PlayFile(StorageFile file, int playVersion)
-        {
-            using (new LoadingAnimationHandler(this))
-            {
-                try
-                {
-                    // Load the Lottie composition.
-                    await _playerSource.SetSourceAsync(file);
-                }
-                catch (Exception)
-                {
-                    // Failed to load.
-                    return;
-                }
-
-                // Reset the scrubber to the 0 position. 
-                _scrubber.Value = 0;
+                // Used declined to pick anything.
+                return;
             }
 
             if (playVersion != _playVersion)
@@ -198,82 +104,42 @@ namespace LottieUwpPlayground
                 return;
             }
 
-            if (_player.IsCompositionLoaded)
+            try
             {
-                // Play the file.
-                _scrubber.Value = 0;
-                await _player.PlayAsync();
+                // Load the Lottie composition.
+                await _stage.Source.SetSourceAsync(file);
             }
-        }
-
-        async Task PlaySingleUri(Uri uri)
-        {
-            var playVersion = ++_playVersion;
-
-            using (new LoadingAnimationHandler(this))
+            catch (Exception)
             {
-                // Turn on looping.
-                _player.LoopAnimation = true;
+                // Failed to load.
+                _stage.Reset();
+                return;
+            }
+
+            if (playVersion != _playVersion)
+            {
+                return;
+            }
+
+            if (_stage.Player.IsCompositionLoaded)
+            {
+                // Reset the scrubber to the 0 position. 
+                _scrubber.Value = 0;
 
                 // If we were stopped in manual play control, turn it back to automatic.
                 if (!_playStopButton.IsChecked.Value)
                 {
                     _playStopButton.IsChecked = true;
                 }
-
-                // Load the Lottie composition.
-                await _playerSource.SetSourceAsync(uri);
-
-                // Reset the scrubber to the 0 position. 
-                _scrubber.Value = 0;
-            }
-
-            if (playVersion != _playVersion)
-            {
-                return;
-            }
-
-            // Play the file.
-            _scrubber.Value = 0;
-            await _player.PlayAsync();
-        }
-
-        sealed class LoadingAnimationHandler : IDisposable
-        {
-            readonly MainPage _owner;
-            readonly Task _task;
-            bool _isDisposed;
-
-            internal LoadingAnimationHandler(MainPage owner)
-            {
-                _owner = owner;
-                _task = Start();
-            }
-
-            async Task Start()
-            {
-                _owner._player.Visibility = Visibility.Collapsed;
-
-                // Wait for 300 mS.
-                await Task.Delay(300);
-                if (!_isDisposed)
-                {
-                    _owner._loadingAnimation.Play();
-                    _owner._loadingAnimation.Visibility = Visibility.Visible;
-                }
-            }
-            public void Dispose()
-            {
-                _isDisposed = true;
-                // Hide and stop the loading animation.
-                _owner._loadingAnimation.Visibility = Visibility.Collapsed;
-                _owner._loadingAnimation.Stop();
-                _owner._player.Visibility = Visibility.Visible;
+                // Play the file.
+                _stage.Player.Play();
             }
         }
+
 
         #region DragNDrop
-        async void LottieDragOverHandler(object sender, DragEventArgs e)
+
+        async void LottieDragEnterHandler(object sender, DragEventArgs e)
         {
             // Only accept files.
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -283,37 +149,59 @@ namespace LottieUwpPlayground
                 var deferral = e.GetDeferral();
                 try
                 {
+                    Debug.WriteLine("About to get storage items");
                     var items = await e.DataView.GetStorageItemsAsync();
+                    Debug.WriteLine("Got storage items");
+
+
                     var filteredItems = items.Where(IsJsonFile);
 
-                    if (filteredItems.Any())
+                    if (!filteredItems.Any() || filteredItems.Skip(1).Any())
                     {
-                        e.AcceptedOperation = DataPackageOperation.Copy;
-                        e.DragUIOverride.Caption = filteredItems.Skip(1).Any()
-                            ? "Drop to view Lotties."
-                            : "Drop to view Lottie.";
+                        return;
                     }
+                    // Exactly one item was selected.
+                    e.AcceptedOperation = DataPackageOperation.Copy;
+                    e.DragUIOverride.Caption = "Drop to view Lottie.";
                 }
                 finally
                 {
                     deferral.Complete();
                 }
+                _stage.DoDragEnter();
             }
         }
 
+        // Called when an item is dropped.
         async void LottieDropHandler(object sender, DragEventArgs e)
         {
-            var deferral = e.GetDeferral();
-            try
+            Debug.WriteLine("Dropping");
+
+            var playVersion = ++_playVersion;
+
+            var item = (await e.DataView.GetStorageItemsAsync()).Single();
+            if (playVersion != _playVersion)
             {
-                var items = await e.DataView.GetStorageItemsAsync();
-                Play(items.Cast<StorageFile>().Where(IsJsonFile));
+                return;
             }
-            finally
+            // Reset the scrubber to the 0 position. 
+            _scrubber.Value = 0;
+
+            // If we were stopped in manual play control, turn it back to automatic.
+            if (!_playStopButton.IsChecked.Value)
             {
-                deferral.Complete();
+                _playStopButton.IsChecked = true;
             }
+
+            _stage.DoDragDropped((StorageFile)item);
         }
+
+        void LottieDragLeaveHandler(object sender, DragEventArgs e)
+        {
+            _stage.DoDragLeave();
+        }
+
+
 
         static bool IsJsonFile(IStorageItem item) => item.IsOfType(StorageItemTypes.File) && item.Name.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase);
 
@@ -327,14 +215,14 @@ namespace LottieUwpPlayground
             if (!_ignoreScrubberValueChanges)
             {
                 _playStopButton.IsChecked = false;
-                _player.SetProgress(e.NewValue);
+                _stage.Player.SetProgress(e.NewValue);
             }
         }
 
         void _playControl_Toggled(object sender, RoutedEventArgs e)
         {
             // If no Lottie is loaded, do nothing.
-            if (!_player.IsCompositionLoaded)
+            if (!_stage.Player.IsCompositionLoaded)
             {
                 return;
             }
@@ -343,25 +231,24 @@ namespace LottieUwpPlayground
             //            If we toggled off, we're in auto mode, start playing.
             if (!_playStopButton.IsChecked.Value)
             {
-                _player.SetProgress(_scrubber.Value);
+                _stage.Player.SetProgress(_scrubber.Value);
             }
             else
             {
-                if (_jukeboxWaitingForManualMode != null)
+                _ignoreScrubberValueChanges = true;
+                _scrubber.Value = 0;
+                _ignoreScrubberValueChanges = false;
+
+                // If we were stopped in manual play control, turn it back to automatic.
+                if (!_playStopButton.IsChecked.Value)
                 {
-                    // Signal the jukebox to keep going.
-                    _jukeboxWaitingForManualMode.SetResult(true);
-                    _jukeboxWaitingForManualMode = null;
+                    _playStopButton.IsChecked = true;
                 }
-                else
-                {
-                    _ignoreScrubberValueChanges = true;
-                    _scrubber.Value = 0;
-                    _ignoreScrubberValueChanges = false;
-                    _player.Play();
-                }
+
+                _stage.Player.Play();
             }
         }
+
     }
 
     public sealed class VisiblityConverter : IValueConverter
@@ -403,6 +290,19 @@ namespace LottieUwpPlayground
                 case "Properties":
                     if (diagnostics == null) { return null; }
                     return DiagnosticsToProperties(diagnostics).ToArray();
+                case "Issues":
+                    {
+                        if (diagnostics == null) { return null; }
+                        var allIssues = diagnostics.JsonParsingIssues.Concat(diagnostics.TranslationIssues);
+                        if (targetType == typeof(Visibility))
+                        {
+                            return allIssues.Any() ? Visibility.Visible : Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            return allIssues.OrderBy(a => a);
+                        }
+                    }
                 case "ParsingIssues":
                     if (diagnostics == null) { return null; }
                     if (targetType == typeof(Visibility))
@@ -443,12 +343,12 @@ namespace LottieUwpPlayground
             var aspectRatio = FloatToRatio(diagnostics.LottieWidth / diagnostics.LottieHeight);
             yield return Tuple.Create("Aspect ratio", $"{aspectRatio.Item1.ToString("0.###")}:{aspectRatio.Item2.ToString("0.###")}");
             yield return Tuple.Create("Size", $"{diagnostics.LottieWidth} x {diagnostics.LottieHeight}");
-            yield return Tuple.Create("Version", diagnostics.LottieVersion);
-            yield return Tuple.Create("Read", MSecs(diagnostics.ReadTime));
-            yield return Tuple.Create("Parse", MSecs(diagnostics.ParseTime));
-            yield return Tuple.Create("Validation", MSecs(diagnostics.ValidationTime));
-            yield return Tuple.Create("Translation", MSecs(diagnostics.TranslationTime));
-            yield return Tuple.Create("Instantiation", MSecs(diagnostics.InstantiationTime));
+            //yield return Tuple.Create("Version", diagnostics.LottieVersion);
+            //yield return Tuple.Create("Read", MSecs(diagnostics.ReadTime));
+            //yield return Tuple.Create("Parse", MSecs(diagnostics.ParseTime));
+            //yield return Tuple.Create("Validation", MSecs(diagnostics.ValidationTime));
+            //yield return Tuple.Create("Translation", MSecs(diagnostics.TranslationTime));
+            //yield return Tuple.Create("Instantiation", MSecs(diagnostics.InstantiationTime));
 
             foreach (var marker in diagnostics.Markers)
             {
@@ -465,12 +365,12 @@ namespace LottieUwpPlayground
         // Returns a pleasantly simplified ratio for the given value.
         static ValueTuple<double, double> FloatToRatio(double value)
         {
-            const int maxNumeratorOrDenominator = 30;
-            var candidateNumerator = 1.0;
-            var candidateDenominator = 1.0;
-            var error = Math.Abs(value - 1);
+            const int maxRatioProduct = 200;
+            var candidateN = 1.0;
+            var candidateD = Math.Round(1 / value);
+            var error = Math.Abs(value - (candidateN / candidateD));
 
-            for (double n = candidateNumerator, d = candidateDenominator; n <= maxNumeratorOrDenominator && d <= maxNumeratorOrDenominator && error != 0;)
+            for (double n = candidateN, d = candidateD; n * d <= maxRatioProduct && error != 0;)
             {
                 if (value > n / d)
                 {
@@ -485,8 +385,8 @@ namespace LottieUwpPlayground
                 if (newError < error)
                 {
                     error = newError;
-                    candidateNumerator = n;
-                    candidateDenominator = d;
+                    candidateN = n;
+                    candidateD = d;
                 }
             }
 
@@ -496,17 +396,16 @@ namespace LottieUwpPlayground
             // requires the smallest adjustment.
             if (error != 0)
             {
-                if (value > candidateNumerator / candidateDenominator)
+                if (value > candidateN / candidateD)
                 {
-                    candidateNumerator = candidateDenominator * value;
+                    candidateN = candidateD * value;
                 }
                 else
                 {
-                    candidateDenominator = candidateNumerator / value;
+                    candidateD = candidateN / value;
                 }
             }
-
-            return ValueTuple.Create(candidateNumerator, candidateDenominator);
+            return ValueTuple.Create(candidateN, candidateD);
         }
     }
 }

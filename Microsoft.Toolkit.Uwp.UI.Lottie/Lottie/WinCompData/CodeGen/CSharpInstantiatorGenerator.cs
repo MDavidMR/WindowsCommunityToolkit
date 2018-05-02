@@ -24,11 +24,10 @@ namespace WinCompData.CodeGen
             float width,
             float height,
             CompositionPropertySet progressPropertySet,
-            string progressPropertyName,
             TimeSpan duration)
         {
             var generator = new CSharpInstantiatorGenerator(rootVisual, false);
-            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, progressPropertyName, duration);
+            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, duration);
         }
 
         protected override void GenerateNamespaceUsings(CodeBuilder builder, bool requiresWin2d)

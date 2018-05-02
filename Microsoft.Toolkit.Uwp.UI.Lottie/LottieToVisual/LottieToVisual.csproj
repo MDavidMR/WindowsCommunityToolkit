@@ -13,9 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Lottie\Lottie\LottieToVisualTranslator.cs">
-      <Link>Lottie\LottieToVisualTranslator.cs</Link>
-    </Compile>
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Expression.cs" Link="LottieToWinComp\Expressions\Expression.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\LessThan.cs" Link="LottieToWinComp\Expressions\LessThan.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Number.cs" Link="LottieToWinComp\Expressions\Number.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\ProgressExpression.cs" Link="LottieToWinComp\Expressions\ProgressExpression.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Ternary.cs" Link="LottieToWinComp\Expressions\Ternary.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\UntypedExpression.cs" Link="LottieToWinComp\Expressions\UntypedExpression.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\LottieToWinCompTranslator.cs" Link="LottieToWinComp\LottieToWinCompTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
@@ -26,5 +30,8 @@
       <Project>{b1dd2d0c-f280-4e5a-a14d-e1856cbb648a}</Project>
       <Name>WinCompData</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LottieToWinComp\Expressions\" />
   </ItemGroup>
 </Project>

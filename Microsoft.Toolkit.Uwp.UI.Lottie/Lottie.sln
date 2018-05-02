@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieUwpPlayground", "LottieUwpPlayground\LottieUwpPlayground.csproj", "{5120EFD7-A556-46BF-8D56-F65F1EF9A305}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieViewer", "LottieViewer\LottieViewer.csproj", "{5120EFD7-A556-46BF-8D56-F65F1EF9A305}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieJsonReader", "LottieJsonReader\LottieJsonReader.csproj", "{AE4E2F47-A73E-44AD-9E5B-4BEEC152329A}"
 EndProject

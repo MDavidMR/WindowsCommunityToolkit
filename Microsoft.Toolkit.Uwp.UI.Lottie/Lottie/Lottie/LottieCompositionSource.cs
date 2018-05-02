@@ -4,6 +4,7 @@
 #endif
 using LottieData;
 using LottieData.Serialization;
+using LottieToWinComp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -116,7 +117,7 @@ namespace Lottie
             // Notify all the sinks that their existing content is no longer valid.
             foreach (var sink in _sinks)
             {
-                sink.SetContent(null, new System.Numerics.Vector2(), null, null, TimeSpan.Zero, null);
+                sink.SetContent(null, new System.Numerics.Vector2(), null, TimeSpan.Zero, null);
             }
 
             var contentFactory = await loader.Load(Options);
@@ -241,7 +242,7 @@ namespace Lottie
                 WinCompData.Visual wincompDataRootVisual = null;
                 await CheckedAwait(Task.Run(() =>
                 {
-                    translateSucceeded = LottieToVisualTranslator.TryTranslateLottieComposition(
+                    translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
                         lottieComposition,
                         false, // strictTranslation
                         true, // annotate
@@ -373,7 +374,6 @@ namespace Lottie
                 Windows.UI.Composition.Visual rootVisual = null;
                 System.Numerics.Vector2 size = new System.Numerics.Vector2((float)_width, (float)_height);
                 Windows.UI.Composition.CompositionPropertySet progressPropertySet = null;
-                string progressPropertyName = LottieToVisualTranslator.ProgressPropertyName;
                 TimeSpan duration = _duration;
                 LottieCompositionDiagnostics diags = _diagnostics != null ? _diagnostics.Clone() : null;
                 object diagnostics = diags;
@@ -390,7 +390,7 @@ namespace Lottie
                         diags.InstantiationTime = sw.Elapsed;
                     }
                 }
-                sink.SetContent(rootVisual, size, progressPropertySet, progressPropertyName, duration, diagnostics);
+                sink.SetContent(rootVisual, size, progressPropertySet, duration, diagnostics);
             }
         }
 

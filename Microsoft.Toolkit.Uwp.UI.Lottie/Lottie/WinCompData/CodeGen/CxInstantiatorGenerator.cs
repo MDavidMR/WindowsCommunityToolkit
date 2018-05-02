@@ -23,11 +23,10 @@ namespace WinCompData.CodeGen
             float width,
             float height,
             CompositionPropertySet progressPropertySet,
-            string progressPropertyName,
             TimeSpan duration)
         {
             var generator = new CxInstantiatorGenerator(rootVisual, false);
-            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, progressPropertyName, duration);
+            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, duration);
         }
 
 

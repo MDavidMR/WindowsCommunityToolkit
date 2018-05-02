@@ -1,6 +1,7 @@
 ﻿using LottieData;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Lottie
@@ -15,7 +16,14 @@ namespace Lottie
 
         public string FileName { get; internal set; } = "";
 
-        public string SuggestedName => GetNameForGeneratedCode();
+        public string SuggestedName
+        {
+            get
+            {
+                var name = string.IsNullOrWhiteSpace(FileName) ? "MyComposition" : FileName;
+                return Path.GetFileNameWithoutExtension(name);
+            }
+        }
 
         public TimeSpan Duration => LottieComposition?.Duration ?? TimeSpan.Zero;
 
@@ -48,92 +56,64 @@ namespace Lottie
         /// </summary>
         public LottieCompositionOptions Options { get; internal set; }
 
-        /// <summary>
-        /// An XML representation of the Lottie.
-        /// </summary>
-        public string LottieXml
+        public string GenerateLottieXml()
         {
-            get
-            {
-                if (LottieComposition == null) { return null; }
-                return LottieData.Tools.LottieCompositionXmlSerializer.ToXml(LottieComposition).ToString();
-            }
+            if (LottieComposition == null) { return null; }
+            return LottieData.Tools.LottieCompositionXmlSerializer.ToXml(LottieComposition).ToString();
         }
 
-        public string WinCompXml
+        public string GenerateWinCompXml()
         {
-            get
-            {
-                return WinCompData.Tools.CompositionObjectXmlSerializer.ToXml(RootVisual).ToString();
-            }
+            return WinCompData.Tools.CompositionObjectXmlSerializer.ToXml(RootVisual).ToString();
         }
 
-        public string WinCompCSharp
+        public string GenerateCSharpCode(string suggestedClassName)
         {
-            get
-            {
-                if (LottieComposition == null) { return null; }
-                return
-                    WinCompData.CodeGen.CSharpInstantiatorGenerator.CreateFactoryCode(
-                        SuggestedName,
-                        RootVisual,
-                        (float)LottieComposition.Width,
-                        (float)LottieComposition.Height,
-                        RootVisual.Properties,
-                        LottieToVisualTranslator.ProgressPropertyName,
-                        LottieComposition.Duration);
-            }
+            if (LottieComposition == null) { return null; }
+            return
+                WinCompData.CodeGen.CSharpInstantiatorGenerator.CreateFactoryCode(
+                    MakeNameSuitableForTypeName(suggestedClassName),
+                    RootVisual,
+                    (float)LottieComposition.Width,
+                    (float)LottieComposition.Height,
+                    RootVisual.Properties,
+                    LottieComposition.Duration);
         }
 
-        public string WinCompCpp
+
+        public string GenerateCxCode(string suggestedClassName)
         {
-            get
-            {
-                if (LottieComposition == null) { return null; }
-                return
-                    WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
-                        SuggestedName,
-                        RootVisual,
-                        (float)LottieComposition.Width,
-                        (float)LottieComposition.Height,
-                        RootVisual.Properties,
-                        LottieToVisualTranslator.ProgressPropertyName,
-                        LottieComposition.Duration);
-            }
+            if (LottieComposition == null) { return null; }
+            return
+                WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
+                    MakeNameSuitableForTypeName(suggestedClassName),
+                    RootVisual,
+                    (float)LottieComposition.Width,
+                    (float)LottieComposition.Height,
+                    RootVisual.Properties,
+                    LottieComposition.Duration);
         }
 
-        string GetNameForGeneratedCode()
+        static string MakeNameSuitableForTypeName(string name)
         {
-            var name = string.IsNullOrWhiteSpace(FileName) ? "My" : FileName;
-
-            // Remove the extension, if any.
-            var lastDotIndex = name.LastIndexOf('.');
-            if (lastDotIndex > 0)
-            {
-                name = name.Substring(0, lastDotIndex);
-            }
-
-            // Ensure the name is usable as a type name in C#. Must start with a character, and
-            // contain no punctuation.
+            // If the first character is not a letter, prepend an underscore.
             if (!char.IsLetter(name, 0))
             {
-                name = "Composition" + name;
+                name = "_" + name;
             }
-            else
-            {
-                name = name + "Composition";
-            }
+
+            // Replace any disallowed character with underscores.
+            name =
+                new string((from ch in name
+                            select char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
+
+            // Remove any duplicated underscores.
+            name = name.Replace("__", "_");
 
             // Capitalize the first letter.
             name = name.ToUpperInvariant().Substring(0, 1) + name.Substring(1);
 
-
-            // Replace non letter/digit characters with underscores.
-            var chars =
-                (from ch in name
-                 select char.IsLetterOrDigit(ch) ? ch : '_').ToArray();
-
-            return new string(chars);
+            return name;
         }
 
         public KeyValuePair<string, double>[] Markers { get; internal set; } = s_emptyMarkers;

@@ -150,7 +150,6 @@ namespace WinCompData.CodeGen
             float width,
             float height,
             CompositionPropertySet progressPropertySet,
-            string progressPropertyName,
             TimeSpan duration)
         {
             var builder = new CodeBuilder();
@@ -175,14 +174,12 @@ namespace WinCompData.CodeGen
             builder.WriteLine("out Visual rootVisual,");
             builder.WriteLine("out Vector2 size,");
             builder.WriteLine("out CompositionPropertySet progressPropertySet,");
-            builder.WriteLine("out string progressPropertyName,");
             builder.WriteLine("out TimeSpan duration)");
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine($"rootVisual = Instantiator{Deref}InstantiateComposition(compositor);");
             builder.WriteLine($"size = {Vector2(width, height)};");
             builder.WriteLine("progressPropertySet = rootVisual.Properties;");
-            builder.WriteLine($"progressPropertyName = {String(progressPropertyName)};");
             builder.WriteLine($"duration = {TimeSpan(duration)};");
             builder.CloseScope();
             builder.WriteLine();
@@ -196,7 +193,6 @@ namespace WinCompData.CodeGen
             builder.WriteLine("out var rootVisual,");
             builder.WriteLine("out var size,");
             builder.WriteLine("out var progressPropertySet,");
-            builder.WriteLine("out var progressPropertyName,");
             builder.WriteLine("out var duration);");
             builder.UnIndent();
             builder.WriteLine();
@@ -205,7 +201,6 @@ namespace WinCompData.CodeGen
             builder.WriteLine("rootVisual,");
             builder.WriteLine("size,");
             builder.WriteLine("progressPropertySet,");
-            builder.WriteLine("progressPropertyName,");
             builder.WriteLine("duration,");
             builder.WriteLine("null);");
             builder.UnIndent();
@@ -863,7 +858,10 @@ namespace WinCompData.CodeGen
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateEllipseGeometry()");
             InitializeCompositionGeometry(builder, obj);
-            builder.WriteLine($"result{Deref}Center = {Vector2(obj.Center)};");
+            if (obj.Center.X != 0 || obj.Center.Y != 0)
+            {
+                builder.WriteLine($"result{Deref}Center = {Vector2(obj.Center)};");
+            }
             builder.WriteLine($"result{Deref}Radius = {Vector2(obj.Radius)};");
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -964,11 +962,11 @@ namespace WinCompData.CodeGen
             }
             if (obj.StrokeDashOffset != 0)
             {
-                builder.WriteLine($"result{Deref}DashOffset = {Float(obj.StrokeDashOffset)};");
+                builder.WriteLine($"result{Deref}StrokeDashOffset = {Float(obj.StrokeDashOffset)};");
             }
             if (obj.StrokeDashArray.Count > 0)
             {
-                builder.WriteLine($"{Var} strokeDashArray = obj{Deref}StrokeDashArray;");
+                builder.WriteLine($"{Var} strokeDashArray = result{Deref}StrokeDashArray;");
                 foreach (var strokeDash in obj.StrokeDashArray)
                 {
                     builder.WriteLine($"strokeDashArray{Deref}Add({Float(strokeDash)});");

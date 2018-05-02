@@ -16,13 +16,11 @@ namespace Compositions
             out Visual rootVisual,
             out Vector2 size,
             out CompositionPropertySet progressPropertySet,
-            out string progressPropertyName,
             out TimeSpan duration)
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(1920, 1081);
             progressPropertySet = rootVisual.Properties;
-            progressPropertyName = "AnimationProgress";
             duration = TimeSpan.FromTicks(28800000);
         }
 
@@ -33,14 +31,12 @@ namespace Compositions
                 out var rootVisual,
                 out var size,
                 out var progressPropertySet,
-                out var progressPropertyName,
                 out var duration);
 
             sink.SetContent(
                 rootVisual,
                 size,
                 progressPropertySet,
-                progressPropertyName,
                 duration,
                 null);
         }
@@ -1007,7 +1003,7 @@ namespace Compositions
                 }
                 var result = _containerVisual_0000 = _c.CreateContainerVisual();
                 var propertySet = result.Properties;
-                propertySet.InsertScalar("AnimationProgress", 0);
+                propertySet.InsertScalar("Progress", 0);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_0001());
                 children.InsertAtTop(ContainerVisual_0003());
@@ -1062,7 +1058,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0000 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("root", ContainerVisual_0000());
-                result.Expression = "root.AnimationProgress";
+                result.Expression = "root.Progress";
                 return result;
             }
 

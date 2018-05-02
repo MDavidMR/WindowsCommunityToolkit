@@ -1,6 +1,6 @@
 ﻿#if DEBUG
 // If uncommented, outputs measure and arrange info.
-//#define DebugMeasureAndArrange
+#define DebugMeasureAndArrange
 #endif // DEBUG
 using System;
 using System.Collections.Generic;
@@ -55,6 +55,9 @@ namespace Lottie
         // If a PlayAsync is active, its state.
         PlayAsyncState _currentPlay;
 
+        // Used to detect reentrance in RunAnimationAsync.
+        int _runAnimationAsyncVersion;
+
         #region Dependency properties
         public static DependencyProperty AutoPlayProperty { get; } =
             RegisterDP(nameof(AutoPlay), true,
@@ -105,9 +108,13 @@ namespace Lottie
         /// <summary>
         /// A <see cref="CompositionObject"/> that will be animated along with 
         /// the progress of the <see cref="CompositionPlayer"/>.
+        /// </summary>
+        /// <remarks>
         /// This is exposed to support advanced scenarios where other <see cref="CompositionObject"/>s
         /// are animated at the same rate as the <see cref="CompositionPlayer"/>.
-        /// </summary>
+        /// To bind a property to the progress of this player, use an <see cref="ExpressionAnimation"/>
+        /// with an expression that references a scalar property named "Progress" on this object.
+        /// </remarks>
         public CompositionObject ProgressObject => _progressPropertySet;
 
         public CompositionPlayer()
@@ -211,9 +218,22 @@ namespace Lottie
 
         #endregion Properties
 
-        public IAsyncAction PlayAsync() => _PlayAsync().AsAsyncAction();
+        /// <summary>
+        /// Plays a segment of the composition.
+        /// </summary>
+        public IAsyncAction PlayAsync(CompositionSegment segment) => _PlayAsync(segment).AsAsyncAction();
 
-        public async void Play() => await _PlayAsync();
+        /// <summary>
+        /// Plays the composition.
+        /// </summary>
+        public IAsyncAction PlayAsync() => 
+            PlayAsync(new CompositionSegment(FromProgress, ToProgress, LoopAnimation, ReverseAnimation));
+
+        /// <summary>
+        /// Plays the composition.
+        /// </summary>
+        public void Play() => 
+            _PlayAsync(new CompositionSegment(FromProgress, ToProgress, LoopAnimation, ReverseAnimation));
 
         public void SetProgress(double progress)
         {
@@ -224,17 +244,9 @@ namespace Lottie
             else
             {
                 _requestSeen = true;
-                Pause();
+                Stop();
                 var floatProgress = ClampFloat0to1(progress);
-                if (_currentPlay == null)
-                {
-                    _progressPropertySet.InsertScalar(c_progressPropertyName, floatProgress);
-                }
-                else
-                {
-                    Pause();
-                    _currentPlay.Controller.Progress = floatProgress;
-                }
+                _progressPropertySet.InsertScalar(c_progressPropertyName, floatProgress);
             }
         }
 
@@ -255,11 +267,14 @@ namespace Lottie
                 {
                     _currentPlay = null;
 
+                    // WARNING: Reentrance may occur from StopAnimation or TrySetResult.
+
                     // Stop the animation.
                     _progressPropertySet.StopAnimation(c_progressPropertyName);
 
                     // Use TrySet because it may have been completed by the Batch.Completed callback already.
-                    // Batch.Completed can not be relied on for looping animations as it fires immediately.
+                    // Batch.Completed can not be relied on for looping animations as it fires as soon
+                    // as the animation starts.
                     playBeingStopped.PlayCompletedSource.TrySetResult(true);
                 }
             }
@@ -301,19 +316,19 @@ namespace Lottie
 
         // Requests that the animation starts playing and returns a Task
         // that completes when the animation completes.
-        Task _PlayAsync()
+        Task _PlayAsync(CompositionSegment segment)
         {
             if (_compositionRoot == null)
             {
                 // Enqueue a command.
-                var playCommand = new PlayAsyncCommand(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
+                var playCommand = new PlayAsyncCommand(segment.FromProgress, segment.ToProgress, segment.LoopAnimation, segment.ReverseAnimation);
                 _queuedCommands.Add(playCommand);
                 return playCommand.Task;
             }
             else
             {
                 _requestSeen = true;
-                return RunAnimationAsync(FromProgress, ToProgress, LoopAnimation, ReverseAnimation);
+                return RunAnimationAsync(segment.FromProgress, segment.ToProgress, segment.LoopAnimation, segment.ReverseAnimation);
             }
         }
 
@@ -436,7 +451,8 @@ namespace Lottie
 
             if (_compositionRoot == null)
             {
-                // No content, nothing to do.
+                // No content. 
+                _rootVisual.Size = new Vector2(0);
                 return finalSize;
             }
 
@@ -618,7 +634,6 @@ namespace Lottie
             Visual rootVisual,
             Vector2 size,
             CompositionPropertySet progressPropertySet,
-            string progressPropertyName,
             TimeSpan duration,
             object diagnostics)
         {
@@ -641,7 +656,7 @@ namespace Lottie
                 // Connect the content's progress property to our progress property.
                 var progressAnimation = Window.Current.Compositor.CreateExpressionAnimation($"my.{c_progressPropertyName}");
                 progressAnimation.SetReferenceParameter("my", _progressPropertySet);
-                progressPropertySet.StartAnimation(progressPropertyName, progressAnimation);
+                progressPropertySet.StartAnimation("Progress", progressAnimation);
 
                 if (AutoPlay)
                 {
@@ -711,13 +726,23 @@ namespace Lottie
             SetValue(IsCompositionLoadedProperty, _compositionRoot != null);
         }
 
+
         // Creates and starts an animation on the progress property. The task completes
         // when the animation is stopped or completes.
         Task RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
         {
-            // Cause any other tasks waiting in this method to return. The most
-            // recent request always wins.
+            // Used to detect reentrance.
+            var version = ++_runAnimationAsyncVersion;
+
+            // Cause any other tasks waiting in this method to return. This method may
+            // cause reentrance.
             Stop();
+
+            if (version != _runAnimationAsyncVersion)
+            {
+                // The call was overtaken by another call due to reentrance.
+                return Task.CompletedTask;
+            }
 
             Debug.Assert(_currentPlay == null);
 
@@ -823,6 +848,7 @@ namespace Lottie
                 _compositionRoot.Dispose(); ;
                 _compositionRoot = null;
 
+                InvalidateArrange();
                 SetValue(DurationProperty, null);
                 SetValue(DiagnosticsProperty, null);
                 SetValue(IsCompositionLoadedProperty, false);

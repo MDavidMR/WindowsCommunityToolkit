@@ -10,7 +10,6 @@ namespace Lottie
             Visual rootVisual,
             Vector2 size,
             CompositionPropertySet progressPropertySet,
-            string progressPropertyName,
             TimeSpan duration,
             object diagnostics);
     }

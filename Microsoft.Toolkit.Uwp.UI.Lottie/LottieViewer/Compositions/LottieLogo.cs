@@ -15,13 +15,11 @@ namespace Compositions
             out Visual rootVisual,
             out Vector2 size,
             out CompositionPropertySet progressPropertySet,
-            out string progressPropertyName,
             out TimeSpan duration)
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(375, 667);
             progressPropertySet = rootVisual.Properties;
-            progressPropertyName = "AnimationProgress";
             duration = TimeSpan.FromTicks(59670000);
         }
 
@@ -32,14 +30,12 @@ namespace Compositions
                 out var rootVisual,
                 out var size,
                 out var progressPropertySet,
-                out var progressPropertyName,
                 out var duration);
 
             sink.SetContent(
                 rootVisual,
                 size,
                 progressPropertySet,
-                progressPropertyName,
                 duration,
                 null);
         }
@@ -64,23 +60,22 @@ namespace Compositions
             CubicBezierEasingFunction _cubicBezierEasingFunction_0012;
             CubicBezierEasingFunction _cubicBezierEasingFunction_0025;
             ExpressionAnimation _expressionAnimation_0000;
+            ExpressionAnimation _expressionAnimation_0001;
+            ExpressionAnimation _expressionAnimation_0002;
+            ExpressionAnimation _expressionAnimation_0003;
+            ExpressionAnimation _expressionAnimation_0004;
+            ExpressionAnimation _expressionAnimation_0005;
+            ExpressionAnimation _expressionAnimation_0006;
+            ExpressionAnimation _expressionAnimation_0007;
+            ExpressionAnimation _expressionAnimation_0008;
             LinearEasingFunction _linearEasingFunction_0000;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0007;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0018;
+            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0008;
             ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0032;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0050;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0055;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0056;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0057;
+            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0033;
+            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0035;
+            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0042;
+            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0053;
             ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0058;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0060;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0066;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0068;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0081;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0083;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0087;
-            ScalarKeyFrameAnimation _scalarKeyFrameAnimation_0089;
-            StepEasingFunction _stepEasingFunction_0000;
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0002;
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0003;
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0004;
@@ -688,17 +683,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0005()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0006());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0000());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.5363128781?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -745,17 +734,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0009()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0010());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0001());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.469273746?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5698323846?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -812,17 +795,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0014()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0015());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0003());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.5139665008?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -869,17 +846,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0018()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0019());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0005());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.43575418?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5195530653?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -935,18 +906,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0023()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0024());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0007());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0001());
                 return result;
             }
 
@@ -992,17 +954,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0027()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0028());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0009());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4636871517?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5363128781?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1058,17 +1014,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0032()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0033());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0011());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4804469347?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1115,17 +1065,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0036()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0037());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0013());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4413407743?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5251396894?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1181,17 +1125,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0041()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0042());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0015());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.469273746?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1238,17 +1176,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0045()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0046());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0017());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.329608947?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.8715083599?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1285,17 +1217,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0049()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0050());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0020());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4245809913?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5139665008?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1331,17 +1257,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0053()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0054());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0023());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4022346437?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.4972067177?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1378,17 +1298,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0057()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0058());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0026());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4581005573?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1424,17 +1338,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0061()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0062());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0029());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.391061455?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.8994413614?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1471,18 +1379,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0065()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0066());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0007());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0001());
                 return result;
             }
 
@@ -1528,18 +1427,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0069()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0070());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0032());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0002());
                 return result;
             }
 
@@ -1585,18 +1475,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0073()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0074());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0032());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0002());
                 return result;
             }
 
@@ -1642,17 +1523,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0077()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0078());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0035());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.329608947?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1689,17 +1564,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0081()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0082());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0037());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4189944267?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1755,17 +1624,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0086()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0087());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0040());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.391061455?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1832,17 +1695,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0091()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0092());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0042());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.156424582?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.3016759753?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1879,17 +1736,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0095()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0096());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0043());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.0893854722?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1926,17 +1777,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0099()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0100());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0046());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.1005586609?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -1977,7 +1822,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "root.AnimationProgress*0.983516484+0.016483516";
+                _expressionAnimation.Expression = "root.Progress*0.9835164835+0.0164835165";
                 _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 controller.StartAnimation("Progress", _expressionAnimation);
                 return result;
@@ -1986,17 +1831,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0103()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 1);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0104());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0049());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.0949720666?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0)";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -2032,18 +1871,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0107()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0108());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0050());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0003());
                 return result;
             }
 
@@ -2077,18 +1907,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0111()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0112());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0050());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0003());
                 return result;
             }
 
@@ -2122,18 +1943,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0115()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0116());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0055());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0004());
                 return result;
             }
 
@@ -2167,18 +1979,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0119()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0120());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0055());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0004());
                 return result;
             }
 
@@ -2212,18 +2015,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0123()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0124());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0058());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0005());
                 return result;
             }
 
@@ -2257,18 +2051,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0127()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0128());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0058());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0005());
                 return result;
             }
 
@@ -2302,18 +2087,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0131()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0132());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0058());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0005());
                 return result;
             }
 
@@ -2347,18 +2123,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0135()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0136());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0058());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0005());
                 return result;
             }
 
@@ -2392,18 +2159,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0139()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0140());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0066());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0006());
                 return result;
             }
 
@@ -2437,18 +2195,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0143()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0144());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0066());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0006());
                 return result;
             }
 
@@ -2482,18 +2231,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0147()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0148());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0066());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0006());
                 return result;
             }
 
@@ -2527,17 +2267,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0151()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0152());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0072());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4469273686?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5027933121?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -2572,17 +2306,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0155()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0156());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0075());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.469273746?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5251396894?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -2617,17 +2345,11 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0159()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0160());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0078());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
+                _expressionAnimation.Expression = "root.Progress<0.4748603404?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.530726254?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.SetReferenceParameter("root", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
             }
@@ -2663,18 +2385,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0163()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0164());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0081());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0007());
                 return result;
             }
 
@@ -2709,18 +2422,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0167()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0168());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0081());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0007());
                 return result;
             }
 
@@ -2755,18 +2459,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0171()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0172());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0081());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0007());
                 return result;
             }
 
@@ -2801,18 +2496,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0175()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0176());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0087());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0008());
                 return result;
             }
 
@@ -2847,18 +2533,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0179()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0180());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0087());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0008());
                 return result;
             }
 
@@ -2893,18 +2570,9 @@ namespace Compositions
             CompositionContainerShape CompositionContainerShape_0183()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertScalar("Visibility", 0);
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0184());
-                result.StartAnimation("Visibility", ScalarKeyFrameAnimation_0087());
-                var controller = result.TryGetAnimationController("Visibility");
-                controller.Pause();
-                controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)";
-                _expressionAnimation.SetReferenceParameter("contents", result);
-                result.StartAnimation("TransformMatrix", _expressionAnimation);
+                result.StartAnimation("TransformMatrix", ExpressionAnimation_0008());
                 return result;
             }
 
@@ -2945,11 +2613,11 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("Radius");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0033());
+                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0018());
                 controller = result.TryGetAnimationController("TrimStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0034());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0019());
                 controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -2972,7 +2640,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0000()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0002());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0000());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -2983,7 +2651,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0001()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0004());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0001());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -2994,7 +2662,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0002()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0006());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0002());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3005,7 +2673,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0003()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0008());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0003());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3016,7 +2684,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0004()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0010());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0004());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3027,7 +2695,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0005()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0012());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0005());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3038,7 +2706,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0006()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0014());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0006());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3049,7 +2717,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0007()));
                 result.TrimEnd = 0;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0016());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0007());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3062,11 +2730,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0);
                 propertySet.InsertScalar("TEnd", 0);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0018());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0008());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0019());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0009());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3086,11 +2754,11 @@ namespace Compositions
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0009()));
                 result.TrimEnd = 0.411F;
                 result.TrimStart = 0.29F;
-                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0021());
+                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0010());
                 var controller = result.TryGetAnimationController("TrimStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0022());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0011());
                 controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3102,11 +2770,11 @@ namespace Compositions
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0010()));
                 result.TrimEnd = 0.5F;
                 result.TrimStart = 0.5F;
-                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0024());
+                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0012());
                 var controller = result.TryGetAnimationController("TrimStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0025());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0013());
                 controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3118,11 +2786,11 @@ namespace Compositions
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0011()));
                 result.TrimEnd = 0.411F;
                 result.TrimStart = 0.29F;
-                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0027());
+                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0014());
                 var controller = result.TryGetAnimationController("TrimStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0028());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0015());
                 controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3133,7 +2801,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0012()));
                 result.TrimEnd = 0.117F;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0030());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0016());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3144,7 +2812,7 @@ namespace Compositions
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0013()));
                 result.TrimEnd = 0.117F;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0031());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0017());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3157,11 +2825,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0);
                 propertySet.InsertScalar("TEnd", 0);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0018());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0008());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0036());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0020());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3181,11 +2849,11 @@ namespace Compositions
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0015()));
                 result.TrimEnd = 0.5F;
                 result.TrimStart = 0.5F;
-                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0038());
+                result.StartAnimation("TrimStart", ScalarKeyFrameAnimation_0021());
                 var controller = result.TryGetAnimationController("TrimStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0039());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0022());
                 controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3197,7 +2865,7 @@ namespace Compositions
                 var result = _c.CreatePathGeometry(new CompositionPath(CanvasGeometry_0016()));
                 result.TrimEnd = 0.249F;
                 result.TrimStart = 0.249F;
-                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0041());
+                result.StartAnimation("TrimEnd", ScalarKeyFrameAnimation_0023());
                 var controller = result.TryGetAnimationController("TrimEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3210,11 +2878,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.8F);
                 propertySet.InsertScalar("TEnd", 0.81F);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0044());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0024());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0045());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0025());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3235,11 +2903,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.8F);
                 propertySet.InsertScalar("TEnd", 0.81F);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0047());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0026());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0048());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0027());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3260,11 +2928,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0051());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0028());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0052());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0029());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3285,11 +2953,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0053());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0030());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0054());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0031());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3310,11 +2978,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0056());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0032());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0057());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0033());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3335,11 +3003,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0056());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0032());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0057());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0033());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3360,11 +3028,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0059());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0034());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0060());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0035());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3385,11 +3053,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0061());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0036());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0060());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0035());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3410,11 +3078,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0062());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0037());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0063());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0038());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3435,11 +3103,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0064());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0039());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0065());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0040());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3460,11 +3128,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0067());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0041());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0068());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0042());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3485,11 +3153,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0069());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0043());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0068());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0042());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3510,11 +3178,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0070());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0044());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0071());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0045());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3535,11 +3203,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0073());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0046());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0074());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0047());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3560,11 +3228,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0076());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0048());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0077());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0049());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3585,11 +3253,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0079());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0050());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0080());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0051());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3610,11 +3278,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0082());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0052());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0083());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0053());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3635,11 +3303,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0084());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0054());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0083());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0053());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3660,11 +3328,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0085());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0055());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0086());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0056());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3685,11 +3353,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0088());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0057());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0089());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0058());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3710,11 +3378,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0090());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0059());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0089());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0058());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -3735,11 +3403,11 @@ namespace Compositions
                 var propertySet = result.Properties;
                 propertySet.InsertScalar("TStart", 0.87F);
                 propertySet.InsertScalar("TEnd", 1);
-                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0091());
+                result.StartAnimation("TStart", ScalarKeyFrameAnimation_0060());
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
-                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0092());
+                result.StartAnimation("TEnd", ScalarKeyFrameAnimation_0061());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", ExpressionAnimation_0000());
@@ -4339,7 +4007,7 @@ namespace Compositions
                 }
                 var result = _containerVisual_0000 = _c.CreateContainerVisual();
                 var propertySet = result.Properties;
-                propertySet.InsertScalar("AnimationProgress", 0);
+                propertySet.InsertScalar("Progress", 0);
                 var children = result.Children;
                 children.InsertAtTop(ShapeVisual_0000());
                 return result;
@@ -4534,7 +4202,103 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0000 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("root", ContainerVisual_0000());
-                result.Expression = "root.AnimationProgress";
+                result.Expression = "root.Progress";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0001()
+            {
+                if (_expressionAnimation_0001 != null)
+                {
+                    return _expressionAnimation_0001;
+                }
+                var result = _expressionAnimation_0001 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.452513963?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0002()
+            {
+                if (_expressionAnimation_0002 != null)
+                {
+                    return _expressionAnimation_0002;
+                }
+                var result = _expressionAnimation_0002 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.3016759753?Matrix3x2(0,0,0,0,0,0):Matrix3x2(1,0,0,1,0,0)";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0003()
+            {
+                if (_expressionAnimation_0003 != null)
+                {
+                    return _expressionAnimation_0003;
+                }
+                var result = _expressionAnimation_0003 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.1675977707?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.2067039162?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0004()
+            {
+                if (_expressionAnimation_0004 != null)
+                {
+                    return _expressionAnimation_0004;
+                }
+                var result = _expressionAnimation_0004 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.3631284833?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.4189944267?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0005()
+            {
+                if (_expressionAnimation_0005 != null)
+                {
+                    return _expressionAnimation_0005;
+                }
+                var result = _expressionAnimation_0005 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.3016759753?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.357541889?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0006()
+            {
+                if (_expressionAnimation_0006 != null)
+                {
+                    return _expressionAnimation_0006;
+                }
+                var result = _expressionAnimation_0006 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.5418994427?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.5977653861?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0007()
+            {
+                if (_expressionAnimation_0007 != null)
+                {
+                    return _expressionAnimation_0007;
+                }
+                var result = _expressionAnimation_0007 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.4189944267?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.4636871517?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
+                return result;
+            }
+
+            ExpressionAnimation ExpressionAnimation_0008()
+            {
+                if (_expressionAnimation_0008 != null)
+                {
+                    return _expressionAnimation_0008;
+                }
+                var result = _expressionAnimation_0008 = _c.CreateExpressionAnimation();
+                result.SetReferenceParameter("root", ContainerVisual_0000());
+                result.Expression = "root.Progress<0.4245809913?Matrix3x2(0,0,0,0,0,0):(root.Progress<0.469273746?Matrix3x2(1,0,0,1,0,0):Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4551,38 +4315,13 @@ namespace Compositions
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.5363129F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0001()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4692737F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5698324F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0002()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.4692737F, 0, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.5139665F, 0.316F, CubicBezierEasingFunction_0006());
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0003()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.5139665F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0004()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0001()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4592,16 +4331,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0005()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4357542F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5195531F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0006()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0002()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4611,19 +4341,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0007()
-            {
-                if (_scalarKeyFrameAnimation_0007 != null)
-                {
-                    return _scalarKeyFrameAnimation_0007;
-                }
-                var result = _scalarKeyFrameAnimation_0007 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.452514F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0008()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0003()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4633,16 +4351,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0009()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4636872F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5363129F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0010()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0004()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4652,15 +4361,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0011()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4804469F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0012()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0005()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4670,16 +4371,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0013()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4413408F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5251397F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0014()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0006()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4689,15 +4381,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0015()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4692737F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0016()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0007()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4707,22 +4391,13 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0017()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0008()
             {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.3296089F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.8715084F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0018()
-            {
-                if (_scalarKeyFrameAnimation_0018 != null)
+                if (_scalarKeyFrameAnimation_0008 != null)
                 {
-                    return _scalarKeyFrameAnimation_0018;
+                    return _scalarKeyFrameAnimation_0008;
                 }
-                var result = _scalarKeyFrameAnimation_0018 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarKeyFrameAnimation_0008 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.301676F, 0, LinearEasingFunction_0000());
@@ -4730,7 +4405,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0019()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0009()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4740,16 +4415,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0020()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.424581F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5139665F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0021()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0010()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4759,7 +4425,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0022()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0011()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4769,16 +4435,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0023()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4022346F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.4972067F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0024()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0012()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4788,7 +4445,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0025()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0013()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4798,15 +4455,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0026()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4581006F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0027()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0014()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4816,7 +4465,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0028()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0015()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4826,16 +4475,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0029()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.3910615F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.8994414F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0030()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0016()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -4845,13 +4485,160 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0031()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0017()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 0.117F, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.452514F, 0.117F, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.4916201F, 1, CubicBezierEasingFunction_0013());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0018()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3519553F, 0.3F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5083799F, 0.399F, CubicBezierEasingFunction_0019());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0019()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3519553F, 0.88F, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0020()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 1, CubicBezierEasingFunction_0011());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0021()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.5F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 0.5F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4748603F, 0, CubicBezierEasingFunction_0012());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0022()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.5F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 0.5F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4748603F, 1, CubicBezierEasingFunction_0012());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0023()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.249F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3910615F, 0.249F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4692737F, 0.891F, CubicBezierEasingFunction_0020());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0024()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.8F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.08938547F, 0.8F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1117318F, 0.5F, CubicBezierEasingFunction_0023());
+                result.InsertKeyFrame(0.1564246F, 0, CubicBezierEasingFunction_0024());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0025()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.81F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.08938547F, 0.81F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.150838F, 0.734F, CubicBezierEasingFunction_0025());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0026()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.8F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1005587F, 0.8F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1284916F, 0.5F, CubicBezierEasingFunction_0026());
+                result.InsertKeyFrame(0.3072626F, 0.3F, CubicBezierEasingFunction_0027());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0027()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.81F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1005587F, 0.81F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1620112F, 0.734F, CubicBezierEasingFunction_0025());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0028()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1620112F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1843575F, 0.37533F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0029()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1620112F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1843575F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0030()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1620112F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1843575F, 0.25333F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0031()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1620112F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.1843575F, 0.69056F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
                 return result;
             }
 
@@ -4863,248 +4650,6 @@ namespace Compositions
                 }
                 var result = _scalarKeyFrameAnimation_0032 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.301676F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0033()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3519553F, 0.3F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5083799F, 0.399F, CubicBezierEasingFunction_0019());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0034()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3519553F, 0.88F, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0035()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.3296089F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0036()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 1, CubicBezierEasingFunction_0011());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0037()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4189944F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0038()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.5F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0.5F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4748603F, 0, CubicBezierEasingFunction_0012());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0039()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.5F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0.5F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4748603F, 1, CubicBezierEasingFunction_0012());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0040()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.3910615F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0041()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.249F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3910615F, 0.249F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4692737F, 0.891F, CubicBezierEasingFunction_0020());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0042()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.1564246F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0043()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.08938547F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0044()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.8F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.08938547F, 0.8F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1117318F, 0.5F, CubicBezierEasingFunction_0023());
-                result.InsertKeyFrame(0.1564246F, 0, CubicBezierEasingFunction_0024());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0045()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.81F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.08938547F, 0.81F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.150838F, 0.734F, CubicBezierEasingFunction_0025());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0046()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.1005587F, 1, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0047()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.8F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1005587F, 0.8F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1284916F, 0.5F, CubicBezierEasingFunction_0026());
-                result.InsertKeyFrame(0.3072626F, 0.3F, CubicBezierEasingFunction_0027());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0048()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.81F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1005587F, 0.81F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1620112F, 0.734F, CubicBezierEasingFunction_0025());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0049()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.09497207F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0050()
-            {
-                if (_scalarKeyFrameAnimation_0050 != null)
-                {
-                    return _scalarKeyFrameAnimation_0050;
-                }
-                var result = _scalarKeyFrameAnimation_0050 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.1675978F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.2067039F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0051()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1620112F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1843575F, 0.37533F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0052()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1620112F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1843575F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0053()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1620112F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1843575F, 0.25333F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0054()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1620112F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.1843575F, 0.69056F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.2011173F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0055()
-            {
-                if (_scalarKeyFrameAnimation_0055 != null)
-                {
-                    return _scalarKeyFrameAnimation_0055;
-                }
-                var result = _scalarKeyFrameAnimation_0055 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.3631285F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0056()
-            {
-                if (_scalarKeyFrameAnimation_0056 != null)
-                {
-                    return _scalarKeyFrameAnimation_0056;
-                }
-                var result = _scalarKeyFrameAnimation_0056 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.3631285F, 0.87F, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.3910615F, 0.21233F, CubicBezierEasingFunction_0006());
@@ -5112,18 +4657,294 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0057()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0033()
             {
-                if (_scalarKeyFrameAnimation_0057 != null)
+                if (_scalarKeyFrameAnimation_0033 != null)
                 {
-                    return _scalarKeyFrameAnimation_0057;
+                    return _scalarKeyFrameAnimation_0033;
                 }
-                var result = _scalarKeyFrameAnimation_0057 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarKeyFrameAnimation_0033 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.3631285F, 1, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.3910615F, 0.66356F, CubicBezierEasingFunction_0006());
                 result.InsertKeyFrame(0.4189944F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0034()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.42133F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0035()
+            {
+                if (_scalarKeyFrameAnimation_0035 != null)
+                {
+                    return _scalarKeyFrameAnimation_0035;
+                }
+                var result = _scalarKeyFrameAnimation_0035 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0036()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.43833F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0037()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.50633F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0038()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.75856F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0039()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.43933F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0040()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.3184358F, 0.70456F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0041()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5586592F, 0.42133F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0042()
+            {
+                if (_scalarKeyFrameAnimation_0042 != null)
+                {
+                    return _scalarKeyFrameAnimation_0042;
+                }
+                var result = _scalarKeyFrameAnimation_0042 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5418994F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5586592F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0043()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5586592F, 0.43833F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0044()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5586592F, 0.50633F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0045()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5418994F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5586592F, 0.75856F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0046()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4469274F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4636872F, 0.21233F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4860335F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0047()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4469274F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4636872F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4860335F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0048()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4692737F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4860335F, 0.21233F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5083799F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0049()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4692737F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4860335F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5083799F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0050()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4748603F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5027933F, 0.21233F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5251397F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0051()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4748603F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.5027933F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.5251397F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0052()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 0.42133F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0053()
+            {
+                if (_scalarKeyFrameAnimation_0053 != null)
+                {
+                    return _scalarKeyFrameAnimation_0053;
+                }
+                var result = _scalarKeyFrameAnimation_0053 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 0.66356F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0054()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 0.43833F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0055()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 0.50633F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0056()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4189944F, 1, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4357542F, 0.75856F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0057()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(59670000);
+                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.424581F, 0.87F, LinearEasingFunction_0000());
+                result.InsertKeyFrame(0.4413408F, 0.42133F, CubicBezierEasingFunction_0006());
+                result.InsertKeyFrame(0.4636872F, 0, CubicBezierEasingFunction_0006());
                 return result;
             }
 
@@ -5135,361 +4956,6 @@ namespace Compositions
                 }
                 var result = _scalarKeyFrameAnimation_0058 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.301676F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.3575419F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0059()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.42133F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0060()
-            {
-                if (_scalarKeyFrameAnimation_0060 != null)
-                {
-                    return _scalarKeyFrameAnimation_0060;
-                }
-                var result = _scalarKeyFrameAnimation_0060 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0061()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.43833F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0062()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.50633F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0063()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.75856F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0064()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.43933F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0065()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.301676F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.3184358F, 0.70456F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.3575419F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0066()
-            {
-                if (_scalarKeyFrameAnimation_0066 != null)
-                {
-                    return _scalarKeyFrameAnimation_0066;
-                }
-                var result = _scalarKeyFrameAnimation_0066 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.5418994F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5977654F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0067()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5586592F, 0.42133F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0068()
-            {
-                if (_scalarKeyFrameAnimation_0068 != null)
-                {
-                    return _scalarKeyFrameAnimation_0068;
-                }
-                var result = _scalarKeyFrameAnimation_0068 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5418994F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5586592F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0069()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5586592F, 0.43833F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0070()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5418994F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5586592F, 0.50633F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0071()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5418994F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5586592F, 0.75856F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5977654F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0072()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4469274F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5027933F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0073()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4469274F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4636872F, 0.21233F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4860335F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0074()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4469274F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4636872F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4860335F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0075()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4692737F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5251397F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0076()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4692737F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4860335F, 0.21233F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5083799F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0077()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4692737F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4860335F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5083799F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0078()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4748603F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.5307263F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0079()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4748603F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5027933F, 0.21233F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5251397F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0080()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4748603F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.5027933F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.5251397F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0081()
-            {
-                if (_scalarKeyFrameAnimation_0081 != null)
-                {
-                    return _scalarKeyFrameAnimation_0081;
-                }
-                var result = _scalarKeyFrameAnimation_0081 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.4189944F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.4636872F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0082()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 0.42133F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0083()
-            {
-                if (_scalarKeyFrameAnimation_0083 != null)
-                {
-                    return _scalarKeyFrameAnimation_0083;
-                }
-                var result = _scalarKeyFrameAnimation_0083 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 0.66356F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0084()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 0.43833F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0085()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 0.50633F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0086()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4189944F, 1, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4357542F, 0.75856F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4581006F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0087()
-            {
-                if (_scalarKeyFrameAnimation_0087 != null)
-                {
-                    return _scalarKeyFrameAnimation_0087;
-                }
-                var result = _scalarKeyFrameAnimation_0087 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0.424581F, 1, StepEasingFunction_0000());
-                result.InsertKeyFrame(0.4692737F, 0, StepEasingFunction_0000());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0088()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
-                result.InsertKeyFrame(0, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.424581F, 0.87F, LinearEasingFunction_0000());
-                result.InsertKeyFrame(0.4413408F, 0.42133F, CubicBezierEasingFunction_0006());
-                result.InsertKeyFrame(0.4636872F, 0, CubicBezierEasingFunction_0006());
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0089()
-            {
-                if (_scalarKeyFrameAnimation_0089 != null)
-                {
-                    return _scalarKeyFrameAnimation_0089;
-                }
-                var result = _scalarKeyFrameAnimation_0089 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(59670000);
                 result.InsertKeyFrame(0, 1, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.424581F, 1, LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.4413408F, 0.66356F, CubicBezierEasingFunction_0006());
@@ -5497,7 +4963,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0090()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0059()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -5508,7 +4974,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0091()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0060()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -5519,7 +4985,7 @@ namespace Compositions
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0092()
+            ScalarKeyFrameAnimation ScalarKeyFrameAnimation_0061()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(59670000);
@@ -5580,17 +5046,6 @@ namespace Compositions
                 shapes.Add(CompositionContainerShape_0173());
                 shapes.Add(CompositionContainerShape_0177());
                 shapes.Add(CompositionContainerShape_0181());
-                return result;
-            }
-
-            StepEasingFunction StepEasingFunction_0000()
-            {
-                if (_stepEasingFunction_0000 != null)
-                {
-                    return _stepEasingFunction_0000;
-                }
-                var result = _stepEasingFunction_0000 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame = true;
                 return result;
             }
 

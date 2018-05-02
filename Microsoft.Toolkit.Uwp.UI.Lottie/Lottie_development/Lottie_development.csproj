@@ -110,14 +110,17 @@
     <Compile Include="..\Lottie\Lottie\CompositionPlayer.cs">
       <Link>Lottie\CompositionPlayer.cs</Link>
     </Compile>
+    <Compile Include="..\Lottie\Lottie\CompositionSegment.cs">
+      <Link>Lottie\CompositionSegment.cs</Link>
+    </Compile>
     <Compile Include="..\Lottie\Lottie\ICompositionSink.cs">
       <Link>Lottie\ICompositionSink.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\ICompositionSource.cs">
       <Link>Lottie\ICompositionSource.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\Intantiator.cs">
-      <Link>Lottie\Intantiator.cs</Link>
+    <Compile Include="..\Lottie\Lottie\Instantiator.cs">
+      <Link>Lottie\Instantiator.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\LottieCompositionDiagnostics.cs">
       <Link>Lottie\LottieCompositionDiagnostics.cs</Link>

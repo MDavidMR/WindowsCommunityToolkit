@@ -17,8 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using LottieData.Optimization;
 using System.Diagnostics;
+using LottieToWinComp.Expressions;
 
-namespace Lottie
+namespace LottieToWinComp
 {
     /// <summary>
     /// Translates a <see cref="LottieData.LottieComposition"/> to an equivalent <see cref="Visual"/>.
@@ -26,7 +27,7 @@ namespace Lottie
 #if PUBLIC
     public
 #endif
-    sealed class LottieToVisualTranslator : IDisposable
+    sealed class LottieToWinCompTranslator : IDisposable
     {
         readonly LottieData.LottieComposition _lc;
         readonly HashSet<string> _issues = new HashSet<string>();
@@ -50,9 +51,9 @@ namespace Lottie
         /// of the animation. Setting this property (directly or with an animation)
         /// between 0 and 1 controls the position of the animation.
         /// </summary>
-        public static string ProgressPropertyName => "AnimationProgress";
+        public static string ProgressPropertyName => "Progress";
 
-        LottieToVisualTranslator(
+        LottieToWinCompTranslator(
             LottieData.LottieComposition lottieComposition,
             Compositor compositor,
             bool strictTranslation,
@@ -109,7 +110,7 @@ namespace Lottie
             out IEnumerable<string> translationIssues)
         {
             // Set up the translator.
-            using (var translator = new LottieToVisualTranslator(
+            using (var translator = new LottieToWinCompTranslator(
                 lottieComposition,
                 new WinCompData.Compositor(),
                 strictTranslation,
@@ -287,7 +288,7 @@ namespace Lottie
             // Convert the layer's in point and out point into absolute progress (0..1) values.
             var inProgress = GetInPointProgress(context, layer);
             var outProgress = GetOutPointProgress(context, layer);
-            if (inProgress > 1 || outProgress < 0)
+            if (inProgress > 1 || outProgress <= 0)
             {
                 // The layer is never visible. Don't create anything.
                 rootNode = null;
@@ -302,64 +303,76 @@ namespace Lottie
             // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
-                // If it's ever visible.
-                if (inProgress < 1)
+                // Insert another node to hold the visiblity property.
+                contentsNode = CreateContainerShape();
+                leafTransformNode.Shapes.Add(contentsNode);
+#if OldVisibility
+                // Insert Visibility flag into the node's PropertySet.
+                if (inProgress <= 0)
                 {
-                    // Insert another node to hold the visiblity property.
-                    contentsNode = CreateContainerShape();
-                    leafTransformNode.Shapes.Add(contentsNode);
+                    // Initially visible
+                    contentsNode.Properties.InsertScalar("Visibility", 1);
 
-                    // Insert Visibility flag into the node's PropertySet.
-                    if (inProgress <= 0)
-                    {
-                        // Initially visible
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-
-                        // If it ever goes inivisble again.
-                        if (outProgress < 1)
-                        {
-#if !NoInvisibility
-                            var stepAnimation = CreateScalarKeyFrameAnimation();
-                            stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                            stepAnimation.Duration = _lc.Duration;
-                            StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                        }
-                    }
-                    else
+                    // If it ever goes inivisble again.
+                    if (outProgress < 1)
                     {
 #if !NoInvisibility
-                        // Initially invisible.
-                        contentsNode.Properties.InsertScalar("Visibility", 0);
-#else
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-#endif
                         var stepAnimation = CreateScalarKeyFrameAnimation();
-                        stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
-
-                        // If it ever goes invisible again.
-                        if (outProgress < 1)
-                        {
-                            stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                        }
+                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
                         stepAnimation.Duration = _lc.Duration;
-#if !NoInvisibility
                         StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                     }
-
-                    // TODO - only create this matrix if the layer has a Visibility animation.
-                    // There is no Visibility property on Visual, so simulate it with a 
-                    // Matrix3x2 expression that animates between identity and
-                    // degenerate.
-                    var compositionMatrixAnim = CreateExpressionAnimation("Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)");
-                    compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                    StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
                 }
                 else
                 {
-                    // TODO: Fix Visibility correctly with Progress 
+#if !NoInvisibility
+                    // Initially invisible.
+                    contentsNode.Properties.InsertScalar("Visibility", 0);
+#else
+                        contentsNode.Properties.InsertScalar("Visibility", 1);
+#endif
+                    var stepAnimation = CreateScalarKeyFrameAnimation();
+                    stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
+
+                    // If it ever goes invisible again.
+                    if (outProgress < 1)
+                    {
+                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
+                    }
+                    stepAnimation.Duration = _lc.Duration;
+#if !NoInvisibility
+                    StartAnimation(contentsNode, "Visibility", stepAnimation);
+#endif
                 }
+
+                // TODO - only create this matrix if the layer has a Visibility animation.
+                // There is no Visibility property on Visual, so simulate it with a 
+                // Matrix3x2 expression that animates between identity and
+                // degenerate.
+                var compositionMatrixAnim = CreateExpressionAnimation("Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)");
+                compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
+                StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
+#else
+
+#if !NoInvisibility
+
+                const string invisible = "Matrix3x2(0,0,0,0,0,0)";
+                const string visible = "Matrix3x2(1,0,0,1,0,0)";
+
+                var visibilityExpression =
+                    ProgressExpression.CreateProgressExpression(
+                        $"root.{ProgressPropertyName}",
+                        new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
+                        new ProgressExpression.Segment(inProgress, outProgress, visible),
+                        new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
+                        );
+
+                var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
+                visibilityAnimation.SetReferenceParameter("root", _rootVisual);
+                StartAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
+#endif // !NoInvisibility
+#endif // OldVisibility
             }
 
             if (_annotate)
@@ -426,7 +439,7 @@ namespace Lottie
             // Convert the layer's in point and out point into absolute progress (0..1) values.
             var inProgress = GetInPointProgress(context, layer);
             var outProgress = GetOutPointProgress(context, layer);
-            if (inProgress > 1 || outProgress < 0)
+            if (inProgress > 1 || outProgress <= 0)
             {
                 // The layer is never visible. Don't create anything.
                 rootNode = null;
@@ -442,64 +455,78 @@ namespace Lottie
             // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
-                // If it's ever visible.
-                if (inProgress < 1)
+                // Insert another node to hold the visiblity property.
+                contentsNode = CreateContainerVisual();
+                leafTransformNode.Children.Add(contentsNode);
+
+#if OldVisibility
+                // Insert Visibility flag into the node's PropertySet.
+                if (inProgress <= 0)
                 {
-                    // Insert another node to hold the visiblity property.
-                    contentsNode = CreateContainerVisual();
-                    leafTransformNode.Children.Add(contentsNode);
+                    // Initially visible
+                    contentsNode.Properties.InsertScalar("Visibility", 1);
 
-                    // Insert Visibility flag into the node's PropertySet.
-                    if (inProgress <= 0)
-                    {
-                        // Initially visible
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-
-                        // If it ever goes inivisble again.
-                        if (outProgress < 1)
-                        {
-#if !NoInvisibility
-                            var stepAnimation = CreateScalarKeyFrameAnimation();
-                            stepAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
-                            stepAnimation.Duration = _lc.Duration;
-                            StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                        }
-                    }
-                    else
+                    // If it ever goes inivisble again.
+                    if (outProgress < 1)
                     {
 #if !NoInvisibility
-                        // Initially invisible.
-                        contentsNode.Properties.InsertScalar("Visibility", 0);
-#else
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-#endif
                         var stepAnimation = CreateScalarKeyFrameAnimation();
-                        stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
-
-                        // If it ever goes invisible again.
-                        if (outProgress < 1)
-                        {
-                            stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                        }
+                        stepAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
                         stepAnimation.Duration = _lc.Duration;
-#if !NoInvisibility
                         StartAnimation(contentsNode, "Visibility", stepAnimation);
 #endif
                     }
-
-                    // TODO - only create this matrix if the layer has a Visibility animation.
-                    // There is no Visibility property on Visual, so simulate it with a 
-                    // Matrix4x4 expression that animates between identity and
-                    // degenerate.
-                    var compositionMatrixAnim = CreateExpressionAnimation("Matrix4x4(contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility)");
-                    compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                    StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
                 }
                 else
                 {
-                    // TODO: Fix Visibility correctly with Progress 
+#if !NoInvisibility
+                    // Initially invisible.
+                    contentsNode.Properties.InsertScalar("Visibility", 0);
+#else
+                        contentsNode.Properties.InsertScalar("Visibility", 1);
+#endif
+                    var stepAnimation = CreateScalarKeyFrameAnimation();
+                    stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
+
+                    // If it ever goes invisible again.
+                    if (outProgress < 1)
+                    {
+                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
+                    }
+                    stepAnimation.Duration = _lc.Duration;
+#if !NoInvisibility
+                    StartAnimation(contentsNode, "Visibility", stepAnimation);
+#endif
                 }
+
+                // TODO - only create this matrix if the layer has a Visibility animation.
+                // There is no Visibility property on Visual, so simulate it with a 
+                // Matrix4x4 expression that animates between identity and
+                // degenerate.
+                var compositionMatrixAnim = CreateExpressionAnimation("Matrix4x4(contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility)");
+                compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
+                StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
+            
+#else
+#if !NoInvisibility
+
+                const string invisible = "0";
+                const string visible = "1";
+
+                var visibilityExpression =
+                    ProgressExpression.CreateProgressExpression(
+                        $"root.{ProgressPropertyName}",
+                        new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
+                        new ProgressExpression.Segment(inProgress, outProgress, visible),
+                        new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
+                        );
+
+                var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
+                visibilityAnimation.SetReferenceParameter("root", _rootVisual);
+                StartAnimation(contentsNode, "Opacity", visibilityAnimation);
+
+#endif // !NoInvisibility
+#endif // OldVisibility
             }
 
             if (_annotate)
@@ -568,7 +595,7 @@ namespace Lottie
 
         sealed class ShapeContentContext
         {
-            readonly LottieToVisualTranslator _owner;
+            readonly LottieToWinCompTranslator _owner;
             internal SolidColorStroke Stroke { get; private set; }
             internal SolidColorFill Fill { get; private set; }
             internal TrimPath TrimPath { get; private set; }
@@ -578,7 +605,7 @@ namespace Lottie
             // the Transform and passed through to the brushes here.
             internal Animatable<double> OpacityPercent { get; private set; }
 
-            internal ShapeContentContext(LottieToVisualTranslator owner)
+            internal ShapeContentContext(LottieToWinCompTranslator owner)
             {
                 _owner = owner;
             }
@@ -736,8 +763,8 @@ namespace Lottie
                     return new Animatable<double>(
                         initialValue: a.InitialValue * bScale,
                         keyFrames: a.KeyFrames.Select(kf => new KeyFrame<double>(
-                            kf.Frame, 
-                            kf.Value * bScale, 
+                            kf.Frame,
+                            kf.Value * bScale,
                             kf.SpatialControlPoint1,
                             kf.SpatialControlPoint2,
                             kf.Easing)),
@@ -1724,11 +1751,11 @@ namespace Lottie
 
                 if (scale != 1)
                 {
-                    expr = $"{expr}*{scale.ToString("0.0########")}";
+                    expr = $"{expr}*{FloatAsString(scale)}";
                 }
                 if (offset != 0)
                 {
-                    expr = $"{expr}+{offset.ToString("0.0########")}";
+                    expr = $"{expr}+{FloatAsString(offset)}";
                 }
 
                 bindingAnimation = CreateExpressionAnimation(expr);
@@ -1742,6 +1769,7 @@ namespace Lottie
             controller.StartAnimation("Progress", bindingAnimation);
         }
 
+        static string FloatAsString(double value) => value.ToString("0.0#########");
 
         void ApplyScalarKeyFrameAnimation(
             TranslationContext context,
@@ -1993,10 +2021,10 @@ namespace Lottie
                         initialValue: MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue),
                         keyFrames: color.KeyFrames.Select(kf =>
                             new KeyFrame<Color>(
-                                kf.Frame, 
-                                MultiplyColorByOpacityPercent(kf.Value, opacityPercent.InitialValue), 
-                                kf.SpatialControlPoint1, 
-                                kf.SpatialControlPoint2, 
+                                kf.Frame,
+                                MultiplyColorByOpacityPercent(kf.Value, opacityPercent.InitialValue),
+                                kf.SpatialControlPoint1,
+                                kf.SpatialControlPoint2,
                                 kf.Easing)),
                         propertyIndex: null);
                 }
@@ -2016,8 +2044,8 @@ namespace Lottie
                         initialValue: MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue),
                         keyFrames: opacityPercent.KeyFrames.Select(kf =>
                             new KeyFrame<Color>(
-                                kf.Frame, 
-                                MultiplyColorByOpacityPercent(color.InitialValue, kf.Value), 
+                                kf.Frame,
+                                MultiplyColorByOpacityPercent(color.InitialValue, kf.Value),
                                 kf.SpatialControlPoint1,
                                 kf.SpatialControlPoint2,
                                 kf.Easing)),

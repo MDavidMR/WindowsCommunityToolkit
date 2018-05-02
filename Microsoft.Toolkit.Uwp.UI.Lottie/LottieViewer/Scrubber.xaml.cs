@@ -6,9 +6,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace LottieUwpPlayground
+namespace LottieViewer
 {
     public sealed partial class Scrubber : UserControl
     {
@@ -67,8 +66,8 @@ namespace LottieUwpPlayground
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            // TODO - the fudge factor here shouldn't be necessary. Investigate.
-            _progressRectangle.Properties.InsertScalar("Width", (float)(finalSize.Width * 0.995));
+            // Update the size of the progress rectangle.
+            _progressRectangle.Properties.InsertScalar("Width", (float)finalSize.Width - 2);
 
             return base.ArrangeOverride(finalSize);
         }

@@ -759,8 +759,11 @@ namespace Lottie
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateEllipseGeometry());
+            if (obj.Center.X != 0 || obj.Center.Y != 0)
+            {
+                result.Center = Vector2(obj.Center);
+            }
             result.Radius = Vector2(obj.Radius);
-            result.Center = Vector2(obj.Center);
             StartAnimations(obj, result);
             return result;
         }

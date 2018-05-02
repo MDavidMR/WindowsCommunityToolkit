@@ -1,25 +1,17 @@
 ﻿using Compositions;
 using Lottie;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace LottieUwpPlayground
+namespace LottieViewer
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -34,24 +26,6 @@ namespace LottieUwpPlayground
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-        }
-
-        // Starts the animated splash screen as content for the current window. The
-        // returned IAsyncAction completes when the animation finishes.
-        IAsyncAction StartAnimatedSplashScreenAsync()
-        {
-            var compositionPlayer = new CompositionPlayer
-            {
-                Stretch = Stretch.UniformToFill,
-                AutoPlay = false,
-                LoopAnimation = false,
-                FromProgress = 0,
-                ToProgress = 0.595,
-                Source = new LottieLogo1Composition()
-            };
-            Window.Current.Content = compositionPlayer;
-            // Start playing.
-            return compositionPlayer.PlayAsync();
         }
 
         /// <summary>
@@ -85,23 +59,15 @@ namespace LottieUwpPlayground
 
             if (!e.PrelaunchActivated)
             {
-                // Start the splash screen animation. This will replace the window content.
-                var splashScreenTask = StartAnimatedSplashScreenAsync().AsTask();
-
                 // Ensure the current window is active
                 Window.Current.Activate();
 
-                // Start navigation to the first page. This will continue
-                // while the splash screen finishes animating.
+                // Run the splash screen animation.
+                await StartAnimatedSplashScreenAsync();
+
+                // Start navigation to the first page.
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
-
-                // Wait for the animation to finish.
-                await splashScreenTask;
-
-                // Replace the splash screen animation with the frame.
-                Window.Current.Content = rootFrame;
             }
-
         }
 
         void InitializeTitleBarColors()
@@ -116,6 +82,56 @@ namespace LottieUwpPlayground
                 titleBar.BackgroundColor = backgroundColor.Color;
                 titleBar.ForegroundColor = foregroundColor.Color;
             }
+        }
+
+        // Starts the animated splash screen as content for the current window. The
+        // returned Task completes when the animation finishes.
+        async Task StartAnimatedSplashScreenAsync()
+        {
+            // Insert splashGrid above the current window content.
+            var originalWindowContent = Window.Current.Content;
+            var splashGrid = new Grid();
+            Window.Current.Content = splashGrid;
+
+            var compositionPlayer = new CompositionPlayer
+            {
+                Stretch = Stretch.UniformToFill,
+                AutoPlay = false,
+                LoopAnimation = false,
+                FromProgress = 0,
+                ToProgress = 0.595,
+                Source = new LottieLogo1Composition()
+            };
+
+            splashGrid.Children.Add(originalWindowContent);
+            splashGrid.Children.Add(compositionPlayer);
+
+            // Start playing.
+            await compositionPlayer.PlayAsync();
+
+            // Fade out the splash screen
+            var storyboard = new Storyboard();
+            storyboard.Children.Add(new DoubleAnimation()
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.15),
+            });
+            Storyboard.SetTargetProperty(storyboard, "Opacity");
+            Storyboard.SetTarget(storyboard, compositionPlayer);
+            storyboard.Begin();
+            storyboard.Completed += (sender, e)
+                =>
+            {
+                // Restore the original content.
+
+                // TODO  - simply moving the original content back causes
+                //         the CompositionPlayer on the Page to disappear. Why?
+                //splashGrid.Children.Clear();
+                //Window.Current.Content = originalWindowContent;
+
+                splashGrid.Children.Remove(compositionPlayer);
+            };
         }
 
         /// <summary>
