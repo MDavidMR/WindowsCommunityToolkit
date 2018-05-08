@@ -9,7 +9,6 @@
     xmlns:compositions="using:Compositions"
     mc:Ignorable="d" Visibility="Visible" RequestedTheme="Default">
     <Page.Resources>
-        <lottie:LottieCompositionSource x:Key="LottieLogo" UriSource="ms-appx:///Assets/LottieLogo1.json"/>
         <local:VisiblityConverter x:Key="VisibilityConverter"/>
         <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
         <SolidColorBrush x:Key="ArtboardBrush" Color="White"/>
@@ -27,11 +26,13 @@
               RelativePanel.AlignRightWithPanel="True"
               >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <!-- Open file -->
+                <!-- Open file (alternative: 0xe8e5) -->
                 <Button Style="{StaticResource ControlsButtonStyle}" Click="PickFile_Click" 
                         ToolTipService.ToolTip="Pick a Lottie file"
                         >&#xf12b;</Button>
 
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!-- Paint palette -->
                 <Button Style="{StaticResource ControlsButtonStyle}"
                         IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
@@ -54,12 +55,11 @@
                     &#xe790;
                 </Button>
 
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <!-- Save as: e792. Save: e74e-->
                 <Button Style="{StaticResource ControlsButtonStyle}" 
                     IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
                     ToolTipService.ToolTip="Save Lottie as code"
-                    Click="SaveFile_Click" >&#xe792;</Button>
+                    Click="SaveFile_Click" >&#xe74e;</Button>
 
             </StackPanel>
 
@@ -107,66 +107,23 @@
 
         </StackPanel>
 
-        
+
         <!-- Controls at the bottom of the window -->
         <Grid x:Name="Controls" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
               Height="64"
               Background="{Binding Source={StaticResource BackgroundBrush}}" >
             <Grid.ColumnDefinitions>
                 <!-- Buttons for opening a file, selecting background .-->
-                <ColumnDefinition MinWidth="80" Width="1*"></ColumnDefinition>
+                <ColumnDefinition  Width="1*"></ColumnDefinition>
                 <ColumnDefinition MinWidth="200" Width="3*"></ColumnDefinition>
-                <ColumnDefinition MinWidth="80" Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <!--<RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>-->
-            </Grid.RowDefinitions>
-            <!--<MediaTransportControls Grid.Row="1" Grid.ColumnSpan="3"/>
-            <MediaPlayerElement Grid.Row="2" Grid.ColumnSpan="3"/>-->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Opacity="0">
-                <StackPanel.Resources>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource ControlsTextBlockStyle}" >
-                        <Setter Property="Padding" Value="30,0,30,0"/>
-                    </Style>
-                </StackPanel.Resources>
-
-                <!-- Open file -->
-                <Button Style="{StaticResource ControlsButtonStyle}" Click="PickFile_Click"
-                        ToolTipService.ToolTip="Pick a Lottie file"
-                        >&#xf12b;</Button>
-                <!-- Open folder -->
-                <!--<TextBlock>&#xe8da;</TextBlock>-->
-                <!--<TextBlock>&#xe8e5;</TextBlock>-->
-
-                <!-- Paint palette -->
-                <Button Style="{StaticResource ControlsButtonStyle}"
-                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
-                        ToolTipService.ToolTip="Background color"
-                        >
-                    <Button.Flyout>
-                        <Flyout FlyoutPresenterStyle="{StaticResource AcrylicFlyoutPresenter}">
-                            <ColorPicker
-                                Background="Transparent"
-                                     ColorSpectrumShape="Ring"
-                                     IsColorPreviewVisible="True"
-                                     IsColorChannelTextInputVisible="False"
-                                     IsHexInputVisible="True"
-                                     Color="{Binding Source={StaticResource ArtboardBrush}, Path=Color, Mode=TwoWay}" 
-                                        IsColorSpectrumVisible="True" 
-                                        IsColorSliderVisible="True" 
-                                        ColorSpectrumComponents="HueSaturation"  />
-                        </Flyout>
-                    </Button.Flyout>
-                    &#xe790;
-                </Button>
-            </StackPanel>
 
             <RelativePanel Grid.Column="1" >
 
                 <!-- Play/stop button -->
                 <ToggleButton x:Name="_playStopButton" Style="{StaticResource ControlsToggleButtonStyle}"
+                              VerticalAlignment="Center"
                               RelativePanel.AlignLeftWithPanel="True"
                               RelativePanel.AlignTopWithPanel="True"
                               RelativePanel.AlignBottomWithPanel="True"
@@ -177,61 +134,24 @@
                               >
                     <Grid>
                         <!-- Play -->
-                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, ConverterParameter=not, Mode=OneWay}">&#xedb5;</TextBlock>
+                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, ConverterParameter=not, Mode=OneWay}" >&#xedb5;</TextBlock>
                         <!-- Stop -->
-                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Height="34" VerticalAlignment="Bottom">&#xe71a;</TextBlock>
+                        <TextBlock Visibility="{x:Bind _playStopButton.IsChecked, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">&#xe71a;</TextBlock>
                     </Grid>
                 </ToggleButton>
 
                 <!-- Scrubber -->
                 <!--IsEnabled="{x:Bind _playStopButton.IsChecked, Mode=OneWay}"-->
                 <local:Scrubber x:Name="_scrubber" ValueChanged="ProgressSliderChanged"
+                                Margin="0,5,0,0"
                         IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
                         RelativePanel.RightOf="_playStopButton"
-                        RelativePanel.LeftOf="_loopButton"
                         RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignBottomWithPanel="True" />
-
-                <!-- Loop or play again or something-->
-                <!-- Currently hidden through opacity - not clear that we want a loop button -->
-                <ToggleButton x:Name="_loopButton" Style="{StaticResource ControlsToggleButtonStyle}" 
-                        Opacity="0"
+                        RelativePanel.AlignBottomWithPanel="True" 
                         RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.AlignTopWithPanel="True"
-                        RelativePanel.AlignBottomWithPanel="True">
-                    <Grid>
-                        <!-- Play to end -->
-                        <TextBlock Visibility="{x:Bind _loopButton.IsChecked, Converter={StaticResource VisibilityConverter}, ConverterParameter=not, Mode=OneWay}">&#xe9ac;</TextBlock>
-                        <!-- Repeat -->
-                        <TextBlock Visibility="{x:Bind _loopButton.IsChecked, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">&#xe8ee;</TextBlock>
-                    </Grid>
-                </ToggleButton>
-
+                        VerticalAlignment="Center"
+                        />
             </RelativePanel>
-
-            <!-- Status indicators and buttons for saving content -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Opacity="0">
-                <StackPanel.Resources>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource ControlsTextBlockStyle}" >
-                        <Setter Property="Padding" Value="20,0,20,0"/>
-                    </Style>
-                </StackPanel.Resources>
-
-                <!-- Flag -->
-                <!--
-                <TextBlock Grid.Column="5">&#xe7c1;</TextBlock>-->
-                <!-- Bang -->
-                <!--<TextBlock Grid.Column="6" Foreground="Orange" >&#xe8c9;</TextBlock>-->
-                <!-- Wrench: &#xe90f;-->
-                <TextBlock Visibility="{Binding ElementName=_stage, Path=Player.Diagnostics, Converter={StaticResource formatter}, ConverterParameter=VisibleIfIssues}" Foreground="Orange" >&#xe7ba;</TextBlock>
-                <!-- Save as -->
-                <Button Style="{StaticResource ControlsButtonStyle}"  
-                    IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
-                    ToolTipService.ToolTip="Save Lottie as code"
-                    Click="SaveFile_Click" >&#xe792;</Button>
-
-            </StackPanel>
-
         </Grid>
     </RelativePanel>
 </Page>

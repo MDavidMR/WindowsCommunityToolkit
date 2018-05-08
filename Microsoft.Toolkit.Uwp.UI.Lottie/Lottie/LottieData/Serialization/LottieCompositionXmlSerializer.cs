@@ -599,6 +599,7 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+                yield return FromAnimatable(nameof(content.Radius), content.Radius);
             }
         }
 

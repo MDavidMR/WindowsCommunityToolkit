@@ -646,7 +646,7 @@ namespace WinCompData.Tools
                     yield return new XAttribute("Target", obj.Target);
                 }
 
-                var keyFramesString = string.Join(", ", obj.KeyFrames.Select(kf => $"({kf.Value}@{kf.Progress})"));
+                var keyFramesString = string.Join(", ", obj.KeyFrames.Select(kf => $"({GetKeyFrameValue(kf)}@{kf.Progress})"));
 
                 if (initialValue.HasValue)
                 {
@@ -656,6 +656,21 @@ namespace WinCompData.Tools
                 {
                     yield return new XText(keyFramesString);
                 }
+            }
+        }
+
+        static string GetKeyFrameValue<T>(KeyFrameAnimation<T>.KeyFrame kf)
+        {
+            switch (kf.Type)
+            {
+                case KeyFrameAnimation<T>.KeyFrameType.Expression:
+                    var expressionKeyFrame = (KeyFrameAnimation<T>.ExpressionKeyFrame)kf;
+                    return $"\"{expressionKeyFrame.Expression}\"";
+                case KeyFrameAnimation<T>.KeyFrameType.Value:
+                    var valueKeyFrame = (KeyFrameAnimation<T>.ValueKeyFrame)kf;
+                    return valueKeyFrame.Value.ToString();
+                default:
+                    throw new InvalidOperationException();
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace WinCompData
+﻿using System;
+
+namespace WinCompData
 {
 #if !WINDOWS_UWP
     public

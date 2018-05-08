@@ -1,4 +1,9 @@
-﻿#if DEBUG
+﻿// Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
+// for multiple trim paths, so it's possible this is actually the most correct.
+#define SimpleTrimPathCombining
+#define SpatialBeziers
+//#define LinearEasingOnSpatialBeziers
+#if DEBUG
 // For diagnosing issues, give nothing a clip.
 //#define NoClipping
 // For diagnosing issues, give nothing scale.
@@ -29,6 +34,9 @@ namespace LottieToWinComp
 #endif
     sealed class LottieToWinCompTranslator : IDisposable
     {
+        // Very small animation progress increment used to place keyframes as close as possible
+        // to each other.
+        const float c_keyFrameProgressEpsilon = 0.0000001F;
         readonly LottieData.LottieComposition _lc;
         readonly HashSet<string> _issues = new HashSet<string>();
         readonly bool _strictTranslation;
@@ -45,7 +53,12 @@ namespace LottieToWinComp
         LinearEasingFunction _linearEasingFunction;
         // Holds a StepEasingFunction that can be reused in multiple animations.
         StepEasingFunction _holdStepEasingFunction;
-
+        // Holds a StepEasingFunction that can be reused in multiple animations.
+        StepEasingFunction _jumpStepEasingFunction;
+        // The name used to bind to the property set that contains the Progress property.
+        const string c_rootName = "_";
+        // The name of the root property set and the Progress property on it.
+        static readonly string s_rootProgress = $"{c_rootName}.{ProgressPropertyName}";
         /// <summary>
         /// The name of the property on the resulting <see cref="Visual"/> that controls the progress
         /// of the animation. Setting this property (directly or with an animation)
@@ -306,55 +319,6 @@ namespace LottieToWinComp
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerShape();
                 leafTransformNode.Shapes.Add(contentsNode);
-#if OldVisibility
-                // Insert Visibility flag into the node's PropertySet.
-                if (inProgress <= 0)
-                {
-                    // Initially visible
-                    contentsNode.Properties.InsertScalar("Visibility", 1);
-
-                    // If it ever goes inivisble again.
-                    if (outProgress < 1)
-                    {
-#if !NoInvisibility
-                        var stepAnimation = CreateScalarKeyFrameAnimation();
-                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                        stepAnimation.Duration = _lc.Duration;
-                        StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                    }
-                }
-                else
-                {
-#if !NoInvisibility
-                    // Initially invisible.
-                    contentsNode.Properties.InsertScalar("Visibility", 0);
-#else
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-#endif
-                    var stepAnimation = CreateScalarKeyFrameAnimation();
-                    stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
-
-                    // If it ever goes invisible again.
-                    if (outProgress < 1)
-                    {
-                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                    }
-                    stepAnimation.Duration = _lc.Duration;
-#if !NoInvisibility
-                    StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                }
-
-                // TODO - only create this matrix if the layer has a Visibility animation.
-                // There is no Visibility property on Visual, so simulate it with a 
-                // Matrix3x2 expression that animates between identity and
-                // degenerate.
-                var compositionMatrixAnim = CreateExpressionAnimation("Matrix3x2(contents.Visibility,0,0,contents.Visibility,0,0)");
-                compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
-#else
-
 #if !NoInvisibility
 
                 const string invisible = "Matrix3x2(0,0,0,0,0,0)";
@@ -362,17 +326,16 @@ namespace LottieToWinComp
 
                 var visibilityExpression =
                     ProgressExpression.CreateProgressExpression(
-                        $"root.{ProgressPropertyName}",
+                        s_rootProgress,
                         new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
                         new ProgressExpression.Segment(inProgress, outProgress, visible),
                         new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
                         );
 
                 var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
-                visibilityAnimation.SetReferenceParameter("root", _rootVisual);
+                visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
 #endif // !NoInvisibility
-#endif // OldVisibility
             }
 
             if (_annotate)
@@ -459,74 +422,22 @@ namespace LottieToWinComp
                 contentsNode = CreateContainerVisual();
                 leafTransformNode.Children.Add(contentsNode);
 
-#if OldVisibility
-                // Insert Visibility flag into the node's PropertySet.
-                if (inProgress <= 0)
-                {
-                    // Initially visible
-                    contentsNode.Properties.InsertScalar("Visibility", 1);
-
-                    // If it ever goes inivisble again.
-                    if (outProgress < 1)
-                    {
 #if !NoInvisibility
-                        var stepAnimation = CreateScalarKeyFrameAnimation();
-                        stepAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
-                        stepAnimation.Duration = _lc.Duration;
-                        StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                    }
-                }
-                else
-                {
-#if !NoInvisibility
-                    // Initially invisible.
-                    contentsNode.Properties.InsertScalar("Visibility", 0);
-#else
-                        contentsNode.Properties.InsertScalar("Visibility", 1);
-#endif
-                    var stepAnimation = CreateScalarKeyFrameAnimation();
-                    stepAnimation.InsertKeyFrame((float)inProgress, 1, CreateHoldStepEasingFunction());
-
-                    // If it ever goes invisible again.
-                    if (outProgress < 1)
-                    {
-                        stepAnimation.InsertKeyFrame((float)outProgress, 0, CreateHoldStepEasingFunction());
-                    }
-                    stepAnimation.Duration = _lc.Duration;
-#if !NoInvisibility
-                    StartAnimation(contentsNode, "Visibility", stepAnimation);
-#endif
-                }
-
-                // TODO - only create this matrix if the layer has a Visibility animation.
-                // There is no Visibility property on Visual, so simulate it with a 
-                // Matrix4x4 expression that animates between identity and
-                // degenerate.
-                var compositionMatrixAnim = CreateExpressionAnimation("Matrix4x4(contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility,0,0,0,0,contents.Visibility)");
-                compositionMatrixAnim.SetReferenceParameter("contents", contentsNode);
-                StartAnimation(contentsNode, "TransformMatrix", compositionMatrixAnim);
-            
-#else
-#if !NoInvisibility
-
                 const string invisible = "0";
                 const string visible = "1";
 
                 var visibilityExpression =
                     ProgressExpression.CreateProgressExpression(
-                        $"root.{ProgressPropertyName}",
+                        s_rootProgress,
                         new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
                         new ProgressExpression.Segment(inProgress, outProgress, visible),
                         new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
                         );
 
                 var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
-                visibilityAnimation.SetReferenceParameter("root", _rootVisual);
+                visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "Opacity", visibilityAnimation);
-
 #endif // !NoInvisibility
-#endif // OldVisibility
             }
 
             if (_annotate)
@@ -616,112 +527,48 @@ namespace LottieToWinComp
                     var popped = stack.Peek();
                     switch (popped.ContentType)
                     {
-                        case ShapeContentType.SolidColorStroke:
-                            // Set the stroke to be used from this point on.
-                            Stroke = (SolidColorStroke)popped;
+                        case ShapeContentType.LinearGradientFill:
+                        case ShapeContentType.RadialGradientFill:
+                            Unsupported("Gradient fill");
                             break;
 
                         case ShapeContentType.LinearGradientStroke:
                         case ShapeContentType.RadialGradientStroke:
-                            _owner.Unsupported("Gradient stroke");
+                            Unsupported("Gradient stroke");
                             break;
 
                         case ShapeContentType.SolidColorFill:
-                            Fill = (SolidColorFill)popped;
+                            Fill = ComposeSolidColorFill(Fill, (SolidColorFill)popped);
                             break;
 
-                        case ShapeContentType.LinearGradientFill:
-                        case ShapeContentType.RadialGradientFill:
-                            _owner.Unsupported("Gradient fill");
-                            break;
-                        case ShapeContentType.TrimPath:
-                            if (TrimPath != null)
-                            {
-                                TrimPath = CombineTrimPaths(TrimPath, (TrimPath)popped);
-                            }
-                            else
-                            {
-                                TrimPath = (TrimPath)popped;
-                            }
+                        case ShapeContentType.SolidColorStroke:
+                            Stroke = ComposeStrokes(Stroke, (SolidColorStroke)popped);
                             break;
 
                         case ShapeContentType.RoundedCorner:
-                            RoundedCorner = (RoundedCorner)popped;
+                            RoundedCorner = ComposeRoundedCorners(RoundedCorner, (RoundedCorner)popped);
                             break;
+
+                        case ShapeContentType.TrimPath:
+                            TrimPath = ComposeTrimPaths(TrimPath, (TrimPath)popped);
+                            break;
+
                         default: return;
                     }
                     stack.Pop();
                 }
             }
 
-            // Attempt to combine 2 trim paths. This only works under very specific circumstances
-            // but covers a common case.
-            TrimPath CombineTrimPaths(TrimPath a, TrimPath b)
+            internal ShapeContentContext Clone()
             {
-                bool success = true;
-
-                // If one startPercent is 0, use the other.
-                Animatable<double> startPercent;
-                if (!a.StartPercent.IsAnimated && a.StartPercent.InitialValue == 0)
+                return new ShapeContentContext(_owner)
                 {
-                    startPercent = b.StartPercent;
-                }
-                else if (!b.StartPercent.IsAnimated && b.StartPercent.InitialValue == 0)
-                {
-                    startPercent = a.StartPercent;
-                }
-                else
-                {
-                    startPercent = null;
-                    success = false;
-                }
-
-                // If one endPercent is 100, use the other.
-                Animatable<double> endPercent;
-                if (!a.EndPercent.IsAnimated && a.EndPercent.InitialValue == 100)
-                {
-                    endPercent = b.EndPercent;
-                }
-                else if (!b.EndPercent.IsAnimated && b.EndPercent.InitialValue == 100)
-                {
-                    endPercent = a.EndPercent;
-                }
-                else
-                {
-                    endPercent = null;
-                    success = false;
-                }
-
-                // If one offsetDegrees is 0, use the other.
-                Animatable<double> offsetDegrees;
-                if (!a.OffsetDegrees.IsAnimated && a.OffsetDegrees.InitialValue == 0)
-                {
-                    offsetDegrees = b.OffsetDegrees;
-                }
-                else if (!b.OffsetDegrees.IsAnimated && b.OffsetDegrees.InitialValue == 0)
-                {
-                    offsetDegrees = a.OffsetDegrees;
-                }
-                else
-                {
-                    offsetDegrees = null;
-                    success = false;
-                }
-
-                if (a.TrimPathType != b.TrimPathType)
-                {
-                    success = false;
-                }
-
-                if (success)
-                {
-                    return new TrimPath(a.Name + b.Name, a.MatchName + b.MatchName, a.TrimPathType, startPercent, endPercent, offsetDegrees);
-                }
-                else
-                {
-                    _owner.Unsupported("Multiple trim paths");
-                    return a;
-                }
+                    Fill = Fill,
+                    Stroke = Stroke,
+                    TrimPath = TrimPath,
+                    RoundedCorner = RoundedCorner,
+                    OpacityPercent = OpacityPercent,
+                };
             }
 
             internal void UpdateOpacityFromTransform(Transform transform)
@@ -731,32 +578,33 @@ namespace LottieToWinComp
                     return;
                 }
 
-                OpacityPercent = MultiplyOpacityPercents(OpacityPercent, transform.OpacityPercent);
+                OpacityPercent = ComposeOpacityPercents(OpacityPercent, transform.OpacityPercent);
             }
 
-            Animatable<double> MultiplyOpacityPercents(Animatable<double> a, Animatable<double> b)
+            Animatable<double> ComposeOpacityPercents(Animatable<double> a, Animatable<double> b)
             {
-                if (a == null || (!a.IsAnimated && a.InitialValue == 100))
+                if (a == null)
                 {
                     return b;
                 }
 
-                if (b == null || (!b.IsAnimated && b.InitialValue == 100))
+                if (b == null)
                 {
-                    return a;
-                }
-
-                if (a.IsAnimated && b.IsAnimated)
-                {
-                    _owner.Unsupported("Animation multiplication.");
                     return a;
                 }
 
                 if (!a.IsAnimated && !b.IsAnimated)
                 {
-                    return new Animatable<double>(a.InitialValue * b.InitialValue, null);
+                    return new Animatable<double>((a.InitialValue * b.InitialValue) / 100.0, null);
                 }
 
+                if (a.IsAnimated && b.IsAnimated)
+                {
+                    Unsupported("Animation multiplication.");
+                    return a;
+                }
+
+                // Only one is animated.
                 if (a.IsAnimated)
                 {
                     var bScale = b.InitialValue;
@@ -772,21 +620,117 @@ namespace LottieToWinComp
                 }
                 else
                 {
-                    return MultiplyOpacityPercents(b, a);
+                    return ComposeOpacityPercents(b, a);
                 }
             }
 
-            internal ShapeContentContext Clone()
+            SolidColorFill ComposeSolidColorFill(SolidColorFill a, SolidColorFill b)
             {
-                return new ShapeContentContext(_owner)
+                if (a == null)
                 {
-                    Fill = Fill,
-                    Stroke = Stroke,
-                    TrimPath = TrimPath,
-                    RoundedCorner = RoundedCorner,
-                    OpacityPercent = OpacityPercent,
-                };
+                    return b;
+                }
+                else if (b == null)
+                {
+                    return a;
+                }
+
+                if (!b.Color.IsAnimated &&
+                    !b.OpacityPercent.IsAnimated)
+                {
+                    if (b.OpacityPercent.InitialValue == 100 &&
+                        b.Color.InitialValue.A == 1)
+                    {
+                        // b overrides a.
+                        return b;
+                    }
+                    else if (b.OpacityPercent.InitialValue == 0 || b.Color.InitialValue.A == 0)
+                    {
+                        // b is transparent, so a wins.
+                        return a;
+                    }
+                }
+
+                // TODO - this is not correct behavior. Colors should blend.
+                Unsupported("Multiple fills");
+                return b;
             }
+
+            SolidColorStroke ComposeStrokes(SolidColorStroke a, SolidColorStroke b)
+            {
+                if (a == null)
+                {
+                    return b;
+                }
+                else if (b == null)
+                {
+                    return a;
+                }
+
+                if (!a.Thickness.IsAnimated && !b.Thickness.IsAnimated &&
+                    !a.DashPattern.Any() && !b.DashPattern.Any() &&
+                    a.OpacityPercent.AlwaysEquals(100) && b.OpacityPercent.AlwaysEquals(100))
+                {
+                    if (a.Thickness.InitialValue >= b.Thickness.InitialValue)
+                    {
+                        // a occludes b, so b can be ignored.
+                        return a;
+                    }
+                }
+
+                // TODO - this is not correct behavior. The new stroke should be in addition
+                //        to the existing stroke. And colors should blend.
+                Unsupported("Multiple strokes");
+                return b;
+            }
+
+            RoundedCorner ComposeRoundedCorners(RoundedCorner a, RoundedCorner b)
+            {
+                if (a == null)
+                {
+                    return b;
+                }
+                else if (b == null)
+                {
+                    return a;
+                }
+
+                if (!b.Radius.IsAnimated)
+                {
+                    if (b.Radius.InitialValue >= 0)
+                    {
+                        // If b has a non-0 value, it wins.
+                        return b;
+                    }
+                    else
+                    {
+                        // b is always 0. A wins.
+                        return a;
+                    }
+                }
+
+                // TODO - this is not correct behavior.
+                Unsupported("Multiple animated rounded corners");
+                return b;
+            }
+
+            TrimPath ComposeTrimPaths(TrimPath a, TrimPath b)
+            {
+                if (a == null)
+                {
+                    return b;
+                }
+                else if (b == null)
+                {
+                    return a;
+                }
+
+                // TODO - this is not correct behavior.
+                Unsupported("Multiple trim paths");
+                return b;
+            }
+
+            void Unsupported(string details) => _owner.Unsupported(details);
         }
 
         // May return null if the layer does not produce any renderable content.
@@ -1129,7 +1073,7 @@ namespace LottieToWinComp
         {
             var compositionRectangle = CreateSpriteShape();
 
-            if (!shapeContent.CornerRadius.IsAnimated && shapeContent.CornerRadius.InitialValue == 0 && shapeContext.RoundedCorner == null)
+            if (shapeContent.CornerRadius.AlwaysEquals(0) && shapeContext.RoundedCorner == null)
             {
                 // Use a non-rounded rectangle geometry.
                 var geometry = CreateRectangleGeometry();
@@ -1210,6 +1154,13 @@ namespace LottieToWinComp
 
         CompositionShape TranslatePathContent(TranslationContext context, ShapeContentContext shapeContext, Shape shapeContent)
         {
+            if (shapeContext.RoundedCorner != null &&
+                (shapeContext.RoundedCorner.Radius.IsAnimated || shapeContext.RoundedCorner.Radius.InitialValue != 0))
+            {
+                // TODO - can rounded corners be implemented by composing cubic beziers?
+                Unsupported("Rounded corners on path");
+            }
+
             // Map Path's Geometry data to PathGeometry.Path
             var geometry = shapeContent.PathData;
 
@@ -1399,7 +1350,7 @@ namespace LottieToWinComp
 
         void TranslateAndApplyStroke(TranslationContext context, SolidColorStroke shapeStroke, CompositionSpriteShape sprite, Animatable<double> opacityPercent)
         {
-            if (shapeStroke == null || (!shapeStroke.Thickness.IsAnimated && shapeStroke.Thickness.InitialValue == 0))
+            if (shapeStroke == null || shapeStroke.Thickness.AlwaysEquals(0))
             {
                 return;
             }
@@ -1447,7 +1398,7 @@ namespace LottieToWinComp
 
         CompositionShape TranslateSolidLayer(TranslationContext context, SolidLayer layer)
         {
-            if (layer.IsHidden || (!layer.Transform.OpacityPercent.IsAnimated && layer.Transform.OpacityPercent.InitialValue == 0))
+            if (layer.IsHidden || layer.Transform.OpacityPercent.AlwaysEquals(0))
             {
                 // The layer does not render anything. Nothing to translate. This can happen when someone
                 // creates a solid layer to act like a Null layer.
@@ -1747,7 +1698,7 @@ namespace LottieToWinComp
             var key = new ScaleAndOffset(scale, offset);
             if (!_progressBindingAnimations.TryGetValue(key, out var bindingAnimation))
             {
-                var expr = $"root.{ProgressPropertyName}";
+                var expr = s_rootProgress;
 
                 if (scale != 1)
                 {
@@ -1759,7 +1710,7 @@ namespace LottieToWinComp
                 }
 
                 bindingAnimation = CreateExpressionAnimation(expr);
-                bindingAnimation.SetReferenceParameter("root", _rootVisual);
+                bindingAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 _progressBindingAnimations.Add(key, bindingAnimation);
             }
 
@@ -1769,7 +1720,7 @@ namespace LottieToWinComp
             controller.StartAnimation("Progress", bindingAnimation);
         }
 
-        static string FloatAsString(double value) => value.ToString("0.0#########");
+        static string FloatAsString(double value) => value.ToString("0.######################################");
 
         void ApplyScalarKeyFrameAnimation(
             TranslationContext context,
@@ -1793,6 +1744,7 @@ namespace LottieToWinComp
                     value,
                     CreateScalarKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, (float)(val * scale), easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1812,6 +1764,7 @@ namespace LottieToWinComp
                     value,
                     CreateColorKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Color(val), easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, expr, easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1832,6 +1785,7 @@ namespace LottieToWinComp
                     value,
                     CreatePathKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, CompositionPathFromPathGeometry(val, fillType), easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, expr, easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1858,6 +1812,7 @@ namespace LottieToWinComp
                     value,
                     CreateVector2KeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector2(val) * (float)scale, easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1884,6 +1839,7 @@ namespace LottieToWinComp
                     value,
                     CreateVector3KeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector3(val) * (float)scale, easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1894,6 +1850,7 @@ namespace LottieToWinComp
             Animatable<T> value,
             Func<CA> compositionAnimationFactory,
             Action<CA, float, T, CompositionEasingFunction> insertKeyFrame,
+            Action<CA, float, string, CompositionEasingFunction> insertExpressionKeyFrame,
             CompositionObject targetObject,
             string targetPropertyName) where CA : KeyFrameAnimation_ where T : IEquatable<T>
         {
@@ -1908,6 +1865,7 @@ namespace LottieToWinComp
                 // TODO - handle this earlier.
                 return;
             }
+
             var firstKeyFrame = trimmedKeyFrames[0];
             var lastKeyFrame = trimmedKeyFrames[trimmedKeyFrames.Length - 1];
 
@@ -1941,20 +1899,140 @@ namespace LottieToWinComp
 
             // Insert the keyframes with the progress adjusted so the first keyframe is at 0 and the remaining
             // progress values are scaled appropriately.
+            var previousValue = value.InitialValue;
+            var previousProgress = 0.0 - c_keyFrameProgressEpsilon;
+            var rootReferenceAdded = false;
+            var previousKeyFrameWasExpression = false;
+            string progressMappingProperty = null;
+            ScalarKeyFrameAnimation progressMappingAnimation = null;
+
             foreach (var keyFrame in trimmedKeyFrames)
             {
-                if (keyFrame.SpatialControlPoint1 != default(Vector3) || keyFrame.SpatialControlPoint2 != default(Vector3))
-                {
-                    Unsupported("Spatial beziers");
-                }
-
                 var adjustedProgress = (keyFrame.Frame - animationStartTime) / animationDuration;
 
-                insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
+                if (keyFrame.SpatialControlPoint1 != default(Vector3) || keyFrame.SpatialControlPoint2 != default(Vector3))
+                {
+                    // TODO - should only be on Vector3. In which case, should they be on Animatable, or on something else?
+                    if (typeof(T) != typeof(Vector3))
+                    {
+                        Debug.WriteLine("Spatial control point on non-Vector3 type");
+                    }
+                    var cp0 = Vector2((Vector3)(object)previousValue);
+                    var cp1 = Vector2(keyFrame.SpatialControlPoint1);
+                    var cp2 = Vector2(keyFrame.SpatialControlPoint2);
+                    var cp3 = Vector2((Vector3)(object)keyFrame.Value);
+                    CubicBezierFunction cb;
+
+#if !LinearEasingOnSpatialBeziers
+                    if (keyFrame.Easing.Type != Easing.EasingType.Step && progressMappingProperty == null)
+                    {
+                        // This is the first spatial bezier for this animation. Create a property
+                        // to hold the mapping of progress to t.
+                        progressMappingProperty = $"t{_tCounter++}";
+                        _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
+                        progressMappingAnimation = CreateScalarKeyFrameAnimation();
+                        progressMappingAnimation.Duration = _lc.Duration;
+                        // TODO - if all of the beziers are colinear we can avoid creating this animation.
+                    }
+#endif // !LinearEasingOnSpatialBeziers
+                    switch (keyFrame.Easing.Type)
+                    {
+                        case Easing.EasingType.Linear:
+                        case Easing.EasingType.CubicBezier:
+#if LinearEasingOnSpatialBeziers
+                            cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, GetRemappedProgress(previousProgress, adjustedProgress));
+#else
+                            cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, Expression.Name($"{c_rootName}.{progressMappingProperty}"));
+#endif
+                            break;
+                        case Easing.EasingType.Step:
+                            // TODO - HACK - steps should never have interesting cubic beziers. So for now create one that is definitely colinear.
+                            cb = CubicBezierFunction.Create(cp0, cp0, cp0, cp0, "IgnoreMe");
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                    var cbExpression = cb.ToString();
+
+
+                    if (cb.IsColinear
+#if !SpatialBeziers
+                        || true
+#endif
+                        )
+                    {
+                        // The cubic bezier function is equivalent to a line, so just use a regular key frame.
+
+                        if (previousKeyFrameWasExpression)
+                        {
+                            // Ensure the previous expression doesn't continue being evaluated during the current keyframe.
+                            // This is necessary because the expression is only defined from the previous progress to the current progress.
+                            insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateJumpStepEasingFunction());
+                        }
+
+                        insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
+                        previousKeyFrameWasExpression = false;
+                    }
+                    else
+                    {
+                        // Expression key frame needed to for a spatial bezier.
+
+                        // Make the progress value just before the requested progress value
+                        // so that there is room to add a key frame just after this to hold
+                        // the final value. This is necessary so that the expression we're about
+                        // to add won't get evaluated during the following segment.
+                        adjustedProgress -= c_keyFrameProgressEpsilon;
+
+#if !LinearEasingOnSpatialBeziers
+                        // Add an animation to map from progress to t over the range of this key frame.
+                        progressMappingAnimation.InsertKeyFrame((float)previousProgress + c_keyFrameProgressEpsilon, 0, CreateJumpStepEasingFunction());
+                        progressMappingAnimation.InsertKeyFrame((float)adjustedProgress, 1, CreateCompositionEasingFunction(keyFrame.Easing));
+#endif
+                        insertExpressionKeyFrame(compositionAnimation, (float)adjustedProgress,
+                            cb.ToString(),                      // Expression. 
+                            CreateJumpStepEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.
+
+                        if (!rootReferenceAdded)
+                        {
+                            // Add a reference to the root. It is used by the expression.
+                            compositionAnimation.SetReferenceParameter(c_rootName, _rootVisual);
+                            rootReferenceAdded = true;
+                        }
+                        previousKeyFrameWasExpression = true;
+                    }
+                }
+                else
+                {
+
+                    if (previousKeyFrameWasExpression)
+                    {
+                        // Ensure the previous expression doesn't continue being evaluated during the current keyframe.
+                        insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateJumpStepEasingFunction());
+                    }
+
+                    insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
+                    previousKeyFrameWasExpression = false;
+                }
+                previousValue = keyFrame.Value;
+                previousProgress = adjustedProgress;
             }
+
+            if (previousKeyFrameWasExpression && previousProgress < 1)
+            {
+                // Add a keyframe to hold the final value. Otherwise the expression on the last keyframe
+                // will get evaluated outside the bounds of its keyframe.
+                // TODO - weird cast because this only applies to Vector3
+                insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, (T)(object)previousValue, CreateJumpStepEasingFunction());
+            }
+
 
             // Start the animation scaled and offset.
             StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
+
+            if (progressMappingAnimation != null)
+            {
+                StartAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
+            }
         }
 
 
@@ -1970,6 +2048,78 @@ namespace LottieToWinComp
             var result = (layer.OutPoint - context.StartTime) / context.DurationInFrames;
 
             return (float)result;
+        }
+
+        sealed class TimeRemap : Expression
+        {
+            readonly double _tRangeLow;
+            readonly double _tRangeHigh;
+            readonly Expression _t;
+            internal TimeRemap(double tRangeLow, double tRangeHigh, string t)
+            {
+                if (tRangeLow >= tRangeHigh)
+                {
+                    throw new ArgumentException();
+                }
+
+                _tRangeLow = tRangeLow;
+                _tRangeHigh = tRangeHigh;
+                _t = Name(t);
+            }
+
+            public override Expression Simplified
+            {
+                get
+                {
+                    // Adjust t and (1-t) based on the given range. This will make T vary between
+                    // 0..1 over the duration of the keyframe.
+                    return Multiply(1 / (_tRangeHigh - _tRangeLow), Subtract(_t, _tRangeLow));
+                }
+            }
+            public override string ToString() => Simplified.ToString();
+        }
+
+        // Returns the name of a variable on the root property set that advances linearly from 0 to 1 over the
+        // given range of Progress.
+        TimeRemap GetRemappedProgress(double tRangeLow, double tRangeHigh) =>
+            new TimeRemap(tRangeLow, tRangeHigh, s_rootProgress);
+
+        int _tCounter = 0;
+        struct RemappedProgressParameters
+        {
+            internal double tRangeLow;
+            internal double tRangeHigh;
+            internal Vector3 controlPoint1;
+            internal Vector3 controlPoint2;
+        }
+        readonly Dictionary<RemappedProgressParameters, Expression> _remappedProgressExpressions = new Dictionary<RemappedProgressParameters, Expression>();
+
+        // Returns the name of a variable on the root property set that advances from 0 to 1 over the
+        // given range of Progress, using the given cubic bezier easing.
+        Expression GetRemappedProgress(double tRangeLow, double tRangeHigh, Vector3 controlPoint1, Vector3 controlPoint2)
+        {
+            // Use an existing property if a matching one has already been created.
+            var parameters = new RemappedProgressParameters { tRangeLow = tRangeLow, tRangeHigh = tRangeHigh, controlPoint1 = controlPoint1, controlPoint2 = controlPoint2 };
+            if (!_remappedProgressExpressions.TryGetValue(parameters, out Expression result))
+            {
+                // Create a property to hold the value.
+                var propertyName = $"t{_tCounter++}";
+                _rootVisual.Properties.InsertScalar(propertyName, 0);
+
+                // Create the remapping expression.
+                var remap = new TimeRemap(tRangeLow, tRangeHigh, s_rootProgress);
+
+                // Create a cubic bezier function to map the time using the given control points.
+                var oneOne = Vector2(1);
+                var easing = CubicBezierFunction.Create(Vector2(0), Vector2(controlPoint1), Vector2(controlPoint2), oneOne, remap);
+
+                var animation = CreateExpressionAnimation($"({easing}).Y");
+                animation.SetReferenceParameter(c_rootName, _rootVisual);
+                StartAnimation(_rootVisual, propertyName, animation);
+                result = Expression.Name($"{c_rootName}.{propertyName}");
+                _remappedProgressExpressions.Add(parameters, result);
+            }
+            return result;
         }
 
         static SolidColorFill.PathFillType GetPathFillType(SolidColorFill fill) => fill == null ? SolidColorFill.PathFillType.EvenOdd : fill.FillType;
@@ -2179,6 +2329,17 @@ namespace LottieToWinComp
                 _holdStepEasingFunction.IsFinalStepSingleFrame = true;
             }
             return _holdStepEasingFunction;
+        }
+
+        // Returns an easing function that jumps immediately to its final value.
+        StepEasingFunction CreateJumpStepEasingFunction()
+        {
+            if (_jumpStepEasingFunction == null)
+            {
+                _jumpStepEasingFunction = _c.CreateStepEasingFunction(1);
+                _jumpStepEasingFunction.IsInitialStepSingleFrame = true;
+            }
+            return _jumpStepEasingFunction;
         }
 
         ScalarKeyFrameAnimation CreateScalarKeyFrameAnimation()

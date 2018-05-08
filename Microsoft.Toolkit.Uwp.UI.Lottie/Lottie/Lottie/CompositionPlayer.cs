@@ -1,6 +1,6 @@
 ﻿#if DEBUG
 // If uncommented, outputs measure and arrange info.
-#define DebugMeasureAndArrange
+//#define DebugMeasureAndArrange
 #endif // DEBUG
 using System;
 using System.Collections.Generic;
@@ -79,18 +79,18 @@ namespace Lottie
         public static DependencyProperty IsCompositionLoadedProperty { get; } =
             RegisterDP(nameof(IsCompositionLoaded), false);
 
+        public static DependencyProperty IsLoopingEnabledProperty { get; } =
+            RegisterDP(nameof(IsLoopingEnabled), true);
+
         public static DependencyProperty IsPlayingProperty { get; } =
             RegisterDP(nameof(IsPlaying), false);
 
-        public static DependencyProperty LoopAnimationProperty { get; } =
-            RegisterDP(nameof(LoopAnimation), true);
+        public static DependencyProperty PlaybackRateProperty { get; } =
+            RegisterDP(nameof(PlaybackRate), 1.0,
+                (owner, oldValue, newValue) => owner.HandlePlaybackRateChanged(oldValue, newValue));
 
         public static DependencyProperty ReverseAnimationProperty { get; } =
             RegisterDP(nameof(ReverseAnimation), false);
-
-        public static DependencyProperty SpeedProperty { get; } =
-            RegisterDP(nameof(Speed), 1.0,
-                (owner, oldValue, newValue) => owner.HandleSpeedChanged(oldValue, newValue));
 
         public static DependencyProperty SourceProperty { get; } =
             RegisterDP(nameof(Source), (ICompositionSource)null,
@@ -166,19 +166,19 @@ namespace Lottie
 
         public bool IsCompositionLoaded => (bool)GetValue(IsCompositionLoadedProperty);
 
-        public bool IsPlaying => (bool)GetValue(IsPlayingProperty);
-
         /// <summary>
         /// If true, the animation will loop continuously between <see cref="FromProgress"/>
         /// and <see cref="ToProgress"/>. If false, the animation will play once each
         /// time the <see cref="PlayAsync"/> method is called, or when the <see cref="Source"/>
         /// property is set and the <see cref="AutoPlay"/> property is true.
         /// </summary>
-        public bool LoopAnimation
+        public bool IsLoopingEnabled
         {
-            get => (bool)GetValue(LoopAnimationProperty);
-            set => SetValue(LoopAnimationProperty, value);
+            get => (bool)GetValue(IsLoopingEnabledProperty);
+            set => SetValue(IsLoopingEnabledProperty, value);
         }
+
+        public bool IsPlaying => (bool)GetValue(IsPlayingProperty);
 
         /// <summary>
         /// If true, the animation will play backwards, from <see cref="ToProgress"/> to <see cref="FromProgress"/>.
@@ -189,10 +189,10 @@ namespace Lottie
             set => SetValue(ReverseAnimationProperty, value);
         }
 
-        public double Speed
+        public double PlaybackRate
         {
-            get => (double)GetValue(SpeedProperty);
-            set => SetValue(SpeedProperty, value);
+            get => (double)GetValue(PlaybackRateProperty);
+            set => SetValue(PlaybackRateProperty, value);
         }
 
         public ICompositionSource Source
@@ -226,14 +226,14 @@ namespace Lottie
         /// <summary>
         /// Plays the composition.
         /// </summary>
-        public IAsyncAction PlayAsync() => 
-            PlayAsync(new CompositionSegment(FromProgress, ToProgress, LoopAnimation, ReverseAnimation));
+        public IAsyncAction PlayAsync() =>
+            PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, IsLoopingEnabled, ReverseAnimation));
 
         /// <summary>
         /// Plays the composition.
         /// </summary>
-        public void Play() => 
-            _PlayAsync(new CompositionSegment(FromProgress, ToProgress, LoopAnimation, ReverseAnimation));
+        public void Play() =>
+            _PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, IsLoopingEnabled, ReverseAnimation));
 
         public void SetProgress(double progress)
         {
@@ -321,14 +321,15 @@ namespace Lottie
             if (_compositionRoot == null)
             {
                 // Enqueue a command.
-                var playCommand = new PlayAsyncCommand(segment.FromProgress, segment.ToProgress, segment.LoopAnimation, segment.ReverseAnimation);
+                var playCommand = new PlayAsyncCommand(segment.FromProgress, segment.ToProgress, segment.IsLoopingEnabled, segment.ReverseAnimation);
                 _queuedCommands.Add(playCommand);
                 return playCommand.Task;
             }
             else
             {
                 _requestSeen = true;
-                return RunAnimationAsync(segment.FromProgress, segment.ToProgress, segment.LoopAnimation, segment.ReverseAnimation);
+                Debug.WriteLine($"Playing segment {segment.Name}");
+                return RunAnimationAsync(segment.FromProgress, segment.ToProgress, segment.IsLoopingEnabled, segment.ReverseAnimation);
             }
         }
 
@@ -564,8 +565,8 @@ namespace Lottie
             _rootVisual.Brush = Window.Current.Compositor.CreateColorBrush(newValue);
         }
 
-        // Called when the Speed property is updated.
-        void HandleSpeedChanged(double oldValue, double newValue)
+        // Called when the PlaybackRate property is updated.
+        void HandlePlaybackRateChanged(double oldValue, double newValue)
         {
             if (_currentPlay != null)
             {
@@ -731,6 +732,8 @@ namespace Lottie
         // when the animation is stopped or completes.
         Task RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
         {
+            Debug.WriteLine($"Play requested of segment from {fromProgress} to {toProgress}");
+
             // Used to detect reentrance.
             var version = ++_runAnimationAsyncVersion;
 
@@ -741,6 +744,7 @@ namespace Lottie
             if (version != _runAnimationAsyncVersion)
             {
                 // The call was overtaken by another call due to reentrance.
+                Debug.WriteLine($"Not playing segment from {fromProgress} to {toProgress} because another segment was requested.");
                 return Task.CompletedTask;
             }
 
@@ -763,6 +767,9 @@ namespace Lottie
                 SetProgress(from);
                 return Task.CompletedTask;
             }
+
+            Debug.WriteLine($"Playing segment from {fromProgress} to {toProgress}");
+
             var compositor = Window.Current.Compositor;
             var playAnimation = compositor.CreateScalarKeyFrameAnimation();
             playAnimation.Duration = duration;
@@ -820,8 +827,8 @@ namespace Lottie
             var playState = _currentPlay =
                 new PlayAsyncState(_progressPropertySet.TryGetAnimationController(c_progressPropertyName));
 
-            // Set the speed.
-            _currentPlay.Controller.PlaybackRate = (float)Speed;
+            // Set the playback rate.
+            _currentPlay.Controller.PlaybackRate = (float)PlaybackRate;
 
             if (batch != null)
             {
@@ -843,9 +850,13 @@ namespace Lottie
             {
                 Stop();
 
+                // Set the progress of the CompositionPropertySet to 0. This is important 
+                // to ensure that other UI that is bound to this value is reset.
+                _progressPropertySet.InsertScalar(c_progressPropertyName, 0);
+
                 _rootVisual.Children.RemoveAll();
 
-                _compositionRoot.Dispose(); ;
+                _compositionRoot.Dispose();
                 _compositionRoot = null;
 
                 InvalidateArrange();

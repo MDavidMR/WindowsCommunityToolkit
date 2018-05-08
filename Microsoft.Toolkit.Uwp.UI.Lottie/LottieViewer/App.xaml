@@ -11,7 +11,7 @@
         
         <!--<SolidColorBrush x:Key="BackgroundBrush" Color="#FF626262"/>-->
         <SolidColorBrush x:Key="BackgroundBrush" Color="#FF4F535E"/>
-        <SolidColorBrush x:Key="StageBackgroundBrush" Color="#FFC2C2C2"/>
+        <SolidColorBrush x:Key="StageBackgroundBrush" Color="{StaticResource SystemChromeMediumLowColor}"/>
         <SolidColorBrush x:Key="ToolsBackgroundBrush" Color="#FF7E7E7E" />
         <SolidColorBrush x:Key="ForegroundBrush" Color="#FFEBEBEB"/>
         <SolidColorBrush x:Key="TransparentBrush" Color="#00FFFFFF"/>
@@ -390,7 +390,7 @@
 
             <Setter Property="FontWeight" Value="Normal" />
             <!--<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />-->
-            <Setter Property="FontSize" Value="34" />
+            <Setter Property="FontSize" Value="22" />
 
             <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
             <Setter Property="FocusVisualMargin" Value="-3" />
@@ -617,7 +617,7 @@
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontWeight" Value="Normal"/>
             <!--<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>-->
-            <Setter Property="FontSize" Value="34" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
             <Setter Property="FocusVisualMargin" Value="-3"/>
             <Setter Property="Template">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WinCompData.Mgcg;
 using WinCompData.Sn;
 using WinCompData.Wui;
 
@@ -36,6 +37,8 @@ namespace WinCompData.Tools
                 CanonicalizeInsetClips();
                 CanonicalizeEllipseGeometries();
                 CanonicalizeRectangleGeometries();
+
+                CanonicalizeCanvasGeometryPaths();
 
                 // Easing functions must be canonicalized before keyframes are canonicalized.
                 CanonicalizeLinearEasingFunctions();
@@ -76,6 +79,16 @@ namespace WinCompData.Tools
                        && !obj.Properties.PropertyNames.Any()
                        && !obj.Animators.Any()
                     select NewNodeAndObject(node, obj);
+            }
+
+            IEnumerable<NodeAndObject<C>> GetCanonicalizableCanvasGeometries<C>(CanvasGeometry.GeometryType type) where C : CanvasGeometry
+            {
+                return
+                    from node in _graph
+                    where node.Type == Graph.NodeType.CanvasGeometry
+                    let obj = (CanvasGeometry)node.Object
+                    where obj.Type == type
+                    select NewNodeAndObject(node, (C)obj);
             }
 
             void CanonicalizeExpressionAnimations()
@@ -178,13 +191,34 @@ namespace WinCompData.Tools
                         {
                             return false;
                         }
+                        if (thisKf.Type != otherKf.Type)
+                        {
+                            return false;
+                        }
                         if (_owner.NodeFor(thisKf.Easing) != _owner.NodeFor(otherKf.Easing))
                         {
                             return false;
                         }
-                        if (!thisKf.Value.Equals(otherKf.Value))
+                        switch (thisKf.Type)
                         {
-                            return false;
+                            case KeyFrameAnimation<V>.KeyFrameType.Expression:
+                                var thisExpressionKeyFrame = (KeyFrameAnimation<V>.ExpressionKeyFrame)thisKf;
+                                var otherExpressionKeyFrame = (KeyFrameAnimation<V>.ExpressionKeyFrame)otherKf;
+                                if (thisExpressionKeyFrame.Expression != otherExpressionKeyFrame.Expression)
+                                {
+                                    return false;
+                                }
+                                break;
+                            case KeyFrameAnimation<V>.KeyFrameType.Value:
+                                var thisValueKeyFrame = (KeyFrameAnimation<V>.ValueKeyFrame)thisKf;
+                                var otherValueKeyFrame = (KeyFrameAnimation<V>.ValueKeyFrame)otherKf;
+                                if (!thisValueKeyFrame.Value.Equals(otherValueKeyFrame.Value))
+                                {
+                                    return false;
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
                     return true;
@@ -249,6 +283,18 @@ namespace WinCompData.Tools
                         obj.TrimEnd,
                         obj.TrimOffset
                     } into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeCanvasGeometryPaths()
+            {
+                var items = GetCanonicalizableCanvasGeometries<CanvasGeometry.Path>(CanvasGeometry.GeometryType.Path);
+                var grouping =
+                    from item in items
+                    let obj = item.Obj
+                    group item.Node by obj into grouped
                     select grouped;
 
                 CanonicalizeGrouping(grouping);

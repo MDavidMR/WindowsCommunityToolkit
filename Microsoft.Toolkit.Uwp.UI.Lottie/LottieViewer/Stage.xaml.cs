@@ -41,7 +41,7 @@ namespace LottieViewer
                 _txtFileName.Text = diags.FileName;
                 _txtDuration.Text = $"{diags.Duration.TotalSeconds} secs";
                 var aspectRatio = FloatToRatio(diags.LottieWidth / diags.LottieHeight);
-                _txtSize.Text = $"{diags.LottieWidth}x{diags.LottieHeight} ({aspectRatio.Item1}:{aspectRatio.Item2})";
+                _txtSize.Text = $"{diags.LottieWidth}x{diags.LottieHeight} ({aspectRatio.Item1.ToString("0.##")}:{aspectRatio.Item2.ToString("0.##")})";
             }
         }
 
@@ -69,7 +69,7 @@ namespace LottieViewer
             {
                 // Failed to load.
                 _player.Opacity = 1;
-                _feedbackLottie.PlayInitialStateAnimation();
+                await _feedbackLottie.PlayLoadFailedAnimation();
                 return;
             }
 

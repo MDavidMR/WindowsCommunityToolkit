@@ -26,7 +26,7 @@ namespace WinCompData.CodeGen
             CompositionPropertySet progressPropertySet,
             TimeSpan duration)
         {
-            var generator = new CSharpInstantiatorGenerator(rootVisual, false);
+            var generator = new CSharpInstantiatorGenerator(rootVisual, setCommentProperties: false);
             return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, duration);
         }
 
@@ -53,6 +53,10 @@ namespace WinCompData.CodeGen
             string IStringifier.ScopeResolve => ".";
 
             string IStringifier.Var => "var";
+
+            string IStringifier.New => "new";
+
+            string IStringifier.Null => "null";
 
             string IStringifier.Bool(bool value) => value ? "true" : "false";
 
@@ -86,7 +90,7 @@ namespace WinCompData.CodeGen
                 }
                 else
                 {
-                    return value == 0 ? "0" : (value.ToString("0.0#########") + "F");
+                    return value == 0 ? "0" : (value.ToString("0.######################################") + "F");
                 }
             }
 

@@ -1442,6 +1442,9 @@ namespace LottieData.Serialization
                 Easing easing = LinearEasing.Instance;
                 // Start by holding from the initial value.
                 bool isHolding = true;
+                // SpatialBeziers.
+                var ti = default(Vector3);
+                var to = default(Vector3);
 
                 // NOTE: indexing an array with GetObjectAt is faster than enumerating.
                 for (uint i = 0; i < count; i++)
@@ -1450,16 +1453,6 @@ namespace LottieData.Serialization
 
                     // "n" is a name on the keyframe. Never seems to be useful.
                     reader.IgnoreFieldIntentionally(lottieKeyFrame, "n");
-
-                    // SpatialBeziers.
-                    var ti = default(Vector3);
-                    var to = default(Vector3);
-
-                    if (lottieKeyFrame.ContainsKey("ti"))
-                    {
-                        ti = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("ti"));
-                        to = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("to"));
-                    }
 
                     // Read the start frame.
                     var startFrame = lottieKeyFrame.GetNamedNumber("t", 0);
@@ -1470,7 +1463,7 @@ namespace LottieData.Serialization
                         if (!lottieKeyFrame.ContainsKey("s"))
                         {
                             // It has no value associated with it.
-                            yield return new KeyFrame<T>(startFrame, endValue, ti, to, easing);
+                            yield return new KeyFrame<T>(startFrame, endValue, to, ti, easing);
                             break;
                         }
                     }
@@ -1485,7 +1478,14 @@ namespace LottieData.Serialization
                         throw new InvalidOperationException();
                     }
 
-                    yield return new KeyFrame<T>(startFrame, startValue, ti, to, easing);
+                    yield return new KeyFrame<T>(startFrame, startValue, to, ti, easing);
+
+                    // Spatial control points.
+                    if (lottieKeyFrame.ContainsKey("ti"))
+                    {
+                        ti = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("ti"));
+                        to = ReadVector3FromJsonArray(lottieKeyFrame.GetNamedArray("to"));
+                    }
 
                     // Get the easing to the end value, and get the end value.
                     if (ReadBool(lottieKeyFrame, "h") == true)

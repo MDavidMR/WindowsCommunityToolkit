@@ -10,7 +10,7 @@ namespace LottieData
         public SolidColorStroke(
             string name,
             string matchName,
-            Animatable<double> offset,
+            Animatable<double> dashOffset,
             IEnumerable<double> dashPattern,
             Animatable<Color> color,
             Animatable<double> opacityPercent,
@@ -20,7 +20,7 @@ namespace LottieData
             double miterLimit)
             : base(name, matchName)
         {
-            DashOffset = offset;
+            DashOffset = dashOffset;
             DashPattern = dashPattern;
             Color = color;
             OpacityPercent = opacityPercent;

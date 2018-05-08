@@ -80,7 +80,7 @@ namespace WinCompData.CodeGen
                 {
                     var pathSourceFactoryCall =
                         NodeFor(((CompositionPath)node.Object).Source).FactoryCall();
-                    node.ForceInline($"new CompositionPath({pathSourceFactoryCall})");
+                    node.ForceInline($"{New} CompositionPath({pathSourceFactoryCall})");
                 }
             }
 
@@ -202,7 +202,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine("size,");
             builder.WriteLine("progressPropertySet,");
             builder.WriteLine("duration,");
-            builder.WriteLine("null);");
+            builder.WriteLine($"{Null});");
             builder.UnIndent();
             builder.CloseScope();
             builder.WriteLine();
@@ -231,7 +231,7 @@ namespace WinCompData.CodeGen
             // Generate the code for the root method.
             builder.WriteLine("internal static Visual InstantiateComposition(Compositor compositor)");
             builder.Indent();
-            builder.WriteLine($"=> new Instantiator(compositor){Deref}{NodeFor(rootVisual).FactoryCall()};");
+            builder.WriteLine($"=> {New} Instantiator(compositor){Deref}{NodeFor(rootVisual).FactoryCall()};");
             builder.UnIndent();
 
             // Write the constructor for the instantiator.
@@ -329,9 +329,9 @@ namespace WinCompData.CodeGen
             {
                 WriteCacheHandler(builder, node);
             }
-            builder.WriteLine($"using (var builder = new CanvasPathBuilder(null))");
+            builder.WriteLine($"using (var builder = {New} CanvasPathBuilder({Null}))");
             builder.OpenScope();
-            foreach (var command in obj.PathBuilder.Commands)
+            foreach (var command in obj.Commands)
             {
                 switch (command.Type)
                 {
@@ -368,7 +368,7 @@ namespace WinCompData.CodeGen
             }
             builder.WriteLine($"{Var} result = {(node.RequiresStorage ? $" {node.FieldName} " : "")}CanvasGeometry{Deref}CreateEllipse(");
             builder.Indent();
-            builder.WriteLine("null,");
+            builder.WriteLine($"{Null},");
             builder.WriteLine($"{Float(obj.X)},");
             builder.WriteLine($"{Float(obj.Y)},");
             builder.WriteLine($"{Float(obj.RadiusX)},");
@@ -387,7 +387,7 @@ namespace WinCompData.CodeGen
             }
             builder.WriteLine($"{Var} result = {(node.RequiresStorage ? $" {node.FieldName} " : "")}CanvasGeometry{Deref}CreateRoundedRectangle(");
             builder.Indent();
-            builder.WriteLine("null,");
+            builder.WriteLine($"{Null},");
             builder.WriteLine($"{Float(obj.X)},");
             builder.WriteLine($"{Float(obj.Y)},");
             builder.WriteLine($"{Float(obj.W)},");
@@ -761,7 +761,19 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Color(kf.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                switch (kf.Type)
+                {
+                    case KeyFrameAnimation<Color>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<Color>.ExpressionKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    case KeyFrameAnimation<Color>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<Color>.ValueKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Color(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -776,7 +788,19 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector2(kf.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                switch (kf.Type)
+                {
+                    case KeyFrameAnimation<Vector2>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<Vector2>.ExpressionKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    case KeyFrameAnimation<Vector2>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<Vector2>.ValueKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector2(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -791,7 +815,19 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector3(kf.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                switch (kf.Type)
+                {
+                    case KeyFrameAnimation<Vector3>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<Vector3>.ExpressionKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    case KeyFrameAnimation<Vector3>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<Vector3>.ValueKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector3(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -806,7 +842,7 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                var path = NodeFor(kf.Value);
+                var path = NodeFor(((PathKeyFrameAnimation.ValueKeyFrame)kf).Value);
                 builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {path.FactoryCall()}, {NodeFor(kf.Easing).FactoryCall()});");
             }
             StartAnimations(builder, obj);
@@ -823,7 +859,19 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Float(kf.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                switch (kf.Type)
+                {
+                    case KeyFrameAnimation<float>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<float>.ExpressionKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    case KeyFrameAnimation<float>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<float>.ValueKeyFrame)kf;
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Float(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -1012,7 +1060,7 @@ namespace WinCompData.CodeGen
         {
             var canvasGeometry = NodeFor((CanvasGeometry)obj.Source);
             WriteObjectFactoryStart(builder, node);
-            WriteCreateAssignment(builder, node, $"new CompositionPath({canvasGeometry.FactoryCall()})");
+            WriteCreateAssignment(builder, node, $"{New} CompositionPath({canvasGeometry.FactoryCall()})");
             WriteObjectFactoryEnd(builder);
             return true;
         }
@@ -1109,6 +1157,10 @@ namespace WinCompData.CodeGen
         }
 
         string Deref => _stringifier.Deref;
+
+        string New => _stringifier.New;
+
+        string Null => _stringifier.Null;
 
         string ScopeResolve => _stringifier.ScopeResolve;
 
@@ -1216,6 +1268,8 @@ namespace WinCompData.CodeGen
         {
             string Deref { get; }
             string MemberSelect { get; }
+            string New { get; }
+            string Null { get; }
             string ScopeResolve { get; }
             string Var { get; }
             string Bool(bool value);

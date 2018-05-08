@@ -11,6 +11,9 @@
             Right = right;
         }
 
-        public override string ToString() => $"{Left} < {Right}";
+        // TODO - could be simplified to a constant bool in some circumstances.
+        public override Expression Simplified => this;
+
+        public override string ToString() => $"{Parenthesize(Left.Simplified)} < {Parenthesize(Right.Simplified)}";
     }
 }

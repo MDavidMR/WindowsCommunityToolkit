@@ -426,7 +426,19 @@ namespace Lottie
             result = CacheAndInitializeKeyframeAnimation(obj, _c.CreateColorKeyFrameAnimation());
             foreach (var kf in obj.KeyFrames)
             {
-                result.InsertKeyFrame(kf.Progress, Color(kf.Value), GetCompositionEasingFunction(kf.Easing));
+                switch (kf.Type)
+                {
+                    case Wd.KeyFrameAnimation<Wd.Wui.Color>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Wd.Wui.Color>.ExpressionKeyFrame)kf;
+                        result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    case Wd.KeyFrameAnimation<Wd.Wui.Color>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<Wd.Wui.Color>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, Color(valueKeyFrame.Value), GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(obj, result);
             return result;
@@ -442,7 +454,19 @@ namespace Lottie
             result = CacheAndInitializeKeyframeAnimation(obj, _c.CreateScalarKeyFrameAnimation());
             foreach (var kf in obj.KeyFrames)
             {
-                result.InsertKeyFrame(kf.Progress, kf.Value, GetCompositionEasingFunction(kf.Easing));
+                switch (kf.Type)
+                {
+                    case Wd.KeyFrameAnimation<float>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<float>.ExpressionKeyFrame)kf;
+                        result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    case Wd.KeyFrameAnimation<float>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<float>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, valueKeyFrame.Value, GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(obj, result);
             return result;
@@ -458,7 +482,19 @@ namespace Lottie
             result = CacheAndInitializeKeyframeAnimation(obj, _c.CreateVector2KeyFrameAnimation());
             foreach (var kf in obj.KeyFrames)
             {
-                result.InsertKeyFrame(kf.Progress, Vector2(kf.Value), GetCompositionEasingFunction(kf.Easing));
+                switch (kf.Type)
+                {
+                    case Wd.KeyFrameAnimation<Wd.Sn.Vector2>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector2>.ExpressionKeyFrame)kf;
+                        result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    case Wd.KeyFrameAnimation<Wd.Sn.Vector2>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector2>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, Vector2(valueKeyFrame.Value), GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
             StartAnimations(obj, result);
             return result;
@@ -474,7 +510,19 @@ namespace Lottie
             result = CacheAndInitializeKeyframeAnimation(obj, _c.CreateVector3KeyFrameAnimation());
             foreach (var kf in obj.KeyFrames)
             {
-                result.InsertKeyFrame(kf.Progress, Vector3(kf.Value), GetCompositionEasingFunction(kf.Easing));
+                switch (kf.Type)
+                {
+                    case Wd.KeyFrameAnimation<Wd.Sn.Vector3>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector3>.ExpressionKeyFrame)kf;
+                        result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    case Wd.KeyFrameAnimation<Wd.Sn.Vector3>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector3>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, Vector3(valueKeyFrame.Value), GetCompositionEasingFunction(kf.Easing));
+                        break;
+                    default:
+                        throw new InvalidCastException();
+                }
             }
             StartAnimations(obj, result);
             return result;
@@ -490,7 +538,7 @@ namespace Lottie
             result = CacheAndInitializeKeyframeAnimation(obj, _c.CreatePathKeyFrameAnimation());
             foreach (var kf in obj.KeyFrames)
             {
-                result.InsertKeyFrame(kf.Progress, GetCompositionPath(kf.Value), GetCompositionEasingFunction(kf.Easing));
+                result.InsertKeyFrame(kf.Progress, GetCompositionPath(((Wd.PathKeyFrameAnimation.ValueKeyFrame)kf).Value), GetCompositionEasingFunction(kf.Easing));
             }
             StartAnimations(obj, result);
             return result;
@@ -845,7 +893,7 @@ namespace Lottie
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Path:
                     using (var builder = new CanvasPathBuilder(null))
                     {
-                        foreach (var command in ((WinCompData.Mgcg.CanvasGeometry.Path)canvasGeometry).PathBuilder.Commands)
+                        foreach (var command in ((WinCompData.Mgcg.CanvasGeometry.Path)canvasGeometry).Commands)
                         {
                             switch (command.Type)
                             {

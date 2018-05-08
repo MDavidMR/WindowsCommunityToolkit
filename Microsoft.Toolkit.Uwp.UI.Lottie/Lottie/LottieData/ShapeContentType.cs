@@ -8,21 +8,21 @@
 #endif
     enum ShapeContentType
     {
-        Group,
-        SolidColorStroke,
-        LinearGradientStroke,
-        RadialGradientStroke,
-        SolidColorFill,
-        LinearGradientFill,
-        RadialGradientFill,
-        Transform,
-        Path,
         Ellipse,
-        Rectangle,
-        Polystar,
-        TrimPath,
+        Group,
+        LinearGradientFill,
+        LinearGradientStroke,
         MergePaths,
+        Path,
+        Polystar,
+        RadialGradientFill,
+        RadialGradientStroke,
+        Rectangle,
         Repeater,
         RoundedCorner,
+        SolidColorFill,
+        SolidColorStroke,
+        Transform,
+        TrimPath,
     }
 }

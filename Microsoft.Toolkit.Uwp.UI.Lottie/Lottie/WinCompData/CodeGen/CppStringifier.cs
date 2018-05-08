@@ -17,6 +17,10 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.Var => "auto";
 
+        string InstantiatorGeneratorBase.IStringifier.New => "ref new";
+
+        string InstantiatorGeneratorBase.IStringifier.Null => "nullptr";
+
         string InstantiatorGeneratorBase.IStringifier.Bool(bool value) => value ? "true" : "false";
 
         string InstantiatorGeneratorBase.IStringifier.Color(Color value) => $"Color::FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
@@ -47,7 +51,7 @@ namespace WinCompData.CodeGen
             }
             else
             {
-                return value == 0 ? "0" : (value.ToString("0.0#########") + "F");
+                return value == 0 ? "0" : (value.ToString("0.######################################") + "F");
             }
         }
 

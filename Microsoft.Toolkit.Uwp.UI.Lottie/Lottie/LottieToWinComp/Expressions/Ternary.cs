@@ -19,7 +19,10 @@ namespace LottieToWinComp.Expressions
         public Expression TrueValue;
         public Expression FalseValue;
 
+        // TODO - can be simplified if the condition is a constant.
+        public override Expression Simplified => this;
         public override string ToString()
-            => $"({Condition}) ? ({TrueValue}) : ({FalseValue})";
+            => $"{Parenthesize(Condition)} ? {Parenthesize(TrueValue)} : {Parenthesize(FalseValue)}";
+
     }
 }

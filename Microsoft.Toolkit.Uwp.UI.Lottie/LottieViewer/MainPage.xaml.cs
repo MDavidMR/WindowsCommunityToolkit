@@ -1,4 +1,5 @@
-﻿using Lottie;
+﻿#define DebugDragDrop
+using Lottie;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,8 +48,11 @@ namespace LottieViewer
             filePicker.FileTypeChoices.Add("C++ CX", new[] { ".cpp" });
             // cppwinrt not yet implemented. Note that the extension needs to be unique
             // if we're going to recognize the choice when the file is saved.
-            //filePicker.FileTypeChoices.Add("C++/WinRT", new[] { ".cpp" });
-            filePicker.FileTypeChoices.Add("Lottie XML", new[] { ".xml" });
+            filePicker.FileTypeChoices.Add("C++/WinRT", new[] { ".cpp" });
+
+            // TODO: for Build we're hiding this option.
+            //filePicker.FileTypeChoices.Add("Lottie XML", new[] { ".xml" });
+            
             // Note that the extension needs to be unique if we're going to 
             // recognize the choice when the file is saved.            
             //filePicker.FileTypeChoices.Add("WinComp XML", new[] { ".xml" });
@@ -62,6 +66,8 @@ namespace LottieViewer
 
             switch (pickedFile.FileType)
             {
+                // If an unrecognized file type is specified, treat it as C#.
+                default:
                 case ".cs":
                     await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode(Path.GetFileNameWithoutExtension(pickedFile.Name)));
                     break;
@@ -71,12 +77,10 @@ namespace LottieViewer
                 case ".xml":
                     await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateLottieXml());
                     break;
-                // Can only have one .xml.
-                //case ".xml":
-                //    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateWinCompXml());
-                //    break;
-                default:
-                    throw new InvalidOperationException();
+                    // Can only have one .xml.
+                    //case ".xml":
+                    //    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateWinCompXml());
+                    //    break;
             }
         }
 
@@ -103,37 +107,16 @@ namespace LottieViewer
             {
                 return;
             }
+            // Reset the scrubber to the 0 position. 
+            _scrubber.Value = 0;
 
-            try
+            // If we were stopped in manual play control, turn it back to automatic.
+            if (!_playStopButton.IsChecked.Value)
             {
-                // Load the Lottie composition.
-                await _stage.Source.SetSourceAsync(file);
-            }
-            catch (Exception)
-            {
-                // Failed to load.
-                _stage.Reset();
-                return;
+                _playStopButton.IsChecked = true;
             }
 
-            if (playVersion != _playVersion)
-            {
-                return;
-            }
-
-            if (_stage.Player.IsCompositionLoaded)
-            {
-                // Reset the scrubber to the 0 position. 
-                _scrubber.Value = 0;
-
-                // If we were stopped in manual play control, turn it back to automatic.
-                if (!_playStopButton.IsChecked.Value)
-                {
-                    _playStopButton.IsChecked = true;
-                }
-                // Play the file.
-                _stage.Player.Play();
-            }
+            _stage.DoDragDropped(file);
         }
 
 
@@ -141,6 +124,8 @@ namespace LottieViewer
 
         async void LottieDragEnterHandler(object sender, DragEventArgs e)
         {
+            DebugDragDrop("Drag enter");
+
             // Only accept files.
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
             {
@@ -149,15 +134,13 @@ namespace LottieViewer
                 var deferral = e.GetDeferral();
                 try
                 {
-                    Debug.WriteLine("About to get storage items");
                     var items = await e.DataView.GetStorageItemsAsync();
-                    Debug.WriteLine("Got storage items");
-
 
                     var filteredItems = items.Where(IsJsonFile);
 
                     if (!filteredItems.Any() || filteredItems.Skip(1).Any())
                     {
+                        DebugDragDrop("Drag enter - ignoring");
                         return;
                     }
                     // Exactly one item was selected.
@@ -166,8 +149,11 @@ namespace LottieViewer
                 }
                 finally
                 {
+                    DebugDragDrop("Completing drag deferral");
                     deferral.Complete();
                 }
+
+                DebugDragDrop("Doing drag enter");
                 _stage.DoDragEnter();
             }
         }
@@ -175,13 +161,13 @@ namespace LottieViewer
         // Called when an item is dropped.
         async void LottieDropHandler(object sender, DragEventArgs e)
         {
-            Debug.WriteLine("Dropping");
-
+            DebugDragDrop("Dropping");
             var playVersion = ++_playVersion;
 
             var item = (await e.DataView.GetStorageItemsAsync()).Single();
             if (playVersion != _playVersion)
             {
+                DebugDragDrop("Ignoring drop");
                 return;
             }
             // Reset the scrubber to the 0 position. 
@@ -193,6 +179,7 @@ namespace LottieViewer
                 _playStopButton.IsChecked = true;
             }
 
+            DebugDragDrop("Doing drop");
             _stage.DoDragDropped((StorageFile)item);
         }
 
@@ -200,6 +187,9 @@ namespace LottieViewer
         {
             _stage.DoDragLeave();
         }
+
+        [Conditional("DebugDragDrop")]
+        static void DebugDragDrop(string text) => Debug.WriteLine(text);
 
 
 
@@ -210,7 +200,7 @@ namespace LottieViewer
 
         bool _ignoreScrubberValueChanges;
 
-        void ProgressSliderChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        void ProgressSliderChanged(object sender, ScrubberValueChangedEventArgs e)
         {
             if (!_ignoreScrubberValueChanges)
             {

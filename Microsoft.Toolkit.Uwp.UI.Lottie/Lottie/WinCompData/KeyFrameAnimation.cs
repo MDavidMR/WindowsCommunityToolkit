@@ -29,6 +29,15 @@ namespace WinCompData
             }
         }
 
+        public void InsertExpressionKeyFrame(float progress, string expression, CompositionEasingFunction easing)
+        {
+            if (progress < 0 || progress > 1)
+            {
+                throw new ArgumentException($"Progress must be >=0 and <=1. Value: {progress}");
+            }
+            _keyFrames.Add(progress, new ExpressionKeyFrame { Progress = progress, Expression = expression, Easing = easing });
+        }
+
         public void InsertKeyFrame(float progress, T value, CompositionEasingFunction easing)
         {
             if (progress < 0 || progress > 1)
@@ -36,7 +45,7 @@ namespace WinCompData
                 throw new ArgumentException($"Progress must be >=0 and <=1. Value: {progress}");
             }
 
-            _keyFrames.Add(progress, new KeyFrame { Progress = progress, Value = value, Easing = easing });
+            _keyFrames.Add(progress, new ValueKeyFrame { Progress = progress, Value = value, Easing = easing });
         }
 
         public IEnumerable<KeyFrame> KeyFrames => _keyFrames.Values.OrderBy(kf => kf.Progress);
@@ -54,11 +63,34 @@ namespace WinCompData
             Target = other.Target;
         }
 
-        public sealed class KeyFrame
+        public enum KeyFrameType
+        {
+            Expression,
+            Value,
+        }
+
+        public abstract class KeyFrame 
         {
             public float Progress { get; internal set; }
-            public T Value { get; internal set; }
             public CompositionEasingFunction Easing { get; internal set; }
+            public abstract KeyFrameType Type { get; }
+
         }
+
+        public sealed class ValueKeyFrame : KeyFrame
+        {
+            public T Value { get; internal set; }
+
+            public override KeyFrameType Type => KeyFrameType.Value;
+        }
+
+        public sealed class ExpressionKeyFrame : KeyFrame
+        {
+            public string Expression { get; internal set; }
+
+            public override KeyFrameType Type => KeyFrameType.Expression;
+
+        }
+
     }
 }

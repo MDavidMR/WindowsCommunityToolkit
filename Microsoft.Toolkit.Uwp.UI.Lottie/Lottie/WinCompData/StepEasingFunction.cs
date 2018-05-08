@@ -5,11 +5,14 @@
 #endif
     sealed class StepEasingFunction : CompositionEasingFunction
     {
-        internal StepEasingFunction(int steps) { StepCount = steps;
+        internal StepEasingFunction(int steps)
+        {
+            StepCount = steps;
             // TODO - setting the FinalStep here is necessary if it's not set
             //        explicitly, but the real Comp object doesn't seem to do this... why?
 
-            FinalStep = steps; }
+            FinalStep = steps;
+        }
 
         public int StepCount { get; set; }
         public bool IsInitialStepSingleFrame { get; set; }

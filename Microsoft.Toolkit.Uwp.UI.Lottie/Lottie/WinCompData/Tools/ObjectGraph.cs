@@ -343,7 +343,7 @@ namespace WinCompData.Tools
             VisitKeyFrameAnimation(obj, node);
             foreach (var keyFrame in obj.KeyFrames)
             {
-                Reference(node, keyFrame.Value);
+                Reference(node, ((KeyFrameAnimation<CompositionPath>.ValueKeyFrame)keyFrame).Value);
             }
             return true;
         }

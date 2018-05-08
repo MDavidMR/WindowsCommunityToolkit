@@ -54,7 +54,12 @@ namespace LottieData
         /// <summary>
         /// Returns true iff this value has any key frames.
         /// </summary>
-        public bool IsAnimated => KeyFrames.Any();
+        public bool IsAnimated => _keyFrames.Length > 0;
+
+        /// <summary>
+        /// Returns true if this value is always equal to the given value.
+        /// </summary>
+        public bool AlwaysEquals(T value) => !IsAnimated && value.Equals(InitialValue);
 
         // Not a great hash code because it ignore the KeyFrames, but quick.
         public override int GetHashCode() => InitialValue.GetHashCode();

@@ -12,8 +12,8 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid Background="Green">
 
-            <lottie:CompositionPlayer Stretch="UniformToFill">
-                <compositions:BatteryComposition/>
+            <lottie:CompositionPlayer Stretch="UniformToFill" PlaybackRate="0.3">
+                <compositions:MyComposition/>
             </lottie:CompositionPlayer>
 
         </Grid>

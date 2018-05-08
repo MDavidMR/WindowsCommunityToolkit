@@ -35,8 +35,6 @@ namespace LottieViewer
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            InitializeTitleBarColors();
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -70,19 +68,25 @@ namespace LottieViewer
             }
         }
 
-        void InitializeTitleBarColors()
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             if (titleBar != null)
             {
                 var backgroundColor = (SolidColorBrush)Current.Resources["BackgroundBrush"];
                 var foregroundColor = (SolidColorBrush)Current.Resources["ForegroundBrush"];
+                var inactiveBackgroundColor = (SolidColorBrush)Current.Resources["ToolsBackgroundBrush"];
                 titleBar.ButtonBackgroundColor = backgroundColor.Color;
                 titleBar.ButtonForegroundColor = foregroundColor.Color;
                 titleBar.BackgroundColor = backgroundColor.Color;
                 titleBar.ForegroundColor = foregroundColor.Color;
+
+                titleBar.InactiveBackgroundColor = backgroundColor.Color;
+                titleBar.InactiveForegroundColor = foregroundColor.Color;
             }
+            base.OnWindowCreated(args);
         }
+
 
         // Starts the animated splash screen as content for the current window. The
         // returned Task completes when the animation finishes.
@@ -97,10 +101,10 @@ namespace LottieViewer
             {
                 Stretch = Stretch.UniformToFill,
                 AutoPlay = false,
-                LoopAnimation = false,
+                IsLoopingEnabled = false,
                 FromProgress = 0,
                 ToProgress = 0.595,
-                Source = new LottieLogo1Composition()
+                Source = new LottieLogo()
             };
 
             splashGrid.Children.Add(originalWindowContent);

@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace LottieViewer
 {
@@ -9,24 +10,27 @@ namespace LottieViewer
     {
         // Shrinks from the expanded JSON file back to the initial size.
         static readonly CompositionSegment ShrinkToInitial =
-            new CompositionSegment(0.1608, 0.203, loopAnimation: false, reverseAnimation: true);
+            new CompositionSegment("ShrinkToInitial", 0.007, 0.1188811, isLoopingEnabled: false, reverseAnimation: true);
 
         // Expands from the initial state to a large JSON file.
-        static readonly CompositionSegment ExpandFromInitial = new CompositionSegment(0.1608, 0.203);
+        static readonly CompositionSegment ExpandFromInitial = new CompositionSegment("ExpandFromInitial", 0.007, 0.1188811);
 
         // A loop where the JSON file looks excited about being dropped.
-        static readonly CompositionSegment ExcitedDropLoop = 
-            new CompositionSegment(0.203, 0.603, loopAnimation:true, reverseAnimation: false);
+        static readonly CompositionSegment ExcitedDropLoop =
+            new CompositionSegment("ExcitedDropLoop", 0.1188811, 0.3426574, isLoopingEnabled: true, reverseAnimation: false);
 
         // Follows on from ExcitedDropLoop.
-        static readonly CompositionSegment ExcitedResolution = new CompositionSegment(0.603, 0.791);
+        static readonly CompositionSegment ExcitedResolution = new CompositionSegment("ExcitedResolution", 0.3426574, 0.489);
 
         // The explosion at the end of loading.
-        static readonly CompositionSegment FinishLoading = new CompositionSegment(0.709, 0.791);
+        static readonly CompositionSegment FinishLoading = new CompositionSegment("FinishLoading", 0.6923078, 1);
+
+        static readonly CompositionSegment FailLoading = new CompositionSegment("FailLoading", 0.4895105, 0.69 /* 0.6923077 */);
 
 
         Task _currentPlay = Task.CompletedTask;
         DragNDropHintState _dragNDropHintState = DragNDropHintState.Initial;
+        Storyboard _fadeOutStoryboard;
 
         public FeedbackLottie()
         {
@@ -36,14 +40,30 @@ namespace LottieViewer
 
         internal void PlayInitialStateAnimation()
         {
+            switch (_dragNDropHintState)
+            {
+                case DragNDropHintState.Failed:
+                case DragNDropHintState.Finished:
+                case DragNDropHintState.Initial:
+                    break;
+
+                case DragNDropHintState.Disabled:
+                case DragNDropHintState.Encouraging:
+                case DragNDropHintState.Shrinking:
+                default:
+                    return;
+            }
+
+            EnsureVisible();
             _dragNDropHintState = DragNDropHintState.Initial;
-            _dragNDropHint.SetProgress(0);
+            _dragNDropHint.SetProgress(0.007);
         }
 
         internal async void PlayDragEnterAnimation()
         {
-            if (_dragNDropHintState == DragNDropHintState.Initial
-                || _dragNDropHintState == DragNDropHintState.Shrinking)
+            EnsureVisible();
+            if (_dragNDropHintState == DragNDropHintState.Initial ||
+                _dragNDropHintState == DragNDropHintState.Shrinking)
             {
                 _dragNDropHintState = DragNDropHintState.Encouraging;
                 await PlaySegment(ExpandFromInitial);
@@ -51,22 +71,46 @@ namespace LottieViewer
             }
         }
 
-        internal Task PlayDroppedAnimation()
+        internal async Task PlayDroppedAnimation()
         {
+            EnsureVisible();
             if (_dragNDropHintState == DragNDropHintState.Encouraging)
             {
-                _dragNDropHintState = DragNDropHintState.Finished;
-                return PlaySegment(ExcitedResolution);
+                await PlaySegment(ExcitedResolution);
+                if (_dragNDropHintState != DragNDropHintState.Encouraging)
+                {
+                    return;
+                }
             }
-            else
+
+            _dragNDropHintState = DragNDropHintState.Finished;
+            await PlaySegment(FinishLoading);
+
+            if (_dragNDropHintState != DragNDropHintState.Finished)
             {
-                _dragNDropHintState = DragNDropHintState.Finished;
-                return PlaySegment(FinishLoading);
+                return;
             }
+
+            // Fade out. This is only necessary for RS4 builds that
+            // do not handle 0-size strokes correctly, leaving crud on
+            // the screen.
+            _fadeOutStoryboard = new Storyboard();
+            _fadeOutStoryboard.Children.Add(new DoubleAnimation()
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.02),
+            });
+            Storyboard.SetTargetProperty(_fadeOutStoryboard, "Opacity");
+            Storyboard.SetTarget(_fadeOutStoryboard, _dragNDropHint);
+            _fadeOutStoryboard.Begin();
+            // Return immediately while the animation fades out.
         }
+
 
         internal void PlayDragLeaveAnimation()
         {
+            EnsureVisible();
             if (_dragNDropHintState == DragNDropHintState.Encouraging)
             {
                 _dragNDropHintState = DragNDropHintState.Shrinking;
@@ -74,9 +118,29 @@ namespace LottieViewer
             }
         }
 
+        internal async Task PlayLoadFailedAnimation()
+        {
+            EnsureVisible();
+            _dragNDropHintState = DragNDropHintState.Failed;
+            await PlaySegment(FailLoading);
+            _dragNDropHintState = DragNDropHintState.Initial;
+            _dragNDropHint.SetProgress(FailLoading.ToProgress);
+        }
+
         Task PlaySegment(CompositionSegment segment)
         {
             return _currentPlay = _dragNDropHint.PlayAsync(segment).AsTask();
+        }
+
+        void EnsureVisible()
+        {
+            if (_fadeOutStoryboard != null)
+            {
+                _fadeOutStoryboard.Stop();
+                _fadeOutStoryboard.Children.Clear();
+                _fadeOutStoryboard = null;
+            }
+            _dragNDropHint.Opacity = 1;
         }
 
         enum DragNDropHintState
@@ -85,6 +149,7 @@ namespace LottieViewer
             Initial,
             Encouraging,
             Finished,
+            Failed,
             Shrinking,
         }
 

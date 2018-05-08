@@ -7,14 +7,16 @@
     {
         public double FromProgress { get; }
         public double ToProgress { get; }
-        public bool LoopAnimation { get; }
+        public bool IsLoopingEnabled { get; }
         public bool ReverseAnimation { get; }
 
-        public CompositionSegment(double fromProgress, double toProgress, bool loopAnimation, bool reverseAnimation)
+        public string Name { get; }
+        public CompositionSegment(string name, double fromProgress, double toProgress, bool isLoopingEnabled, bool reverseAnimation)
         {
+            Name = name;
             FromProgress = fromProgress;
             ToProgress = toProgress;
-            LoopAnimation = loopAnimation;
+            IsLoopingEnabled = isLoopingEnabled;
             ReverseAnimation = reverseAnimation;
         }
 
@@ -22,8 +24,8 @@
         /// Defines a segment that plays from <paramref name="fromProgress"/> to <paramref name="toProgress"/>
         /// without looping or repeating.
         /// </summary>
-        public CompositionSegment(double fromProgress, double toProgress)
-            : this(fromProgress, toProgress, loopAnimation: false, reverseAnimation: false)
+        public CompositionSegment(string name, double fromProgress, double toProgress)
+            : this(name, fromProgress, toProgress, isLoopingEnabled: false, reverseAnimation: false)
         {
         }
     }
