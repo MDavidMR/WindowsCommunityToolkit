@@ -595,7 +595,7 @@ namespace LottieToWinComp
 
                 if (!a.IsAnimated && !b.IsAnimated)
                 {
-                    return new Animatable<double>((a.InitialValue * b.InitialValue) / 100.0, null);
+                    return new Animatable<double>(a.InitialValue * (b.InitialValue / 100.0), null);
                 }
 
                 if (a.IsAnimated && b.IsAnimated)
@@ -607,16 +607,23 @@ namespace LottieToWinComp
                 // Only one is animated.
                 if (a.IsAnimated)
                 {
-                    var bScale = b.InitialValue;
-                    return new Animatable<double>(
-                        initialValue: a.InitialValue * bScale,
-                        keyFrames: a.KeyFrames.Select(kf => new KeyFrame<double>(
-                            kf.Frame,
-                            kf.Value * bScale,
-                            kf.SpatialControlPoint1,
-                            kf.SpatialControlPoint2,
-                            kf.Easing)),
-                        propertyIndex: null);
+                    if (b.InitialValue == 100)
+                    {
+                        return a;
+                    }
+                    else
+                    {
+                        var bScale = b.InitialValue;
+                        return new Animatable<double>(
+                            initialValue: a.InitialValue * bScale,
+                            keyFrames: a.KeyFrames.Select(kf => new KeyFrame<double>(
+                                kf.Frame,
+                                kf.Value * (bScale / 100),
+                                kf.SpatialControlPoint1,
+                                kf.SpatialControlPoint2,
+                                kf.Easing)),
+                            propertyIndex: null);
+                    }
                 }
                 else
                 {
