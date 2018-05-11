@@ -47,6 +47,8 @@ namespace WinCompData.CodeGen
         {
             string IStringifier.Deref => ".";
 
+            string IStringifier.Ref => throw new NotImplementedException();
+
             string IStringifier.MemberSelect => ".";
 
             string IStringifier.ScopeResolve => ".";
@@ -56,6 +58,8 @@ namespace WinCompData.CodeGen
             string IStringifier.New => "new";
 
             string IStringifier.Null => "null";
+
+            string IStringifier.VectorAppend => "Add";
 
             string IStringifier.Bool(bool value) => value ? "true" : "false";
 
@@ -76,6 +80,8 @@ namespace WinCompData.CodeGen
             string IStringifier.TimeSpan(TimeSpan value) => $"TimeSpan.FromTicks({value.Ticks})";
 
             string IStringifier.Vector2(Vector2 value) => $"new Vector2({ Float(value.X) }, { Float(value.Y)})";
+
+            string IStringifier.Vector2Raw(Vector2 value) => throw new NotImplementedException();
 
             string IStringifier.Vector3(Vector3 value) => $"new Vector3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
 

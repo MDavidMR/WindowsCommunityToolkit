@@ -41,6 +41,12 @@ namespace WinCompData.CodeGen
             WriteLine("}");
         }
 
+        internal void CloseScopeClassDefinition()
+        {
+            UnIndent();
+            WriteLine("};");
+        }
+
         internal void Indent()
         {
             _indentCount++;

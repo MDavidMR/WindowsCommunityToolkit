@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace WinCompData.Tools
 {
+#if !WINDOWS_UWP
+    public
+#endif
     abstract class CanonicalizedNode<T> : Graph.Node<T> where T : CanonicalizedNode<T>, new()
     {
         public CanonicalizedNode()

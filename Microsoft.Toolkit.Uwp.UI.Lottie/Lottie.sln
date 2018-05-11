@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCompData", "WinCompData\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieTest", "LottieTest\LottieTest.csproj", "{3922414B-1DB5-49C1-92C0-C3875E9FC673}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LottieCPPTest", "LottieCPPTest\LottieCPPTest.vcxproj", "{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,28 @@ Global
 		{3922414B-1DB5-49C1-92C0-C3875E9FC673}.Release|x86.ActiveCfg = Release|x86
 		{3922414B-1DB5-49C1-92C0-C3875E9FC673}.Release|x86.Build.0 = Release|x86
 		{3922414B-1DB5-49C1-92C0-C3875E9FC673}.Release|x86.Deploy.0 = Release|x86
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|Any CPU.Build.0 = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|Any CPU.Deploy.0 = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|ARM.Build.0 = Debug|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x64.ActiveCfg = Debug|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x64.Build.0 = Debug|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x64.Deploy.0 = Debug|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x86.ActiveCfg = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x86.Build.0 = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Debug|x86.Deploy.0 = Debug|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|ARM.ActiveCfg = Release|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|ARM.Build.0 = Release|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|ARM.Deploy.0 = Release|ARM
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x64.ActiveCfg = Release|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x64.Build.0 = Release|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x64.Deploy.0 = Release|x64
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x86.ActiveCfg = Release|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x86.Build.0 = Release|Win32
+		{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}.Release|x86.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

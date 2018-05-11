@@ -15,14 +15,14 @@ namespace WinCompData.CodeGen
     abstract class InstantiatorGeneratorBase
     {
         // The name of the field holding the singleton ExpressionAnimation.
-        const string c_singletonExpressionAnimationName = "_expressionAnimation";
-        readonly bool _setCommentProperties;
-        readonly ObjectGraph<ObjectData> _objectGraph;
+        protected const string c_singletonExpressionAnimationName = "_expressionAnimation";
+        protected readonly bool _setCommentProperties;
+        protected readonly ObjectGraph<ObjectData> _objectGraph;
         // The subset of the object graph for which nodes will be generated.
-        readonly ObjectData[] _canonicalNodes;
-        readonly IStringifier _stringifier;
+        protected readonly ObjectData[] _canonicalNodes;
+        protected readonly IStringifier _stringifier;
 
-        internal InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
+        protected InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
         {
             _setCommentProperties = setCommentProperties;
             _stringifier = stringifier;
@@ -95,7 +95,7 @@ namespace WinCompData.CodeGen
         }
 
         // Returns the canonical node for the given object.
-        ObjectData NodeFor(object obj) => _objectGraph[obj].Canonical;
+        protected ObjectData NodeFor(object obj) => _objectGraph[obj].Canonical;
 
         // Gets the CanonicalInRefs for node, ignoring those from ExpressionAnimations
         // that have a single instance because they are treated specially (they are initialized inline).
@@ -239,7 +239,7 @@ namespace WinCompData.CodeGen
         protected virtual void WriteICompositionSourceImplementation(CodeBuilder builder) {  }
 
         // Generates code for the given node. The code is written into the CodeBuilder on the node.
-        void WriteCodeForNode(CodeBuilder builder, ObjectData node)
+        protected void WriteCodeForNode(CodeBuilder builder, ObjectData node)
         {
             // Only generate if the node is not inlined into the caller.
             if (!node.Inlined)
@@ -304,7 +304,7 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
+        virtual protected bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
             if (node.RequiresStorage)
@@ -708,7 +708,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        void InitializeCompositionAnimation(CodeBuilder builder, CompositionAnimation obj)
+        protected void InitializeCompositionAnimation(CodeBuilder builder, CompositionAnimation obj)
         {
             InitializeCompositionAnimationWithParameters(
                 builder,
@@ -729,7 +729,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        void InitializeKeyFrameAnimation(CodeBuilder builder, KeyFrameAnimation_ obj)
+        virtual protected void InitializeKeyFrameAnimation(CodeBuilder builder, KeyFrameAnimation_ obj)
         {
             InitializeCompositionAnimation(builder, obj);
             builder.WriteLine($"result{Deref}Duration = {TimeSpan(obj.Duration)};");
@@ -860,7 +860,7 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        bool GenerateCompositionRectangleGeometryFactory(CodeBuilder builder, CompositionRectangleGeometry obj, ObjectData node)
+        protected bool GenerateCompositionRectangleGeometryFactory(CodeBuilder builder, CompositionRectangleGeometry obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateRectangleGeometry()");
@@ -938,7 +938,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}Add({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{VectorAppend}({NodeFor(shape).FactoryCall()});");
                 }
             }
             StartAnimations(builder, obj);
@@ -956,7 +956,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}Add({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{VectorAppend}({NodeFor(shape).FactoryCall()});");
                 }
             }
             StartAnimations(builder, obj);
@@ -1047,10 +1047,10 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        void WriteCacheHandler(CodeBuilder builder, ObjectData node)
+        protected void WriteCacheHandler(CodeBuilder builder, ObjectData node)
         {
             var fieldName = node.FieldName;
-            builder.WriteLine($"if ({fieldName} != null)");
+            builder.WriteLine($"if ({fieldName} != {Null})");
             builder.OpenScope();
             builder.WriteLine($"return {fieldName};");
             builder.CloseScope();
@@ -1087,7 +1087,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
         }
 
-        void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
+        virtual protected void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
             builder.WriteLine($"{node.TypeName} {node.Name}({(parameters == null ? "" : string.Join(", ", parameters))})");
             builder.OpenScope();
@@ -1137,22 +1137,23 @@ namespace WinCompData.CodeGen
                 }
             }
         }
+        protected string Deref => _stringifier.Deref;
 
-        string Deref => _stringifier.Deref;
+        protected string New => _stringifier.New;
 
-        string New => _stringifier.New;
+        protected string Null => _stringifier.Null;
 
-        string Null => _stringifier.Null;
+        protected string ScopeResolve => _stringifier.ScopeResolve;
 
-        string ScopeResolve => _stringifier.ScopeResolve;
+        protected string Var => _stringifier.Var;
 
-        string Var => _stringifier.Var;
+        protected string Bool(bool value) => _stringifier.Bool(value);
 
-        string Bool(bool value) => _stringifier.Bool(value);
+        protected string Color(Color value) => _stringifier.Color(value);
 
-        string Color(Color value) => _stringifier.Color(value);
+        protected string VectorAppend => _stringifier.VectorAppend;
 
-        string CanvasFigureLoop(CanvasFigureLoop value)
+        virtual protected string CanvasFigureLoop(CanvasFigureLoop value)
         {
             switch (value)
             {
@@ -1182,7 +1183,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        string FilledRegionDetermination(CanvasFilledRegionDetermination value)
+        virtual protected string FilledRegionDetermination(CanvasFilledRegionDetermination value)
         {
             switch (value)
             {
@@ -1237,18 +1238,19 @@ namespace WinCompData.CodeGen
             }
         }
 
-        string TimeSpan(TimeSpan value) => _stringifier.TimeSpan(value);
+        protected string TimeSpan(TimeSpan value) => _stringifier.TimeSpan(value);
 
-        string Vector2(float x, float y) => Vector2(new Vector2(x, y));
+        protected string Vector2(float x, float y) => Vector2(new Vector2(x, y));
 
-        string Vector2(Vector2 value) => _stringifier.Vector2(value);
+        protected string Vector2(Vector2 value) => _stringifier.Vector2(value);
 
-        string Vector3(Vector3 value) => _stringifier.Vector3(value);
+        protected string Vector3(Vector3 value) => _stringifier.Vector3(value);
 
         // Provides language-specific string representations of a value.
-        internal interface IStringifier
+        protected internal interface IStringifier
         {
             string Deref { get; }
+            string Ref { get; }
             string MemberSelect { get; }
             string New { get; }
             string Null { get; }
@@ -1262,11 +1264,13 @@ namespace WinCompData.CodeGen
             string String(string value);
             string TimeSpan(TimeSpan value);
             string Vector2(Vector2 value);
+            string Vector2Raw(Vector2 value);
             string Vector3(Vector3 value);
+            string VectorAppend { get; }
         }
 
         // A node in the object graph, annotated with extra stuff to assist in code generation.
-        sealed class ObjectData : CanonicalizedNode<ObjectData>
+        protected sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
             string _overriddenFactoryCall;
 

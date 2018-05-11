@@ -11,6 +11,8 @@ namespace WinCompData.CodeGen
     {
         string InstantiatorGeneratorBase.IStringifier.Deref => "->";
 
+        string InstantiatorGeneratorBase.IStringifier.Ref => "&";
+
         string InstantiatorGeneratorBase.IStringifier.MemberSelect => ".";
 
         string InstantiatorGeneratorBase.IStringifier.ScopeResolve => "::";
@@ -23,7 +25,7 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.Bool(bool value) => value ? "true" : "false";
 
-        string InstantiatorGeneratorBase.IStringifier.Color(Color value) => $"Color::FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
+        string InstantiatorGeneratorBase.IStringifier.Color(Color value) => $"ColorHelper::FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
 
         string InstantiatorGeneratorBase.IStringifier.Float(float value) => Float(value);
 
@@ -38,9 +40,11 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.TimeSpan(TimeSpan value) => $"{value.Ticks}L";
 
-        string InstantiatorGeneratorBase.IStringifier.Vector2(Vector2 value) => $"*(ref new float2({ Float(value.X) }, { Float(value.Y)}))";
+        string InstantiatorGeneratorBase.IStringifier.Vector2(Vector2 value) => $"float2({ Float(value.X) }, { Float(value.Y)})";
 
-        string InstantiatorGeneratorBase.IStringifier.Vector3(Vector3 value) => $"(ref new float3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)}))";
+        string InstantiatorGeneratorBase.IStringifier.Vector2Raw(Vector2 value) => $"{{{Float(value.X)}, {Float(value.Y)}}}";
+
+        string InstantiatorGeneratorBase.IStringifier.Vector3(Vector3 value) => $"float3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
 
         static string Float(float value)
         {
@@ -56,5 +60,7 @@ namespace WinCompData.CodeGen
         }
 
         static string Hex(int value) => $"0x{value.ToString("X2")}";
+
+        string InstantiatorGeneratorBase.IStringifier.VectorAppend => "Append";
     }
 }
