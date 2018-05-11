@@ -26,5 +26,21 @@ namespace LottieTest
         {
             this.InitializeComponent();
         }
+
+        void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
+            switch (item.Tag)
+            {
+                case "AuditCorpus":
+                    ContentFrame.Navigate(typeof(AuditCorpus));
+                    break;
+                case "MyComposition":
+                    ContentFrame.Navigate(typeof(MyComposition));
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
     }
 }

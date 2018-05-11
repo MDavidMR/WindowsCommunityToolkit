@@ -142,7 +142,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        protected abstract void GenerateNamespaceUsings(CodeBuilder buidler, bool requiresD2d);
+        protected abstract void GenerateNamespaceUsings(CodeBuilder builder, bool requiresD2d);
 
         protected string GenerateCode(
             string className,
@@ -164,7 +164,8 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"sealed class {className} : ICompositionSource");
+            builder.WriteLine($"sealed class {className}");
+            
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
@@ -182,32 +183,9 @@ namespace WinCompData.CodeGen
             builder.WriteLine("progressPropertySet = rootVisual.Properties;");
             builder.WriteLine($"duration = {TimeSpan(duration)};");
             builder.CloseScope();
-            builder.WriteLine();
 
-            // Generate the ICompositionSource interface.
-            builder.WriteLine("void ICompositionSource.ConnectSink(ICompositionSink sink)");
-            builder.OpenScope();
-            builder.WriteLine("CreateInstance(");
-            builder.Indent();
-            builder.WriteLine($"Window{Deref}Current{Deref}Compositor,");
-            builder.WriteLine("out var rootVisual,");
-            builder.WriteLine("out var size,");
-            builder.WriteLine("out var progressPropertySet,");
-            builder.WriteLine("out var duration);");
-            builder.UnIndent();
-            builder.WriteLine();
-            builder.WriteLine($"sink{Deref}SetContent(");
-            builder.Indent();
-            builder.WriteLine("rootVisual,");
-            builder.WriteLine("size,");
-            builder.WriteLine("progressPropertySet,");
-            builder.WriteLine("duration,");
-            builder.WriteLine($"{Null});");
-            builder.UnIndent();
-            builder.CloseScope();
-            builder.WriteLine();
-            builder.WriteLine($"void ICompositionSource{Deref}DisconnectSink(ICompositionSink sink) {{ }}");
-            builder.WriteLine();
+            // Write the ICompositionSource implementation. This is optional - some generators may output nothing.
+            WriteICompositionSourceImplementation(builder);
 
             // Write the instantiator.
             builder.WriteLine("sealed class Instantiator");
@@ -255,6 +233,9 @@ namespace WinCompData.CodeGen
 
             return builder.ToString();
         }
+
+        // Override this to generate an implementation of ICompositionSource.
+        protected virtual void WriteICompositionSourceImplementation(CodeBuilder builder) {  }
 
         // Generates code for the given node. The code is written into the CodeBuilder on the node.
         void WriteCodeForNode(CodeBuilder builder, ObjectData node)

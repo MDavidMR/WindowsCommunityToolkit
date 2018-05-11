@@ -95,10 +95,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AuditCorpus.xaml.cs">
+      <DependentUpon>AuditCorpus.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyComposition.cs" />
+    <Compile Include="MyComposition.xaml.cs">
+      <DependentUpon>MyComposition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,662 +112,1317 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Assets\LottieLogo1.json" />
-    <None Include="Assets\LottieCorpus\0016.body_movin.json" />
-    <None Include="Assets\LottieCorpus\0024.toggle_switch.json" />
-    <None Include="Assets\LottieCorpus\0026.lets_have_some_hamburger.json" />
-    <None Include="Assets\LottieCorpus\0027.loading...json" />
-    <None Include="Assets\LottieCorpus\0028.loading.json" />
-    <None Include="Assets\LottieCorpus\0029.motorcycle.json" />
-    <None Include="Assets\LottieCorpus\0030.touch_id.json" />
-    <None Include="Assets\LottieCorpus\0031.retweet.json" />
-    <None Include="Assets\LottieCorpus\0032.camera.json" />
-    <None Include="Assets\LottieCorpus\0033.video_cam.json" />
-    <None Include="Assets\LottieCorpus\0035.loader.json" />
-    <None Include="Assets\LottieCorpus\0036.bounching_ball.json" />
-    <None Include="Assets\LottieCorpus\0040.loading.json" />
-    <None Include="Assets\LottieCorpus\0041.emoji_tongue.json" />
-    <None Include="Assets\LottieCorpus\0043.emoji_wink.json" />
-    <None Include="Assets\LottieCorpus\0044.emoji_shock.json" />
-    <None Include="Assets\LottieCorpus\0045.countdown.json" />
-    <None Include="Assets\LottieCorpus\0046.play_and_like_it.json" />
-    <None Include="Assets\LottieCorpus\0047.gears.json" />
-    <None Include="Assets\LottieCorpus\0048.progress_bar.json" />
-    <None Include="Assets\LottieCorpus\0049.postcard.json" />
-    <None Include="Assets\LottieCorpus\0050.material_loader.json" />
-    <None Include="Assets\LottieCorpus\0051.preloader.json" />
-    <None Include="Assets\LottieCorpus\0052.bounce.json" />
-    <None Include="Assets\LottieCorpus\0053.search_button.json" />
-    <None Include="Assets\LottieCorpus\0054.submit_button.json" />
-    <None Include="Assets\LottieCorpus\0055.cancel_button.json" />
-    <None Include="Assets\LottieCorpus\0056.location_pin.json" />
-    <None Include="Assets\LottieCorpus\0057.loading_semicircle.json" />
-    <None Include="Assets\LottieCorpus\0067.exploding_heart.json" />
-    <None Include="Assets\LottieCorpus\0068.loader.json" />
-    <None Include="Assets\LottieCorpus\0069.video_content_ta-dah!.json" />
-    <None Include="Assets\LottieCorpus\0070.image_icon_tadah!.json" />
-    <None Include="Assets\LottieCorpus\0072.favourite_app_icon.json" />
-    <None Include="Assets\LottieCorpus\0076.atm_link.json" />
-    <None Include="Assets\LottieCorpus\0077.i%27m_thirsty!.json" />
-    <None Include="Assets\LottieCorpus\0078.bouncing_heart.json" />
-    <None Include="Assets\LottieCorpus\0079.animated_graph.json" />
-    <None Include="Assets\LottieCorpus\0081.beating_heart.json" />
-    <None Include="Assets\LottieCorpus\0082.rey_updated!.json" />
-    <None Include="Assets\LottieCorpus\0083.plane_to_dollar.json" />
-    <None Include="Assets\LottieCorpus\0084.speaking.json" />
-    <None Include="Assets\LottieCorpus\0090.love.json" />
-    <None Include="Assets\LottieCorpus\0094.soda_loader.json" />
-    <None Include="Assets\LottieCorpus\0095.location_marker.json" />
-    <None Include="Assets\LottieCorpus\0096.permission.json" />
-    <None Include="Assets\LottieCorpus\0099.bell.json" />
-    <None Include="Assets\LottieCorpus\0100.check_pop.json" />
-    <None Include="Assets\LottieCorpus\0101.x_pop.json" />
-    <None Include="Assets\LottieCorpus\0102.cube_loader.json" />
-    <None Include="Assets\LottieCorpus\0105.save.json" />
-    <None Include="Assets\LottieCorpus\0106.save.json" />
-    <None Include="Assets\LottieCorpus\0108.quick_hart_select.json" />
-    <None Include="Assets\LottieCorpus\0111.xuanwheel_logo.json" />
-    <None Include="Assets\LottieCorpus\0116.square_loader.json" />
-    <None Include="Assets\LottieCorpus\0118.notification_request.json" />
-    <None Include="Assets\LottieCorpus\0120.play,_pause.json" />
-    <None Include="Assets\LottieCorpus\0124.download.json" />
-    <None Include="Assets\LottieCorpus\0129.lottiepreview_qr.json" />
-    <None Include="Assets\LottieCorpus\0131.xamarin_animation.json" />
-    <None Include="Assets\LottieCorpus\0132.play_button.json" />
-    <None Include="Assets\LottieCorpus\0137.clock.json" />
-    <None Include="Assets\LottieCorpus\0139.drop_loading.json" />
-    <None Include="Assets\LottieCorpus\0142.loading_animation.json" />
-    <None Include="Assets\LottieCorpus\0144.loading.json" />
-    <None Include="Assets\LottieCorpus\0146.simple_outline_lock_.json" />
-    <None Include="Assets\LottieCorpus\0147.outline_user.json" />
-    <None Include="Assets\LottieCorpus\0148.xamarin_logo_2.json" />
-    <None Include="Assets\LottieCorpus\0149.color_line.json" />
-    <None Include="Assets\LottieCorpus\0150.android_fingerprint.json" />
-    <None Include="Assets\LottieCorpus\0152.100_percent.json" />
-    <None Include="Assets\LottieCorpus\0159.servishero_loading.json" />
-    <None Include="Assets\LottieCorpus\0160.rocksauce_title_card.json" />
-    <None Include="Assets\LottieCorpus\0171.loading.json" />
-    <None Include="Assets\LottieCorpus\0172.1_bar.json" />
-    <None Include="Assets\LottieCorpus\0173.2_bar.json" />
-    <None Include="Assets\LottieCorpus\0174.4_bar_loop.json" />
-    <None Include="Assets\LottieCorpus\0175.day_night_cycle.json" />
-    <None Include="Assets\LottieCorpus\0176.pen_tool_loop.json" />
-    <None Include="Assets\LottieCorpus\0177.switch_loop.json" />
-    <None Include="Assets\LottieCorpus\0179.curly_hair_character_loop.json" />
-    <None Include="Assets\LottieCorpus\0180.pencil_write.json" />
-    <None Include="Assets\LottieCorpus\0182.volume_shake_indicator.json" />
-    <None Include="Assets\LottieCorpus\0187.fish.json" />
-    <None Include="Assets\LottieCorpus\0189.done_all.json" />
-    <None Include="Assets\LottieCorpus\0190.simple_check.json" />
-    <None Include="Assets\LottieCorpus\0192.swipe_right_indicator.json" />
-    <None Include="Assets\LottieCorpus\0194.material_loading.json" />
-    <None Include="Assets\LottieCorpus\0196.material_wave_loading.json" />
-    <None Include="Assets\LottieCorpus\0197.glow_loading.json" />
-    <None Include="Assets\LottieCorpus\0198.volume_indicator.json" />
-    <None Include="Assets\LottieCorpus\0199.moving_eye.json" />
-    <None Include="Assets\LottieCorpus\0200.panel2d.json" />
-    <None Include="Assets\LottieCorpus\0201.simple_loader.json" />
-    <None Include="Assets\LottieCorpus\0202.setting.json" />
-    <None Include="Assets\LottieCorpus\0203.star.json" />
-    <None Include="Assets\LottieCorpus\0204.share.json" />
-    <None Include="Assets\LottieCorpus\0205.feedback.json" />
-    <None Include="Assets\LottieCorpus\0206.update.json" />
-    <None Include="Assets\LottieCorpus\0207.toggle.json" />
-    <None Include="Assets\LottieCorpus\0208.hint.json" />
-    <None Include="Assets\LottieCorpus\0214.finish,done.json" />
-    <None Include="Assets\LottieCorpus\0217.vr_sickness.json" />
-    <None Include="Assets\LottieCorpus\0221.infinite_rainbow.json" />
-    <None Include="Assets\LottieCorpus\0222.trail_loading.json" />
-    <None Include="Assets\LottieCorpus\0224.mindful.json" />
-    <None Include="Assets\LottieCorpus\0225.spacehub.json" />
-    <None Include="Assets\LottieCorpus\0226.splashy_loader.json" />
-    <None Include="Assets\LottieCorpus\0230.pagination.json" />
-    <None Include="Assets\LottieCorpus\0236.accept_arrows.json" />
-    <None Include="Assets\LottieCorpus\0237.decline_arrows.json" />
-    <None Include="Assets\LottieCorpus\0240.elephant_trunk_swing.json" />
-    <None Include="Assets\LottieCorpus\0241.autoconnect_loading.json" />
-    <None Include="Assets\LottieCorpus\0243.updating_map.json" />
-    <None Include="Assets\LottieCorpus\0248.cloud_disconnection.json" />
-    <None Include="Assets\LottieCorpus\0250.pause.json" />
-    <None Include="Assets\LottieCorpus\0252.square_drop_loader.json" />
-    <None Include="Assets\LottieCorpus\0255.menu_button_alt.json" />
-    <None Include="Assets\LottieCorpus\0256.timer.json" />
-    <None Include="Assets\LottieCorpus\0260.3d_rotate_loading_animation.json" />
-    <None Include="Assets\LottieCorpus\0261.medal.json" />
-    <None Include="Assets\LottieCorpus\0262.rating_star_-_yellow.json" />
-    <None Include="Assets\LottieCorpus\0267.star_rating.json" />
-    <None Include="Assets\LottieCorpus\0270.map_animation.json" />
-    <None Include="Assets\LottieCorpus\0271.loader.json" />
-    <None Include="Assets\LottieCorpus\0281.crown.json" />
-    <None Include="Assets\LottieCorpus\0292.5_stars.json" />
-    <None Include="Assets\LottieCorpus\0297.loading_rainbow.json" />
-    <None Include="Assets\LottieCorpus\0300.g.json" />
-    <None Include="Assets\LottieCorpus\0302.loader.json" />
-    <None Include="Assets\LottieCorpus\0304.loader_3.json" />
-    <None Include="Assets\LottieCorpus\0305.loader_4.json" />
-    <None Include="Assets\LottieCorpus\0306.loader_5.json" />
-    <None Include="Assets\LottieCorpus\0315.loader_ring.json" />
-    <None Include="Assets\LottieCorpus\0316.horloge.json" />
-    <None Include="Assets\LottieCorpus\0318.wishlist.json" />
-    <None Include="Assets\LottieCorpus\0319.shrug.json" />
-    <None Include="Assets\LottieCorpus\0322.favorite.json" />
-    <None Include="Assets\LottieCorpus\0325.vicky.json" />
-    <None Include="Assets\LottieCorpus\0326.hecomicon.json" />
-    <None Include="Assets\LottieCorpus\0329.hexadots.json" />
-    <None Include="Assets\LottieCorpus\0330.empty_status.json" />
-    <None Include="Assets\LottieCorpus\0334.hamburger.json" />
-    <None Include="Assets\LottieCorpus\0342.success.json" />
-    <None Include="Assets\LottieCorpus\0343.favorite.json" />
-    <None Include="Assets\LottieCorpus\0345.home.json" />
-    <None Include="Assets\LottieCorpus\0346.layers.json" />
-    <None Include="Assets\LottieCorpus\0347.like.json" />
-    <None Include="Assets\LottieCorpus\0349.bike_loader.json" />
-    <None Include="Assets\LottieCorpus\0351.pink_drink_machine.json" />
-    <None Include="Assets\LottieCorpus\0354.button_spread.json" />
-    <None Include="Assets\LottieCorpus\0362.like.json" />
-    <None Include="Assets\LottieCorpus\0363.beer_bubbles.json" />
-    <None Include="Assets\LottieCorpus\0366.equalizer_bounce.json" />
-    <None Include="Assets\LottieCorpus\0370.youyu.json" />
-    <None Include="Assets\LottieCorpus\0372.wifi_wiper.json" />
-    <None Include="Assets\LottieCorpus\0373.streetby_loading.json" />
-    <None Include="Assets\LottieCorpus\0374.jump_loader.json" />
-    <None Include="Assets\LottieCorpus\0376.check_mark.json" />
-    <None Include="Assets\LottieCorpus\0379.send_btn.json" />
-    <None Include="Assets\LottieCorpus\0380.box_creeper.json" />
-    <None Include="Assets\LottieCorpus\0381.loading.json" />
-    <None Include="Assets\LottieCorpus\0393.expanding_marker.json" />
-    <None Include="Assets\LottieCorpus\0397.snap_loader_black.json" />
-    <None Include="Assets\LottieCorpus\0398.snap_loader_white.json" />
-    <None Include="Assets\LottieCorpus\0408.youtube_icon_reveal.json" />
-    <None Include="Assets\LottieCorpus\0409.siren.json" />
-    <None Include="Assets\LottieCorpus\0410.lego_loader.json" />
-    <None Include="Assets\LottieCorpus\0412.download_icon_success.json" />
-    <None Include="Assets\LottieCorpus\0413.shopping_basket_icon.json" />
-    <None Include="Assets\LottieCorpus\0419.like.json" />
-    <None Include="Assets\LottieCorpus\0428.blah_blah.json" />
-    <None Include="Assets\LottieCorpus\0429.an_endless_hike_on_a_tiny_world_.json" />
-    <None Include="Assets\LottieCorpus\0430.longpress_gesture.json" />
-    <None Include="Assets\LottieCorpus\0432.done_button.json" />
-    <None Include="Assets\LottieCorpus\0433.checked_done_.json" />
-    <None Include="Assets\LottieCorpus\0434.gradient_animated_background.json" />
-    <None Include="Assets\LottieCorpus\0435.birds.json" />
-    <None Include="Assets\LottieCorpus\0436.stormed.json" />
-    <None Include="Assets\LottieCorpus\0439.love_explosion.json" />
-    <None Include="Assets\LottieCorpus\0440.stop_go_radio_button.json" />
-    <None Include="Assets\LottieCorpus\0446.warning_sign.json" />
-    <None Include="Assets\LottieCorpus\0448.ripple_loading_animation.json" />
-    <None Include="Assets\LottieCorpus\0450.play_fill_loader.json" />
-    <None Include="Assets\LottieCorpus\0458.loading.json" />
-    <None Include="Assets\LottieCorpus\0460.floating_action_button.json" />
-    <None Include="Assets\LottieCorpus\0461.button_touch_effect.json" />
-    <None Include="Assets\LottieCorpus\0465.github_%28giants_remix%29.json" />
-    <None Include="Assets\LottieCorpus\0474.skeleton_frame_loading.json" />
-    <None Include="Assets\LottieCorpus\0477.dot_loader.json" />
-    <None Include="Assets\LottieCorpus\0478.flow.json" />
-    <None Include="Assets\LottieCorpus\0482.animated_color_options.json" />
-    <None Include="Assets\LottieCorpus\0489.menu.json" />
-    <None Include="Assets\LottieCorpus\0490.loading.json" />
-    <None Include="Assets\LottieCorpus\0494.bootymovin.json" />
-    <None Include="Assets\LottieCorpus\0496.simple_circular_animation.json" />
-    <None Include="Assets\LottieCorpus\0497.loader.json" />
-    <None Include="Assets\LottieCorpus\0500.lamp.json" />
-    <None Include="Assets\LottieCorpus\0501.like.json" />
-    <None Include="Assets\LottieCorpus\0502.cloud.json" />
-    <None Include="Assets\LottieCorpus\0510.power.json" />
-    <None Include="Assets\LottieCorpus\0511.money.json" />
-    <None Include="Assets\LottieCorpus\0513.5_estrelas_go!_.json" />
-    <None Include="Assets\LottieCorpus\0515.cursoranim.json" />
-    <None Include="Assets\LottieCorpus\0519.load_complete.json" />
-    <None Include="Assets\LottieCorpus\0521.like_animation.json" />
-    <None Include="Assets\LottieCorpus\0523.exploding_stars.json" />
-    <None Include="Assets\LottieCorpus\0526.playing.json" />
-    <None Include="Assets\LottieCorpus\0527.check.json" />
-    <None Include="Assets\LottieCorpus\0531.stars.json" />
-    <None Include="Assets\LottieCorpus\0532.kiss.json" />
-    <None Include="Assets\LottieCorpus\0535.click_animation.json" />
-    <None Include="Assets\LottieCorpus\0540.charge_money.json" />
-    <None Include="Assets\LottieCorpus\0541.plim.json" />
-    <None Include="Assets\LottieCorpus\0542.warning_sign.json" />
-    <None Include="Assets\LottieCorpus\0543.check.json" />
-    <None Include="Assets\LottieCorpus\0558.rewards_icon.json" />
-    <None Include="Assets\LottieCorpus\0578.animated_logo.json" />
-    <None Include="Assets\LottieCorpus\0579.scan_qr_code_success.json" />
-    <None Include="Assets\LottieCorpus\0580.code_invite_success.json" />
-    <None Include="Assets\LottieCorpus\0582.eclipse.json" />
-    <None Include="Assets\LottieCorpus\0586.added.json" />
-    <None Include="Assets\LottieCorpus\0588.wallet_&amp;_coin.json" />
-    <None Include="Assets\LottieCorpus\0593.dot_preloader.json" />
-    <None Include="Assets\LottieCorpus\0596.pillow_animation.json" />
-    <None Include="Assets\LottieCorpus\0599.hamburger_menu.json" />
-    <None Include="Assets\LottieCorpus\0600.submit_button_success.json" />
-    <None Include="Assets\LottieCorpus\0603.building.json" />
-    <None Include="Assets\LottieCorpus\0605.traffic_light.json" />
-    <None Include="Assets\LottieCorpus\0612.mlm_logo_grid.json" />
-    <None Include="Assets\LottieCorpus\0614.ok.json" />
-    <None Include="Assets\LottieCorpus\0622.victory.json" />
-    <None Include="Assets\LottieCorpus\0623.amali.json" />
-    <None Include="Assets\LottieCorpus\0626.syncing.json" />
-    <None Include="Assets\LottieCorpus\0629.empty_box.json" />
-    <None Include="Assets\LottieCorpus\0635.fail.json" />
-    <None Include="Assets\LottieCorpus\0641.simple_tick.json" />
-    <None Include="Assets\LottieCorpus\0642.simple_tick_2.json" />
-    <None Include="Assets\LottieCorpus\0643.aispeech_mic.json" />
-    <None Include="Assets\LottieCorpus\0645.success.json" />
-    <None Include="Assets\LottieCorpus\0647.animacion__-_payme.json" />
-    <None Include="Assets\LottieCorpus\0649.animacion_2_-_payme.json" />
-    <None Include="Assets\LottieCorpus\0651.warn.json" />
-    <None Include="Assets\LottieCorpus\0668.unlocking.json" />
-    <None Include="Assets\LottieCorpus\0669.recharge_underway.json" />
-    <None Include="Assets\LottieCorpus\0670.recharge_completed.json" />
-    <None Include="Assets\LottieCorpus\0672.sort.json" />
-    <None Include="Assets\LottieCorpus\0675.graduating_engineer.json" />
-    <None Include="Assets\LottieCorpus\0676.done.json" />
-    <None Include="Assets\LottieCorpus\0677.trophy.json" />
-    <None Include="Assets\LottieCorpus\0690.loading.json" />
-    <None Include="Assets\LottieCorpus\0693.skeleton_loading.json" />
-    <None Include="Assets\LottieCorpus\0695.bouncy_mapmaker.json" />
-    <None Include="Assets\LottieCorpus\0696.padlock_tick.json" />
-    <None Include="Assets\LottieCorpus\0697.unlock.json" />
-    <None Include="Assets\LottieCorpus\0703.navi%27s_loader.json" />
-    <None Include="Assets\LottieCorpus\0706.the_final_frontier.json" />
-    <None Include="Assets\LottieCorpus\0708.drop_to_refresh.json" />
-    <None Include="Assets\LottieCorpus\0710.loading_full_page.json" />
-    <None Include="Assets\LottieCorpus\0711.history_button.json" />
-    <None Include="Assets\LottieCorpus\0714.water_loader.json" />
-    <None Include="Assets\LottieCorpus\0715.heart_favorite.json" />
-    <None Include="Assets\LottieCorpus\0716.letter_b_monster.json" />
-    <None Include="Assets\LottieCorpus\0718.good_to_go.json" />
-    <None Include="Assets\LottieCorpus\0719.loading_.json" />
-    <None Include="Assets\LottieCorpus\0723.preview_icon_hover.json" />
-    <None Include="Assets\LottieCorpus\0724.ready_to_upload.json" />
-    <None Include="Assets\LottieCorpus\0725.heart_with_particles.json" />
-    <None Include="Assets\LottieCorpus\0726.ice_cream_animation.json" />
-    <None Include="Assets\LottieCorpus\0727.like.json" />
-    <None Include="Assets\LottieCorpus\0728.phone_tilt_animation.json" />
-    <None Include="Assets\LottieCorpus\0732.tick_reveal.json" />
-    <None Include="Assets\LottieCorpus\0734.circle_grow.json" />
-    <None Include="Assets\LottieCorpus\0770.finding_music_files.json" />
-    <None Include="Assets\LottieCorpus\0771.message_arrow.json" />
-    <None Include="Assets\LottieCorpus\0772.bookmark_animation.json" />
-    <None Include="Assets\LottieCorpus\0776.account_success.json" />
-    <None Include="Assets\LottieCorpus\0779.blue_clock.json" />
-    <None Include="Assets\LottieCorpus\0781.no_notifications!.json" />
-    <None Include="Assets\LottieCorpus\0792.drink_more_water.json" />
-    <None Include="Assets\LottieCorpus\0793.cycle_animation.json" />
-    <None Include="Assets\LottieCorpus\0796.check_mark.json" />
-    <None Include="Assets\LottieCorpus\0817.no_internet_connection.json" />
-    <None Include="Assets\LottieCorpus\0818.bubble.json" />
-    <None Include="Assets\LottieCorpus\0819.button_press.json" />
-    <None Include="Assets\LottieCorpus\0823.crying.json" />
-    <None Include="Assets\LottieCorpus\0829.spiral_loop.json" />
-    <None Include="Assets\LottieCorpus\0833.cambodia_flag.json" />
-    <None Include="Assets\LottieCorpus\0834.download_icon.json" />
-    <None Include="Assets\LottieCorpus\0835.loading.json" />
-    <None Include="Assets\LottieCorpus\0836.like_button.json" />
-    <None Include="Assets\LottieCorpus\0837.ciclista_salita.json" />
-    <None Include="Assets\LottieCorpus\0867.bluetooth.json" />
-    <None Include="Assets\LottieCorpus\0868.wifi_connected.json" />
-    <None Include="Assets\LottieCorpus\0872.empty_list.json" />
-    <None Include="Assets\LottieCorpus\0873.camera.json" />
-    <None Include="Assets\LottieCorpus\0874.pulse_loader.json" />
-    <None Include="Assets\LottieCorpus\0878.random_effect.json" />
-    <None Include="Assets\LottieCorpus\0879.cloud_sync.json" />
-    <None Include="Assets\LottieCorpus\0890.loading_animation.json" />
-    <None Include="Assets\LottieCorpus\0892.loading.json" />
-    <None Include="Assets\LottieCorpus\0898.play.json" />
-    <None Include="Assets\LottieCorpus\0899.like.json" />
-    <None Include="Assets\LottieCorpus\0909.fruit_toggle.json" />
-    <None Include="Assets\LottieCorpus\0910.antenna.json" />
-    <None Include="Assets\LottieCorpus\0911.swipe_left.json" />
-    <None Include="Assets\LottieCorpus\0912.dna_like_loader.json" />
-    <None Include="Assets\LottieCorpus\0913.kodeqr_animation.json" />
-    <None Include="Assets\LottieCorpus\0921.check.json" />
-    <None Include="Assets\LottieCorpus\0925.cruz.json" />
-    <None Include="Assets\LottieCorpus\0926.menu_volver.json" />
-    <None Include="Assets\LottieCorpus\0928.sun&amp;moon.json" />
-    <None Include="Assets\LottieCorpus\0929.flappy_box_loader.json" />
-    <None Include="Assets\LottieCorpus\0930.worm.json" />
-    <None Include="Assets\LottieCorpus\0931.checkbox.json" />
-    <None Include="Assets\LottieCorpus\0935.loading.json" />
-    <None Include="Assets\LottieCorpus\0936.search.json" />
-    <None Include="Assets\LottieCorpus\0938.iphone_x_loading.json" />
-    <None Include="Assets\LottieCorpus\0939.star.json" />
-    <None Include="Assets\LottieCorpus\0942.animated_laptop_.json" />
-    <None Include="Assets\LottieCorpus\0943.simple_check.json" />
-    <None Include="Assets\LottieCorpus\0944.scan_animation.json" />
-    <None Include="Assets\LottieCorpus\0945.happy_emoji_-_great_work_.json" />
-    <None Include="Assets\LottieCorpus\0946.dna.json" />
-    <None Include="Assets\LottieCorpus\0947.drink.json" />
-    <None Include="Assets\LottieCorpus\0950.complete.json" />
-    <None Include="Assets\LottieCorpus\0951.info.json" />
-    <None Include="Assets\LottieCorpus\0952.news.json" />
-    <None Include="Assets\LottieCorpus\0957.flight_icon_interaction.json" />
-    <None Include="Assets\LottieCorpus\0959.unhappy_french_fries.json" />
-    <None Include="Assets\LottieCorpus\0961.checked_loading.json" />
-    <None Include="Assets\LottieCorpus\0966.heart_animation.json" />
-    <None Include="Assets\LottieCorpus\0969.clap.json" />
-    <None Include="Assets\LottieCorpus\0972.done.json" />
-    <None Include="Assets\LottieCorpus\0973.completed_process.json" />
-    <None Include="Assets\LottieCorpus\0974.sms_passcode.json" />
-    <None Include="Assets\LottieCorpus\0975.verify_phone.json" />
-    <None Include="Assets\LottieCorpus\0978.walking_deer.json" />
-    <None Include="Assets\LottieCorpus\0979.paprika_marketing_logo.json" />
-    <None Include="Assets\LottieCorpus\0982.socar_logo.json" />
-    <None Include="Assets\LottieCorpus\0985.phonological.json" />
-    <None Include="Assets\LottieCorpus\0986.mnemonics.json" />
-    <None Include="Assets\LottieCorpus\0987.estimate.json" />
-    <None Include="Assets\LottieCorpus\0988.confusion.json" />
-    <None Include="Assets\LottieCorpus\0989.incomprehension.json" />
-    <None Include="Assets\LottieCorpus\0990.inattentive.json" />
-    <None Include="Assets\LottieCorpus\0991.dyslexia.json" />
-    <None Include="Assets\LottieCorpus\0996.poo_loader.json" />
-    <None Include="Assets\LottieCorpus\0997.connecting_circle.json" />
-    <None Include="Assets\LottieCorpus\0999.rebote.json" />
-    <None Include="Assets\LottieCorpus\1000.cubos.json" />
-    <None Include="Assets\LottieCorpus\1002.spinning_cat.json" />
-    <None Include="Assets\LottieCorpus\1008.cool_transition_for_mobile.json" />
-    <None Include="Assets\LottieCorpus\1012.construction_site.json" />
-    <None Include="Assets\LottieCorpus\1016.spirit_geek.json" />
-    <None Include="Assets\LottieCorpus\1017.in_progress_loader.json" />
-    <None Include="Assets\LottieCorpus\1022.mellow_ventures_logo.json" />
-    <None Include="Assets\LottieCorpus\1023.loading.json" />
-    <None Include="Assets\LottieCorpus\1025.loading.json" />
-    <None Include="Assets\LottieCorpus\1027.loading_gears.json" />
-    <None Include="Assets\LottieCorpus\1028.ripple.json" />
-    <None Include="Assets\LottieCorpus\1029.book_app_icon.json" />
-    <None Include="Assets\LottieCorpus\1042.round.json" />
-    <None Include="Assets\LottieCorpus\1049.hourglass.json" />
-    <None Include="Assets\LottieCorpus\1052.face_id.json" />
-    <None Include="Assets\LottieCorpus\1054.like.json" />
-    <None Include="Assets\LottieCorpus\1055.world_locations.json" />
-    <None Include="Assets\LottieCorpus\1064.radar_scanning.json" />
-    <None Include="Assets\LottieCorpus\1074.tail_wag.json" />
-    <None Include="Assets\LottieCorpus\1077.text_bubble_pop_up.json" />
-    <None Include="Assets\LottieCorpus\1078.form_submitted.json" />
-    <None Include="Assets\LottieCorpus\1081.basic_thick_circle_loader.json" />
-    <None Include="Assets\LottieCorpus\1087.heart.json" />
-    <None Include="Assets\LottieCorpus\1088.shape_types.json" />
-    <None Include="Assets\LottieCorpus\1096.coding_ape.json" />
-    <None Include="Assets\LottieCorpus\1107.shape_animation.json" />
-    <None Include="Assets\LottieCorpus\1114.saving_quotes.json" />
-    <None Include="Assets\LottieCorpus\1115.ripple.json" />
-    <None Include="Assets\LottieCorpus\1117.download.json" />
-    <None Include="Assets\LottieCorpus\1120.get_started_slider.json" />
-    <None Include="Assets\LottieCorpus\1124.loader.json" />
-    <None Include="Assets\LottieCorpus\1127.success.json" />
-    <None Include="Assets\LottieCorpus\1128.handy_sales_logo.json" />
-    <None Include="Assets\LottieCorpus\1129.loader_spinner.json" />
-    <None Include="Assets\LottieCorpus\1130.logo_intro.json" />
-    <None Include="Assets\LottieCorpus\1131.atm_.json" />
-    <None Include="Assets\LottieCorpus\1133.ipad.json" />
-    <None Include="Assets\LottieCorpus\1134.onboarding.json" />
-    <None Include="Assets\LottieCorpus\1136.loading_screen.json" />
-    <None Include="Assets\LottieCorpus\1138.deer.json" />
-    <None Include="Assets\LottieCorpus\1140.yelloader.json" />
-    <None Include="Assets\LottieCorpus\1141.infinity_loader_.json" />
-    <None Include="Assets\LottieCorpus\1144.screenhole.json" />
-    <None Include="Assets\LottieCorpus\1145.merry_christmas.json" />
-    <None Include="Assets\LottieCorpus\1147.deal.json" />
-    <None Include="Assets\LottieCorpus\1149.veil.json" />
-    <None Include="Assets\LottieCorpus\1150.loading_animation.json" />
-    <None Include="Assets\LottieCorpus\1151.coin.json" />
-    <None Include="Assets\LottieCorpus\1152.blue_waves_.json" />
-    <None Include="Assets\LottieCorpus\1153.sending_paper_plane.json" />
-    <None Include="Assets\LottieCorpus\1154.security_check.json" />
-    <None Include="Assets\LottieCorpus\1155.insta_camera.json" />
-    <None Include="Assets\LottieCorpus\1157.lazy_night.json" />
-    <None Include="Assets\LottieCorpus\1158.sleeping.json" />
-    <None Include="Assets\LottieCorpus\1159.camera.json" />
-    <None Include="Assets\LottieCorpus\1161.happy_new_year.json" />
-    <None Include="Assets\LottieCorpus\1162.weeve_logo.json" />
-    <None Include="Assets\LottieCorpus\1166.tick.json" />
-    <None Include="Assets\LottieCorpus\1167.failed.json" />
-    <None Include="Assets\LottieCorpus\1170.helicopter.json" />
-    <None Include="Assets\LottieCorpus\1171.mild_waves.json" />
-    <None Include="Assets\LottieCorpus\1173.sun_burst_weather_icon.json" />
-    <None Include="Assets\LottieCorpus\1174.warning.json" />
-    <None Include="Assets\LottieCorpus\1175.email.json" />
-    <None Include="Assets\LottieCorpus\1177.waiting.json" />
-    <None Include="Assets\LottieCorpus\1178.timer.json" />
-    <None Include="Assets\LottieCorpus\1183.e-commerce_icon.json" />
-    <None Include="Assets\LottieCorpus\1184.first_attempt.json" />
-    <None Include="Assets\LottieCorpus\1185.loader.json" />
-    <None Include="Assets\LottieCorpus\1189.check.json" />
-    <None Include="Assets\LottieCorpus\1190.like.json" />
-    <None Include="Assets\LottieCorpus\1191.typing.json" />
-    <None Include="Assets\LottieCorpus\1192.like.json" />
-    <None Include="Assets\LottieCorpus\1193.skipping.json" />
-    <None Include="Assets\LottieCorpus\1196.lock_and_key.json" />
-    <None Include="Assets\LottieCorpus\1198.heart_abstract.json" />
-    <None Include="Assets\LottieCorpus\1202.super_fast_tech_support.json" />
-    <None Include="Assets\LottieCorpus\1203.airplane.json" />
-    <None Include="Assets\LottieCorpus\1204.car.json" />
-    <None Include="Assets\LottieCorpus\1206.noodles.json" />
-    <None Include="Assets\LottieCorpus\1207.sort.json" />
-    <None Include="Assets\LottieCorpus\1208.live_and_love_in_2018.json" />
-    <None Include="Assets\LottieCorpus\1213.scanning_animation.json" />
-    <None Include="Assets\LottieCorpus\1217.loading_check_mark.json" />
-    <None Include="Assets\LottieCorpus\1221.loader_animation.json" />
-    <None Include="Assets\LottieCorpus\1224.like_animation.json" />
-    <None Include="Assets\LottieCorpus\1228.beam_-_getting_started_walkthrough..json" />
-    <None Include="Assets\LottieCorpus\1240.car2go_loading_animation.json" />
-    <None Include="Assets\LottieCorpus\1242.mr_hole.json" />
-    <None Include="Assets\LottieCorpus\1243.buttcoin_toot.json" />
-    <None Include="Assets\LottieCorpus\1252.loading.json" />
-    <None Include="Assets\LottieCorpus\1254.circles.json" />
-    <None Include="Assets\LottieCorpus\1258.sweep_card.json" />
-    <None Include="Assets\LottieCorpus\1270.error.json" />
-    <None Include="Assets\LottieCorpus\1271.building_screen.json" />
-    <None Include="Assets\LottieCorpus\1272.disconnected.json" />
-    <None Include="Assets\LottieCorpus\1291.meshguru_-_connection_icons.json" />
-    <None Include="Assets\LottieCorpus\1292.mesh_guru_-_cards.json" />
-    <None Include="Assets\LottieCorpus\1293.zeta_diwali.json" />
-    <None Include="Assets\LottieCorpus\1294.circle_loader.json" />
-    <None Include="Assets\LottieCorpus\1295.success_state.json" />
-    <None Include="Assets\LottieCorpus\1296.loading.json" />
-    <None Include="Assets\LottieCorpus\1298.floating_cloud.json" />
-    <None Include="Assets\LottieCorpus\1301.round_cap_material_loading.json" />
-    <None Include="Assets\LottieCorpus\1302.cube_loading.json" />
-    <None Include="Assets\LottieCorpus\1303.truck_running.json" />
-    <None Include="Assets\LottieCorpus\1304.cube_lock.json" />
-    <None Include="Assets\LottieCorpus\1305.cube_mic.json" />
-    <None Include="Assets\LottieCorpus\1306.cube_speaker.json" />
-    <None Include="Assets\LottieCorpus\1307.switch.json" />
-    <None Include="Assets\LottieCorpus\1308.green_check.json" />
-    <None Include="Assets\LottieCorpus\1309.smiley_stack.json" />
-    <None Include="Assets\LottieCorpus\1310.heart_beating.json" />
-    <None Include="Assets\LottieCorpus\1312.circle.json" />
-    <None Include="Assets\LottieCorpus\1314.check.json" />
-    <None Include="Assets\LottieCorpus\1315.button_hover_effect.json" />
-    <None Include="Assets\LottieCorpus\1316.error.json" />
-    <None Include="Assets\LottieCorpus\1317.attachment.json" />
-    <None Include="Assets\LottieCorpus\1318.search.json" />
-    <None Include="Assets\LottieCorpus\1319.menu_hamburger.json" />
-    <None Include="Assets\LottieCorpus\1320.menu_hamburger_arrow.json" />
-    <None Include="Assets\LottieCorpus\1321.check.json" />
-    <None Include="Assets\LottieCorpus\1323.star.json" />
-    <None Include="Assets\LottieCorpus\1325.download.json" />
-    <None Include="Assets\LottieCorpus\1326.dots.json" />
-    <None Include="Assets\LottieCorpus\1329.heartbutton.json" />
-    <None Include="Assets\LottieCorpus\1331.done.json" />
-    <None Include="Assets\LottieCorpus\1342.location.json" />
-    <None Include="Assets\LottieCorpus\1343.like_pop_animation.json" />
-    <None Include="Assets\LottieCorpus\1345.play_&amp;_pause.json" />
-    <None Include="Assets\LottieCorpus\1346.tick.json" />
-    <None Include="Assets\LottieCorpus\1347.icon_-_delivery.json" />
-    <None Include="Assets\LottieCorpus\1353.task_done.json" />
-    <None Include="Assets\LottieCorpus\1358.error_message.json" />
-    <None Include="Assets\LottieCorpus\1360.monitor.json" />
-    <None Include="Assets\LottieCorpus\1364.sync_data.json" />
-    <None Include="Assets\LottieCorpus\1366.sync_data.json" />
-    <None Include="Assets\LottieCorpus\1368.happy_gift.json" />
-    <None Include="Assets\LottieCorpus\1369.restless_gift.json" />
-    <None Include="Assets\LottieCorpus\1370.confetti.json" />
-    <None Include="Assets\LottieCorpus\1371.green_check_iii.json" />
-    <None Include="Assets\LottieCorpus\1372.green_check_iv.json" />
-    <None Include="Assets\LottieCorpus\1373.green_check_v.json" />
-    <None Include="Assets\LottieCorpus\1374.restless_gift_ii.json" />
-    <None Include="Assets\LottieCorpus\1375.smiley_stack_ii.json" />
-    <None Include="Assets\LottieCorpus\1376.mobile_navigation.json" />
-    <None Include="Assets\LottieCorpus\1377.warning.json" />
-    <None Include="Assets\LottieCorpus\1378.acrobatics.json" />
-    <None Include="Assets\LottieCorpus\1379.so_excited.json" />
-    <None Include="Assets\LottieCorpus\1380.bikingishard.json" />
-    <None Include="Assets\LottieCorpus\1382.mr.member_logo.json" />
-    <None Include="Assets\LottieCorpus\1383.transloader.json" />
-    <None Include="Assets\LottieCorpus\1384.loader_home.json" />
-    <None Include="Assets\LottieCorpus\1385.let%27s_go.json" />
-    <None Include="Assets\LottieCorpus\1397.animation_for_monobank.json" />
-    <None Include="Assets\LottieCorpus\1398.sparkybit.json" />
-    <None Include="Assets\LottieCorpus\1399.cubes.json" />
-    <None Include="Assets\LottieCorpus\1401.eye01.json" />
-    <None Include="Assets\LottieCorpus\1402.eye_blinking.json" />
-    <None Include="Assets\LottieCorpus\1405.scroll_down.json" />
-    <None Include="Assets\LottieCorpus\1406.done.json" />
-    <None Include="Assets\LottieCorpus\1408.network_lost.json" />
-    <None Include="Assets\LottieCorpus\1409.boo.json" />
-    <None Include="Assets\LottieCorpus\1417.waves_and_stripe.json" />
-    <None Include="Assets\LottieCorpus\1420.filter_icon.json" />
-    <None Include="Assets\LottieCorpus\1424.no_connection.json" />
-    <None Include="Assets\LottieCorpus\1427.pin_location.json" />
-    <None Include="Assets\LottieCorpus\1428.verify.json" />
-    <None Include="Assets\LottieCorpus\1438.angry.json" />
-    <None Include="Assets\LottieCorpus\1439.fall_in_love.json" />
-    <None Include="Assets\LottieCorpus\1440.cries.json" />
-    <None Include="Assets\LottieCorpus\1441.suspects.json" />
-    <None Include="Assets\LottieCorpus\1442.welcomes.json" />
-    <None Include="Assets\LottieCorpus\1443.laughs.json" />
-    <None Include="Assets\LottieCorpus\1446.biking_is_cool.json" />
-    <None Include="Assets\LottieCorpus\1459.heart_rate.json" />
-    <None Include="Assets\LottieCorpus\1460.gem_for_graminsta_app_%28auto_follower%29.json" />
-    <None Include="Assets\LottieCorpus\1465.heart.json" />
-    <None Include="Assets\LottieCorpus\1466.notification.json" />
-    <None Include="Assets\LottieCorpus\1471.skuchnoman.json" />
-    <None Include="Assets\LottieCorpus\1473.speedometer.json" />
-    <None Include="Assets\LottieCorpus\1483.government_house.json" />
-    <None Include="Assets\LottieCorpus\1485.goose_heart.json" />
-    <None Include="Assets\LottieCorpus\1488.goose_wing.json" />
-    <None Include="Assets\LottieCorpus\1503.beauty.json" />
-    <None Include="Assets\LottieCorpus\1505.beauty.json" />
-    <None Include="Assets\LottieCorpus\1507.beauty.json" />
-    <None Include="Assets\LottieCorpus\1508.beauty.json" />
-    <None Include="Assets\LottieCorpus\1511.beauty.json" />
-    <None Include="Assets\LottieCorpus\1512.duck_och.json" />
-    <None Include="Assets\LottieCorpus\1513.duck_och.json" />
-    <None Include="Assets\LottieCorpus\1516.duck_och.json" />
-    <None Include="Assets\LottieCorpus\1517.smile.json" />
-    <None Include="Assets\LottieCorpus\1518.hamburger_menu.json" />
-    <None Include="Assets\LottieCorpus\1520.goose_thinks.json" />
-    <None Include="Assets\LottieCorpus\1522.goose_wonders.json" />
-    <None Include="Assets\LottieCorpus\1524.tekro.json" />
-    <None Include="Assets\LottieCorpus\1528.sonar.json" />
-    <None Include="Assets\LottieCorpus\1529.pulsing_beacon.json" />
-    <None Include="Assets\LottieCorpus\1530.search.json" />
-    <None Include="Assets\LottieCorpus\1531.loader.json" />
-    <None Include="Assets\LottieCorpus\1533.loaders.json" />
-    <None Include="Assets\LottieCorpus\1547.stars.json" />
-    <None Include="Assets\LottieCorpus\1562.play_button.json" />
-    <None Include="Assets\LottieCorpus\1566.techno_penguin.json" />
-    <None Include="Assets\LottieCorpus\1570.triangle_round.json" />
-    <None Include="Assets\LottieCorpus\1573.regalo_saltarin.json" />
-    <None Include="Assets\LottieCorpus\1575.hamburger.json" />
-    <None Include="Assets\LottieCorpus\1577.beetle.json" />
-    <None Include="Assets\LottieCorpus\1578.red_ant.json" />
-    <None Include="Assets\LottieCorpus\1579.music_loading.json" />
-    <None Include="Assets\LottieCorpus\1583.spider_golden_web_weaver.json" />
-    <None Include="Assets\LottieCorpus\1584.hamburger.json" />
-    <None Include="Assets\LottieCorpus\1588.dislike.json" />
-    <None Include="Assets\LottieCorpus\1589.loading.json" />
-    <None Include="Assets\LottieCorpus\1592.cashchanger_logo.json" />
-    <None Include="Assets\LottieCorpus\1594.interleague_golf_logo.json" />
-    <None Include="Assets\LottieCorpus\1595.logo_animation.json" />
-    <None Include="Assets\LottieCorpus\1597.find_object.json" />
-    <None Include="Assets\LottieCorpus\1598.six_spoke_spinner_white.json" />
-    <None Include="Assets\LottieCorpus\1599.six_spoke_spinner.json" />
-    <None Include="Assets\LottieCorpus\1600.wireless_usb_ping.json" />
-    <None Include="Assets\LottieCorpus\1601.heart_animation.json" />
-    <None Include="Assets\LottieCorpus\1605.gift_box.json" />
-    <None Include="Assets\LottieCorpus\1606.profile.json" />
-    <None Include="Assets\LottieCorpus\1607.computer_display.json" />
-    <None Include="Assets\LottieCorpus\1608.simple_pulse.json" />
-    <None Include="Assets\LottieCorpus\1612.curved_line_animation.json" />
-    <None Include="Assets\LottieCorpus\1613.spring_coming.json" />
-    <None Include="Assets\LottieCorpus\1617.x_symbol.json" />
-    <None Include="Assets\LottieCorpus\1625.anubis.json" />
-    <None Include="Assets\LottieCorpus\1631.healthtap_spinner.json" />
-    <None Include="Assets\LottieCorpus\1633.shijianjiazai.json" />
-    <None Include="Assets\LottieCorpus\1634.loading.json" />
-    <None Include="Assets\LottieCorpus\1638.exploding_heart.json" />
-    <None Include="Assets\LottieCorpus\1643.exploding_star.json" />
-    <None Include="Assets\LottieCorpus\1645.circles_loader.json" />
-    <None Include="Assets\LottieCorpus\1652.menu_switch.json" />
-    <None Include="Assets\LottieCorpus\1653.home_icon.json" />
-    <None Include="Assets\LottieCorpus\1655.lemon_on_off.json" />
-    <None Include="Assets\LottieCorpus\1656.street_sign_right.json" />
-    <None Include="Assets\LottieCorpus\1657.give_the_thumbs-up.json" />
-    <None Include="Assets\LottieCorpus\1659.share_it_icon.json" />
-    <None Include="Assets\LottieCorpus\1662.gears_or_settings.json" />
-    <None Include="Assets\LottieCorpus\1663.balloons.json" />
-    <None Include="Assets\LottieCorpus\1665.dribbble_bouncing_ball.json" />
-    <None Include="Assets\LottieCorpus\1666.radar.json" />
-    <None Include="Assets\LottieCorpus\1667.firework.json" />
-    <None Include="Assets\LottieCorpus\1668.wifi_signal.json" />
-    <None Include="Assets\LottieCorpus\1669.loading_rotation.json" />
-    <None Include="Assets\LottieCorpus\1670.clock_full_rotation.json" />
-    <None Include="Assets\LottieCorpus\1671.wifi_tethering.json" />
-    <None Include="Assets\LottieCorpus\1672.spinner_.json" />
-    <None Include="Assets\LottieCorpus\1677.beauty_loader.json" />
-    <None Include="Assets\LottieCorpus\1679.play_button.json" />
-    <None Include="Assets\LottieCorpus\1681.play_button_circle.json" />
-    <None Include="Assets\LottieCorpus\1683.cloud_upload.json" />
-    <None Include="Assets\LottieCorpus\1684.cloud_download.json" />
-    <None Include="Assets\LottieCorpus\1686.file_upload.json" />
-    <None Include="Assets\LottieCorpus\1688.whys.json" />
-    <None Include="Assets\LottieCorpus\1689.file_download.json" />
-    <None Include="Assets\LottieCorpus\1690.moon_.json" />
-    <None Include="Assets\LottieCorpus\1691.gift.json" />
-    <None Include="Assets\LottieCorpus\1693.gradient_sleepy_loader.json" />
-    <None Include="Assets\LottieCorpus\1696.toggle.json" />
-    <None Include="Assets\LottieCorpus\1703.sync_icon.json" />
-    <None Include="Assets\LottieCorpus\1705.mappoint.json" />
-    <None Include="Assets\LottieCorpus\1706.fixter.json" />
-    <None Include="Assets\LottieCorpus\1708.success.json" />
-    <None Include="Assets\LottieCorpus\1710.balloons_with_string.json" />
-    <None Include="Assets\LottieCorpus\1711.waves_.json" />
-    <None Include="Assets\LottieCorpus\1712.bms-rocket.json" />
-    <None Include="Assets\LottieCorpus\1716.checkmark.json" />
-    <None Include="Assets\LottieCorpus\1725.not_found.json" />
-    <None Include="Assets\LottieCorpus\1726.tickets.json" />
-    <None Include="Assets\LottieCorpus\1727.bookmark.json" />
-    <None Include="Assets\LottieCorpus\1728.swipe_left_to_right.json" />
-    <None Include="Assets\LottieCorpus\1731.infinity_loader.json" />
-    <None Include="Assets\LottieCorpus\1733.color_loader.json" />
-    <None Include="Assets\LottieCorpus\1735.animated_indonesian_first_president.json" />
-    <None Include="Assets\LottieCorpus\1736.fli.json" />
-    <None Include="Assets\LottieCorpus\1741.breathing_in_and_out.json" />
-    <None Include="Assets\LottieCorpus\1743.phoenix_team.json" />
-    <None Include="Assets\LottieCorpus\1744.check_in_.json" />
-    <None Include="Assets\LottieCorpus\1745.checkbox_check.json" />
-    <None Include="Assets\LottieCorpus\1749.404.json" />
-    <None Include="Assets\LottieCorpus\1752.spice.json" />
-    <None Include="Assets\LottieCorpus\1755.share_for_graminsta_app.json" />
-    <None Include="Assets\LottieCorpus\1757.loading.json" />
-    <None Include="Assets\LottieCorpus\1758.credit_card.json" />
-    <None Include="Assets\LottieCorpus\1762.boxing.json" />
-    <None Include="Assets\LottieCorpus\1763.flux_it.json" />
-    <None Include="Assets\LottieCorpus\1764.credit_level.json" />
-    <None Include="Assets\LottieCorpus\1765.cash.json" />
-    <None Include="Assets\LottieCorpus\1766.bar_graph.json" />
-    <None Include="Assets\LottieCorpus\1767.lock.json" />
-    <None Include="Assets\LottieCorpus\1768.looking_for_router.json" />
-    <None Include="Assets\LottieCorpus\1771.loading_ribbon.json" />
-    <None Include="Assets\LottieCorpus\1772.leds.json" />
-    <None Include="Assets\LottieCorpus\1775.pulse_effect.json" />
-    <None Include="Assets\LottieCorpus\1776.adopt.json" />
-    <None Include="Assets\LottieCorpus\1777.adopt.json" />
-    <None Include="Assets\LottieCorpus\1779.ball.json" />
-    <None Include="Assets\LottieCorpus\1785.preloader.json" />
-    <None Include="Assets\LottieCorpus\1786.profile.json" />
-    <None Include="Assets\LottieCorpus\LottieScraper.json" />
+    <Content Include="Assets\LottieCorpus\0016.body_movin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0024.toggle_switch.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0026.lets_have_some_hamburger.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0027.loading...json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0028.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0029.motorcycle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0030.touch_id.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0031.retweet.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0032.camera.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0033.video_cam.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0035.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0036.bounching_ball.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0040.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0041.emoji_tongue.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0043.emoji_wink.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0044.emoji_shock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0045.countdown.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0046.play_and_like_it.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0047.gears.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0048.progress_bar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0049.postcard.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0050.material_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0051.preloader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0052.bounce.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0053.search_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0054.submit_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0055.cancel_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0056.location_pin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0057.loading_semicircle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0067.exploding_heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0068.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0069.video_content_ta-dah!.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0070.image_icon_tadah!.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0072.favourite_app_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0076.atm_link.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0077.i%27m_thirsty!.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0078.bouncing_heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0079.animated_graph.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0081.beating_heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0082.rey_updated!.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0083.plane_to_dollar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0084.speaking.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0090.love.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0094.soda_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0095.location_marker.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0096.permission.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0099.bell.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0100.check_pop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0101.x_pop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0102.cube_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0105.save.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0106.save.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0108.quick_hart_select.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0111.xuanwheel_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0116.square_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0118.notification_request.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0120.play,_pause.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0124.download.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0129.lottiepreview_qr.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0131.xamarin_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0132.play_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0137.clock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0139.drop_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0142.loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0144.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0146.simple_outline_lock_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0147.outline_user.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0148.xamarin_logo_2.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0149.color_line.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0150.android_fingerprint.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0152.100_percent.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0159.servishero_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0160.rocksauce_title_card.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0171.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0172.1_bar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0173.2_bar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0174.4_bar_loop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0175.day_night_cycle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0176.pen_tool_loop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0177.switch_loop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0179.curly_hair_character_loop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0180.pencil_write.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0182.volume_shake_indicator.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0187.fish.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0189.done_all.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0190.simple_check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0192.swipe_right_indicator.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0194.material_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0196.material_wave_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0197.glow_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0198.volume_indicator.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0199.moving_eye.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0200.panel2d.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0201.simple_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0202.setting.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0203.star.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0204.share.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0205.feedback.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0206.update.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0207.toggle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0208.hint.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0214.finish,done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0217.vr_sickness.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0221.infinite_rainbow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0222.trail_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0224.mindful.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0225.spacehub.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0226.splashy_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0230.pagination.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0236.accept_arrows.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0237.decline_arrows.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0240.elephant_trunk_swing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0241.autoconnect_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0243.updating_map.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0248.cloud_disconnection.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0250.pause.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0252.square_drop_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0255.menu_button_alt.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0256.timer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0260.3d_rotate_loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0261.medal.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0262.rating_star_-_yellow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0267.star_rating.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0270.map_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0271.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0281.crown.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0292.5_stars.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0297.loading_rainbow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0300.g.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0302.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0304.loader_3.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0305.loader_4.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0306.loader_5.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0315.loader_ring.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0316.horloge.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0318.wishlist.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0319.shrug.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0322.favorite.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0325.vicky.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0326.hecomicon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0329.hexadots.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0330.empty_status.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0334.hamburger.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0342.success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0343.favorite.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0345.home.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0346.layers.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0347.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0349.bike_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0351.pink_drink_machine.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0354.button_spread.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0362.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0363.beer_bubbles.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0366.equalizer_bounce.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0370.youyu.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0372.wifi_wiper.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0373.streetby_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0374.jump_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0376.check_mark.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0379.send_btn.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0380.box_creeper.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0381.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0393.expanding_marker.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0397.snap_loader_black.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0398.snap_loader_white.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0408.youtube_icon_reveal.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0409.siren.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0410.lego_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0412.download_icon_success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0413.shopping_basket_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0419.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0428.blah_blah.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0429.an_endless_hike_on_a_tiny_world_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0430.longpress_gesture.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0432.done_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0433.checked_done_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0434.gradient_animated_background.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0435.birds.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0436.stormed.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0439.love_explosion.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0440.stop_go_radio_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0446.warning_sign.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0448.ripple_loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0450.play_fill_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0458.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0460.floating_action_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0461.button_touch_effect.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0465.github_%28giants_remix%29.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0474.skeleton_frame_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0477.dot_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0478.flow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0482.animated_color_options.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0489.menu.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0490.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0494.bootymovin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0496.simple_circular_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0497.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0500.lamp.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0501.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0502.cloud.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0510.power.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0511.money.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0513.5_estrelas_go!_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0515.cursoranim.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0519.load_complete.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0521.like_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0523.exploding_stars.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0526.playing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0527.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0531.stars.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0532.kiss.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0535.click_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0540.charge_money.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0541.plim.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0542.warning_sign.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0543.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0558.rewards_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0578.animated_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0579.scan_qr_code_success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0580.code_invite_success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0582.eclipse.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0586.added.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0588.wallet_&amp;_coin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0593.dot_preloader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0596.pillow_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0599.hamburger_menu.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0600.submit_button_success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0603.building.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0605.traffic_light.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0612.mlm_logo_grid.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0614.ok.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0622.victory.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0623.amali.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0626.syncing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0629.empty_box.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0635.fail.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0641.simple_tick.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0642.simple_tick_2.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0643.aispeech_mic.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0645.success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0647.animacion__-_payme.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0649.animacion_2_-_payme.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0651.warn.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0668.unlocking.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0669.recharge_underway.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0670.recharge_completed.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0672.sort.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0675.graduating_engineer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0676.done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0677.trophy.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0690.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0693.skeleton_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0695.bouncy_mapmaker.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0696.padlock_tick.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0697.unlock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0703.navi%27s_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0706.the_final_frontier.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0708.drop_to_refresh.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0710.loading_full_page.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0711.history_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0714.water_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0715.heart_favorite.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0716.letter_b_monster.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0718.good_to_go.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0719.loading_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0723.preview_icon_hover.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0724.ready_to_upload.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0725.heart_with_particles.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0726.ice_cream_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0727.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0728.phone_tilt_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0732.tick_reveal.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0734.circle_grow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0770.finding_music_files.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0771.message_arrow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0772.bookmark_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0776.account_success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0779.blue_clock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0781.no_notifications!.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0792.drink_more_water.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0793.cycle_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0796.check_mark.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0817.no_internet_connection.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0818.bubble.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0819.button_press.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0823.crying.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0829.spiral_loop.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0833.cambodia_flag.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0834.download_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0835.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0836.like_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0837.ciclista_salita.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0867.bluetooth.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0868.wifi_connected.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0872.empty_list.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0873.camera.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0874.pulse_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0878.random_effect.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0879.cloud_sync.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0890.loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0892.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0898.play.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0899.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0909.fruit_toggle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0910.antenna.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0911.swipe_left.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0912.dna_like_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0913.kodeqr_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0921.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0925.cruz.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0926.menu_volver.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0928.sun&amp;moon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0929.flappy_box_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0930.worm.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0931.checkbox.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0935.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0936.search.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0938.iphone_x_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0939.star.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0942.animated_laptop_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0943.simple_check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0944.scan_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0945.happy_emoji_-_great_work_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0946.dna.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0947.drink.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0950.complete.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0951.info.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0952.news.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0957.flight_icon_interaction.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0959.unhappy_french_fries.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0961.checked_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0966.heart_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0969.clap.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0972.done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0973.completed_process.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0974.sms_passcode.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0975.verify_phone.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0978.walking_deer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0979.paprika_marketing_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0982.socar_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0985.phonological.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0986.mnemonics.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0987.estimate.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0988.confusion.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0989.incomprehension.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0990.inattentive.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0991.dyslexia.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0996.poo_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0997.connecting_circle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\0999.rebote.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1000.cubos.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1002.spinning_cat.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1008.cool_transition_for_mobile.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1012.construction_site.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1016.spirit_geek.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1017.in_progress_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1022.mellow_ventures_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1023.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1025.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1027.loading_gears.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1028.ripple.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1029.book_app_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1042.round.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1049.hourglass.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1052.face_id.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1054.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1055.world_locations.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1064.radar_scanning.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1074.tail_wag.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1077.text_bubble_pop_up.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1078.form_submitted.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1081.basic_thick_circle_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1087.heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1088.shape_types.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1096.coding_ape.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1107.shape_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1114.saving_quotes.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1115.ripple.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1117.download.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1120.get_started_slider.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1124.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1127.success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1128.handy_sales_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1129.loader_spinner.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1130.logo_intro.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1131.atm_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1133.ipad.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1134.onboarding.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1136.loading_screen.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1138.deer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1140.yelloader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1141.infinity_loader_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1144.screenhole.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1145.merry_christmas.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1147.deal.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1149.veil.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1150.loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1151.coin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1152.blue_waves_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1153.sending_paper_plane.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1154.security_check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1155.insta_camera.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1157.lazy_night.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1158.sleeping.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1159.camera.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1161.happy_new_year.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1162.weeve_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1166.tick.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1167.failed.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1170.helicopter.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1171.mild_waves.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1173.sun_burst_weather_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1174.warning.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1175.email.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1177.waiting.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1178.timer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1183.e-commerce_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1184.first_attempt.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1185.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1189.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1190.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1191.typing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1192.like.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1193.skipping.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1196.lock_and_key.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1198.heart_abstract.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1202.super_fast_tech_support.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1203.airplane.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1204.car.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1206.noodles.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1207.sort.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1208.live_and_love_in_2018.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1213.scanning_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1217.loading_check_mark.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1221.loader_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1224.like_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1228.beam_-_getting_started_walkthrough..json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1240.car2go_loading_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1242.mr_hole.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1243.buttcoin_toot.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1252.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1254.circles.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1258.sweep_card.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1270.error.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1271.building_screen.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1272.disconnected.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1291.meshguru_-_connection_icons.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1292.mesh_guru_-_cards.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1293.zeta_diwali.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1294.circle_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1295.success_state.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1296.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1298.floating_cloud.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1301.round_cap_material_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1302.cube_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1303.truck_running.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1304.cube_lock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1305.cube_mic.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1306.cube_speaker.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1307.switch.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1308.green_check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1309.smiley_stack.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1310.heart_beating.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1312.circle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1314.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1315.button_hover_effect.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1316.error.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1317.attachment.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1318.search.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1319.menu_hamburger.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1320.menu_hamburger_arrow.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1321.check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1323.star.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1325.download.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1326.dots.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1329.heartbutton.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1331.done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1342.location.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1343.like_pop_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1345.play_&amp;_pause.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1346.tick.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1347.icon_-_delivery.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1353.task_done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1358.error_message.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1360.monitor.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1364.sync_data.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1366.sync_data.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1368.happy_gift.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1369.restless_gift.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1370.confetti.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1371.green_check_iii.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1372.green_check_iv.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1373.green_check_v.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1374.restless_gift_ii.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1375.smiley_stack_ii.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1376.mobile_navigation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1377.warning.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1378.acrobatics.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1379.so_excited.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1380.bikingishard.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1382.mr.member_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1383.transloader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1384.loader_home.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1385.let%27s_go.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1397.animation_for_monobank.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1398.sparkybit.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1399.cubes.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1401.eye01.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1402.eye_blinking.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1405.scroll_down.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1406.done.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1408.network_lost.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1409.boo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1417.waves_and_stripe.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1420.filter_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1424.no_connection.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1427.pin_location.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1428.verify.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1438.angry.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1439.fall_in_love.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1440.cries.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1441.suspects.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1442.welcomes.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1443.laughs.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1446.biking_is_cool.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1459.heart_rate.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1460.gem_for_graminsta_app_%28auto_follower%29.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1465.heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1466.notification.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1471.skuchnoman.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1473.speedometer.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1483.government_house.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1485.goose_heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1488.goose_wing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1503.beauty.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1505.beauty.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1507.beauty.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1508.beauty.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1511.beauty.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1512.duck_och.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1513.duck_och.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1516.duck_och.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1517.smile.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1518.hamburger_menu.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1520.goose_thinks.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1522.goose_wonders.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1524.tekro.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1528.sonar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1529.pulsing_beacon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1530.search.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1531.loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1533.loaders.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1547.stars.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1562.play_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1566.techno_penguin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1570.triangle_round.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1573.regalo_saltarin.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1575.hamburger.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1577.beetle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1578.red_ant.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1579.music_loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1583.spider_golden_web_weaver.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1584.hamburger.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1588.dislike.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1589.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1592.cashchanger_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1594.interleague_golf_logo.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1595.logo_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1597.find_object.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1598.six_spoke_spinner_white.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1599.six_spoke_spinner.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1600.wireless_usb_ping.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1601.heart_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1605.gift_box.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1606.profile.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1607.computer_display.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1608.simple_pulse.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1612.curved_line_animation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1613.spring_coming.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1617.x_symbol.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1625.anubis.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1631.healthtap_spinner.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1633.shijianjiazai.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1634.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1638.exploding_heart.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1643.exploding_star.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1645.circles_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1652.menu_switch.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1653.home_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1655.lemon_on_off.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1656.street_sign_right.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1657.give_the_thumbs-up.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1659.share_it_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1662.gears_or_settings.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1663.balloons.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1665.dribbble_bouncing_ball.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1666.radar.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1667.firework.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1668.wifi_signal.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1669.loading_rotation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1670.clock_full_rotation.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1671.wifi_tethering.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1672.spinner_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1677.beauty_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1679.play_button.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1681.play_button_circle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1683.cloud_upload.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1684.cloud_download.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1686.file_upload.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1688.whys.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1689.file_download.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1690.moon_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1691.gift.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1693.gradient_sleepy_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1696.toggle.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1703.sync_icon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1705.mappoint.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1706.fixter.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1708.success.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1710.balloons_with_string.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1711.waves_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1712.bms-rocket.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1716.checkmark.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1725.not_found.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1726.tickets.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1727.bookmark.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1728.swipe_left_to_right.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1731.infinity_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1733.color_loader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1735.animated_indonesian_first_president.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1736.fli.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1741.breathing_in_and_out.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1743.phoenix_team.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1744.check_in_.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1745.checkbox_check.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1749.404.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1752.spice.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1755.share_for_graminsta_app.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1757.loading.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1758.credit_card.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1762.boxing.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1763.flux_it.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1764.credit_level.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1765.cash.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1766.bar_graph.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1767.lock.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1768.looking_for_router.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1771.loading_ribbon.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1772.leds.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1775.pulse_effect.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1776.adopt.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1777.adopt.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1779.ball.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1785.preloader.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\1786.profile.json">
+    </Content>
+    <Content Include="Assets\LottieCorpus\LottieScraper.json" />
     <None Include="LottieTest_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -779,9 +1440,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="AuditCorpus.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MyComposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -790,9 +1459,25 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LottieData\LottieData.csproj">
+      <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>
+      <Name>LottieData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LottieJsonReader\LottieJsonReader.csproj">
+      <Project>{AE4E2F47-A73E-44AD-9E5B-4BEEC152329A}</Project>
+      <Name>LottieJsonReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LottieToVisual\LottieToVisual.csproj">
+      <Project>{4C88D697-FB3C-48E4-BAB1-F285468162D0}</Project>
+      <Name>LottieToVisual</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lottie_development\Lottie_development.csproj">
       <Project>{dc73f166-0b2f-4494-979d-91273c4c3182}</Project>
       <Name>Lottie_development</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinCompData\WinCompData.csproj">
+      <Project>{B1DD2D0C-F280-4E5A-A14D-E1856CBB648A}</Project>
+      <Name>WinCompData</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

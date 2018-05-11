@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="LottieTest.AuditCorpus"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LottieTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Click="Button_Click" >Start audit</Button>
+            <CheckBox x:Name="_standardCorpus" Content="Audit the standard corpus (uncheck to choose files to audit)" IsChecked="True"/>
+            <StackPanel Orientation="Horizontal">
+            <TextBlock>Progress:</TextBlock>
+                <TextBlock x:Name="_txtProgressCounter">0</TextBlock>
+                <TextBlock>/</TextBlock>
+                <TextBlock x:Name="_txtProgressTotal">0</TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

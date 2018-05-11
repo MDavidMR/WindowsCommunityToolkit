@@ -948,11 +948,6 @@ namespace LottieData.Serialization
                 return new Animatable<Color>(Color.Black, null);
             }
 
-            if (obj.ContainsKey("x"))
-            {
-                ReportIssue("Expressions are not supported.");
-            }
-
             s_animatableColorParser.ParseJson(this, obj, out IEnumerable<KeyFrame<Color>> keyFrames, out Color initialValue);
 
             var propertyIndex = ReadInt(obj, "ix");
@@ -1083,10 +1078,6 @@ namespace LottieData.Serialization
 
         Animatable<PathGeometry> ReadAnimatableGeometry(JsonObject obj)
         {
-            if (obj != null && obj.ContainsKey("x"))
-            {
-                ReportIssue("Expressions are not supported.");
-            }
             s_animatableGeometryParser.ParseJson(this, obj, out IEnumerable<KeyFrame<PathGeometry>> keyFrames, out PathGeometry initialValue);
             var propertyIndex = ReadInt(obj, "ix");
             return new Animatable<PathGeometry>(initialValue, keyFrames, propertyIndex);
@@ -1094,10 +1085,6 @@ namespace LottieData.Serialization
 
         Animatable<double> ReadAnimatableFloat(JsonObject obj)
         {
-            if (obj != null && obj.ContainsKey("x"))
-            {
-                ReportIssue("Expressions are not supported.");
-            }
             s_animatableFloatParser.ParseJson(this, obj, out IEnumerable<KeyFrame<double>> keyFrames, out double initialValue);
             var propertyIndex = ReadInt(obj, "ix");
             return new Animatable<double>(initialValue, keyFrames, propertyIndex);
@@ -1393,7 +1380,7 @@ namespace LottieData.Serialization
 
                         // Property expression. Currently ignored because we don't support expressions.
                         case "x":
-                            reader.ReportIssue("Expressions in animations are not supported.");
+                            reader.ReportIssue("Expressions are not supported.");
                             break;
                         default:
                             throw new LottieJsonReaderException($"Unexpected field: {field.Key}");

@@ -83,6 +83,9 @@ namespace LottieViewer
 
                 titleBar.InactiveBackgroundColor = backgroundColor.Color;
                 titleBar.InactiveForegroundColor = foregroundColor.Color;
+
+                titleBar.ButtonInactiveBackgroundColor = backgroundColor.Color;
+                titleBar.ButtonInactiveForegroundColor = foregroundColor.Color;
             }
             base.OnWindowCreated(args);
         }

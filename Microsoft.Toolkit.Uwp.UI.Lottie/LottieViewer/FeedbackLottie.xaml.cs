@@ -1,8 +1,8 @@
 ﻿using Lottie;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace LottieViewer
 {
@@ -30,7 +30,6 @@ namespace LottieViewer
 
         Task _currentPlay = Task.CompletedTask;
         DragNDropHintState _dragNDropHintState = DragNDropHintState.Initial;
-        Storyboard _fadeOutStoryboard;
 
         public FeedbackLottie()
         {
@@ -84,27 +83,13 @@ namespace LottieViewer
             }
 
             _dragNDropHintState = DragNDropHintState.Finished;
-            await PlaySegment(FinishLoading);
-
-            if (_dragNDropHintState != DragNDropHintState.Finished)
-            {
-                return;
-            }
 
             // Fade out. This is only necessary for RS4 builds that
             // do not handle 0-size strokes correctly, leaving crud on
             // the screen.
-            _fadeOutStoryboard = new Storyboard();
-            _fadeOutStoryboard.Children.Add(new DoubleAnimation()
-            {
-                From = 1,
-                To = 0,
-                Duration = TimeSpan.FromSeconds(0.02),
-            });
-            Storyboard.SetTargetProperty(_fadeOutStoryboard, "Opacity");
-            Storyboard.SetTarget(_fadeOutStoryboard, _dragNDropHint);
             _fadeOutStoryboard.Begin();
-            // Return immediately while the animation fades out.
+
+            await PlaySegment(FinishLoading);
         }
 
 
@@ -134,12 +119,8 @@ namespace LottieViewer
 
         void EnsureVisible()
         {
-            if (_fadeOutStoryboard != null)
-            {
-                _fadeOutStoryboard.Stop();
-                _fadeOutStoryboard.Children.Clear();
-                _fadeOutStoryboard = null;
-            }
+            Debug.WriteLine("Stopping opacity animation");
+            _fadeOutStoryboard.Stop();
             _dragNDropHint.Opacity = 1;
         }
 

@@ -10,7 +10,20 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <lottie:CompositionPlayer x:Name="_dragNDropHint" AutoPlay="False" >
-        <compositions:UiFeedbackAnimations/>
-    </lottie:CompositionPlayer>
+    <UserControl.Resources>
+        <Storyboard x:Name="_fadeOutStoryboard">
+            <DoubleAnimation
+                Storyboard.TargetName="_dragNDropHintContainer"
+                Storyboard.TargetProperty="Opacity"
+                From="1.0"
+                To="0.0"
+                Duration="0:0:0.6"
+                ></DoubleAnimation>
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid x:Name="_dragNDropHintContainer">
+        <lottie:CompositionPlayer x:Name="_dragNDropHint" AutoPlay="False">
+            <compositions:UiFeedbackAnimations/>
+        </lottie:CompositionPlayer>
+    </Grid>
 </UserControl>

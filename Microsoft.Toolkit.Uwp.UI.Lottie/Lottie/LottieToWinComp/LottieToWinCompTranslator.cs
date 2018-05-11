@@ -57,8 +57,9 @@ namespace LottieToWinComp
         StepEasingFunction _jumpStepEasingFunction;
         // The name used to bind to the property set that contains the Progress property.
         const string c_rootName = "_";
-        // The name of the root property set and the Progress property on it.
-        static readonly string s_rootProgress = $"{c_rootName}.{ProgressPropertyName}";
+        // An expression the refers to the name of the root property set and the Progress property on it.
+        static readonly Name s_rootProgress = new Name($"{c_rootName}.{ProgressPropertyName}");
+
         /// <summary>
         /// The name of the property on the resulting <see cref="Visual"/> that controls the progress
         /// of the animation. Setting this property (directly or with an animation)
@@ -99,7 +100,7 @@ namespace LottieToWinComp
             LottieData.LottieComposition lottieComposition,
             bool strictTranslation,
             out Visual visual,
-            out IEnumerable<string> translationIssues) =>
+            out string[] translationIssues) =>
             TryTranslateLottieComposition(
                 lottieComposition,
                 strictTranslation,
@@ -120,7 +121,7 @@ namespace LottieToWinComp
             bool strictTranslation,
             bool annotateCompositionObjects,
             out Visual visual,
-            out IEnumerable<string> translationIssues)
+            out string[] translationIssues)
         {
             // Set up the translator.
             using (var translator = new LottieToWinCompTranslator(
@@ -135,7 +136,7 @@ namespace LottieToWinComp
 
                 // Set the out parameters.
                 visual = translator._rootVisual;
-                translationIssues = translator._issues;
+                translationIssues = translator._issues.ToArray();
             }
 
             return true;
@@ -226,7 +227,7 @@ namespace LottieToWinComp
 
             if (layer.TimeStretch != 1)
             {
-                Unsupported($"Time stretch: {layer.TimeStretch}");
+                Unsupported("Time stretch");
             }
 
             if (layer.IsHidden)
@@ -1705,18 +1706,18 @@ namespace LottieToWinComp
             var key = new ScaleAndOffset(scale, offset);
             if (!_progressBindingAnimations.TryGetValue(key, out var bindingAnimation))
             {
-                var expr = s_rootProgress;
+                Expression expr = s_rootProgress;
 
                 if (scale != 1)
                 {
-                    expr = $"{expr}*{FloatAsString(scale)}";
+                    expr = new Multiply(expr, new Number(scale));
                 }
                 if (offset != 0)
                 {
-                    expr = $"{expr}+{FloatAsString(offset)}";
+                    expr = new Sum(expr, offset);
                 }
 
-                bindingAnimation = CreateExpressionAnimation(expr);
+                bindingAnimation = CreateExpressionAnimation(expr.ToString());
                 bindingAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 _progressBindingAnimations.Add(key, bindingAnimation);
             }
@@ -1726,8 +1727,6 @@ namespace LottieToWinComp
             // The Progress property provides the time reference for the animation.
             controller.StartAnimation("Progress", bindingAnimation);
         }
-
-        static string FloatAsString(double value) => value.ToString("0.######################################");
 
         void ApplyScalarKeyFrameAnimation(
             TranslationContext context,
@@ -1751,7 +1750,7 @@ namespace LottieToWinComp
                     value,
                     CreateScalarKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, (float)(val * scale), easing),
-                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
+                    null,
                     targetObject,
                     targetPropertyName);
             }
@@ -1771,7 +1770,7 @@ namespace LottieToWinComp
                     value,
                     CreateColorKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Color(val), easing),
-                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, expr, easing),
+                    null,
                     targetObject,
                     targetPropertyName);
             }
@@ -1792,7 +1791,7 @@ namespace LottieToWinComp
                     value,
                     CreatePathKeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, CompositionPathFromPathGeometry(val, fillType), easing),
-                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, expr, easing),
+                    null,
                     targetObject,
                     targetPropertyName);
             }
@@ -1818,8 +1817,8 @@ namespace LottieToWinComp
                     context,
                     value,
                     CreateVector2KeyFrameAnimation,
-                    (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector2(val) * (float)scale, easing),
-                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
+                    (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector2(val * scale), easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? Scale(expr, scale) : expr.ToString(), easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1846,7 +1845,7 @@ namespace LottieToWinComp
                     value,
                     CreateVector3KeyFrameAnimation,
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector3(val) * (float)scale, easing),
-                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? $"{FloatAsString((float)scale)}*({expr})" : expr, easing),
+                    (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? Scale(expr, scale).ToString() : expr.ToString(), easing),
                     targetObject,
                     targetPropertyName);
             }
@@ -1857,7 +1856,7 @@ namespace LottieToWinComp
             Animatable<T> value,
             Func<CA> compositionAnimationFactory,
             Action<CA, float, T, CompositionEasingFunction> insertKeyFrame,
-            Action<CA, float, string, CompositionEasingFunction> insertExpressionKeyFrame,
+            Action<CA, float, Expression, CompositionEasingFunction> insertExpressionKeyFrame,
             CompositionObject targetObject,
             string targetPropertyName) where CA : KeyFrameAnimation_ where T : IEquatable<T>
         {
@@ -1988,15 +1987,23 @@ namespace LottieToWinComp
                         // so that there is room to add a key frame just after this to hold
                         // the final value. This is necessary so that the expression we're about
                         // to add won't get evaluated during the following segment.
-                        adjustedProgress -= c_keyFrameProgressEpsilon;
+                        if (adjustedProgress > 0)
+                        {
+                            adjustedProgress -= c_keyFrameProgressEpsilon;
+                        }
 
 #if !LinearEasingOnSpatialBeziers
                         // Add an animation to map from progress to t over the range of this key frame.
-                        progressMappingAnimation.InsertKeyFrame((float)previousProgress + c_keyFrameProgressEpsilon, 0, CreateJumpStepEasingFunction());
+                        if (previousProgress > 0)
+                        {
+                            progressMappingAnimation.InsertKeyFrame((float)previousProgress + c_keyFrameProgressEpsilon, 0, CreateJumpStepEasingFunction());
+                        }
                         progressMappingAnimation.InsertKeyFrame((float)adjustedProgress, 1, CreateCompositionEasingFunction(keyFrame.Easing));
 #endif
-                        insertExpressionKeyFrame(compositionAnimation, (float)adjustedProgress,
-                            cb.ToString(),                      // Expression. 
+                        insertExpressionKeyFrame(
+                            compositionAnimation, 
+                            (float)adjustedProgress,
+                            cb,                                 // Expression. 
                             CreateJumpStepEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.
 
                         if (!rootReferenceAdded)
@@ -2057,12 +2064,17 @@ namespace LottieToWinComp
             return (float)result;
         }
 
+        static string Scale(Expression expression, double scale)
+        {
+            return new Multiply(new Number(scale), expression).ToString();
+        }
+
         sealed class TimeRemap : Expression
         {
             readonly double _tRangeLow;
             readonly double _tRangeHigh;
             readonly Expression _t;
-            internal TimeRemap(double tRangeLow, double tRangeHigh, string t)
+            internal TimeRemap(double tRangeLow, double tRangeHigh, Expression t)
             {
                 if (tRangeLow >= tRangeHigh)
                 {
@@ -2071,7 +2083,7 @@ namespace LottieToWinComp
 
                 _tRangeLow = tRangeLow;
                 _tRangeHigh = tRangeHigh;
-                _t = Name(t);
+                _t = t;
             }
 
             public override Expression Simplified

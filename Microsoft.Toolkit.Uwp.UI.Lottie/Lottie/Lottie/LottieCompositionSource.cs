@@ -62,7 +62,7 @@ namespace Lottie
         public LottieCompositionOptions Options { get; set; }
 
         /// <summary>
-        /// Called by XAML to convert a string to a <see cref="CompositionSource"/>.
+        /// Called by XAML to convert a string to an <see cref="ICompositionSource"/>.
         /// </summary>
         public static LottieCompositionSource CreateFromString(string uri)
         {
@@ -161,8 +161,10 @@ namespace Lottie
                 if (Options.HasFlag(LottieCompositionOptions.IncludeDiagnostics))
                 {
                     sw = Stopwatch.StartNew();
-                    diagnostics = new LottieCompositionDiagnostics();
-                    diagnostics.Options = Options;
+                    diagnostics = new LottieCompositionDiagnostics
+                    {
+                        Options = Options
+                    };
                 }
 
                 var result = new ContentFactory(diagnostics);

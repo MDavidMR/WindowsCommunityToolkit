@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LottieData
@@ -25,11 +26,43 @@ namespace LottieData
         /// </summary>
         public static string[] Validate(LottieComposition lottieComposition)
         {
+            if (lottieComposition == null)
+            {
+                throw new ArgumentNullException(nameof(lottieComposition));
+            }
+
             var validator = new LottieCompositionValidator(lottieComposition);
 
+            validator.ValidateLayerInPointBeforeOutPoint();
             validator.ValidateParentPointsToValidLayer();
             validator.ValidateNoParentCycles();
             return validator._issues.ToArray();
+        }
+
+        /// <summary>
+        /// Validates that the in-point of each layer is before its out-point.
+        /// </summary>
+        void ValidateLayerInPointBeforeOutPoint()
+        {
+            ValidateLayerInPointBeforeOutPoint(_lottieComposition.Layers);
+            foreach (var layersAsset in _lottieComposition.Assets.OfType<LayerCollectionAsset>())
+            {
+                ValidateLayerInPointBeforeOutPoint(layersAsset.Layers);
+            }
+        }
+
+        /// <summary>
+        /// Validates that the in-point of each layer is before its out-point.
+        /// </summary>
+        void ValidateLayerInPointBeforeOutPoint(LayerCollection layers)
+        {
+            foreach (var layer in layers.GetLayersBottomToTop())
+            {
+                if (layer.InPoint >= layer.OutPoint)
+                {
+                    _issues.Add($"Layer {layer.Name} has in-point after out-point.");
+                }
+            }
         }
 
         /// <summary>
