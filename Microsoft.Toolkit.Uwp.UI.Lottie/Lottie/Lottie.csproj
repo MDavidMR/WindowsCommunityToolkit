@@ -179,8 +179,8 @@
     <Compile Include="LottieData\Serialization\LottieJsonReaderException.cs" />
     <Compile Include="Lottie\CompositionSegment.cs" />
     <Compile Include="Lottie\ICompositionFactory.cs" />
-    <Compile Include="Lottie\ICompositionSink.cs" />
     <Compile Include="Lottie\ICompositionSource.cs" />
+    <Compile Include="Lottie\IDynamicCompositionSource.cs" />
     <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
     <Compile Include="Lottie\LottieCompositionOptions.cs" />
     <Compile Include="Lottie\LottieCompositionSource.cs" />

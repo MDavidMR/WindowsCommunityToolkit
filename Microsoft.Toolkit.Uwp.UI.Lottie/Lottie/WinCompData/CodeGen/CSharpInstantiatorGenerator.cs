@@ -32,6 +32,7 @@ namespace WinCompData.CodeGen
 
         protected override void GenerateNamespaceUsings(CodeBuilder builder, bool requiresWin2d)
         {
+            builder.WriteLine("using Host = Lottie;");
             if (requiresWin2d)
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
@@ -40,46 +41,6 @@ namespace WinCompData.CodeGen
             builder.WriteLine("using System.Numerics;");
             builder.WriteLine("using Windows.UI;");
             builder.WriteLine("using Windows.UI.Composition;");
-            builder.WriteLine("using Windows.UI.Xaml;");
-        }
-
-        protected override void WriteICompositionSourceImplementation(CodeBuilder builder)
-        {
-            builder.WriteLine();
-            builder.UnIndent();
-            builder.UnIndent();
-            builder.WriteLine("#region ICompositionSource");
-            builder.Indent();
-            builder.Indent();
-            // Generate the ICompositionSource interface.
-            builder.WriteLine("void Lottie.ICompositionSource.ConnectSink(Lottie.ICompositionSink sink)");
-            builder.OpenScope();
-            builder.WriteLine("CreateInstance(");
-            builder.Indent();
-            builder.WriteLine($"Window.Current.Compositor,");
-            builder.WriteLine("out var rootVisual,");
-            builder.WriteLine("out var size,");
-            builder.WriteLine("out var progressPropertySet,");
-            builder.WriteLine("out var duration);");
-            builder.UnIndent();
-            builder.WriteLine();
-            builder.WriteLine($"sink.SetContent(");
-            builder.Indent();
-            builder.WriteLine("rootVisual,");
-            builder.WriteLine("size,");
-            builder.WriteLine("progressPropertySet,");
-            builder.WriteLine("duration,");
-            builder.WriteLine("null);");
-            builder.UnIndent();
-            builder.CloseScope();
-            builder.WriteLine();
-            builder.WriteLine("void Lottie.ICompositionSource.DisconnectSink(Lottie.ICompositionSink sink) { }");
-            builder.UnIndent();
-            builder.UnIndent();
-            builder.WriteLine("#endregion // ICompositionSource");
-            builder.Indent();
-            builder.Indent();
-            builder.WriteLine();
         }
 
         sealed class CSharpStringifier : IStringifier

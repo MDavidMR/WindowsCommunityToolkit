@@ -14,6 +14,9 @@ using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using System.Numerics;
+using Windows.UI.Composition;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Lottie
 {
@@ -21,10 +24,10 @@ namespace Lottie
     /// A <see cref="CompositionSource"/> for a Lottie composition. This allows
     /// a Lottie to be specified as the source of a <see cref="Composition"/>.
     /// </summary>
-    public sealed class LottieCompositionSource : ICompositionSource
+    public sealed class LottieCompositionSource : IDynamicCompositionSource
     {
-        readonly List<ICompositionSink> _sinks = new List<ICompositionSink>();
         readonly StorageFile _storageFile;
+        EventRegistrationTokenTable<DynamicCompositionSourceEventHandler> _compositionInvalidatedEventTokenTable;
         int _loadVersion;
         Uri _uriSource;
         ContentFactory _contentFactory;
@@ -89,19 +92,57 @@ namespace Lottie
             return LoadAsync(new Loader(sourceUri)).AsAsyncAction();
         }
 
-        void ICompositionSource.ConnectSink(ICompositionSink sink)
+        event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
         {
-            Debug.Assert(!_sinks.Contains(sink));
-            _sinks.Add(sink);
-            if (_contentFactory != null)
+            add
             {
-                _contentFactory.InstantiateContentForSink(sink);
+                return EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+                   .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
+                   .AddEventHandler(value);
+            }
+
+            remove
+            {
+                EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+                   .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
+                    .RemoveEventHandler(value);
             }
         }
 
-        void ICompositionSource.DisconnectSink(ICompositionSink sink)
+        bool ICompositionSource.TryCreateInstance(
+            Compositor compositor,
+            out Visual rootVisual,
+            out Vector2 size,
+            out CompositionPropertySet progressPropertySet,
+            out TimeSpan duration,
+            out object diagnostics)
         {
-            _sinks.Remove(sink);
+            if (_contentFactory == null)
+            {
+                rootVisual = null;
+                size = default(Vector2);
+                progressPropertySet = null;
+                duration = default(TimeSpan);
+                diagnostics = null;
+                return false;
+            }
+            else
+            {
+                return _contentFactory.TryCreateInstance(
+                    compositor,
+                    out rootVisual,
+                    out size,
+                    out progressPropertySet,
+                    out duration,
+                    out diagnostics);
+            }
+        }
+
+        void NotifyListenersThatCompositionChanged()
+        {
+            EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+                .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
+                .InvocationList?.Invoke(this);
         }
 
         // Starts a LoadAsync and returns immediately.
@@ -114,11 +155,8 @@ namespace Lottie
             var loadVersion = ++_loadVersion;
             _contentFactory = null;
 
-            // Notify all the sinks that their existing content is no longer valid.
-            foreach (var sink in _sinks)
-            {
-                sink.SetContent(null, new System.Numerics.Vector2(), null, TimeSpan.Zero, null);
-            }
+            // Notify all listeners that their existing content is no longer valid.
+            NotifyListenersThatCompositionChanged();
 
             var contentFactory = await loader.Load(Options);
             if (loadVersion != _loadVersion)
@@ -130,17 +168,14 @@ namespace Lottie
             // We are the the most recent load. Save the result.
             _contentFactory = contentFactory;
 
-            // Instantiate content for each registered CompositionPlayer
-            foreach (var sink in _sinks)
-            {
-                contentFactory.InstantiateContentForSink(sink);
-            }
-
             if (!contentFactory.CanInstantiate)
             {
                 // The load failed.
                 throw new ArgumentException("Failed to load composition.");
             }
+
+            // Notify all listeners that they should create their instance of the content again.
+            NotifyListenersThatCompositionChanged();
         }
 
         // Handles loading a composition from a Lottie file.
@@ -220,7 +255,7 @@ namespace Lottie
                     // Save the LottieComposition in the diagnostics so that the xml and codegen
                     // code can be derived from it.
                     diagnostics.LottieComposition = lottieComposition;
-                    
+
                     // For each marker, normalize to a progress value by subtracting the InPoint (so it is relative to the start of the animation)
                     // and dividing by OutPoint - InPoint
                     diagnostics.Markers = lottieComposition.Markers.Select(m =>
@@ -342,7 +377,7 @@ namespace Lottie
 
         // Information from which a composition's content can be instantiated. Contains the WinCompData
         // translation of a composition and some metadata.
-        sealed class ContentFactory
+        sealed class ContentFactory : ICompositionSource
         {
             readonly LottieCompositionDiagnostics _diagnostics;
             WinCompData.Visual _wincompDataRootVisual;
@@ -367,32 +402,42 @@ namespace Lottie
                 _wincompDataRootVisual = rootVisual;
             }
 
-            internal bool CanInstantiate { get { return _wincompDataRootVisual != null; } }
+            internal bool CanInstantiate => _wincompDataRootVisual != null;
 
-            // Instantiates a new copy of the content and sets it on the given sink.
-            // Requires _translatedLottie != null.
-            internal void InstantiateContentForSink(ICompositionSink sink)
+            public bool TryCreateInstance(
+                Compositor compositor,
+                out Visual rootVisual,
+                out Vector2 size,
+                out CompositionPropertySet progressPropertySet,
+                out TimeSpan duration,
+                out object diagnostics)
             {
-                Windows.UI.Composition.Visual rootVisual = null;
-                System.Numerics.Vector2 size = new System.Numerics.Vector2((float)_width, (float)_height);
-                Windows.UI.Composition.CompositionPropertySet progressPropertySet = null;
-                TimeSpan duration = _duration;
                 LottieCompositionDiagnostics diags = _diagnostics != null ? _diagnostics.Clone() : null;
-                object diagnostics = diags;
+                diagnostics = diags;
 
-                if (_wincompDataRootVisual != null)
+                if (!CanInstantiate)
+                {
+                    rootVisual = null;
+                    size = default(Vector2);
+                    progressPropertySet = null;
+                    duration = default(TimeSpan);
+                    return false;
+                }
+                else
                 {
                     var sw = Stopwatch.StartNew();
 
-                    rootVisual = Instantiator.CreateVisual(Window.Current.Compositor, _wincompDataRootVisual);
+                    rootVisual = Instantiator.CreateVisual(compositor, _wincompDataRootVisual);
+                    size = new Vector2((float)_width, (float)_height);
                     progressPropertySet = rootVisual.Properties;
+                    duration = _duration;
 
                     if (diags != null)
                     {
                         diags.InstantiationTime = sw.Elapsed;
                     }
+                    return true;
                 }
-                sink.SetContent(rootVisual, size, progressPropertySet, duration, diagnostics);
             }
         }
 
@@ -419,6 +464,7 @@ namespace Lottie
             return task;
 #endif
         }
+
         #endregion DEBUG
     }
 }

@@ -1,46 +1,29 @@
-using Lottie;
+using Host = Lottie;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;
 using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.Xaml;
 
 namespace Compositions
 {
-    sealed class UiFeedbackAnimations : ICompositionSource
+    sealed class UiFeedbackAnimations : Host.ICompositionSource
     {
-        public void CreateInstance(
+        public bool TryCreateInstance(
             Compositor compositor,
             out Visual rootVisual,
             out Vector2 size,
             out CompositionPropertySet progressPropertySet,
-            out TimeSpan duration)
+            out TimeSpan duration,
+            out object diagnostics)
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(337, 317);
             progressPropertySet = rootVisual.Properties;
             duration = TimeSpan.FromTicks(23830000);
+            diagnostics = null;
+            return true;
         }
-        
-        void ICompositionSource.ConnectSink(ICompositionSink sink)
-        {
-            CreateInstance(
-                Window.Current.Compositor,
-                out var rootVisual,
-                out var size,
-                out var progressPropertySet,
-                out var duration);
-            
-            sink.SetContent(
-                rootVisual,
-                size,
-                progressPropertySet,
-                duration,
-                null);
-        }
-        
-        void ICompositionSource.DisconnectSink(ICompositionSink sink) { }
         
         sealed class Instantiator
         {

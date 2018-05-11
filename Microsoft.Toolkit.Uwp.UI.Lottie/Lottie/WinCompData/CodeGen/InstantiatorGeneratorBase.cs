@@ -164,28 +164,29 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"sealed class {className}");
+            builder.WriteLine($"sealed class {className} : Host{ScopeResolve}ICompositionSource");
             
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine("public void CreateInstance(");
+            builder.WriteLine("public bool TryCreateInstance(");
             builder.Indent();
             builder.WriteLine("Compositor compositor,");
             builder.WriteLine("out Visual rootVisual,");
             builder.WriteLine("out Vector2 size,");
             builder.WriteLine("out CompositionPropertySet progressPropertySet,");
-            builder.WriteLine("out TimeSpan duration)");
+            builder.WriteLine("out TimeSpan duration,");
+            builder.WriteLine("out object diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine($"rootVisual = Instantiator{Deref}InstantiateComposition(compositor);");
             builder.WriteLine($"size = {Vector2(width, height)};");
             builder.WriteLine("progressPropertySet = rootVisual.Properties;");
             builder.WriteLine($"duration = {TimeSpan(duration)};");
+            builder.WriteLine($"diagnostics = {Null};");
+            builder.WriteLine("return true;");
             builder.CloseScope();
-
-            // Write the ICompositionSource implementation. This is optional - some generators may output nothing.
-            WriteICompositionSourceImplementation(builder);
+            builder.WriteLine();
 
             // Write the instantiator.
             builder.WriteLine("sealed class Instantiator");

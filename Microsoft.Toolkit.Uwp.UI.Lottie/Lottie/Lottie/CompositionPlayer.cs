@@ -22,7 +22,7 @@ namespace Lottie
     /// A XAML element that displays and controls an animated composition.
     /// </summary>
     [ContentProperty(Name = nameof(Source))]
-    public sealed class CompositionPlayer : FrameworkElement, ICompositionSink
+    public sealed class CompositionPlayer : FrameworkElement
     {
         // The name of the property in the _progressPropertySet that 
         // controls the progress of the animation.
@@ -574,6 +574,13 @@ namespace Lottie
             }
         }
 
+        // Called when the current ICompositionSource changes its content.
+        void HandleCompositionInvalidated(object sender)
+        {
+            // Get the new content from the source.
+            UpdateContent();
+        }
+
         // Called when the Source property is updated.
         void HandleSourcePropertyChanged(ICompositionSource oldValue, ICompositionSource newValue)
         {
@@ -581,23 +588,19 @@ namespace Lottie
             // enqueued before the Source was set are irrelevant.
             ClearCommandQueue();
 
-            if (oldValue != null)
+            // Disconnect from the old source.
+            if (oldValue is IDynamicCompositionSource oldDynamicSource)
             {
-                // Disconnect from the old source.
-                oldValue.DisconnectSink(this);
+                oldDynamicSource.CompositionInvalidated -= HandleCompositionInvalidated;
             }
 
-            if (newValue != null)
+            if (newValue is IDynamicCompositionSource newDynamicSource)
             {
-#if DEBUG
-                var sw = Stopwatch.StartNew();
-#endif // DEBUG
-                // Register to receive content from the source.
-                newValue.ConnectSink(this);
-#if DEBUG
-                Debug.WriteLine($"ConnectSink on {newValue} took {sw.Elapsed}");
-#endif // DEBUG
+                newDynamicSource.CompositionInvalidated += HandleCompositionInvalidated;
             }
+
+            // Get the new content from the source.
+            UpdateContent();
         }
 
         // Called when the Stretch property is updated.
@@ -629,17 +632,37 @@ namespace Lottie
             }
         }
 
-        // Method called by the current ICompositionSource when it has new content
+        // Method called when the current ICompositionSource has new content
         // or the existing content is no longer valid.
-        void ICompositionSink.SetContent(
-            Visual rootVisual,
-            Vector2 size,
-            CompositionPropertySet progressPropertySet,
-            TimeSpan duration,
-            object diagnostics)
+        void UpdateContent()
         {
             // Unload the old composition (if any).
             UnloadComposition();
+
+            Visual rootVisual;
+            Vector2 size;
+            CompositionPropertySet progressPropertySet;
+            TimeSpan duration;
+            object diagnostics;
+
+            if (Source == null)
+            {
+                rootVisual = null;
+                size = default(Vector2);
+                progressPropertySet = null;
+                duration = default(TimeSpan);
+                diagnostics = null;
+            }
+            else
+            {
+                Source.TryCreateInstance(
+                    Window.Current.Compositor,
+                    out rootVisual,
+                    out size,
+                    out progressPropertySet,
+                    out duration,
+                    out diagnostics);
+            }
 
             _compositionRoot = rootVisual;
             _compositionSize = size;

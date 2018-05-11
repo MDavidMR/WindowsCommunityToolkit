@@ -113,11 +113,11 @@
     <Compile Include="..\Lottie\Lottie\CompositionSegment.cs">
       <Link>Lottie\CompositionSegment.cs</Link>
     </Compile>
-    <Compile Include="..\Lottie\Lottie\ICompositionSink.cs">
-      <Link>Lottie\ICompositionSink.cs</Link>
-    </Compile>
     <Compile Include="..\Lottie\Lottie\ICompositionSource.cs">
       <Link>Lottie\ICompositionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\Lottie\Lottie\IDynamicCompositionSource.cs">
+      <Link>Lottie\IDynamicCompositionSource.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\Instantiator.cs">
       <Link>Lottie\Instantiator.cs</Link>
