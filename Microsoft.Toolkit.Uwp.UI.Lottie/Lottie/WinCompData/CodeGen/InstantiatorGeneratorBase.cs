@@ -16,13 +16,13 @@ namespace WinCompData.CodeGen
     {
         // The name of the field holding the singleton ExpressionAnimation.
         protected const string c_singletonExpressionAnimationName = "_expressionAnimation";
-        protected readonly bool _setCommentProperties;
-        protected readonly ObjectGraph<ObjectData> _objectGraph;
+        readonly bool _setCommentProperties;
+        readonly ObjectGraph<ObjectData> _objectGraph;
         // The subset of the object graph for which nodes will be generated.
-        protected readonly ObjectData[] _canonicalNodes;
-        protected readonly IStringifier _stringifier;
+        readonly ObjectData[] _canonicalNodes;
+        readonly IStringifier _stringifier;
 
-        protected InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
+        internal InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
         {
             _setCommentProperties = setCommentProperties;
             _stringifier = stringifier;
@@ -142,8 +142,24 @@ namespace WinCompData.CodeGen
             }
         }
 
-        protected abstract void GenerateNamespaceUsings(CodeBuilder builder, bool requiresD2d);
+        // Override to generate the using namespace statements at the top of the file.
+        protected abstract void WritePreamble(CodeBuilder builder, bool requiresD2d);
 
+        protected abstract void WriteClassStart(
+            CodeBuilder builder,
+            string className,
+            Vector2 size,
+            CompositionPropertySet progressPropertySet,
+            TimeSpan duration);
+
+        protected abstract void WriteField(CodeBuilder builder, string typeName, string fieldName);
+
+        protected abstract void WriteClassEnd(CodeBuilder builder, Visual rootVisual);
+
+
+        /// <summary>
+        /// Call this to generate the code. Returns a string containing the generated code.
+        /// </summary>
         protected string GenerateCode(
             string className,
             Visual rootVisual,
@@ -152,47 +168,14 @@ namespace WinCompData.CodeGen
             CompositionPropertySet progressPropertySet,
             TimeSpan duration)
         {
-            var builder = new CodeBuilder();
-            // TODO - keyframe animations should have their reference parameters set. Doesn't
-            //        matter right now because we have no expression keyframes.
-
+            var codeBuilder = new CodeBuilder();
 
             // Generate #includes and usings for namespaces.
             var requiresWin2D = _canonicalNodes.Where(n => n.RequiresWin2D).Any();
-            GenerateNamespaceUsings(builder, requiresWin2D);
 
-            builder.WriteLine();
-            builder.WriteLine("namespace Compositions");
-            builder.OpenScope();
-            builder.WriteLine($"sealed class {className} : Host{ScopeResolve}ICompositionSource");
-            
-            builder.OpenScope();
+            WritePreamble(codeBuilder, requiresWin2D);
 
-            // Generate the method that creates an instance of the composition.
-            builder.WriteLine("public bool TryCreateInstance(");
-            builder.Indent();
-            builder.WriteLine("Compositor compositor,");
-            builder.WriteLine("out Visual rootVisual,");
-            builder.WriteLine("out Vector2 size,");
-            builder.WriteLine("out CompositionPropertySet progressPropertySet,");
-            builder.WriteLine("out TimeSpan duration,");
-            builder.WriteLine("out object diagnostics)");
-            builder.UnIndent();
-            builder.OpenScope();
-            builder.WriteLine($"rootVisual = Instantiator{Deref}InstantiateComposition(compositor);");
-            builder.WriteLine($"size = {Vector2(width, height)};");
-            builder.WriteLine("progressPropertySet = rootVisual.Properties;");
-            builder.WriteLine($"duration = {TimeSpan(duration)};");
-            builder.WriteLine($"diagnostics = {Null};");
-            builder.WriteLine("return true;");
-            builder.CloseScope();
-            builder.WriteLine();
-
-            // Write the instantiator.
-            builder.WriteLine("sealed class Instantiator");
-            builder.OpenScope();
-            builder.WriteLine("readonly Compositor _c;");
-            builder.WriteLine($"readonly ExpressionAnimation {c_singletonExpressionAnimationName};");
+            WriteClassStart(codeBuilder, className, new Vector2(width, height), progressPropertySet, duration);
 
             // Write fields for each object that needs storage (i.e. objects that are 
             // referenced more than once).
@@ -201,45 +184,23 @@ namespace WinCompData.CodeGen
                 if (node.RequiresStorage)
                 {
                     // Generate a field for the storage.
-                    builder.WriteLine($"{node.TypeName} {node.FieldName};");
+                    WriteField(codeBuilder, node.TypeName, node.FieldName);
                 }
             }
-
-            // Write the method that instantiates everything.
-            builder.WriteLine();
-            // Generate the code for the root method.
-            builder.WriteLine("internal static Visual InstantiateComposition(Compositor compositor)");
-            builder.Indent();
-            builder.WriteLine($"=> {New} Instantiator(compositor){Deref}{NodeFor(rootVisual).FactoryCall()};");
-            builder.UnIndent();
-
-            // Write the constructor for the instantiator.
-            builder.WriteLine();
-            builder.WriteLine("Instantiator(Compositor compositor)");
-            builder.OpenScope();
-            builder.WriteLine("_c = compositor;");
-            builder.WriteLine($"{c_singletonExpressionAnimationName} = compositor{Deref}CreateExpressionAnimation();");
-            builder.CloseScope();
-            builder.WriteLine();
+            codeBuilder.WriteLine();
 
             // Write methods for each node.
             foreach (var node in _canonicalNodes)
             {
-                WriteCodeForNode(builder, node);
+                WriteCodeForNode(codeBuilder, node);
             }
 
-            builder.CloseScope();
-            builder.CloseScope();
-            builder.CloseScope();
-
-            return builder.ToString();
+            WriteClassEnd(codeBuilder, rootVisual);
+            return codeBuilder.ToString();
         }
 
-        // Override this to generate an implementation of ICompositionSource.
-        protected virtual void WriteICompositionSourceImplementation(CodeBuilder builder) {  }
-
         // Generates code for the given node. The code is written into the CodeBuilder on the node.
-        protected void WriteCodeForNode(CodeBuilder builder, ObjectData node)
+        void WriteCodeForNode(CodeBuilder builder, ObjectData node)
         {
             // Only generate if the node is not inlined into the caller.
             if (!node.Inlined)
@@ -304,7 +265,7 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        virtual protected bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
+        protected virtual bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
             if (node.RequiresStorage)
@@ -708,7 +669,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        protected void InitializeCompositionAnimation(CodeBuilder builder, CompositionAnimation obj)
+        void InitializeCompositionAnimation(CodeBuilder builder, CompositionAnimation obj)
         {
             InitializeCompositionAnimationWithParameters(
                 builder,
@@ -729,7 +690,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        virtual protected void InitializeKeyFrameAnimation(CodeBuilder builder, KeyFrameAnimation_ obj)
+        void InitializeKeyFrameAnimation(CodeBuilder builder, KeyFrameAnimation_ obj)
         {
             InitializeCompositionAnimation(builder, obj);
             builder.WriteLine($"result{Deref}Duration = {TimeSpan(obj.Duration)};");
@@ -860,7 +821,7 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        protected bool GenerateCompositionRectangleGeometryFactory(CodeBuilder builder, CompositionRectangleGeometry obj, ObjectData node)
+        bool GenerateCompositionRectangleGeometryFactory(CodeBuilder builder, CompositionRectangleGeometry obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateRectangleGeometry()");
@@ -938,7 +899,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}{VectorAppend}({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{IListAdd}({NodeFor(shape).FactoryCall()});");
                 }
             }
             StartAnimations(builder, obj);
@@ -956,7 +917,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}{VectorAppend}({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{IListAdd}({NodeFor(shape).FactoryCall()});");
                 }
             }
             StartAnimations(builder, obj);
@@ -1087,7 +1048,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
         }
 
-        virtual protected void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
+        protected virtual void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
             builder.WriteLine($"{node.TypeName} {node.Name}({(parameters == null ? "" : string.Join(", ", parameters))})");
             builder.OpenScope();
@@ -1137,64 +1098,28 @@ namespace WinCompData.CodeGen
                 }
             }
         }
-        protected string Deref => _stringifier.Deref;
 
-        protected string New => _stringifier.New;
+        string Deref => _stringifier.Deref;
 
-        protected string Null => _stringifier.Null;
+        string New => _stringifier.New;
 
-        protected string ScopeResolve => _stringifier.ScopeResolve;
+        string Null => _stringifier.Null;
 
-        protected string Var => _stringifier.Var;
+        string ScopeResolve => _stringifier.ScopeResolve;
 
-        protected string Bool(bool value) => _stringifier.Bool(value);
+        string Var => _stringifier.Var;
 
-        protected string Color(Color value) => _stringifier.Color(value);
+        string Bool(bool value) => _stringifier.Bool(value);
 
-        protected string VectorAppend => _stringifier.VectorAppend;
+        string Color(Color value) => _stringifier.Color(value);
 
-        virtual protected string CanvasFigureLoop(CanvasFigureLoop value)
-        {
-            switch (value)
-            {
-                case Mgcg.CanvasFigureLoop.Open:
-                    return $"CanvasFigureLoop{ScopeResolve}Open";
-                case Mgcg.CanvasFigureLoop.Closed:
-                    return $"CanvasFigureLoop{ScopeResolve}Closed";
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+        string IListAdd => _stringifier.IListAdd;
 
-        string CanvasGeometryCombine(CanvasGeometryCombine value)
-        {
-            switch (value)
-            {
-                case Mgcg.CanvasGeometryCombine.Union:
-                    return $"CanvasGeometryCombine{ScopeResolve}Union";
-                case Mgcg.CanvasGeometryCombine.Exclude:
-                    return $"CanvasGeometryCombine{ScopeResolve}Exclude";
-                case Mgcg.CanvasGeometryCombine.Intersect:
-                    return $"CanvasGeometryCombine{ScopeResolve}Intersect";
-                case Mgcg.CanvasGeometryCombine.Xor:
-                    return $"CanvasGeometryCombine{ScopeResolve}Xor";
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+        string CanvasFigureLoop(CanvasFigureLoop value) => _stringifier.CanvasFigureLoop(value);
 
-        virtual protected string FilledRegionDetermination(CanvasFilledRegionDetermination value)
-        {
-            switch (value)
-            {
-                case CanvasFilledRegionDetermination.Alternate:
-                    return $"CanvasFilledRegionDetermination{ScopeResolve}Alternate";
-                case CanvasFilledRegionDetermination.Winding:
-                    return $"CanvasFilledRegionDetermination{ScopeResolve}Winding";
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+        string CanvasGeometryCombine(CanvasGeometryCombine value) => _stringifier.CanvasGeometryCombine(value);
+
+        string FilledRegionDetermination(CanvasFilledRegionDetermination value) => _stringifier.FilledRegionDetermination(value);
 
         string Float(float value) => _stringifier.Float(value);
 
@@ -1238,35 +1163,35 @@ namespace WinCompData.CodeGen
             }
         }
 
-        protected string TimeSpan(TimeSpan value) => _stringifier.TimeSpan(value);
+        string TimeSpan(TimeSpan value) => _stringifier.TimeSpan(value);
 
-        protected string Vector2(float x, float y) => Vector2(new Vector2(x, y));
+        string Vector2(Vector2 value) => _stringifier.Vector2(value);
 
-        protected string Vector2(Vector2 value) => _stringifier.Vector2(value);
-
-        protected string Vector3(Vector3 value) => _stringifier.Vector3(value);
+        string Vector3(Vector3 value) => _stringifier.Vector3(value);
 
         // Provides language-specific string representations of a value.
         protected internal interface IStringifier
         {
+            string Bool(bool value);
+            string CanvasFigureLoop(CanvasFigureLoop value);
+            string CanvasGeometryCombine(CanvasGeometryCombine value);
+
+            string Color(Color value);
             string Deref { get; }
-            string Ref { get; }
+            string FilledRegionDetermination(CanvasFilledRegionDetermination value);
+            string Float(float value);
+            string IListAdd { get; }
+            string Int(int value);
             string MemberSelect { get; }
             string New { get; }
             string Null { get; }
             string ScopeResolve { get; }
-            string Var { get; }
-            string Bool(bool value);
-            string Color(Color value);
-            string Float(float value);
-            string Int(int value);
             string Matrix3x2(Matrix3x2 value);
             string String(string value);
             string TimeSpan(TimeSpan value);
+            string Var { get; }
             string Vector2(Vector2 value);
-            string Vector2Raw(Vector2 value);
             string Vector3(Vector3 value);
-            string VectorAppend { get; }
         }
 
         // A node in the object graph, annotated with extra stuff to assist in code generation.

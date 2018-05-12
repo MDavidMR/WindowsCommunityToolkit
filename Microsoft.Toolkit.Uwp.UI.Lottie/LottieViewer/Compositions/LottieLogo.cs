@@ -79,15 +79,6 @@ namespace Compositions
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0006;
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0008;
 
-            internal static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).ContainerVisual_0000();
-
-            Instantiator(Compositor compositor)
-            {
-                _c = compositor;
-                _expressionAnimation = compositor.CreateExpressionAnimation();
-            }
-
             CanvasGeometry CanvasGeometry_0000()
             {
                 if (_canvasGeometry_0000 != null)
@@ -5175,6 +5166,16 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(295.771F, 108.994F), LinearEasingFunction_0000());
                 result.InsertKeyFrame(0.1043956F, new Vector2(35.771F, 108.994F), CubicBezierEasingFunction_0028());
                 return result;
+            }
+
+
+            internal static Visual InstantiateComposition(Compositor compositor)
+                => new Instantiator(compositor).ContainerVisual_0000();
+
+            Instantiator(Compositor compositor)
+            {
+                _c = compositor;
+                _expressionAnimation = compositor.CreateExpressionAnimation();
             }
 
         }
