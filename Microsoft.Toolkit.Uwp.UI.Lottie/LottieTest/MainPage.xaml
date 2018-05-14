@@ -9,6 +9,7 @@
 
     <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked">
         <NavigationView.MenuItems>
+            <NavigationViewItem Content="Scrape LottieFiles.com" Tag="ScrapeLottieFiles"/>
             <NavigationViewItem Content="Audit the Lottie corpus" Tag="AuditCorpus"/>
             <NavigationViewItem Content="Show MyComposition" Tag="MyComposition"/>
         </NavigationView.MenuItems>

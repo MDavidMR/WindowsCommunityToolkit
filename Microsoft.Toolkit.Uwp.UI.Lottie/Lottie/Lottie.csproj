@@ -116,6 +116,7 @@
     <Compile Include="LottieToWinComp\Expressions\CubicBezierFunction.cs" />
     <Compile Include="LottieToWinComp\Expressions\Expression.cs" />
     <Compile Include="LottieToWinComp\Expressions\LessThan.cs" />
+    <Compile Include="LottieToWinComp\Expressions\Matrix3x2.cs" />
     <Compile Include="LottieToWinComp\Expressions\Name.cs" />
     <Compile Include="LottieToWinComp\Expressions\Subtract.cs" />
     <Compile Include="LottieToWinComp\Expressions\Multiply.cs" />

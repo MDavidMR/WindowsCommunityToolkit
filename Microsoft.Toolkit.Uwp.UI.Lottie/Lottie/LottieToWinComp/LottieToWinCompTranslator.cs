@@ -321,16 +321,12 @@ namespace LottieToWinComp
                 contentsNode = CreateContainerShape();
                 leafTransformNode.Shapes.Add(contentsNode);
 #if !NoInvisibility
-
-                const string invisible = "Matrix3x2(0,0,0,0,0,0)";
-                const string visible = "Matrix3x2(1,0,0,1,0,0)";
-
                 var visibilityExpression =
                     ProgressExpression.CreateProgressExpression(
                         s_rootProgress,
-                        new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
-                        new ProgressExpression.Segment(inProgress, outProgress, visible),
-                        new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
+                        new ProgressExpression.Segment(double.MinValue, inProgress, Matrix3x2.Zero),
+                        new ProgressExpression.Segment(inProgress, outProgress, Matrix3x2.Identity),
+                        new ProgressExpression.Segment(outProgress, double.MaxValue, Matrix3x2.Zero)
                         );
 
                 var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
@@ -1900,7 +1896,8 @@ namespace LottieToWinComp
 
             var animationDuration = animationEndTime - animationStartTime;
 
-            var scale = context.DurationInFrames / animationDuration;
+            // The Math.Min is to deal with rounding errors that cause the scale to be slightly more than 1.
+            var scale = Math.Min(context.DurationInFrames / animationDuration, 1.0);
             var offset = (context.StartTime - animationStartTime) / animationDuration;
 
             // Insert the keyframes with the progress adjusted so the first keyframe is at 0 and the remaining

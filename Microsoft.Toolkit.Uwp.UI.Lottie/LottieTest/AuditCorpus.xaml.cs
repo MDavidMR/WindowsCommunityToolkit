@@ -51,26 +51,18 @@ namespace LottieTest
             _txtProgressCounter.Text = "0";
             _txtProgressTotal.Text = "0";
             StorageFolder folder;
-            if (_standardCorpus.IsChecked.Value)
+            var folderPicker = new FolderPicker
             {
-                var assetsFolder = await Package.Current.InstalledLocation.GetFolderAsync("Assets");
-                folder = await assetsFolder.GetFolderAsync("LottieCorpus");
-            }
-            else
-            {
-                var folderPicker = new FolderPicker
-                {
-                    ViewMode = PickerViewMode.List,
-                    SuggestedStartLocation = PickerLocationId.Downloads,
-                };
+                ViewMode = PickerViewMode.List,
+                SuggestedStartLocation = PickerLocationId.Downloads,
+            };
 
-                folderPicker.FileTypeFilter.Add(".json");
+            folderPicker.FileTypeFilter.Add(".json");
 
-                folder = await folderPicker.PickSingleFolderAsync();
-            }
+            folder = await folderPicker.PickSingleFolderAsync();
 
-            // Get the files.
-            var files = (await folder.CreateFileQueryWithOptions(new QueryOptions(CommonFileQuery.DefaultQuery, new[] { ".json" })).GetFilesAsync()).ToArray();
+            // Get the files. This gets all .json files in the directory and subdirectories.
+            var files = (await folder.CreateFileQueryWithOptions(new QueryOptions(CommonFileQuery.OrderByName, new[] { ".json" })).GetFilesAsync()).ToArray();
 
             // Audit the files.
             var lottieInfos = await AuditFiles(files);
@@ -100,7 +92,7 @@ namespace LottieTest
             var allIssues =
                 (from lottieInfo in lottieInfos
                  from issue in lottieInfo.AllIssues
-                 // Remove any commas - they confuse Excel even inside quotes.
+                     // Remove any commas - they confuse Excel even inside quotes.
                  select issue.Replace(',', ' ')).Distinct().OrderBy(a => a).ToArray();
 
             const string separator = ", ";

@@ -17,6 +17,7 @@
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\CubicBezierFunction.cs" Link="LottieToWinComp\Expressions\CubicBezierFunction.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\Expression.cs" Link="LottieToWinComp\Expressions\Expression.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\LessThan.cs" Link="LottieToWinComp\Expressions\LessThan.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Matrix3x2.cs" Link="LottieToWinComp\Expressions\Matrix3x2.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\Multiply.cs" Link="LottieToWinComp\Expressions\Multiply.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\Name.cs" Link="LottieToWinComp\Expressions\Name.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\Expressions\Number.cs" Link="LottieToWinComp\Expressions\Number.cs" />

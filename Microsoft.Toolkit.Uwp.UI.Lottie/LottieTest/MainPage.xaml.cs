@@ -35,6 +35,9 @@ namespace LottieTest
                 case "AuditCorpus":
                     ContentFrame.Navigate(typeof(AuditCorpus));
                     break;
+                case "ScrapeLottieFiles":
+                    ContentFrame.Navigate(typeof(LottieFilesScraper));
+                    break;
                 case "MyComposition":
                     ContentFrame.Navigate(typeof(MyComposition));
                     break;

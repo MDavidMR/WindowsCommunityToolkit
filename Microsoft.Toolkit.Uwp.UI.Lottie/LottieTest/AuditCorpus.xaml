@@ -10,7 +10,6 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Click="Button_Click" >Start audit</Button>
-            <CheckBox x:Name="_standardCorpus" Content="Audit the standard corpus (uncheck to choose files to audit)" IsChecked="True"/>
             <StackPanel Orientation="Horizontal">
             <TextBlock>Progress:</TextBlock>
                 <TextBlock x:Name="_txtProgressCounter">0</TextBlock>

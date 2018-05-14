@@ -1,0 +1,1 @@
+The files in the subdirectory are the corpus that we measure the RS4-based Lottie implementation against.
