@@ -21,11 +21,6 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Compositions;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-#define OOBE_MAIN_STARTFRAME 0
-#define OOBE_MAIN_HI_FRAME 360
-#define OOBE_MAIN_ENDFRAME 592
 
 MainPage::MainPage()
 {
@@ -36,21 +31,25 @@ MainPage::MainPage()
     float2 size;
     CompositionPropertySet^ progressPropertySet;
     TimeSpan duration;
+    Object^ diagnostics;
 
-    Oobe_hi compositionFactory;
-    compositionFactory.TryCreateInstance(comp, rootVisual, size, progressPropertySet, duration);
+    // Allocating on the heap is optional - it can also be used on the stack. Allocating
+    // on the heap here to ensure it works correctly in that mode.
+    auto compositionFactory = ref new MyComposition();
+    compositionFactory->TryCreateInstance(comp, &rootVisual, &size, &progressPropertySet, &duration, &diagnostics);
 	
     auto rootShape = comp->CreateSpriteVisual();
     Windows::UI::Xaml::Hosting::ElementCompositionPreview::SetElementChildVisual(animGrid, rootShape);
 
     rootShape->Children->InsertAtTop(rootVisual);
+
     progressPropertySet->InsertScalar("Progress", 0);
 
     auto m_playAnimation = comp->CreateScalarKeyFrameAnimation();
     auto lin = comp->CreateLinearEasingFunction();
     m_playAnimation->Duration = duration;
-    m_playAnimation->InsertKeyFrame(0, OOBE_MAIN_STARTFRAME / OOBE_MAIN_ENDFRAME);
-    m_playAnimation->InsertKeyFrame(1, OOBE_MAIN_ENDFRAME / OOBE_MAIN_ENDFRAME, lin);
+    m_playAnimation->InsertKeyFrame(0, 0);
+    m_playAnimation->InsertKeyFrame(1, 1, lin);
     m_playAnimation->IterationBehavior = AnimationIterationBehavior::Forever;
     progressPropertySet->StartAnimation("Progress", m_playAnimation);
 }

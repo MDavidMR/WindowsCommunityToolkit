@@ -71,36 +71,33 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.Null => "nullptr";
 
-
         string InstantiatorGeneratorBase.IStringifier.Matrix3x2(Matrix3x2 value)
         {
-            return $"*(ref new float3x2({Float(value.M11)}, {Float(value.M12)},{Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)}))";
+            return $"float3x2({Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)})";
         }
+
+        string InstantiatorGeneratorBase.IStringifier.Readonly => "";
+
+        string InstantiatorGeneratorBase.IStringifier.ReferenceTypeName(string value) => 
+            value == "CanvasGeometry" 
+                // C++ uses IGeometrySource2D in place of CanvasGeometry
+                ? "IGeometrySource2D^" 
+                : $"{value}^";
 
         string InstantiatorGeneratorBase.IStringifier.String(string value) => $"\"{value}\"";
 
-        public string TimeSpan(TimeSpan value) => $"TimeSpan{{{value.Ticks}L}}";
+        public string TimeSpan(TimeSpan value) => $"{{ {value.Ticks}L }}";
 
         string InstantiatorGeneratorBase.IStringifier.Var => "auto";
 
-        string InstantiatorGeneratorBase.IStringifier.Vector2(Vector2 value) => $"float2({ Float(value.X) }, { Float(value.Y)})";
+        public string Vector2(Vector2 value) => $"{{ {Float(value.X)}, {Float(value.Y)} }}";
 
-        string InstantiatorGeneratorBase.IStringifier.Vector3(Vector3 value) => $"float3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
+        string InstantiatorGeneratorBase.IStringifier.Vector3(Vector3 value) => $"{{ {Float(value.X)}, {Float(value.Y)}, {Float(value.Z)} }}";
 
-        internal string Vector2Raw(Vector2 value) => $"{{{Float(value.X)}, {Float(value.Y)}}}";
-
-        static string Float(float value)
-        {
-            if (Math.Floor(value) == value)
-            {
-                // Round numbers don't need decimal places or the F suffix.
-                return value.ToString("0");
-            }
-            else
-            {
-                return value == 0 ? "0" : (value.ToString("0.######################################") + "F");
-            }
-        }
+        public string Float(float value) =>
+            Math.Floor(value) == value
+                ? value.ToString("0")
+                : value.ToString("0.######################################") + "F";
 
         static string Hex(int value) => $"0x{value.ToString("X2")}";
 

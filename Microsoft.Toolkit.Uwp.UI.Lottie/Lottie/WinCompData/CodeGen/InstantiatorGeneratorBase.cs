@@ -15,7 +15,7 @@ namespace WinCompData.CodeGen
     abstract class InstantiatorGeneratorBase
     {
         // The name of the field holding the singleton ExpressionAnimation.
-        protected const string c_singletonExpressionAnimationName = "_expressionAnimation";
+        const string c_singletonExpressionAnimationName = "_expressionAnimation";
         readonly bool _setCommentProperties;
         readonly ObjectGraph<ObjectData> _objectGraph;
         // The subset of the object graph for which nodes will be generated.
@@ -26,13 +26,12 @@ namespace WinCompData.CodeGen
         {
             _setCommentProperties = setCommentProperties;
             _stringifier = stringifier;
+
             // Build the object graph.
             _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(graphRoot, includeVertices: true);
 
             // Canonicalize the nodes.
             Canonicalizer.Canonicalize(_objectGraph, !setCommentProperties);
-
-            // Get the canonical nodes. These are the nodes for which code will be generated.
 
             // Filter out ExpressionAnimations that are unique. They will use a single instance that is reset on each use.
             var canonicals =
@@ -50,13 +49,6 @@ namespace WinCompData.CodeGen
                      !(((CompositionObject)node.Object).Type == CompositionObjectType.AnimationController ||
                       ((CompositionObject)node.Object).Type == CompositionObjectType.CompositionPropertySet)
                  select node.Canonical).Distinct().ToArray();
-
-
-            Debug.WriteLine($"Canonicalizer reduced object graph from {_objectGraph.Count()} to {canonicals.Count()}");
-#if DEBUG
-            // Get a list of the nodes that were elided through canonicalization.
-            var canonicalized = _objectGraph.Where(n => !n.IsCanonical).ToArray();
-#endif // DEBUG
 
             // Give names to each canonical node.
             SetCanonicalMethodNames(canonicals);
@@ -78,8 +70,7 @@ namespace WinCompData.CodeGen
             {
                 if (node.CanonicalInRefs.Count() <= 1)
                 {
-                    var pathSourceFactoryCall =
-                        NodeFor(((CompositionPath)node.Object).Source).FactoryCall();
+                    var pathSourceFactoryCall = CallFactoryFor(((CompositionPath)node.Object).Source);
                     node.ForceInline($"{New} CompositionPath({pathSourceFactoryCall})");
                 }
             }
@@ -94,8 +85,106 @@ namespace WinCompData.CodeGen
             }
         }
 
+        /// <summary>
+        /// Writes the using namespace statements and includes at the top of the file.
+        /// </summary>
+        protected abstract void WritePreamble(CodeBuilder builder, bool requiresWin2d);
+
+        /// <summary>
+        /// Writes the start of the class.
+        /// </summary>
+        protected abstract void WriteClassStart(
+            CodeBuilder builder,
+            string className,
+            Vector2 size,
+            CompositionPropertySet progressPropertySet,
+            TimeSpan duration);
+
+
+        /// <summary>
+        /// Writes the end of the class.
+        /// </summary>
+        protected abstract void WriteClassEnd(CodeBuilder builder, Visual rootVisual, string reusableExpressionAnimationField);
+
+        /// <summary>
+        /// Writes CanvasGeometery.Combination factory code.
+        /// </summary>
+        /// <param name="typeName">The type of the result.</param>
+        /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
+        protected abstract void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName);
+
+        /// <summary>
+        /// Writes CanvasGeometery.Ellipse factory code.
+        /// </summary>
+        /// <param name="typeName">The type of the result.</param>
+        /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
+        protected abstract void WriteCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, string typeName, string fieldName);
+
+        /// <summary>
+        /// Writes CanvasGeometery.Path factory code.
+        /// </summary>
+        /// <param name="typeName">The type of the result.</param>
+        /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
+        protected abstract void WriteCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, string typeName, string fieldName);
+
+        /// <summary>
+        /// Writes CanvasGeometery.RoundedRectangle factory code.
+        /// </summary>
+        /// <param name="typeName">The type of the result.</param>
+        /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
+        protected abstract void WriteCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, string typeName, string fieldName);
+
+        /// <summary>
+        /// Call this to generate the code. Returns a string containing the generated code.
+        /// </summary>
+        protected string GenerateCode(
+            string className,
+            Visual rootVisual,
+            float width,
+            float height,
+            CompositionPropertySet progressPropertySet,
+            TimeSpan duration)
+        {
+            var codeBuilder = new CodeBuilder();
+
+            // Generate #includes and usings for namespaces.
+            var requiresWin2D = _canonicalNodes.Where(n => n.RequiresWin2D).Any();
+
+            WritePreamble(codeBuilder, requiresWin2D);
+
+            WriteClassStart(codeBuilder, className, new Vector2(width, height), progressPropertySet, duration);
+
+            // Write fields for each object that needs storage (i.e. objects that are 
+            // referenced more than once).
+            WriteField(codeBuilder, Readonly(_stringifier.ReferenceTypeName("Compositor")), "_c");
+            WriteField(codeBuilder, Readonly(_stringifier.ReferenceTypeName("ExpressionAnimation")), c_singletonExpressionAnimationName);
+            foreach (var node in _canonicalNodes)
+            {
+                if (node.RequiresStorage)
+                {
+                    // Generate a field for the storage.
+                    WriteField(codeBuilder, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+                }
+            }
+            codeBuilder.WriteLine();
+
+            // Write methods for each node.
+            foreach (var node in _canonicalNodes)
+            {
+                WriteCodeForNode(codeBuilder, node);
+            }
+
+            WriteClassEnd(codeBuilder, rootVisual, c_singletonExpressionAnimationName);
+            return codeBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Returns the code to call the factory for the given object.
+        /// </summary>
+        protected string CallFactoryFor(object obj) => NodeFor(obj).FactoryCall();
+
         // Returns the canonical node for the given object.
-        protected ObjectData NodeFor(object obj) => _objectGraph[obj].Canonical;
+        ObjectData NodeFor(object obj) => _objectGraph[obj].Canonical;
 
         // Gets the CanonicalInRefs for node, ignoring those from ExpressionAnimations
         // that have a single instance because they are treated specially (they are initialized inline).
@@ -142,61 +231,9 @@ namespace WinCompData.CodeGen
             }
         }
 
-        // Override to generate the using namespace statements at the top of the file.
-        protected abstract void WritePreamble(CodeBuilder builder, bool requiresD2d);
-
-        protected abstract void WriteClassStart(
-            CodeBuilder builder,
-            string className,
-            Vector2 size,
-            CompositionPropertySet progressPropertySet,
-            TimeSpan duration);
-
-        protected abstract void WriteField(CodeBuilder builder, string typeName, string fieldName);
-
-        protected abstract void WriteClassEnd(CodeBuilder builder, Visual rootVisual);
-
-
-        /// <summary>
-        /// Call this to generate the code. Returns a string containing the generated code.
-        /// </summary>
-        protected string GenerateCode(
-            string className,
-            Visual rootVisual,
-            float width,
-            float height,
-            CompositionPropertySet progressPropertySet,
-            TimeSpan duration)
+        void WriteField(CodeBuilder builder, string typeName, string fieldName)
         {
-            var codeBuilder = new CodeBuilder();
-
-            // Generate #includes and usings for namespaces.
-            var requiresWin2D = _canonicalNodes.Where(n => n.RequiresWin2D).Any();
-
-            WritePreamble(codeBuilder, requiresWin2D);
-
-            WriteClassStart(codeBuilder, className, new Vector2(width, height), progressPropertySet, duration);
-
-            // Write fields for each object that needs storage (i.e. objects that are 
-            // referenced more than once).
-            foreach (var node in _canonicalNodes)
-            {
-                if (node.RequiresStorage)
-                {
-                    // Generate a field for the storage.
-                    WriteField(codeBuilder, node.TypeName, node.FieldName);
-                }
-            }
-            codeBuilder.WriteLine();
-
-            // Write methods for each node.
-            foreach (var node in _canonicalNodes)
-            {
-                WriteCodeForNode(codeBuilder, node);
-            }
-
-            WriteClassEnd(codeBuilder, rootVisual);
-            return codeBuilder.ToString();
+            builder.WriteLine($"{typeName} {fieldName};");
         }
 
         // Generates code for the given node. The code is written into the CodeBuilder on the node.
@@ -242,81 +279,26 @@ namespace WinCompData.CodeGen
         bool GenerateCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
-            if (node.RequiresStorage)
-            {
-                WriteCacheHandler(builder, node);
-            }
-            var a = NodeFor(obj.A);
-            var b = NodeFor(obj.B);
-            builder.WriteLine($"{Var} result = {(node.RequiresStorage ? $" {node.FieldName} = " : "")}{a.FactoryCall()}.");
-            builder.Indent();
-            builder.WriteLine($"CombineWith({b.FactoryCall()},");
-            if (obj.Matrix.IsIdentity)
-            {
-                builder.WriteLine("Matrix3x2.Identity,");
-            }
-            else
-            {
-                builder.WriteLine($"{Matrix3x2(obj.Matrix)},");
-            }
-            builder.WriteLine($"{CanvasGeometryCombine(obj.CombineMode)});");
-            builder.UnIndent();
+            // Call the subclass to write the body.
+            WriteCanvasGeometryCombinationFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
             WriteObjectFactoryEnd(builder);
-            return true;
-        }
-
-        protected virtual bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
-        {
-            WriteObjectFactoryStart(builder, node);
-            if (node.RequiresStorage)
-            {
-                WriteCacheHandler(builder, node);
-            }
-            builder.WriteLine($"using (var builder = {New} CanvasPathBuilder({Null}))");
-            builder.OpenScope();
-            foreach (var command in obj.Commands)
-            {
-                switch (command.Type)
-                {
-                    case CanvasPathBuilder.CommandType.BeginFigure:
-                        builder.WriteLine($"builder{Deref}BeginFigure({Vector2((Vector2)command.Args)});");
-                        break;
-                    case CanvasPathBuilder.CommandType.EndFigure:
-                        builder.WriteLine($"builder{Deref}EndFigure({CanvasFigureLoop((CanvasFigureLoop)command.Args)});");
-                        break;
-                    case CanvasPathBuilder.CommandType.AddCubicBezier:
-                        var vectors = (Vector2[])command.Args;
-                        builder.WriteLine($"builder{Deref}AddCubicBezier({Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])});");
-                        break;
-                    case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                        builder.WriteLine($"builder{Deref}SetFilledRegionDetermination({FilledRegionDetermination((CanvasFilledRegionDetermination)command.Args)});");
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-            builder.WriteLine($"return {(node.RequiresStorage ? $" {node.FieldName} = " : "")}CanvasGeometry{Deref}CreatePath(builder);");
-            builder.CloseScope();
-            builder.CloseScope();
-            builder.WriteLine();
             return true;
         }
 
         bool GenerateCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
-            if (node.RequiresStorage)
-            {
-                WriteCacheHandler(builder, node);
-            }
-            builder.WriteLine($"{Var} result = {(node.RequiresStorage ? $" {node.FieldName} " : "")}CanvasGeometry{Deref}CreateEllipse(");
-            builder.Indent();
-            builder.WriteLine($"{Null},");
-            builder.WriteLine($"{Float(obj.X)},");
-            builder.WriteLine($"{Float(obj.Y)},");
-            builder.WriteLine($"{Float(obj.RadiusX)},");
-            builder.WriteLine($"{Float(obj.RadiusY)};");
-            builder.UnIndent();
+            // Call the subclass to write the body.
+            WriteCanvasGeometryEllipseFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+            WriteObjectFactoryEnd(builder);
+            return true;
+        }
+
+        bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
+        {
+            WriteObjectFactoryStart(builder, node);
+            // Call the subclass to write the body.
+            WriteCanvasGeometryPathFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
             WriteObjectFactoryEnd(builder);
             return true;
         }
@@ -324,20 +306,8 @@ namespace WinCompData.CodeGen
         bool GenerateCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
-            if (node.RequiresStorage)
-            {
-                WriteCacheHandler(builder, node);
-            }
-            builder.WriteLine($"{Var} result = {(node.RequiresStorage ? $" {node.FieldName} " : "")}CanvasGeometry{Deref}CreateRoundedRectangle(");
-            builder.Indent();
-            builder.WriteLine($"{Null},");
-            builder.WriteLine($"{Float(obj.X)},");
-            builder.WriteLine($"{Float(obj.Y)},");
-            builder.WriteLine($"{Float(obj.W)},");
-            builder.WriteLine($"{Float(obj.H)},");
-            builder.WriteLine($"{Float(obj.RadiusX)},");
-            builder.WriteLine($"{Float(obj.RadiusY)};");
-            builder.UnIndent();
+            // Call the subclass to write the body.
+            WriteCanvasGeometryRoundedRectangleFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
             WriteObjectFactoryEnd(builder);
             return true;
         }
@@ -510,7 +480,7 @@ namespace WinCompData.CodeGen
                     {
                         var referenceParamenterValueName = rp.Value == obj
                             ? localName
-                            : $"{NodeFor(rp.Value).FactoryCall()}";
+                            : CallFactoryFor(rp.Value);
                         builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}SetReferenceParameter({String(rp.Key)}, {referenceParamenterValueName});");
                     }
                     builder.WriteLine($"{localName}{Deref}StartAnimation({String(animator.AnimatedProperty)}, {c_singletonExpressionAnimationName});");
@@ -582,7 +552,7 @@ namespace WinCompData.CodeGen
             }
             if (obj.Clip != null)
             {
-                builder.WriteLine($"result{Deref}Clip = {NodeFor(obj.Clip).FactoryCall()};");
+                builder.WriteLine($"result{Deref}Clip = {CallFactoryFor(obj.Clip)};");
             }
             if (obj.Offset.HasValue)
             {
@@ -647,7 +617,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} children = result{Deref}Children;");
                 foreach (var child in obj.Children)
                 {
-                    builder.WriteLine($"children{Deref}InsertAtTop({NodeFor(child).FactoryCall()});");
+                    builder.WriteLine($"children{Deref}InsertAtTop({CallFactoryFor(child)});");
                 }
             }
         }
@@ -674,7 +644,7 @@ namespace WinCompData.CodeGen
             InitializeCompositionAnimationWithParameters(
                 builder,
                 obj,
-                obj.ReferenceParameters.Select(p => new KeyValuePair<string, string>(p.Key, $"{NodeFor(p.Value).FactoryCall()}")));
+                obj.ReferenceParameters.Select(p => new KeyValuePair<string, string>(p.Key, $"{CallFactoryFor(p.Value)}")));
         }
 
         void InitializeCompositionAnimationWithParameters(CodeBuilder builder, CompositionAnimation obj, IEnumerable<KeyValuePair<string, string>> parameters)
@@ -708,11 +678,11 @@ namespace WinCompData.CodeGen
                 {
                     case KeyFrameAnimation<Color>.KeyFrameType.Expression:
                         var expressionKeyFrame = (KeyFrameAnimation<Color>.ExpressionKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     case KeyFrameAnimation<Color>.KeyFrameType.Value:
                         var valueKeyFrame = (KeyFrameAnimation<Color>.ValueKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Color(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Color(valueKeyFrame.Value)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -735,11 +705,11 @@ namespace WinCompData.CodeGen
                 {
                     case KeyFrameAnimation<Vector2>.KeyFrameType.Expression:
                         var expressionKeyFrame = (KeyFrameAnimation<Vector2>.ExpressionKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     case KeyFrameAnimation<Vector2>.KeyFrameType.Value:
                         var valueKeyFrame = (KeyFrameAnimation<Vector2>.ValueKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector2(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector2(valueKeyFrame.Value)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -762,11 +732,11 @@ namespace WinCompData.CodeGen
                 {
                     case KeyFrameAnimation<Vector3>.KeyFrameType.Expression:
                         var expressionKeyFrame = (KeyFrameAnimation<Vector3>.ExpressionKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     case KeyFrameAnimation<Vector3>.KeyFrameType.Value:
                         var valueKeyFrame = (KeyFrameAnimation<Vector3>.ValueKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector3(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Vector3(valueKeyFrame.Value)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -785,8 +755,8 @@ namespace WinCompData.CodeGen
 
             foreach (var kf in obj.KeyFrames)
             {
-                var path = NodeFor(((PathKeyFrameAnimation.ValueKeyFrame)kf).Value);
-                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {path.FactoryCall()}, {NodeFor(kf.Easing).FactoryCall()});");
+                var valueKeyFrame = (PathKeyFrameAnimation.ValueKeyFrame)kf;
+                builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {CallFactoryFor(valueKeyFrame.Value)}, {CallFactoryFor(kf.Easing)});");
             }
             StartAnimations(builder, obj);
             WriteObjectFactoryEnd(builder);
@@ -806,11 +776,11 @@ namespace WinCompData.CodeGen
                 {
                     case KeyFrameAnimation<float>.KeyFrameType.Expression:
                         var expressionKeyFrame = (KeyFrameAnimation<float>.ExpressionKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertExpressionKeyFrame({Float(kf.Progress)}, {String(expressionKeyFrame.Expression)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     case KeyFrameAnimation<float>.KeyFrameType.Value:
                         var valueKeyFrame = (KeyFrameAnimation<float>.ValueKeyFrame)kf;
-                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Float(valueKeyFrame.Value)}, {NodeFor(kf.Easing).FactoryCall()});");
+                        builder.WriteLine($"result{Deref}InsertKeyFrame({Float(kf.Progress)}, {Float(valueKeyFrame.Value)}, {CallFactoryFor(kf.Easing)});");
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -899,7 +869,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}{IListAdd}({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{IListAdd}({CallFactoryFor(shape)});");
                 }
             }
             StartAnimations(builder, obj);
@@ -917,7 +887,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} shapes = result{Deref}Shapes;");
                 foreach (var shape in obj.Shapes)
                 {
-                    builder.WriteLine($"shapes{Deref}{IListAdd}({NodeFor(shape).FactoryCall()});");
+                    builder.WriteLine($"shapes{Deref}{IListAdd}({CallFactoryFor(shape)});");
                 }
             }
             StartAnimations(builder, obj);
@@ -933,11 +903,11 @@ namespace WinCompData.CodeGen
 
             if (obj.FillBrush != null)
             {
-                builder.WriteLine($"result{Deref}FillBrush = {NodeFor(obj.FillBrush).FactoryCall()};");
+                builder.WriteLine($"result{Deref}FillBrush = {CallFactoryFor(obj.FillBrush)};");
             }
             if (obj.Geometry != null)
             {
-                builder.WriteLine($"result{Deref}Geometry = {NodeFor(obj.Geometry).FactoryCall()};");
+                builder.WriteLine($"result{Deref}Geometry = {CallFactoryFor(obj.Geometry)};");
             }
             if (obj.IsStrokeNonScaling)
             {
@@ -945,7 +915,7 @@ namespace WinCompData.CodeGen
             }
             if (obj.StrokeBrush != null)
             {
-                builder.WriteLine($"result{Deref}StrokeBrush = {NodeFor(obj.StrokeBrush).FactoryCall()};");
+                builder.WriteLine($"result{Deref}StrokeBrush = {CallFactoryFor(obj.StrokeBrush)};");
             }
             if (obj.StrokeDashCap != CompositionStrokeCap.Flat)
             {
@@ -960,7 +930,7 @@ namespace WinCompData.CodeGen
                 builder.WriteLine($"{Var} strokeDashArray = result{Deref}StrokeDashArray;");
                 foreach (var strokeDash in obj.StrokeDashArray)
                 {
-                    builder.WriteLine($"strokeDashArray{Deref}Add({Float(strokeDash)});");
+                    builder.WriteLine($"strokeDashArray{Deref}{IListAdd}({Float(strokeDash)});");
                 }
             }
             if (obj.StrokeEndCap != CompositionStrokeCap.Flat)
@@ -1008,7 +978,7 @@ namespace WinCompData.CodeGen
             return true;
         }
 
-        protected void WriteCacheHandler(CodeBuilder builder, ObjectData node)
+        void WriteCacheHandler(CodeBuilder builder, ObjectData node)
         {
             var fieldName = node.FieldName;
             builder.WriteLine($"if ({fieldName} != {Null})");
@@ -1021,9 +991,7 @@ namespace WinCompData.CodeGen
         {
             if (node.RequiresStorage)
             {
-                var fieldName = node.FieldName;
-                WriteCacheHandler(builder, node);
-                builder.WriteLine($"{Var} result = {fieldName} = {createCallText};");
+                builder.WriteLine($"{Var} result = {node.FieldName} = {createCallText};");
             }
             else
             {
@@ -1034,7 +1002,7 @@ namespace WinCompData.CodeGen
         // Handles object factories that are just a create call.
         void WriteSimpleObjectFactory(CodeBuilder builder, ObjectData node, string createCallText)
         {
-            WriteObjectFactoryStart(builder, node);
+            WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name);
             if (node.RequiresStorage)
             {
                 WriteCacheHandler(builder, node);
@@ -1048,9 +1016,18 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
         }
 
-        protected virtual void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
+        void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
-            builder.WriteLine($"{node.TypeName} {node.Name}({(parameters == null ? "" : string.Join(", ", parameters))})");
+            WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name, parameters);
+            if (node.RequiresStorage)
+            {
+                WriteCacheHandler(builder, node);
+            }
+        }
+
+        protected void WriteObjectFactoryStartWithoutCache(CodeBuilder builder, string typeName, string methodName, IEnumerable<string> parameters = null)
+        {
+            builder.WriteLine($"{_stringifier.ReferenceTypeName(typeName)} {methodName}({(parameters == null ? "" : string.Join(", ", parameters))})");
             builder.OpenScope();
         }
 
@@ -1127,6 +1104,14 @@ namespace WinCompData.CodeGen
 
         string Matrix3x2(Matrix3x2 value) => _stringifier.Matrix3x2(value);
 
+        string Readonly(string value)
+        {
+            var readonlyPrefix = _stringifier.Readonly;
+            return string.IsNullOrWhiteSpace(readonlyPrefix)
+                ? value
+                : $"{readonlyPrefix} {value}";
+        }
+
         string String(string value) => _stringifier.String(value);
 
         string StrokeCap(CompositionStrokeCap value)
@@ -1175,18 +1160,19 @@ namespace WinCompData.CodeGen
             string Bool(bool value);
             string CanvasFigureLoop(CanvasFigureLoop value);
             string CanvasGeometryCombine(CanvasGeometryCombine value);
-
             string Color(Color value);
             string Deref { get; }
             string FilledRegionDetermination(CanvasFilledRegionDetermination value);
             string Float(float value);
             string IListAdd { get; }
             string Int(int value);
+            string Matrix3x2(Matrix3x2 value);
             string MemberSelect { get; }
             string New { get; }
             string Null { get; }
+            string Readonly { get; }
+            string ReferenceTypeName(string value);
             string ScopeResolve { get; }
-            string Matrix3x2(Matrix3x2 value);
             string String(string value);
             string TimeSpan(TimeSpan value);
             string Var { get; }
@@ -1195,13 +1181,13 @@ namespace WinCompData.CodeGen
         }
 
         // A node in the object graph, annotated with extra stuff to assist in code generation.
-        protected sealed class ObjectData : CanonicalizedNode<ObjectData>
+        sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
             string _overriddenFactoryCall;
 
             public string Name { get; set; }
 
-            public string FieldName => CamelCase(Name);
+            public string FieldName => RequiresStorage ? CamelCase(Name) : null;
 
             // Returns text for obtaining the value for this node. If the node has
             // been inlined, this can generate the code into the returned string, otherwise

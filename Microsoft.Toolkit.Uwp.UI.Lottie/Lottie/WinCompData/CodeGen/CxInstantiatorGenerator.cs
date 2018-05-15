@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using WinCompData.Mgcg;
 using WinCompData.Sn;
 
@@ -39,6 +37,7 @@ namespace WinCompData.CodeGen
         {
             if (requiresD2d)
             {
+                builder.WriteLine("#include \"pch.h\"");
                 // D2D
                 builder.WriteLine("#include \"d2d1.h\"");
                 builder.WriteLine("#include <d2d1_1.h>");
@@ -62,7 +61,6 @@ namespace WinCompData.CodeGen
             builder.WriteLine("using namespace Microsoft::WRL;");
         }
 
-
         protected override void WriteClassStart(
             CodeBuilder builder, 
             string className, 
@@ -73,102 +71,101 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"class {className} sealed");
+            builder.WriteLine($"ref class {className} sealed");
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
+            builder.UnIndent();
             builder.WriteLine("public:");
+            builder.Indent();
             builder.WriteLine("bool TryCreateInstance(");
             builder.Indent();
-            builder.WriteLine("Compositor^ const compositor,");
-            builder.WriteLine("Visual^& rootVisual,");
-            builder.WriteLine("float2& size,");
-            builder.WriteLine("CompositionPropertySet^& progressPropertySet,");
-            builder.WriteLine("TimeSpan& duration)");
+            builder.WriteLine("Compositor^ compositor,");
+            builder.WriteLine("Visual^* rootVisual,");
+            builder.WriteLine("float2* size,");
+            builder.WriteLine("CompositionPropertySet^* progressPropertySet,");
+            builder.WriteLine("TimeSpan* duration,");
+            builder.WriteLine("Object^* diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
-            builder.WriteLine("Instantiator comp(compositor);");
-            builder.WriteLine("rootVisual = comp.GetRootContainerVisual();");
-            builder.WriteLine($"size = {{{size.X}, {size.Y}}};");
-            builder.WriteLine("progressPropertySet = rootVisual->Properties;");
-            builder.WriteLine($"duration.Duration = {_stringifier.TimeSpan(duration)};");
+            builder.WriteLine("*rootVisual = Instantiator::InstantiateComposition(compositor);");
+            builder.WriteLine($"*size = {Vector2(size)};");
+            builder.WriteLine("*progressPropertySet = (*rootVisual)->Properties;");
+            builder.WriteLine($"duration->Duration = {_stringifier.TimeSpan(duration)};");
+            builder.WriteLine("diagnostics = nullptr;");
             builder.WriteLine("return true;");
             builder.CloseScope();
             builder.WriteLine();
 
             // Write the instantiator.
+            builder.UnIndent();
             builder.WriteLine("private:");
+            builder.Indent();
             builder.WriteLine("class Instantiator sealed");
             builder.OpenScope();
-            builder.WriteLine("public:");
 
-            // Write the constructor for the instantiator.
-            builder.WriteLine("Instantiator::Instantiator(Compositor^ compositor)");
-            builder.OpenScope();
-            builder.WriteLine("_c = compositor;");
-            builder.WriteLine($"{c_singletonExpressionAnimationName} = compositor->CreateExpressionAnimation();");
-            builder.WriteLine("HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf());");
-            builder.WriteLine("if (hr != S_OK)");
-            builder.OpenScope();
-            builder.WriteLine("throw new Platform::Exception(hr);");
-            builder.CloseScope();
-            builder.CloseScope();
-            builder.WriteLine();
-
-            // Write Method to Generate Everything
-            builder.WriteLine("Visual^ GetRootContainerVisual()");
-            builder.OpenScope();
-            builder.WriteLine("return ContainerVisual_0000();");
-            builder.CloseScope();
-            builder.WriteLine();
-
-            // Write the rest of the private members
-            builder.WriteLine("private:");
-            builder.WriteLine("Compositor^ _c;");
-            // D2D Factory global
+            // D2D factory field.
             builder.WriteLine("ComPtr<ID2D1Factory> _d2dFactory;");
-            builder.WriteLine($"ExpressionAnimation^ {c_singletonExpressionAnimationName};");
         }
 
-        protected override void WriteClassEnd(CodeBuilder builder, Visual rootVisual)
+        protected override void WriteClassEnd(CodeBuilder builder, Visual rootVisual, string reusableExpressionAnimationField)
         {
             // Utility method for path geometries
             builder.WriteLine("static IGeometrySource2D^ D2DPathGeometryToIGeometrySource2D(ComPtr<ID2D1PathGeometry> path)");
             builder.OpenScope();
             builder.WriteLine("ComPtr<GeoSource> geoSource = new GeoSource(path.Get());");
             builder.WriteLine("ComPtr<ABI::Windows::Graphics::IGeometrySource2D> interop = geoSource.Detach();");
-            builder.WriteLine("return (reinterpret_cast<IGeometrySource2D^>(interop.Get()));");
+            builder.WriteLine("return reinterpret_cast<IGeometrySource2D^>(interop.Get());");
             builder.CloseScope();
             builder.WriteLine();
 
+            // Write the constructor for the instantiator.
+            builder.WriteLine("Instantiator(Compositor^ compositor)");
+            builder.OpenScope();
+            builder.WriteLine("_c = compositor;");
+            // Instantiate the reusable ExpressionAnimation.
+            builder.WriteLine($"{reusableExpressionAnimationField} = _c->CreateExpressionAnimation();");
+            builder.WriteLine("HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf());");
+            builder.WriteLine("if (hr != S_OK)");
+            builder.OpenScope();
+            builder.WriteLine("throw ref new Platform::Exception(hr);");
+            builder.CloseScope();
+            builder.CloseScope();
+
+            // Write the method that instantiates the composition.
+            builder.WriteLine();
+            builder.UnIndent();
+            builder.WriteLine("public:");
+            builder.Indent();
+            builder.WriteLine("static Visual^ InstantiateComposition(Compositor^ compositor)");
+            builder.OpenScope();
+            builder.WriteLine($"return Instantiator(compositor).{CallFactoryFor(rootVisual)};");
+            builder.CloseScope();
+
+            // Close the scope for the instantiator class.
             builder.CloseClassScope();
+
+            // Close the scope for the class.
             builder.CloseClassScope();
+
+            // Close the scope for the namespace.
             builder.CloseScope();
         }
 
-        protected override void WriteField(CodeBuilder builder, string typeName, string fieldName)
+        protected override void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName)
         {
-            builder.WriteLine($"{typeName}^ {fieldName};");
+            builder.WriteLine(" -- TODO -- ");
         }
 
-        protected override void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
+        protected override void WriteCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, string typeName, string fieldName)
         {
-            var typeName = node.TypeName;
-            if (node.TypeName == "CanvasGeometry")
-            {
-                typeName = "IGeometrySource2D";
-            }
-            builder.WriteLine($"{typeName}^ {node.Name}({(parameters == null ? "" : string.Join(", ", parameters))})");
-            builder.OpenScope();
+            builder.WriteLine(" -- TODO -- ");
         }
 
-        protected override bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
+        protected override void WriteCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, string typeName, string fieldName)
         {
-            WriteObjectFactoryStart(builder, node);
-            if (node.RequiresStorage)
-            {
-                WriteCacheHandler(builder, node);
-            }
+            builder.WriteLine($"{typeName} result;");
+
             // D2D Setup
             builder.WriteLine("ComPtr<ID2D1PathGeometry> path;");
             builder.WriteLine("_d2dFactory->CreatePathGeometry(&path);");
@@ -180,14 +177,14 @@ namespace WinCompData.CodeGen
                 {
                     case CanvasPathBuilder.CommandType.BeginFigure:
                         // Assume D2D1_FIGURE_BEGIN_FILLED
-                        builder.WriteLine($"sink->BeginFigure({Vector2Raw((Vector2)command.Args)}, D2D1_FIGURE_BEGIN_FILLED);");
+                        builder.WriteLine($"sink->BeginFigure({Vector2((Vector2)command.Args)}, D2D1_FIGURE_BEGIN_FILLED);");
                         break;
                     case CanvasPathBuilder.CommandType.EndFigure:
                         builder.WriteLine($"sink->EndFigure({CanvasFigureLoop((CanvasFigureLoop)command.Args)});");
                         break;
                     case CanvasPathBuilder.CommandType.AddCubicBezier:
                         var vectors = (Vector2[])command.Args;
-                        builder.WriteLine($"sink->AddBezier({{{Vector2Raw(vectors[0])}, {Vector2Raw(vectors[1])}, {Vector2Raw(vectors[2])}}});");
+                        builder.WriteLine($"sink->AddBezier({{{Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])}}});");
                         break;
                     case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
                         // TODO: Only applies to D2D Geometry group
@@ -198,17 +195,18 @@ namespace WinCompData.CodeGen
                 }
             }
             builder.WriteLine("sink->Close();");
-            // Convert to IGeometrySource2D
-            builder.WriteLine("return D2DPathGeometryToIGeometrySource2D(path);");
 
-            builder.CloseScope();
-            builder.WriteLine();
-            return true;
+            // Convert to IGeometrySource2D
+            builder.WriteLine("result = D2DPathGeometryToIGeometrySource2D(path);");
         }
- 
+
+        protected override void WriteCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, string typeName, string fieldName)
+        {
+            builder.WriteLine(" -- TODO -- ");
+        }
+
         string CanvasFigureLoop(CanvasFigureLoop value) => _stringifier.CanvasFigureLoop(value);
         string FilledRegionDetermination(CanvasFilledRegionDetermination value) => _stringifier.FilledRegionDetermination(value);
-        string Vector2Raw(Vector2 value) => _stringifier.Vector2Raw(value);
-
+        string Vector2(Vector2 value) => _stringifier.Vector2(value);
     }
 }
