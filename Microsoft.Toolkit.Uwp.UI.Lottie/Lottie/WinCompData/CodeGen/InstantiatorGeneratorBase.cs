@@ -1232,7 +1232,7 @@ namespace WinCompData.CodeGen
                         case Graph.NodeType.CompositionPath:
                             return "CompositionPath";
                         case Graph.NodeType.CanvasGeometry:
-                            return "CanvasGeometry";
+                            return "IGeometrySource2D";
                         default:
                             throw new InvalidOperationException();
                     }

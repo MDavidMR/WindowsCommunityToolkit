@@ -37,7 +37,7 @@ MainPage::MainPage()
     // on the heap here to ensure it works correctly in that mode.
     auto compositionFactory = ref new MyComposition();
     compositionFactory->TryCreateInstance(comp, &rootVisual, &size, &progressPropertySet, &duration, &diagnostics);
-	
+
     auto rootShape = comp->CreateSpriteVisual();
     Windows::UI::Xaml::Hosting::ElementCompositionPreview::SetElementChildVisual(animGrid, rootShape);
 

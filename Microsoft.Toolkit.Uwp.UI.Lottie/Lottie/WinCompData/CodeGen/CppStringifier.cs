@@ -78,11 +78,7 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.Readonly => "";
 
-        string InstantiatorGeneratorBase.IStringifier.ReferenceTypeName(string value) => 
-            value == "CanvasGeometry" 
-                // C++ uses IGeometrySource2D in place of CanvasGeometry
-                ? "IGeometrySource2D^" 
-                : $"{value}^";
+        string InstantiatorGeneratorBase.IStringifier.ReferenceTypeName(string value) => $"{value}^";
 
         string InstantiatorGeneratorBase.IStringifier.String(string value) => $"\"{value}\"";
 

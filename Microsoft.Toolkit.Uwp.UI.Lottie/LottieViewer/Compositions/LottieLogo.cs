@@ -2,6 +2,7 @@ using Host = Lottie;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;
+using Windows.Graphics;
 using Windows.UI;
 using Windows.UI.Composition;
 
@@ -29,15 +30,15 @@ namespace Compositions
         {
             readonly Compositor _c;
             readonly ExpressionAnimation _expressionAnimation;
-            CanvasGeometry _canvasGeometry_0000;
-            CanvasGeometry _canvasGeometry_0001;
-            CanvasGeometry _canvasGeometry_0002;
-            CanvasGeometry _canvasGeometry_0003;
-            CanvasGeometry _canvasGeometry_0004;
-            CanvasGeometry _canvasGeometry_0005;
-            CanvasGeometry _canvasGeometry_0006;
-            CanvasGeometry _canvasGeometry_0007;
-            CanvasGeometry _canvasGeometry_0008;
+            IGeometrySource2D _canvasGeometry_0000;
+            IGeometrySource2D _canvasGeometry_0001;
+            IGeometrySource2D _canvasGeometry_0002;
+            IGeometrySource2D _canvasGeometry_0003;
+            IGeometrySource2D _canvasGeometry_0004;
+            IGeometrySource2D _canvasGeometry_0005;
+            IGeometrySource2D _canvasGeometry_0006;
+            IGeometrySource2D _canvasGeometry_0007;
+            IGeometrySource2D _canvasGeometry_0008;
             CompositionColorBrush _compositionColorBrush_0001;
             CompositionColorBrush _compositionColorBrush_0002;
             CompositionEllipseGeometry _compositionEllipseGeometry_0003;
@@ -79,76 +80,85 @@ namespace Compositions
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0006;
             Vector2KeyFrameAnimation _vector2KeyFrameAnimation_0008;
 
-            CanvasGeometry CanvasGeometry_0000()
+            IGeometrySource2D CanvasGeometry_0000()
             {
                 if (_canvasGeometry_0000 != null)
                 {
                     return _canvasGeometry_0000;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(-13.664F, -0.145F));
                     builder.AddCubicBezier(new Vector2(-13.664F, -0.145F), new Vector2(75.663F, 0.29F), new Vector2(75.663F, 0.29F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0000 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0000 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0001()
+            IGeometrySource2D CanvasGeometry_0001()
             {
                 if (_canvasGeometry_0001 != null)
                 {
                     return _canvasGeometry_0001;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(0.859F, -21.143F));
                     builder.AddCubicBezier(new Vector2(0.859F, -21.143F), new Vector2(-4.359F, 70.392F), new Vector2(-4.359F, 70.392F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0001 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0001 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0002()
+            IGeometrySource2D CanvasGeometry_0002()
             {
                 if (_canvasGeometry_0002 != null)
                 {
                     return _canvasGeometry_0002;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(-26.67F, -0.283F));
                     builder.AddCubicBezier(new Vector2(-26.67F, -0.283F), new Vector2(99.171F, 0.066F), new Vector2(99.171F, 0.066F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0002 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0002 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0003()
+            IGeometrySource2D CanvasGeometry_0003()
             {
                 if (_canvasGeometry_0003 != null)
                 {
                     return _canvasGeometry_0003;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(-13.664F, -0.145F));
                     builder.AddCubicBezier(new Vector2(-13.664F, -0.145F), new Vector2(62.163F, 0.29F), new Vector2(62.163F, 0.29F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0003 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0003 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0004()
+            IGeometrySource2D CanvasGeometry_0004()
             {
                 if (_canvasGeometry_0004 != null)
                 {
                     return _canvasGeometry_0004;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -159,64 +169,72 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(-46.637F, 13.334F), new Vector2(-47.84F, 0.933F), new Vector2(-37.873F, -7.117F));
                     builder.AddCubicBezier(new Vector2(-13.196F, -27.046F), new Vector2(8.96F, 11.559F), new Vector2(49.506F, 11.559F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0004 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0004 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0005()
+            IGeometrySource2D CanvasGeometry_0005()
             {
                 if (_canvasGeometry_0005 != null)
                 {
                     return _canvasGeometry_0005;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(246.65F, 213.814F));
                     builder.AddCubicBezier(new Vector2(246.65F, 213.814F), new Vector2(340.956F, 213.628F), new Vector2(340.956F, 213.628F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0005 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0005 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0006()
+            IGeometrySource2D CanvasGeometry_0006()
             {
                 if (_canvasGeometry_0006 != null)
                 {
                     return _canvasGeometry_0006;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(1.681F, -29.992F));
                     builder.AddCubicBezier(new Vector2(1.681F, -29.992F), new Vector2(-1.681F, 29.992F), new Vector2(-1.681F, 29.992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0006 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0006 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0007()
+            IGeometrySource2D CanvasGeometry_0007()
             {
                 if (_canvasGeometry_0007 != null)
                 {
                     return _canvasGeometry_0007;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(1.768F, -25.966F));
                     builder.AddCubicBezier(new Vector2(1.768F, -25.966F), new Vector2(-1.768F, 25.966F), new Vector2(-1.768F, 25.966F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0007 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0007 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0008()
+            IGeometrySource2D CanvasGeometry_0008()
             {
                 if (_canvasGeometry_0008 != null)
                 {
                     return _canvasGeometry_0008;
                 }
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -228,12 +246,14 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(51.957F, 44.134F), new Vector2(52.687F, 43.874F), new Vector2(53.188F, 43.741F));
                     builder.AddCubicBezier(new Vector2(53.689F, 43.608F), new Vector2(68.971F, 41.357F), new Vector2(140.394F, 43.672F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return _canvasGeometry_0008 = CanvasGeometry.CreatePath(builder);
+                    result = _canvasGeometry_0008 = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0009()
+            IGeometrySource2D CanvasGeometry_0009()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -241,12 +261,14 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(-67.125F, -112), new Vector2(-73.558F, -100.719F), new Vector2(-75.458F, -89.951F));
                     builder.AddCubicBezier(new Vector2(-78.625F, -72), new Vector2(-79.375F, -58.25F), new Vector2(-80.375F, -39.25F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0010()
+            IGeometrySource2D CanvasGeometry_0010()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -254,12 +276,14 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(-67.25F, -105.5F), new Vector2(-70.433F, -94.969F), new Vector2(-72.333F, -84.201F));
                     builder.AddCubicBezier(new Vector2(-75.5F, -66.25F), new Vector2(-75.5F, -56.75F), new Vector2(-76.5F, -37.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0011()
+            IGeometrySource2D CanvasGeometry_0011()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -267,12 +291,14 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(7.5F, -14.5F), new Vector2(-4, -37), new Vector2(-35.046F, -35.579F));
                     builder.AddCubicBezier(new Vector2(-61.472F, -34.369F), new Vector2(-62.25F, -5.75F), new Vector2(-62.25F, -5.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0012()
+            IGeometrySource2D CanvasGeometry_0012()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
@@ -281,200 +307,233 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(-9.903F, -15.019F), new Vector2(-21.57F, -20.579F), new Vector2(-32.046F, -20.579F));
                     builder.AddCubicBezier(new Vector2(-53.5F, -20.579F), new Vector2(-42.25F, 4.25F), new Vector2(-42.25F, 4.25F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0013()
+            IGeometrySource2D CanvasGeometry_0013()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(16.231F, 39.073F));
                     builder.AddCubicBezier(new Vector2(16.231F, 39.073F), new Vector2(-32.769F, 57.365F), new Vector2(-32.769F, 57.365F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0014()
+            IGeometrySource2D CanvasGeometry_0014()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(7.45F, 21.95F));
                     builder.AddCubicBezier(new Vector2(7.45F, 21.95F), new Vector2(-32.75F, 55.75F), new Vector2(-32.75F, 55.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0015()
+            IGeometrySource2D CanvasGeometry_0015()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(-94.5F, 37.073F));
                     builder.AddCubicBezier(new Vector2(-94.5F, 37.073F), new Vector2(-48.769F, 55.365F), new Vector2(-48.769F, 55.365F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0016()
+            IGeometrySource2D CanvasGeometry_0016()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(-87.5F, 20.95F));
                     builder.AddCubicBezier(new Vector2(-87.5F, 20.95F), new Vector2(-48.75F, 54.75F), new Vector2(-48.75F, 54.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0017()
+            IGeometrySource2D CanvasGeometry_0017()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(166.731F, -7.927F));
                     builder.AddCubicBezier(new Vector2(166.731F, -7.927F), new Vector2(136.731F, 7.115F), new Vector2(136.731F, 7.115F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0018()
+            IGeometrySource2D CanvasGeometry_0018()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(156.45F, -23.05F));
                     builder.AddCubicBezier(new Vector2(156.45F, -23.05F), new Vector2(132, 2.75F), new Vector2(132, 2.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0019()
+            IGeometrySource2D CanvasGeometry_0019()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(169.5F, 18.073F));
                     builder.AddCubicBezier(new Vector2(169.5F, 18.073F), new Vector2(137.481F, 11.365F), new Vector2(137.481F, 11.365F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0020()
+            IGeometrySource2D CanvasGeometry_0020()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(119.5F, -45.05F));
                     builder.AddCubicBezier(new Vector2(119.5F, -45.05F), new Vector2(82.75F, -44.75F), new Vector2(82.75F, -44.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0021()
+            IGeometrySource2D CanvasGeometry_0021()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(119.25F, -20.05F));
                     builder.AddCubicBezier(new Vector2(119.25F, -20.05F), new Vector2(63.5F, -20.5F), new Vector2(63.5F, -20.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0022()
+            IGeometrySource2D CanvasGeometry_0022()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(128, 3.65F));
                     builder.AddCubicBezier(new Vector2(128, 3.65F), new Vector2(78.25F, 3.5F), new Vector2(78.25F, 3.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0023()
+            IGeometrySource2D CanvasGeometry_0023()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(149.624F, 8.244F));
                     builder.AddCubicBezier(new Vector2(149.624F, 8.244F), new Vector2(136.648F, 10.156F), new Vector2(136.648F, 10.156F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0024()
+            IGeometrySource2D CanvasGeometry_0024()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(144.429F, -5.397F));
                     builder.AddCubicBezier(new Vector2(144.429F, -5.397F), new Vector2(132.275F, 4.731F), new Vector2(132.275F, 4.731F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0025()
+            IGeometrySource2D CanvasGeometry_0025()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(145.677F, 22.22F));
                     builder.AddCubicBezier(new Vector2(145.677F, 22.22F), new Vector2(134.922F, 14.749F), new Vector2(134.922F, 14.749F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0026()
+            IGeometrySource2D CanvasGeometry_0026()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(147.699F, 13.025F));
                     builder.AddCubicBezier(new Vector2(147.699F, 13.025F), new Vector2(133.195F, 13.21F), new Vector2(133.195F, 13.21F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0027()
+            IGeometrySource2D CanvasGeometry_0027()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(142.183F, -5.112F));
                     builder.AddCubicBezier(new Vector2(142.183F, -5.112F), new Vector2(130.029F, 5.016F), new Vector2(130.029F, 5.016F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
-            CanvasGeometry CanvasGeometry_0028()
+            IGeometrySource2D CanvasGeometry_0028()
             {
+                IGeometrySource2D result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Alternate);
                     builder.BeginFigure(new Vector2(142.038F, 29.278F));
                     builder.AddCubicBezier(new Vector2(142.038F, 29.278F), new Vector2(131.282F, 21.807F), new Vector2(131.282F, 21.807F));
                     builder.EndFigure(CanvasFigureLoop.Open);
-                    return CanvasGeometry.CreatePath(builder);
+                    result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
             }
 
             CompositionColorBrush CompositionColorBrush_0000()
@@ -575,7 +634,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0006());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.5363129) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.5363129) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -626,7 +685,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0010());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5698324) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5698324) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -687,7 +746,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0015());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.5139665) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.5139665) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -738,7 +797,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0019());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4357542) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5195531) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4357542) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5195531) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -846,7 +905,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0028());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4636872) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5363129) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4636872) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5363129) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -906,7 +965,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0033());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4804469) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4804469) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -957,7 +1016,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0037());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4413408) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5251397) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4413408) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5251397) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1017,7 +1076,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0042());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1068,7 +1127,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0046());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.3296089) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.8715084) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.3296089) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8715084) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1109,7 +1168,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0050());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.424581) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5139665) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.424581) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5139665) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1149,7 +1208,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0054());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4022346) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.4972067) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4022346) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.4972067) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1190,7 +1249,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0058());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4581006) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4581006) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1230,7 +1289,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0062());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.3910615) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.8994414) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.3910615) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8994414) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1415,7 +1474,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0078());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.3296089) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.3296089) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1456,7 +1515,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0082());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4189944) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4189944) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1516,7 +1575,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0087());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.3910615) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.3910615) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1587,7 +1646,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0092());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.1564246) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.301676) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.1564246) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.301676) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1628,7 +1687,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0096());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.08938547) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.08938547) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1669,7 +1728,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0100());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.1005587) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.1005587) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -1723,7 +1782,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0104());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.09497207) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0))";
+                _expressionAnimation.Expression = "(_.Progress < 0.09497207) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0)";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -2159,7 +2218,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0152());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4469274) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5027933) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4469274) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5027933) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -2198,7 +2257,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0156());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5251397) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4692737) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5251397) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -2237,7 +2296,7 @@ namespace Compositions
                 var shapes = result.Shapes;
                 shapes.Add(CompositionContainerShape_0160());
                 _expressionAnimation.ClearAllParameters();
-                _expressionAnimation.Expression = "(_.Progress < 0.4748603) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5307263) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                _expressionAnimation.Expression = "(_.Progress < 0.4748603) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5307263) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 _expressionAnimation.SetReferenceParameter("_", ContainerVisual_0000());
                 result.StartAnimation("TransformMatrix", _expressionAnimation);
                 return result;
@@ -4126,7 +4185,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0001 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.452514) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                result.Expression = "(_.Progress < 0.452514) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 return result;
             }
 
@@ -4138,7 +4197,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0002 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.301676) ? (Matrix3x2(0,0,0,0,0,0)) : (Matrix3x2(1,0,0,1,0,0))";
+                result.Expression = "(_.Progress < 0.301676) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 return result;
             }
 
@@ -4150,7 +4209,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0003 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.1675978) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.2067039) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.1675978) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2067039) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4162,7 +4221,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0004 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.3631285) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.4189944) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.3631285) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.4189944) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4174,7 +4233,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0005 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.301676) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.3575419) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.301676) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3575419) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4186,7 +4245,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0006 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.5418994) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.5977654) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.5418994) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.5977654) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4198,7 +4257,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0007 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.4189944) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.4636872) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.4189944) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.4636872) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -4210,7 +4269,7 @@ namespace Compositions
                 }
                 var result = _expressionAnimation_0008 = _c.CreateExpressionAnimation();
                 result.SetReferenceParameter("_", ContainerVisual_0000());
-                result.Expression = "(_.Progress < 0.424581) ? (Matrix3x2(0,0,0,0,0,0)) : ((_.Progress < 0.4692737) ? (Matrix3x2(1,0,0,1,0,0)) : (Matrix3x2(0,0,0,0,0,0)))";
+                result.Expression = "(_.Progress < 0.424581) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.4692737) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
                 return result;
             }
 
@@ -5168,16 +5227,14 @@ namespace Compositions
                 return result;
             }
 
-
-            internal static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).ContainerVisual_0000();
-
             Instantiator(Compositor compositor)
             {
                 _c = compositor;
                 _expressionAnimation = compositor.CreateExpressionAnimation();
             }
 
+            public static Visual InstantiateComposition(Compositor compositor)
+                => new Instantiator(compositor).ContainerVisual_0000();
         }
     }
 }
