@@ -22,7 +22,7 @@ namespace WinCompData.CodeGen
         readonly ObjectData[] _canonicalNodes;
         readonly IStringifier _stringifier;
 
-        internal InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
+        protected InstantiatorGeneratorBase(CompositionObject graphRoot, bool setCommentProperties, IStringifier stringifier)
         {
             _setCommentProperties = setCommentProperties;
             _stringifier = stringifier;

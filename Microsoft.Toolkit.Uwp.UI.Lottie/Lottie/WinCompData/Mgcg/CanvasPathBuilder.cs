@@ -28,6 +28,11 @@ namespace WinCompData.Mgcg
             _commands.Add(new Command{Type = CommandType.AddCubicBezier, Args = new[] { a, b, c }});
         }
 
+        public void AddLine(Vector2 a)
+        {
+            _commands.Add(new Command { Type = CommandType.AddLine, Args = new[] { a} });
+        }
+
         public void SetFilledRegionDetermination(CanvasFilledRegionDetermination a)
         {
             _commands.Add(new Command { Type = CommandType.SetFilledRegionDetermination, Args = a });
@@ -49,6 +54,7 @@ namespace WinCompData.Mgcg
             BeginFigure,
             EndFigure,
             AddCubicBezier,
+            AddLine,
             SetFilledRegionDetermination,
         }
     }

@@ -108,6 +108,7 @@
     <Compile Include="MyComposition.xaml.cs">
       <DependentUpon>MyComposition.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PathsGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

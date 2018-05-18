@@ -903,6 +903,10 @@ namespace Lottie
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
                                     builder.EndFigure(CanvasFigureLoop((Wd.Mgcg.CanvasFigureLoop)command.Args));
                                     break;
+                                case Wd.Mgcg.CanvasPathBuilder.CommandType.AddLine:
+                                    var point = ((Wd.Sn.Vector2[])command.Args)[0];
+                                    builder.AddLine(Vector2(point));
+                                    break;
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
                                     var vectors = (Wd.Sn.Vector2[])command.Args;
                                     builder.AddCubicBezier(Vector2(vectors[0]), Vector2(vectors[1]), Vector2(vectors[2]));

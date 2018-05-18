@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using WinCompData.CodeGen;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -122,12 +123,13 @@ namespace LottieTest
             _txtProgressTotal.Text = files.Count().ToString();
 
             var lottieInfos = new List<LottieInfo>();
-
+            var paths = new List<string>();
             // Parse each file in the corpus.
             foreach (var file in files)
             {
                 _progressCounter++;
                 _txtProgressCounter.Text = _progressCounter.ToString();
+                _txtCurrentFile.Text = file.Name;
 
                 var lottieInfo = new LottieInfo
                 {
@@ -172,7 +174,20 @@ namespace LottieTest
 
                 lottieInfo.TranslationIssues = translationIssues;
 
+                // Codegen the Lottie
+                var code = CSharpInstantiatorGenerator.CreateFactoryCode(
+                    "AuditedComposition", 
+                    wincompDataRootVisual, 
+                    (float)lottieComposition.Width, 
+                    (float)lottieComposition.Height, 
+                    wincompDataRootVisual.Properties, 
+                    lottieComposition.Duration);
+
+                // Collect the paths that are used in the file.
+                paths.AddRange(PathsGenerator.GeneratePaths(wincompDataRootVisual));
             }
+
+            var allPaths = string.Join("\r\n", paths);
             return lottieInfos.ToArray();
         }
 

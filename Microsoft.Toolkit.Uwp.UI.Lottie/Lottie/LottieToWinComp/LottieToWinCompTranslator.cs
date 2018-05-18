@@ -971,6 +971,103 @@ namespace LottieToWinComp
 
         }
 
+        // Returns true iff all of the points lie on the same line, and p1 and p2 are between p0 and p3.
+        // Such cubic beziers can be replaced by a line from p0 to p3.
+        static bool IsCubicBezierALine(
+            WinCompData.Sn.Vector2 p0,
+            WinCompData.Sn.Vector2 p1,
+            WinCompData.Sn.Vector2 p2,
+            WinCompData.Sn.Vector2 p3)
+        {
+            if (!IsCubicBezierColinear(p0, p1, p2, p3))
+            {
+                return false;
+            }
+
+            // The points are on the same line. The cubic bezier is a line if
+            // p1 and p2 are between p0..p3.
+            var outerDiffX = Math.Abs(p0.X - p3.X);
+
+            if (Math.Abs(p0.X - p1.X) > outerDiffX)
+            {
+                return false;
+            }
+            if (Math.Abs(p3.X - p1.X) > outerDiffX)
+            {
+                return false;
+            }
+
+            if (Math.Abs(p0.X - p2.X) > outerDiffX)
+            {
+                return false;
+            }
+            if (Math.Abs(p3.X - p2.X) > outerDiffX)
+            {
+                return false;
+            }
+
+
+            var outerDiffY = Math.Abs(p0.Y - p3.Y);
+
+            if (Math.Abs(p0.Y - p1.Y) > outerDiffY)
+            {
+                return false;
+            }
+            if (Math.Abs(p3.Y - p1.Y) > outerDiffY)
+            {
+                return false;
+            }
+
+            if (Math.Abs(p0.Y - p2.Y) > outerDiffY)
+            {
+                return false;
+            }
+            if (Math.Abs(p3.Y - p2.Y) > outerDiffY)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Returns true if each of the given points is on the same line.
+        static bool IsCubicBezierColinear(
+            WinCompData.Sn.Vector2 p0,
+            WinCompData.Sn.Vector2 p1,
+            WinCompData.Sn.Vector2 p2,
+            WinCompData.Sn.Vector2 p3)
+        {
+            var p01X = p0.X - p1.X;
+            var p01Y = p0.Y - p1.Y;
+
+            var p02X = p0.X - p2.X;
+            var p02Y = p0.Y - p2.Y;
+
+            var p03X = p0.X - p3.X;
+            var p03Y = p0.Y - p3.Y;
+
+            if (p01Y == 0 || p02Y == 0 || p03Y == 0)
+            {
+                // Can't divide by Y because it's 0 in at least one case. (i.e. horizontal line)
+                if (p01X == 0 || p02X == 0 || p03X == 0)
+                {
+                    // Can't divide by X because it's 0 in at least one case (i.e. vertical line)
+                    // The points can only be colinear if they're all equal.
+                    return p0 == p1 && p0 == p2 && p0 == p3;
+                }
+                else
+                {
+                    return (p01Y / p01X) == (p02Y / p02X) &&
+                           (p01Y / p01X) == (p03Y / p03X);
+                }
+            }
+            else
+            {
+                return (p01X / p01Y) == (p02X / p02Y) &&
+                       (p01X / p01Y) == (p03X / p03Y);
+            }
+        }
+
         CanvasGeometry CreateWin2dPathGeometry(Shape path, SolidColorFill.PathFillType fillType)
         {
             if (path.PathData.IsAnimated)
@@ -991,10 +1088,27 @@ namespace LottieToWinComp
                 }
                 else
                 {
+                    var cp0 = Vector2(pathData.Start);
                     builder.BeginFigure(Vector2(pathData.Start));
                     foreach (var segment in beziers)
                     {
-                        builder.AddCubicBezier(Vector2(segment.ControlPoint1), Vector2(segment.ControlPoint2), Vector2(segment.Vertex));
+                        var cp1 = Vector2(segment.ControlPoint1);
+                        var cp2 = Vector2(segment.ControlPoint2);
+                        var cp3 = Vector2(segment.Vertex);
+
+                        if (IsCubicBezierALine(cp0, cp1, cp2, cp3))
+                        {
+                            // Ignore 0-length lines.
+                            if (!cp0.Equals(cp3))
+                            {
+                                builder.AddLine(cp3);
+                            }
+                        }
+                        else
+                        {
+                            builder.AddCubicBezier(cp1, cp2, cp3);
+                        }
+                        cp0 = cp3;
                     }
                     builder.EndFigure(pathData.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
                 }
@@ -1958,7 +2072,7 @@ namespace LottieToWinComp
                     var cbExpression = cb.ToString();
 
 
-                    if (cb.IsColinear
+                    if (cb.IsEquivalentToLinear
 #if !SpatialBeziers
                         || true
 #endif
@@ -1998,7 +2112,7 @@ namespace LottieToWinComp
                         progressMappingAnimation.InsertKeyFrame((float)adjustedProgress, 1, CreateCompositionEasingFunction(keyFrame.Easing));
 #endif
                         insertExpressionKeyFrame(
-                            compositionAnimation, 
+                            compositionAnimation,
                             (float)adjustedProgress,
                             cb,                                 // Expression. 
                             CreateJumpStepEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.

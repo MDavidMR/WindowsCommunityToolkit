@@ -1,4 +1,5 @@
-﻿using SnVector2 = WinCompData.Sn.Vector2;
+﻿using System;
+using SnVector2 = WinCompData.Sn.Vector2;
 
 namespace LottieToWinComp.Expressions
 {
@@ -25,19 +26,72 @@ namespace LottieToWinComp.Expressions
         }
 
         /// <summary>
-        /// True iff all 4 control points are on the same line, or the segment between
-        /// controlPoint0 and controlPoint3 is 0 length. A cubic bezier with colinear control 
-        /// points can be replaced by a linear function from controlPoint0 to controlPoint3.
+        /// True iff the cubic bezier is equivalent to a line drawn from point 0 to point 3.
         /// </summary>
-        public bool IsColinear
+        public bool IsEquivalentToLinear
         {
             get
             {
-                if (_p0.Equals(_p3))
+                if (!IsColinear)
                 {
-                    return true;
+                    return false;
                 }
 
+                // The points are on the same line. The cubic bezier is a line if
+                // p1 and p2 are between p0..p3.
+                var outerDiffX = Math.Abs(_p0.X - _p3.X);
+
+                if (Math.Abs(_p0.X - _p1.X) > outerDiffX)
+                {
+                    return false;
+                }
+                if (Math.Abs(_p3.X - _p1.X) > outerDiffX)
+                {
+                    return false;
+                }
+
+                if (Math.Abs(_p0.X - _p2.X) > outerDiffX)
+                {
+                    return false;
+                }
+                if (Math.Abs(_p3.X - _p2.X) > outerDiffX)
+                {
+                    return false;
+                }
+
+
+                var outerDiffY = Math.Abs(_p0.Y - _p3.Y);
+
+                if (Math.Abs(_p0.Y - _p1.Y) > outerDiffY)
+                {
+                    return false;
+                }
+                if (Math.Abs(_p3.Y - _p1.Y) > outerDiffY)
+                {
+                    return false;
+                }
+
+                if (Math.Abs(_p0.Y - _p2.Y) > outerDiffY)
+                {
+                    return false;
+                }
+                if (Math.Abs(_p3.Y - _p2.Y) > outerDiffY)
+                {
+                    return false;
+                }
+
+                return true;
+
+            }
+        }
+
+        /// <summary>
+        /// True iff all of the control points are on the same line.
+        /// </summary>
+        bool IsColinear
+        {
+            get
+            {
                 var p01X = _p0.X - _p1.X;
                 var p01Y = _p0.Y - _p1.Y;
 
@@ -67,7 +121,6 @@ namespace LottieToWinComp.Expressions
                     return (p01X / p01Y) == (p02X / p02Y) &&
                            (p01X / p01Y) == (p03X / p03Y);
                 }
-
             }
         }
 

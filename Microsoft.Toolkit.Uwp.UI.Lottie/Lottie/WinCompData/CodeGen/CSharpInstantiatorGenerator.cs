@@ -156,6 +156,10 @@ namespace WinCompData.CodeGen
                     case CanvasPathBuilder.CommandType.EndFigure:
                         builder.WriteLine($"builder.EndFigure({_stringifier.CanvasFigureLoop((CanvasFigureLoop)command.Args)});");
                         break;
+                    case CanvasPathBuilder.CommandType.AddLine:
+                        var endPoint = ((Vector2[])command.Args)[0];
+                        builder.WriteLine($"builder.AddLine({Vector2(endPoint)});");
+                        break;
                     case CanvasPathBuilder.CommandType.AddCubicBezier:
                         var vectors = (Vector2[])command.Args;
                         builder.WriteLine($"builder.AddCubicBezier({Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])});");

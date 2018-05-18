@@ -16,6 +16,7 @@
                 <TextBlock>/</TextBlock>
                 <TextBlock x:Name="_txtProgressTotal">0</TextBlock>
             </StackPanel>
+            <TextBlock x:Name="_txtCurrentFile"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>
