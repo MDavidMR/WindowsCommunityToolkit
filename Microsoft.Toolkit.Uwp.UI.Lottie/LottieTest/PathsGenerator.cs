@@ -41,13 +41,8 @@ namespace LottieTest
                 from node in Graph.FromCompositionObject(root, true)
                 // Filter to CanvasGeometry nodes.
                 where node.Type == Graph.NodeType.CanvasGeometry
-                // Get the CanvasGeometry nodes that reference the current node.
-                let cgInRefs =
-                    from inRef in node.InReferences
-                    where inRef.Type == Graph.NodeType.CanvasGeometry
-                    select inRef
                 // Filter to nodes that are not referenced by a CanvasGeometry.
-                where !cgInRefs.Any()
+                where !node.InReferences.Where(n => n.Type == Graph.NodeType.CanvasGeometry).Any()
                 select (CanvasGeometry)node.Object;
 
             return result.ToArray();
