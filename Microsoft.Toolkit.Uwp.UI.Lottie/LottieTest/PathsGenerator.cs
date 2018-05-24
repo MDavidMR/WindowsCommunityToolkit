@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Mgcg;
 using WinCompData.Sn;
+using WinCompData.Tools;
 using WinCompData.Wui;
 
 namespace LottieTest
 {
+
     // Generates a list of geometry paths. The paths can be used to help develop
     // optimizations for DWM.
     sealed class PathsGenerator : InstantiatorGeneratorBase
@@ -21,6 +22,9 @@ namespace LottieTest
 
         internal static string[] GeneratePaths(CompositionObject root)
         {
+            // Get the CanvasGeometries that are not contained by other CanvasGeometries.
+            var cgs = GetCanvasGeometries(root);
+
             var instance = new PathsGenerator(root);
             instance.GenerateCode("", (Visual)root, 0, 0, root.Properties, TimeSpan.Zero);
             return instance._paths.ToArray();
@@ -28,6 +32,25 @@ namespace LottieTest
 
         PathsGenerator(CompositionObject graphRoot) : base(graphRoot, setCommentProperties: false, stringifier: new Stringifier())
         {
+        }
+
+        // Returns the list of CanvasGeometry objects that are not referenced by any CanvasGeometry.
+        static CanvasGeometry[] GetCanvasGeometries(CompositionObject root)
+        {
+            var result =
+                from node in Graph.FromCompositionObject(root, true)
+                // Filter to CanvasGeometry nodes.
+                where node.Type == Graph.NodeType.CanvasGeometry
+                // Get the CanvasGeometry nodes that reference the current node.
+                let cgInRefs =
+                    from inRef in node.InReferences
+                    where inRef.Type == Graph.NodeType.CanvasGeometry
+                    select inRef
+                // Filter to nodes that are not referenced by a CanvasGeometry.
+                where !cgInRefs.Any()
+                select (CanvasGeometry)node.Object;
+
+            return result.ToArray();
         }
 
         protected override void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName)

@@ -13,7 +13,17 @@ namespace WinCompData.Tools
     {
         internal Graph() { }
 
-       
+        /// <summary>
+        /// Returns the graph of nodes reachable from the given <see cref="CompositionObject"/> root.
+        /// </summary>
+        public static ObjectGraph<Node> FromCompositionObject(CompositionObject root, bool includeVertices) 
+            => ObjectGraph<Node>.FromCompositionObject(root, includeVertices);
+
+        /// <summary>
+        /// A simple non-extensible node type.
+        /// </summary>
+        public sealed class Node : Node<Node> { }
+
         public class Node<T> : INodePrivate<T> where T : Node<T>, new()
         {
             static readonly T[] s_emptyArray = new T[0];
@@ -92,7 +102,10 @@ namespace WinCompData.Tools
             _includeVertices = includeVertices;
         }
 
-        internal static ObjectGraph<T> FromCompositionObject(CompositionObject root, bool includeVertices)
+        /// <summary>
+        /// Returns the graph of nodes reachable from the given <see cref="CompositionObject"/> root.
+        /// </summary>
+        public static new ObjectGraph<T> FromCompositionObject(CompositionObject root, bool includeVertices)
         {
             var result = new ObjectGraph<T>(includeVertices);
             result.Reference(null, root);
