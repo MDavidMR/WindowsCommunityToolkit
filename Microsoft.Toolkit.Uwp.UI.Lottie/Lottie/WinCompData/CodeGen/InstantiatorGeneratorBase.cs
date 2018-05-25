@@ -1103,20 +1103,6 @@ namespace WinCompData.CodeGen
             }
         }
 
-        // Breaks up the given text into lines.
-        static IEnumerable<string> BreakUp(string text) => BreakUp(text, 83);
-
-        // Breaks up the given text into lines of at most maxLineLength characters.
-        static IEnumerable<string> BreakUp(string text, int maxLineLength)
-        {
-            var rest = text;
-            while (rest.Length > 0)
-            {
-                yield return GetLine(rest, maxLineLength, out string tail);
-                rest = tail;
-            }
-        }
-
         // Returns the next line from the front of the given text, ensuring it is no more 
         // than maxLineLength and a tail that contains the remainder.
         static string GetLine(string text, int maxLineLength, out string remainder)
