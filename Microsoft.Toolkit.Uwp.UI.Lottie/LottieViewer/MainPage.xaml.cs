@@ -50,8 +50,7 @@ namespace LottieViewer
             // if we're going to recognize the choice when the file is saved.
             //filePicker.FileTypeChoices.Add("C++/WinRT", new[] { ".cpp" });
 
-            // TODO: for Build we're hiding this option.
-            //filePicker.FileTypeChoices.Add("Lottie XML", new[] { ".xml" });
+            filePicker.FileTypeChoices.Add("Lottie XML", new[] { ".xml" });
             
             // Note that the extension needs to be unique if we're going to 
             // recognize the choice when the file is saved.            

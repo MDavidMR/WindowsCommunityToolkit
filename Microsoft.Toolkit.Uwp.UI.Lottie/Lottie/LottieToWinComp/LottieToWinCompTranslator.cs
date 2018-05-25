@@ -41,6 +41,7 @@ namespace LottieToWinComp
         readonly HashSet<string> _issues = new HashSet<string>();
         readonly bool _strictTranslation;
         readonly bool _annotate;
+        readonly bool _addDescriptions;
         readonly Compositor _c;
         readonly ContainerVisual _rootVisual;
         readonly Dictionary<ScaleAndOffset, ExpressionAnimation> _progressBindingAnimations = new Dictionary<ScaleAndOffset, ExpressionAnimation>();
@@ -71,19 +72,19 @@ namespace LottieToWinComp
             LottieData.LottieComposition lottieComposition,
             Compositor compositor,
             bool strictTranslation,
-            bool annotateCompositionObjects)
+            bool annotateCompositionObjects,
+            bool addDescriptions)
         {
             _lc = lottieComposition;
             _c = compositor;
             _strictTranslation = strictTranslation;
             _annotate = annotateCompositionObjects;
+            _addDescriptions = addDescriptions;
 
             // Create the root.
             _rootVisual = CreateContainerVisual();
-            if (_annotate)
-            {
-                _rootVisual.Comment = "Lottie";
-            }
+            Describe(_rootVisual, "The root of the composition.");
+            Annotate(_rootVisual, "Composition root");
 
             // Add the master progress property to the visual.
             _rootVisual.Properties.InsertScalar(ProgressPropertyName, 0);
@@ -105,21 +106,24 @@ namespace LottieToWinComp
                 lottieComposition,
                 strictTranslation,
                 false,
+                true,   // add descriptions for codegen comments
                 out visual,
                 out translationIssues);
 
         /// <summary>
         /// Attempts to translates the given <see cref="LottieData.LottieComposition"/>.
         /// </summary>
-        /// <param name="lottieComposition">The <see cref="LottieData.LottieComposition"/> to translate.</param>
+        /// <param name="lottieComposition">The <see cref="LottieComposition"/> to translate.</param>
         /// <param name="annotateCompositionObjects">Add a string to the .Comment property of the <see cref="CompositionObjects"/>s to help with debugging.</param>
+        /// <param name="addCodegenDescriptions">Add descriptions to objects for comments on generated code.</param>
         /// <param name="visual">The <see cref="Visual"/> that contains the translated Lottie.</param>
         /// <param name="resources">Resources that must be kept alive as long as <paramref name="visual"/> is alive, and should be Disposed when no longer required.</param>
         /// <param name="translationIssues">A list of issues that were encountered during the translation.</param>
         public static bool TryTranslateLottieComposition(
-            LottieData.LottieComposition lottieComposition,
+            LottieComposition lottieComposition,
             bool strictTranslation,
             bool annotateCompositionObjects,
+            bool addCodegenDescriptions,
             out Visual visual,
             out string[] translationIssues)
         {
@@ -128,7 +132,8 @@ namespace LottieToWinComp
                 lottieComposition,
                 new WinCompData.Compositor(),
                 strictTranslation,
-                annotateCompositionObjects))
+                annotateCompositionObjects,
+                addCodegenDescriptions))
             {
 
                 // Translate the Lottie content to a CompositionShapeVisual tree.
@@ -319,6 +324,7 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerShape();
+                Describe(contentsNode, "Animates visibility of the shape.");
                 leafTransformNode.Shapes.Add(contentsNode);
 #if !NoInvisibility
                 var visibilityExpression =
@@ -335,18 +341,12 @@ namespace LottieToWinComp
 #endif // !NoInvisibility
             }
 
-            if (_annotate)
-            {
-                contentsNode.Comment = contentsNode.Comment != null
+            Annotate(contentsNode, contentsNode.Comment != null
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                    : $"'{layer.Name}'.Contents";
-            }
+                    : $"'{layer.Name}'.Contents");
 
             // Return the root of the chain of transforms (might be the same as the contents node)
-            if (_annotate)
-            {
-                rootNode.Comment = string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
-            }
+            Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
 
             return true;
         }
@@ -417,6 +417,7 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerVisual();
+                Describe(contentsNode, "Animates visibility of the visual.");
                 leafTransformNode.Children.Add(contentsNode);
 
 #if !NoInvisibility
@@ -437,14 +438,11 @@ namespace LottieToWinComp
 #endif // !NoInvisibility
             }
 
-            if (_annotate)
-            {
-                contentsNode.Comment = contentsNode.Comment != null
+            Annotate(contentsNode, contentsNode.Comment != null
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                    : $"'{layer.Name}'.Contents";
+                    : $"'{layer.Name}'.Contents");
 
-                rootNode.Comment = string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment);
-            }
+            Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
 
             return true;
         }
@@ -467,10 +465,8 @@ namespace LottieToWinComp
             }
 
             var result = CreateContainerVisual();
-            if (_annotate)
-            {
-                result.Comment = $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'";
-            }
+            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'"); ;
+
 
             result.Children.Add(rootNode);
 #if !NoClipping
@@ -754,10 +750,7 @@ namespace LottieToWinComp
             {
                 contentsNode.Shapes.AddRange(contents);
 
-                if (_annotate)
-                {
-                    rootNode.Comment = $"{layer.Type}Layer:'{layer.Name}'";
-                }
+                Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
 
                 return rootNode;
             }
@@ -776,10 +769,7 @@ namespace LottieToWinComp
 
             if (contents.Length > 0)
             {
-                if (_annotate)
-                {
-                    compositionNode.Comment = group.Name;
-                }
+                Annotate(compositionNode, group.Name);
                 compositionNode.Shapes.AddRange(contents);
                 return compositionNode;
             }
@@ -1170,11 +1160,8 @@ namespace LottieToWinComp
 
             var compositionEllipseGeometry = CreateEllipseGeometry();
             compositionSpriteShape.Geometry = compositionEllipseGeometry;
-            if (_annotate)
-            {
-                compositionSpriteShape.Comment = shapeContent.Name;
-                compositionEllipseGeometry.Comment = $"{shapeContent.Name}.EllipseGeometry";
-            }
+            Annotate(compositionSpriteShape, shapeContent.Name);
+            Annotate(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
 
             compositionEllipseGeometry.Center = Vector2(shapeContent.Position.InitialValue);
             ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center");
@@ -1261,11 +1248,8 @@ namespace LottieToWinComp
             var trimOffsetDegrees = (width / (2 * (width + height))) * 360;
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionRectangle, trimOffsetDegrees: trimOffsetDegrees);
 
-            if (_annotate)
-            {
-                compositionRectangle.Comment = shapeContent.Name;
-                compositionRectangle.Geometry.Comment = $"{shapeContent.Name}.RectangleGeometry";
-            }
+            Annotate(compositionRectangle, shapeContent.Name);
+            Annotate(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
 
             return compositionRectangle;
         }
@@ -1289,11 +1273,8 @@ namespace LottieToWinComp
             compositionSpriteShape.Geometry = compositionPathGeometry;
             compositionPathGeometry.Path = CompositionPathFromPathGeometry(geometry.InitialValue, GetPathFillType(shapeContext.Fill));
 
-            if (_annotate)
-            {
-                compositionSpriteShape.Comment = shapeContent.Name;
-                compositionPathGeometry.Comment = $"{shapeContent.Name}.PathGeometry";
-            }
+            Annotate(compositionSpriteShape, shapeContent.Name);
+            Annotate(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
 
             ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path");
 
@@ -1543,16 +1524,9 @@ namespace LottieToWinComp
 
             rectangle.FillBrush = brush;
 
-            if (_annotate)
-            {
-                rectangle.Comment = "SolidLayerRectangle";
-                rectangleGeometry.Comment = rectangle.Comment + ".RectangleGeometry";
-            }
-
-            if (_annotate)
-            {
-                rootNode.Comment = $"{layer.Type}Layer:'{layer.Name}'";
-            }
+            Annotate(rectangle, "SolidLayerRectangle");
+            Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
+            Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
 
             return rootNode;
         }
@@ -1578,10 +1552,7 @@ namespace LottieToWinComp
 
             // Apply the transform.
             TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
-            if (_annotate)
-            {
-                leafTransformNode.Comment = $"'{layer.Name}'.Transforms";
-            }
+            Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1592,10 +1563,7 @@ namespace LottieToWinComp
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerVisualForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
-                if (_annotate)
-                {
-                    rootTransformNode.Comment = $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}";
-                }
+                Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Children.Add(leafTransformNode);
             }
@@ -1620,10 +1588,7 @@ namespace LottieToWinComp
 
             // Apply the transform from the layer.
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
-            if (_annotate)
-            {
-                leafTransformNode.Comment = $"'{layer.Name}'.Transforms";
-            }
+            Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1634,10 +1599,7 @@ namespace LottieToWinComp
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
-                if (_annotate)
-                {
-                    rootTransformNode.Comment = $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}";
-                }
+                Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Shapes.Add(leafTransformNode);
             }
@@ -2574,6 +2536,24 @@ namespace LottieToWinComp
                 case MergePaths.MergeMode.ExcludeIntersections: return CanvasGeometryCombine.Xor;
                 default:
                     throw new InvalidOperationException();
+            }
+        }
+
+        // Sets the comment property on the object.
+        void Annotate(CompositionObject obj, string comment)
+        {
+            if (_annotate)
+            {
+                obj.Comment = comment;
+            }
+        }
+
+        // Sets a description on the object.
+        void Describe(CompositionObject obj, string description)
+        {
+            if (_addDescriptions)
+            {
+                obj.Description = description;
             }
         }
 

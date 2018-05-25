@@ -169,6 +169,7 @@ namespace LottieTest
                         lottieComposition,
                         false, // strictTranslation
                         true, // annotate
+                        true, // add descriptions for codegen commments
                         out var wincompDataRootVisual,
                         out var translationIssues);
 

@@ -1001,6 +1001,7 @@ namespace WinCompData.CodeGen
         // Handles object factories that are just a create call.
         void WriteSimpleObjectFactory(CodeBuilder builder, ObjectData node, string createCallText)
         {
+            WriteMethodComment(builder, node);
             WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name);
             if (node.RequiresStorage)
             {
@@ -1017,10 +1018,23 @@ namespace WinCompData.CodeGen
 
         void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
+            WriteMethodComment(builder, node);
             WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name, parameters);
             if (node.RequiresStorage)
             {
                 WriteCacheHandler(builder, node);
+            }
+        }
+
+        void WriteMethodComment(CodeBuilder builder, ObjectData node)
+        {
+            var comment = node.Comment;
+            if (comment != null)
+            {
+                foreach (var line in BreakUp(comment))
+                {
+                    builder.WriteLine($"// {line}");
+                }
             }
         }
 
@@ -1073,6 +1087,112 @@ namespace WinCompData.CodeGen
                         throw new InvalidOperationException();
                 }
             }
+        }
+
+        // Breaks up the given text into lines.
+        static IEnumerable<string> BreakUp(string text) => BreakUp(text, 83);
+
+        // Breaks up the given text into lines of at most maxLineLength characters.
+        static IEnumerable<string> BreakUp(string text, int maxLineLength)
+        {
+            var rest = text;
+            while (rest.Length > 0)
+            {
+                yield return GetLine(rest, maxLineLength, out string tail);
+                rest = tail;
+            }
+        }
+
+        // Returns the next line from the front of the given text, ensuring it is no more 
+        // than maxLineLength and a tail that contains the remainder.
+        static string GetLine(string text, int maxLineLength, out string remainder)
+        {
+            text = text.TrimEnd();
+
+            // Look for the next 2 places to break. If the 2nd place makes the line too long,
+            // break at the 1st place, otherwise keep looking.
+            int breakAt;
+            int breakLookahead = 0;
+            do
+            {
+                // Find the next breakable position starting at the last break point
+                breakAt = breakLookahead;
+                breakLookahead++;
+                while (breakLookahead < text.Length)
+                {
+                    Char cur = text[breakLookahead];
+                    switch (cur)
+                    {
+                        // Special handling for XML markup. If a < is found, prevent breaking
+                        // until the closing >.
+                        case '<':
+                            do
+                            {
+                                breakLookahead++;
+                            } while (breakLookahead < text.Length && text[breakLookahead] != '>');
+                            break;
+                        case '\r':
+                            // CR found. Break immediately
+                            if (breakLookahead + 1 < text.Length && text[breakLookahead] == '\n')
+                            {
+                                // CRLF pair - step over both
+                                if (breakLookahead > maxLineLength)
+                                {
+                                    remainder = text.Substring(breakAt);
+                                    return text.Substring(0, breakAt);
+                                }
+                                else
+                                {
+                                    // Jump over the CRLF
+                                    remainder = text.Substring(breakLookahead + 2);
+                                    return text.Substring(0, breakLookahead);
+                                }
+                            }
+                            else
+                            {
+                                goto case '\n';
+                            }
+                        case '\n':
+                            // LF found. Break immediately
+                            if (breakLookahead > maxLineLength)
+                            {
+                                remainder = text.Substring(breakAt);
+                                return text.Substring(0, breakAt);
+                            }
+                            else
+                            {
+                                // Jump over the LF
+                                remainder = text.Substring(breakLookahead + 1);
+                                return text.Substring(0, breakLookahead);
+                            }
+                        default:
+                            if (char.IsWhiteSpace(cur))
+                            {
+                                // Found the next whitespace
+                                goto WHITESPACE_FOUND;
+                            }
+                            break;
+                    }
+                    breakLookahead++;
+                }
+                // Found whitespace or end of string. Look for next
+                WHITESPACE_FOUND: { }
+            } while (breakLookahead != text.Length && breakLookahead <= maxLineLength);
+
+            // If no progress was made, allow the line to be too long.
+            if (breakAt == 0)
+            {
+                breakAt = breakLookahead;
+            }
+
+            // If the breakLookahead still is less than the maximum length, return the whole
+            // line.
+            if (breakLookahead <= maxLineLength)
+            {
+                breakAt = breakLookahead;
+            }
+            remainder = text.Substring(breakAt);
+            return text.Substring(0, breakAt);
         }
 
         string Deref => _stringifier.Deref;
@@ -1201,6 +1321,21 @@ namespace WinCompData.CodeGen
                 else
                 {
                     return $"{Name}()";
+                }
+            }
+
+            internal string Comment
+            {
+                get
+                {
+                    if (Object is CompositionObject)
+                    {
+                        return ((CompositionObject)Object).Description;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
 
