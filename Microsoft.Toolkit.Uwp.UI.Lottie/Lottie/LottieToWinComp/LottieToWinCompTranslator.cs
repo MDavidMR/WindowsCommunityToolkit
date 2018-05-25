@@ -751,6 +751,7 @@ namespace LottieToWinComp
                 contentsNode.Shapes.AddRange(contents);
 
                 Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
+                Describe(rootNode, $"Shape layer: \"{layer.Name}\".");
 
                 return rootNode;
             }
@@ -1518,16 +1519,13 @@ namespace LottieToWinComp
 
             contentsNode.Shapes.Add(rectangle);
 
-            // TODO - the opacity in the transform needs to be taken into consideration here
-            // TODO - the brush could be animated.
-            var brush = CreateNonAnimatedColorBrush(layer.Color);
-
-            rectangle.FillBrush = brush;
+            rectangle.FillBrush = CreateAnimatedColorBrush(context, layer.Color, layer.Transform.OpacityPercent);
 
             Annotate(rectangle, "SolidLayerRectangle");
             Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
             Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-
+            Describe(rootNode, $"Solid layer: \"{layer.Name}\".");
+            
             return rootNode;
         }
 
@@ -2273,55 +2271,70 @@ namespace LottieToWinComp
             }
             else if (opacityPercent.IsAnimated)
             {
-                if (color.IsAnimated)
-                {
-                    // TODO: multiply animations to produce a new set of key frames for the opacity-multiplied color.
-                    Unsupported("Opacity and color animated at the same time");
-                    return color;
-                }
-                else
-                {
-                    // Multiply the single color value by the opacity animation.
-                    return new Animatable<Color>(
-                        initialValue: MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue),
-                        keyFrames: opacityPercent.KeyFrames.Select(kf =>
-                            new KeyFrame<Color>(
-                                kf.Frame,
-                                MultiplyColorByOpacityPercent(color.InitialValue, kf.Value),
-                                kf.SpatialControlPoint1,
-                                kf.SpatialControlPoint2,
-                                kf.Easing)),
-                        propertyIndex: null);
-
-                }
+                // Color is not animated.
+                return MultiplyColorByAnimatableOpacityPercent(color.InitialValue, opacityPercent);
             }
             else
             {
                 // Multiply color by opacity
                 var nonAnimatedMultipliedColor = MultiplyColorByOpacityPercent(color.InitialValue, opacityPercent.InitialValue);
-                return new Animatable<LottieData.Color>(nonAnimatedMultipliedColor, null);
+                return new Animatable<Color>(nonAnimatedMultipliedColor, null);
             }
-
         }
+
+        Animatable<Color> MultiplyColorByAnimatableOpacityPercent(
+            Color color,
+            Animatable<double> opacityPercent)
+        {
+            if (!opacityPercent.IsAnimated)
+            {
+                return new Animatable<Color>(MultiplyColorByOpacityPercent(color, opacityPercent.InitialValue), null);
+            }
+            else
+            {
+                // Multiply the single color value by the opacity animation.
+                return new Animatable<Color>(
+                    initialValue: MultiplyColorByOpacityPercent(color, opacityPercent.InitialValue),
+                    keyFrames: opacityPercent.KeyFrames.Select(kf =>
+                        new KeyFrame<Color>(
+                            kf.Frame,
+                            MultiplyColorByOpacityPercent(color, kf.Value),
+                            kf.SpatialControlPoint1,
+                            kf.SpatialControlPoint2,
+                            kf.Easing)),
+                    propertyIndex: null);
+            }
+        }
+
 
         static Color MultiplyColorByOpacityPercent(Color color, double opacityPercent)
             => opacityPercent == 100 ? color
             : LottieData.Color.FromArgb(color.A * opacityPercent / 100, color.R, color.G, color.B);
 
 
+        CompositionColorBrush CreateAnimatedColorBrush(TranslationContext context, Color color, Animatable<double> opacityPercent)
+        {
+            var multipliedColor = MultiplyColorByAnimatableOpacityPercent(color, opacityPercent);
+            return CreateAnimatedColorBrush(context, multipliedColor);
+        }
+
         CompositionColorBrush CreateAnimatedColorBrush(TranslationContext context, Animatable<Color> color, Animatable<double> opacityPercent)
         {
             var multipliedColor = MultiplyAnimatableColorByAnimatableOpacityPercent(color, opacityPercent);
+            return CreateAnimatedColorBrush(context, multipliedColor);
+        }
 
-            if (multipliedColor.IsAnimated)
+        CompositionColorBrush CreateAnimatedColorBrush(TranslationContext context, Animatable<Color> color)
+        {
+            if (color.IsAnimated)
             {
-                var result = CreateColorBrush(multipliedColor.InitialValue);
-                ApplyColorKeyFrameAnimation(context, multipliedColor, result, nameof(result.Color));
+                var result = CreateColorBrush(color.InitialValue);
+                ApplyColorKeyFrameAnimation(context, color, result, nameof(result.Color));
                 return result;
             }
             else
             {
-                return CreateNonAnimatedColorBrush(multipliedColor.InitialValue);
+                return CreateNonAnimatedColorBrush(color.InitialValue);
             }
         }
 

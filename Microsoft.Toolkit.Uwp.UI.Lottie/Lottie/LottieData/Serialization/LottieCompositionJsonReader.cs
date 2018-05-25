@@ -196,7 +196,7 @@ namespace LottieData.Serialization
                 frameRate.Value,
                 is3d,
                 new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
-                assets,
+                assets ?? new AssetCollection(new Asset[0]),
                 layers,
                 markers ?? new Marker[0]);
 
@@ -217,8 +217,8 @@ namespace LottieData.Serialization
             // Older Lottie's use a string for the id. Newer Lotties use a number.
             // Convert either to a string.
             var idObj = obj.GetNamedValue("id");
-            var id = idObj.ValueType == JsonValueType.Number 
-                ? idObj.GetNumber().ToString() 
+            var id = idObj.ValueType == JsonValueType.Number
+                ? idObj.GetNumber().ToString()
                 : idObj.GetString();
 
             // Try to parse as a layers asset.
@@ -276,7 +276,7 @@ namespace LottieData.Serialization
                 ReportIssue("Layer with render:false");
                 return null;
             }
-            
+
             // Warnings
             if (name.EndsWith(".ai") || obj.GetNamedString("cl", "") == "ai")
             {
