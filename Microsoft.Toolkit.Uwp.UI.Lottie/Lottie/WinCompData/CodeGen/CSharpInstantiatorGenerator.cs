@@ -209,6 +209,8 @@ namespace WinCompData.CodeGen
 
             string IStringifier.IListAdd => "Add";
 
+            string IStringifier.FactoryCall(string value) => value;
+
             string IStringifier.Bool(bool value) => value ? "true" : "false";
 
             public string CanvasFigureLoop(CanvasFigureLoop value)
@@ -268,6 +270,8 @@ namespace WinCompData.CodeGen
             string IStringifier.Readonly => "readonly";
 
             string IStringifier.ReferenceTypeName(string value) => value;
+
+            public string ReferenceTypeName(string value) => value;
 
             string IStringifier.String(string value) => $"\"{value}\"";
 

@@ -142,6 +142,8 @@ namespace LottieTest
 
             public string Var => "";
 
+            public string FactoryCall(string value) => "";
+
             public string Bool(bool value)
             {
                 return "";

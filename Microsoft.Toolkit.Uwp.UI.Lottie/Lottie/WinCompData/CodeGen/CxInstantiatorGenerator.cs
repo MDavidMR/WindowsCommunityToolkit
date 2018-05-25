@@ -47,8 +47,6 @@ namespace WinCompData.CodeGen
                 // Interop
                 builder.WriteLine("#include <Windows.Graphics.Interop.h>");
                 builder.WriteLine("#include <windows.ui.composition.interop.h>");
-                // Most likely bundle GeoSource.h as file incase multiple comps are used
-                builder.WriteLine("#include \"GeoSource.h\"");
                 // ComPtr
                 builder.WriteLine("#include <wrl.h>");
             }
@@ -97,10 +95,17 @@ namespace WinCompData.CodeGen
             builder.CloseScope();
             builder.WriteLine();
 
-            // Write the instantiator.
             builder.UnIndent();
             builder.WriteLine("private:");
             builder.Indent();
+
+            // Write GeoSource to allow it's use in function definitions
+            builder.WriteLine($"{_stringifier.GeoSourceClass}");
+
+            // Typedef to simplify generation
+            builder.WriteLine("typedef ComPtr<GeoSource> CanvasGeometry;");
+
+            // Write the instantiator.
             builder.WriteLine("class Instantiator sealed");
             builder.OpenScope();
 
@@ -110,12 +115,21 @@ namespace WinCompData.CodeGen
 
         protected override void WriteClassEnd(CodeBuilder builder, Visual rootVisual, string reusableExpressionAnimationField)
         {
-            // Utility method for path geometries
-            builder.WriteLine("static IGeometrySource2D^ D2DPathGeometryToIGeometrySource2D(ComPtr<ID2D1PathGeometry> path)");
+            // Utility method for D2D geometries
+            builder.WriteLine("static IGeometrySource2D^ CanvasGeometryToIGeometrySource2D(CanvasGeometry geo)");
             builder.OpenScope();
-            builder.WriteLine("ComPtr<GeoSource> geoSource = new GeoSource(path.Get());");
-            builder.WriteLine("ComPtr<ABI::Windows::Graphics::IGeometrySource2D> interop = geoSource.Detach();");
+            builder.WriteLine("ComPtr<ABI::Windows::Graphics::IGeometrySource2D> interop = geo.Detach();");
             builder.WriteLine("return reinterpret_cast<IGeometrySource2D^>(interop.Get());");
+            builder.CloseScope();
+            builder.WriteLine();
+
+            // Utility method for fail-fasting on bad HRESULTs from d2d operations
+            builder.WriteLine("static void FFHR(HRESULT hr)");
+            builder.OpenScope();
+            builder.WriteLine("if (hr != S_OK)");
+            builder.OpenScope();
+            builder.WriteLine("RoFailFastWithErrorContext(hr);");
+            builder.CloseScope();
             builder.CloseScope();
             builder.WriteLine();
 
@@ -125,11 +139,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine("_c = compositor;");
             // Instantiate the reusable ExpressionAnimation.
             builder.WriteLine($"{reusableExpressionAnimationField} = _c->CreateExpressionAnimation();");
-            builder.WriteLine("HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf());");
-            builder.WriteLine("if (hr != S_OK)");
-            builder.OpenScope();
-            builder.WriteLine("throw ref new Platform::Exception(hr);");
-            builder.CloseScope();
+            builder.WriteLine($"{FailFastWrapper("D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf())")};");
             builder.CloseScope();
 
             // Write the method that instantiates the composition.
@@ -141,6 +151,7 @@ namespace WinCompData.CodeGen
             builder.OpenScope();
             builder.WriteLine($"return Instantiator(compositor).{CallFactoryFor(rootVisual)};");
             builder.CloseScope();
+            builder.WriteLine();
 
             // Close the scope for the instantiator class.
             builder.CloseClassScope();
@@ -154,12 +165,36 @@ namespace WinCompData.CodeGen
 
         protected override void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName)
         {
-            builder.WriteLine(" -- TODO -- ");
+            builder.WriteLine($"{typeName} result;");
+            builder.WriteLine("ID2D1Geometry **geoA = new ID2D1Geometry*, **geoB = new ID2D1Geometry*;");
+            builder.WriteLine($"{CallFactoryFor(obj.A)}->GetGeometry(geoA);");
+            builder.WriteLine($"{CallFactoryFor(obj.B)}->GetGeometry(geoB);");
+            builder.WriteLine("ComPtr<ID2D1PathGeometry> path;");
+            builder.WriteLine($"{FailFastWrapper("_d2dFactory->CreatePathGeometry(&path)")};");
+            builder.WriteLine("ComPtr<ID2D1GeometrySink> sink;");
+            builder.WriteLine($"{FailFastWrapper("path->Open(&sink)")};");
+            builder.WriteLine($"FFHR((*geoA)->CombineWithGeometry(");
+            builder.Indent();
+            builder.WriteLine($"*geoB,");
+            builder.WriteLine($"{_stringifier.CanvasGeometryCombine(obj.CombineMode)},");
+            builder.WriteLine($"{_stringifier.Matrix3x2(obj.Matrix)},");
+            builder.WriteLine($"sink.Get()));");
+            builder.UnIndent();
+            builder.WriteLine($"{FailFastWrapper("sink->Close()")};");
+            builder.WriteLine("result = new GeoSource(path.Get());");
         }
 
         protected override void WriteCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, string typeName, string fieldName)
         {
-            builder.WriteLine(" -- TODO -- ");
+            builder.WriteLine($"{typeName} result;");
+            builder.WriteLine("ComPtr<ID2D1EllipseGeometry> ellipse;");
+            builder.WriteLine("FFHR(_d2dFactory->CreateEllipseGeometry(");
+            builder.Indent();
+            builder.WriteLine($"D2D1::Ellipse({{{Float(obj.X)},{Float(obj.Y)}}}, {Float(obj.RadiusX)}, {Float(obj.RadiusY)}),");
+            builder.WriteLine("&ellipse));");
+            builder.UnIndent();
+            builder.CloseScope();
+            builder.WriteLine("result = new GeoSource(ellipse.Get());");
         }
 
         protected override void WriteCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, string typeName, string fieldName)
@@ -168,9 +203,9 @@ namespace WinCompData.CodeGen
 
             // D2D Setup
             builder.WriteLine("ComPtr<ID2D1PathGeometry> path;");
-            builder.WriteLine("_d2dFactory->CreatePathGeometry(&path);");
+            builder.WriteLine($"{FailFastWrapper("_d2dFactory->CreatePathGeometry(&path)")};");
             builder.WriteLine("ComPtr<ID2D1GeometrySink> sink;");
-            builder.WriteLine("path->Open(&sink);");
+            builder.WriteLine($"{FailFastWrapper("path->Open(&sink)")};");
             foreach (var command in obj.Commands)
             {
                 switch (command.Type)
@@ -191,26 +226,32 @@ namespace WinCompData.CodeGen
                         builder.WriteLine($"sink->AddBezier({{{Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])}}});");
                         break;
                     case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                        // TODO: Only applies to D2D Geometry group
-                        //builder.WriteLine($"GeoSink->SetFilledRegionDetermination({FilledRegionDetermination((CanvasFilledRegionDetermination)command.Args)});");
+                        builder.WriteLine($"sink->SetFillMode({FilledRegionDetermination((CanvasFilledRegionDetermination)command.Args)});");
                         break;
                     default:
                         throw new InvalidOperationException();
                 }
             }
-            builder.WriteLine("sink->Close();");
-
-            // Convert to IGeometrySource2D
-            builder.WriteLine("result = D2DPathGeometryToIGeometrySource2D(path);");
+            builder.WriteLine($"{FailFastWrapper("sink->Close()")};");
+            builder.WriteLine("result = new GeoSource(path.Get());");
         }
 
         protected override void WriteCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, string typeName, string fieldName)
         {
-            builder.WriteLine(" -- TODO -- ");
+            builder.WriteLine($"{typeName} result;");
+            builder.WriteLine("ComPtr<ID2D1RoundedRectangleGeometry> rect;");
+            builder.WriteLine("FFHR(_d2dFactory->CreateRoundedRectangleGeometry(");
+            builder.Indent();
+            builder.WriteLine($"D2D1::RoundedRect({{{Float(obj.X)},{Float(obj.Y)}}}, {Float(obj.RadiusX)}, {Float(obj.RadiusY)}),");
+            builder.WriteLine("&rect));");
+            builder.UnIndent();
+            builder.WriteLine("result = new GeoSource(rect.Get());");
         }
 
         string CanvasFigureLoop(CanvasFigureLoop value) => _stringifier.CanvasFigureLoop(value);
         string FilledRegionDetermination(CanvasFilledRegionDetermination value) => _stringifier.FilledRegionDetermination(value);
         string Vector2(Vector2 value) => _stringifier.Vector2(value);
+        string Float(float value) => _stringifier.Float(value);
+        string FailFastWrapper(string value) => _stringifier.FailFastWrapper(value);
     }
 }

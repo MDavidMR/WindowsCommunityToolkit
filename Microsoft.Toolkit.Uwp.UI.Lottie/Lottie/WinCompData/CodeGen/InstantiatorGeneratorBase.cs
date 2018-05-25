@@ -70,7 +70,7 @@ namespace WinCompData.CodeGen
                 if (node.CanonicalInRefs.Count() <= 1)
                 {
                     var pathSourceFactoryCall = CallFactoryFor(((CompositionPath)node.Object).Source);
-                    node.ForceInline($"{New} CompositionPath({pathSourceFactoryCall})");
+                    node.ForceInline($"{New} CompositionPath({_stringifier.FactoryCall(pathSourceFactoryCall)})");
                 }
             }
 
@@ -972,7 +972,7 @@ namespace WinCompData.CodeGen
         {
             var canvasGeometry = NodeFor((CanvasGeometry)obj.Source);
             WriteObjectFactoryStart(builder, node);
-            WriteCreateAssignment(builder, node, $"{New} CompositionPath({canvasGeometry.FactoryCall()})");
+            WriteCreateAssignment(builder, node, $"{New} CompositionPath({_stringifier.FactoryCall(canvasGeometry.FactoryCall())})");
             WriteObjectFactoryEnd(builder);
             return true;
         }
@@ -1024,7 +1024,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        protected void WriteObjectFactoryStartWithoutCache(CodeBuilder builder, string typeName, string methodName, IEnumerable<string> parameters = null)
+        void WriteObjectFactoryStartWithoutCache(CodeBuilder builder, string typeName, string methodName, IEnumerable<string> parameters = null)
         {
             builder.WriteLine($"{_stringifier.ReferenceTypeName(typeName)} {methodName}({(parameters == null ? "" : string.Join(", ", parameters))})");
             builder.OpenScope();
@@ -1164,6 +1164,7 @@ namespace WinCompData.CodeGen
             string FilledRegionDetermination(CanvasFilledRegionDetermination value);
             string Float(float value);
             string IListAdd { get; }
+            string FactoryCall(string value);
             string Int(int value);
             string Matrix3x2(Matrix3x2 value);
             string MemberSelect { get; }
@@ -1231,7 +1232,7 @@ namespace WinCompData.CodeGen
                         case Graph.NodeType.CompositionPath:
                             return "CompositionPath";
                         case Graph.NodeType.CanvasGeometry:
-                            return "IGeometrySource2D";
+                            return "CanvasGeometry";
                         default:
                             throw new InvalidOperationException();
                     }

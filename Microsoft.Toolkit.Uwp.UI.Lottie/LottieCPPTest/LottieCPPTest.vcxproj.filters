@@ -8,6 +8,9 @@
       <UniqueIdentifier>45d2a240-e0a0-4901-8844-105df0a4f99a</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
+    <Filter Include="Controls">
+      <UniqueIdentifier>{9831166c-20b7-4b44-8975-aae587615ca8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -22,7 +25,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
-    <ClInclude Include="GeoSource.h" />
+    <ClInclude Include="ICompositionSource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -55,5 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainPage.xaml" />
+    <Page Include="AnimationControl.xaml">
+      <Filter>Controls</Filter>
+    </Page>
   </ItemGroup>
 </Project>
