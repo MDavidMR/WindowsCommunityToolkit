@@ -465,8 +465,6 @@ namespace LottieToWinComp
             }
 
             var result = CreateContainerVisual();
-            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'"); ;
-
 
             result.Children.Add(rootNode);
 #if !NoClipping
@@ -494,6 +492,8 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
 
+            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'"); ;
+            DescribeLayer(result, layer);
             return result;
         }
 
@@ -751,7 +751,7 @@ namespace LottieToWinComp
                 contentsNode.Shapes.AddRange(contents);
 
                 Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-                Describe(rootNode, $"Shape layer: \"{layer.Name}\".");
+                DescribeLayer(rootNode, layer);
 
                 return rootNode;
             }
@@ -1524,8 +1524,8 @@ namespace LottieToWinComp
             Annotate(rectangle, "SolidLayerRectangle");
             Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
             Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-            Describe(rootNode, $"Solid layer: \"{layer.Name}\".");
-            
+            DescribeLayer(rootNode, layer);
+
             return rootNode;
         }
 
@@ -2561,7 +2561,13 @@ namespace LottieToWinComp
             }
         }
 
-        // Sets a description on the object.
+        // Sets the description of a layer on an object.
+        void DescribeLayer(CompositionObject obj, Layer layer)
+        {
+            Describe(obj, $"{layer.Type} layer: \"{layer.Name}\".");
+        }
+
+        // Sets a description on an object.
         void Describe(CompositionObject obj, string description)
         {
             if (_addDescriptions)

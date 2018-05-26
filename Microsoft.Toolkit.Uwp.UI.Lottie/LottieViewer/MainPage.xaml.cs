@@ -28,7 +28,6 @@ namespace LottieViewer
 
         }
 
-
         async void SaveFile_Click(object sender, RoutedEventArgs e)
         {
             var diagnostics = _stage.Player.Diagnostics as LottieCompositionDiagnostics;
