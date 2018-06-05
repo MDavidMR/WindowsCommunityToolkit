@@ -1,16 +1,49 @@
 ﻿using System;
 using System.Linq;
+using WinCompData.Expressions;
 
-namespace LottieToWinComp.Expressions
+namespace LottieToWinComp
 {
-    static class ProgressExpression
+    sealed class ExpressionFactory : Expression
     {
+        // The name used to bind to the property set that contains the Progress property.
+        const string c_rootName = "_";
+        static readonly Expression s_myTStart = Scalar("my.TStart");
+        static readonly Expression s_myTEnd = Scalar("my.TEnd");
+
+        // An expression that refers to the name of the root property set and the Progress property on it.
+        internal static readonly Expression RootProgress = Scalar($"{c_rootName}.{LottieToWinCompTranslator.ProgressPropertyName}");
+        internal static readonly Expression MaxTStartTEnd = Max(s_myTStart, s_myTEnd);
+        internal static readonly Expression MinTStartTEnd = Min(s_myTStart, s_myTEnd);
+        internal static readonly Expression OffsetExpression =
+            Vector2(
+                Subtract(Scalar("my.Position.X"),
+                        Divide(Scalar("my.Size.X"), Scalar(2))),
+                Subtract(Scalar("my.Position.Y"),
+                        Divide(Scalar("my.Size.Y"), Scalar(2))));
+        internal static readonly Expression MyAnchor2 = Vector2("my.Anchor");
+        internal static readonly Expression PositionMinusAnchor = Subtract(Vector2("my.Position"), MyAnchor2);
+        internal static Expression ScaledAndOffsetRootProgress(double scale, double offset)
+        {
+            var result = RootProgress;
+
+            if (scale != 1)
+            {
+                result = Multiply(result, Scalar(scale));
+            }
+            if (offset != 0)
+            {
+                result = Sum(result, Scalar(offset));
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// A segment of a progress expression. Defines the expression that is to be
         /// evaluated between two progress values.
         /// </summary>
-        internal sealed class Segment
+        public sealed class Segment
         {
             public Segment(double fromProgress, double toProgress, Expression value)
             {
@@ -103,6 +136,8 @@ namespace LottieToWinComp.Expressions
                         falseValue: expression1);
             }
         }
+
+
 
     }
 }

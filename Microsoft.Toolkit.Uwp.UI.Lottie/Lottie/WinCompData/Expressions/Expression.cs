@@ -1,28 +1,43 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
+#if !WINDOWS_UWP
+    public
+#endif
     abstract class Expression
     {
-        internal Expression() { }
+        protected Expression() { }
 
         /// <summary>
         /// A simplified form of the expression. May be the same as this.
         /// </summary>
         public virtual Expression Simplified => this;
 
-        public static implicit operator Expression(double value) => new Number(value);
+        public virtual ExpressionType InferredType { get; } = new ExpressionType(TypeConstraint.NoType);
 
-        public static implicit operator Expression(string value) => new UntypedExpression(value);
+        public static Number Scalar(double value) => new Number(value);
 
-        public static implicit operator Expression(WinCompData.Sn.Vector2 value) => new Vector2(value);
+        public static Divide Divide(Expression x, Expression y) => new Divide(x, y);
 
-        public static Expression Name(string name) => new Name(name);
+        public static Vector2 Constant(WinCompData.Sn.Vector2 value) => new Vector2(Scalar(value.X), Scalar(value.Y));
 
-        protected static Expression Squared(Expression expression) => new Squared(expression);
+        public static TypeAssert Scalar(string name) => Name(name, TypeConstraint.Scalar);
 
-        protected static Expression Cubed(Expression expression) => new Cubed(expression);
+        public static Max Max(Expression x, Expression y) => new Max(x, y);
+        public static Min Min(Expression x, Expression y) => new Min(x, y);
 
-        protected static Expression Sum(Expression a, Expression b) => new Sum(a, b);
-        protected static Expression Sum(Expression a, Expression b, params Expression[] parameters)
+        static TypeAssert Name(string name, TypeConstraint typeConstraint) => new TypeAssert(new Name(name), typeConstraint);
+
+        public static TypeAssert Vector2(string name) => Name(name, TypeConstraint.Vector2);
+        public static Vector2 Vector2(Expression x, Expression y) => new Vector2(x, y);
+
+        public static Vector3 Vector3(Expression x, Expression y, Expression z) => new Vector3(x, y, z);
+
+        protected static Squared Squared(Expression expression) => new Squared(expression);
+
+        protected static Cubed Cubed(Expression expression) => new Cubed(expression);
+
+        public static Sum Sum(Expression a, Expression b) => new Sum(a, b);
+        public static Sum Sum(Expression a, Expression b, params Expression[] parameters)
         {
             var result = new Sum(a, b);
             foreach (var parameter in parameters)
@@ -31,12 +46,16 @@
             }
             return result;
         }
-        protected static Number Sum(Number a, Number b) => new Number(a.Value + b.Value);
+        public static Number Sum(Number a, Number b) => Scalar(a.Value + b.Value);
 
-        protected static Expression Subtract(Expression a, Expression b) => new Subtract(a, b);
+        public static Subtract Subtract(Expression a, Expression b) => new Subtract(a, b);
 
-        protected static Expression Multiply(Expression a, Expression b) => new Multiply(a, b);
-        protected static Expression Multiply(Expression a, Expression b, params Expression[] parameters)
+        public static Multiply Multiply(Expression a, Expression b) => new Multiply(a, b);
+
+        public static Matrix3x2 Matrix3x2Zero => Matrix3x2.Zero;
+        public static Matrix3x2 Matrix3x2Identity => Matrix3x2.Identity;
+
+        protected static Multiply Multiply(Expression a, Expression b, params Expression[] parameters)
         {
             var result = new Multiply(a, b);
             foreach (var parameter in parameters)

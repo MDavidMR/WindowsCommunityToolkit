@@ -60,8 +60,10 @@ namespace WinCompData.CodeGen
             }
         }
 
-        string InstantiatorGeneratorBase.IStringifier.Int(int value) => value.ToString();
+        string InstantiatorGeneratorBase.IStringifier.Int32(int value) => value.ToString();
+        public string Int64(long value) => $"{value}L";
 
+        string InstantiatorGeneratorBase.IStringifier.Int64TypeName => "int64_t";
 
         string InstantiatorGeneratorBase.IStringifier.ScopeResolve => "::";
 
@@ -86,7 +88,8 @@ namespace WinCompData.CodeGen
 
         string InstantiatorGeneratorBase.IStringifier.String(string value) => $"\"{value}\"";
 
-        public string TimeSpan(TimeSpan value) => $"{{ {value.Ticks}L }}";
+        public string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
+        public string TimeSpan(string ticks) => $"{{ {ticks} }}";
 
         string InstantiatorGeneratorBase.IStringifier.Var => "auto";
 
@@ -108,7 +111,7 @@ namespace WinCompData.CodeGen
         public string FailFastWrapper(string value) => $"FFHR({value})";
 
         public string GeoSourceClass =>
-              @"class GeoSource:
+              @"class GeoSource :
             public ABI::Windows::Graphics::IGeometrySource2D,
             public ABI::Windows::Graphics::IGeometrySource2DInterop
         {
@@ -186,6 +189,8 @@ namespace WinCompData.CodeGen
         private:
             ULONG m_cRef;
             Microsoft::WRL::ComPtr<ID2D1Geometry> m_cpGeometry;
-        };";
+        };
+";
+
     }
 }

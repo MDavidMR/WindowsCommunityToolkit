@@ -1,25 +1,27 @@
-﻿namespace WinCompData
+﻿using WinCompData.Expressions;
+
+namespace WinCompData
 {
 #if !WINDOWS_UWP
     public
 #endif
     sealed class ExpressionAnimation : CompositionAnimation
     {
-        internal ExpressionAnimation(string expression) : this(null, expression)
+        internal ExpressionAnimation(Expression expression) : this(null, expression)
         {
         }
 
-        ExpressionAnimation(ExpressionAnimation other, string expression) : base(other)
+        ExpressionAnimation(ExpressionAnimation other, Expression expression) : base(other)
         {
             Expression = expression;
         }
 
-        public string Expression { get; }
+        public Expression Expression { get; }
 
         public override CompositionObjectType Type => CompositionObjectType.ExpressionAnimation;
 
         internal override CompositionAnimation Clone() => new ExpressionAnimation(this, Expression);
 
-        public override string ToString() => Expression;
+        public override string ToString() => Expression.Simplified.ToString();
     }
 }

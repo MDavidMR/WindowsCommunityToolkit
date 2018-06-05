@@ -13,16 +13,18 @@
 // For diagnosing issues, do not inherit transforms.
 //#define NoTransformInheritance
 #endif
-using WinCompData;
-using WinCompData.Mgc;
-using WinCompData.Mgcg;
 using LottieData;
+using LottieData.Optimization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using LottieData.Optimization;
 using System.Diagnostics;
-using LottieToWinComp.Expressions;
+using System.Linq;
+using WinCompData;
+using Expr = WinCompData.Expressions.Expression;
+using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
+using TypeConstraint = WinCompData.Expressions.TypeConstraint;
+using ExpressionType = WinCompData.Expressions.ExpressionType;
+using WinCompData.Mgcg;
 
 namespace LottieToWinComp
 {
@@ -58,8 +60,6 @@ namespace LottieToWinComp
         StepEasingFunction _jumpStepEasingFunction;
         // The name used to bind to the property set that contains the Progress property.
         const string c_rootName = "_";
-        // An expression the refers to the name of the root property set and the Progress property on it.
-        static readonly Name s_rootProgress = new Name($"{c_rootName}.{ProgressPropertyName}");
 
         /// <summary>
         /// The name of the property on the resulting <see cref="Visual"/> that controls the progress
@@ -83,7 +83,7 @@ namespace LottieToWinComp
 
             // Create the root.
             _rootVisual = CreateContainerVisual();
-            Describe(_rootVisual, "The root of the composition.");
+            Describe(_rootVisual, "The root of the composition.", "");
             Annotate(_rootVisual, "Composition root");
 
             // Add the master progress property to the visual.
@@ -324,18 +324,20 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerShape();
-                Describe(contentsNode, "Animates visibility of the shape.");
+                Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
+                    ? "Animates visibility of the layer."
+                    : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
                 leafTransformNode.Shapes.Add(contentsNode);
 #if !NoInvisibility
                 var visibilityExpression =
-                    ProgressExpression.CreateProgressExpression(
-                        s_rootProgress,
-                        new ProgressExpression.Segment(double.MinValue, inProgress, Matrix3x2.Zero),
-                        new ProgressExpression.Segment(inProgress, outProgress, Matrix3x2.Identity),
-                        new ProgressExpression.Segment(outProgress, double.MaxValue, Matrix3x2.Zero)
+                    ExpressionFactory.CreateProgressExpression(
+                        ExpressionFactory.RootProgress,
+                        new ExpressionFactory.Segment(double.MinValue, inProgress, Expr.Matrix3x2Zero),
+                        new ExpressionFactory.Segment(inProgress, outProgress, Expr.Matrix3x2Identity),
+                        new ExpressionFactory.Segment(outProgress, double.MaxValue, Expr.Matrix3x2Zero)
                         );
 
-                var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
+                var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
 #endif // !NoInvisibility
@@ -345,8 +347,13 @@ namespace LottieToWinComp
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                     : $"'{layer.Name}'.Contents");
 
+            Describe(contentsNode, contentsNode.Comment != null
+                    ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
+                    : $"'{layer.Name}'.Contents");
+
             // Return the root of the chain of transforms (might be the same as the contents node)
             Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
+            Describe(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
 
             return true;
         }
@@ -417,22 +424,24 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerVisual();
-                Describe(contentsNode, "Animates visibility of the visual.");
+                Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
+                    ? "Animates visibility of the layer."
+                    : $"Animate visibility of layer: \"{layer.Name}\".", "Visibility");
                 leafTransformNode.Children.Add(contentsNode);
 
 #if !NoInvisibility
-                const string invisible = "0";
-                const string visible = "1";
+                var invisible =  Expr.Scalar(0);
+                var visible = Expr.Scalar(1);
 
                 var visibilityExpression =
-                    ProgressExpression.CreateProgressExpression(
-                        s_rootProgress,
-                        new ProgressExpression.Segment(double.MinValue, inProgress, invisible),
-                        new ProgressExpression.Segment(inProgress, outProgress, visible),
-                        new ProgressExpression.Segment(outProgress, double.MaxValue, invisible)
+                    ExpressionFactory.CreateProgressExpression(
+                        ExpressionFactory.RootProgress,
+                        new ExpressionFactory.Segment(double.MinValue, inProgress, invisible),
+                        new ExpressionFactory.Segment(inProgress, outProgress, visible),
+                        new ExpressionFactory.Segment(outProgress, double.MaxValue, invisible)
                         );
 
-                var visibilityAnimation = _c.CreateExpressionAnimation(visibilityExpression.ToString());
+                var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "Opacity", visibilityAnimation);
 #endif // !NoInvisibility
@@ -443,6 +452,12 @@ namespace LottieToWinComp
                     : $"'{layer.Name}'.Contents");
 
             Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
+
+            Describe(contentsNode, contentsNode.Comment != null
+                ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
+                : $"'{layer.Name}'.Contents");
+
+            Describe(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
 
             return true;
         }
@@ -771,6 +786,7 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 Annotate(compositionNode, group.Name);
+                Describe(compositionNode, $"Group: {group.Name}");
                 compositionNode.Shapes.AddRange(contents);
                 return compositionNode;
             }
@@ -1103,7 +1119,9 @@ namespace LottieToWinComp
                     }
                     builder.EndFigure(pathData.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
                 }
-                return CanvasGeometry.CreatePath(builder);
+                var result = CanvasGeometry.CreatePath(builder);
+                Describe(result, path.Name);
+                return result;
             }
         }
 
@@ -1120,12 +1138,15 @@ namespace LottieToWinComp
             var xRadius = ellipseDiameter.InitialValue.X / 2;
             var yRadius = ellipseDiameter.InitialValue.Y / 2;
 
-            return CanvasGeometry.CreateEllipse(
+            var result = CanvasGeometry.CreateEllipse(
                 null,
                 (float)(ellipsePosition.InitialValue.X - (xRadius / 2)),
                 (float)(ellipsePosition.InitialValue.Y - (yRadius / 2)),
                 (float)xRadius,
                 (float)yRadius);
+
+            Describe(result, ellipse.Name);
+            return result;
         }
 
         CanvasGeometry CreateWin2dRectangleGeometry(ShapeContentContext context, Rectangle rectangle)
@@ -1144,7 +1165,7 @@ namespace LottieToWinComp
             var height = size.InitialValue.Y;
             var radius = cornerRadius.InitialValue;
 
-            return CanvasGeometry.CreateRoundedRectangle(
+            var result = CanvasGeometry.CreateRoundedRectangle(
                 null,
                 (float)(position.InitialValue.X - (width / 2)),
                 (float)(position.InitialValue.Y - (height / 2)),
@@ -1152,6 +1173,9 @@ namespace LottieToWinComp
                 (float)height,
                 (float)radius,
                 (float)radius);
+
+            Describe(result, rectangle.Name);
+            return result;
         }
 
         CompositionShape TranslateEllipseContent(TranslationContext context, ShapeContentContext shapeContext, Ellipse shapeContent)
@@ -1163,6 +1187,8 @@ namespace LottieToWinComp
             compositionSpriteShape.Geometry = compositionEllipseGeometry;
             Annotate(compositionSpriteShape, shapeContent.Name);
             Annotate(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
+            Describe(compositionSpriteShape, shapeContent.Name);
+            Describe(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
 
             compositionEllipseGeometry.Center = Vector2(shapeContent.Position.InitialValue);
             ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center");
@@ -1189,7 +1215,7 @@ namespace LottieToWinComp
                 geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
 
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
+                var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
@@ -1210,7 +1236,7 @@ namespace LottieToWinComp
                 geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
 
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation("Vector2(my.Position.X-(my.Size.X/2),my.Position.Y-(my.Size.Y/2))");
+                var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
@@ -1251,6 +1277,8 @@ namespace LottieToWinComp
 
             Annotate(compositionRectangle, shapeContent.Name);
             Annotate(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
+            Describe(compositionRectangle, shapeContent.Name);
+            Describe(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
 
             return compositionRectangle;
         }
@@ -1276,6 +1304,8 @@ namespace LottieToWinComp
 
             Annotate(compositionSpriteShape, shapeContent.Name);
             Annotate(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
+            Describe(compositionSpriteShape, shapeContent.Name);
+            Describe(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
 
             ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path");
 
@@ -1409,13 +1439,13 @@ namespace LottieToWinComp
                 // will be set by these values through an expression.
                 geometry.Properties.InsertScalar("TStart", (float)(startPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart");
-                var trimStartExpression = CreateExpressionAnimation("Min(my.TStart,my.TEnd)");
+                var trimStartExpression = CreateExpressionAnimation(ExpressionFactory.MinTStartTEnd);
                 trimStartExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
 
                 geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd");
-                var trimEndExpression = CreateExpressionAnimation("Max(my.TStart,my.TEnd)");
+                var trimEndExpression = CreateExpressionAnimation(ExpressionFactory.MaxTStartTEnd);
                 trimEndExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
             }
@@ -1524,7 +1554,9 @@ namespace LottieToWinComp
             Annotate(rectangle, "SolidLayerRectangle");
             Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
             Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-            DescribeLayer(rootNode, layer);
+            Describe(rectangle, "SolidLayerRectangle");
+            Describe(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
+            Describe(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
 
             return rootNode;
         }
@@ -1551,6 +1583,7 @@ namespace LottieToWinComp
             // Apply the transform.
             TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
             Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
+            Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1562,6 +1595,7 @@ namespace LottieToWinComp
                 TranslateTransformOnContainerVisualForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
                 Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
+                Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Children.Add(leafTransformNode);
             }
@@ -1587,6 +1621,7 @@ namespace LottieToWinComp
             // Apply the transform from the layer.
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
             Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
+            Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1598,6 +1633,7 @@ namespace LottieToWinComp
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
                 Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
+                Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Shapes.Add(leafTransformNode);
             }
@@ -1623,7 +1659,11 @@ namespace LottieToWinComp
 
             if (transform.Anchor.IsAnimated)
             {
-                var centerPointExpression = CreateExpressionAnimation("Vector3(my.Anchor.X,my.Anchor.Y,0)");
+                var centerPointExpression = CreateExpressionAnimation(
+                    Expr.Vector3(
+                            Expr.Scalar("my.Anchor.X"),
+                            Expr.Scalar("my.Anchor.Y"),
+                            Expr.Scalar(0)));
                 centerPointExpression.SetReferenceParameter("my", container);
                 StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
@@ -1646,7 +1686,11 @@ namespace LottieToWinComp
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation("Vector3(my.Position.X-my.Anchor.X,my.Position.Y-my.Anchor.Y,0)");
+                var offsetExpression = CreateExpressionAnimation( 
+                    Expr.Vector3(
+                        Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar("my.Anchor.X")),
+                        Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar("my.Anchor.Y")),
+                        Expr.Scalar(0)));
                 offsetExpression.SetReferenceParameter("my", container);
                 StartAnimation(container, nameof(container.Offset), offsetExpression);
             }
@@ -1697,7 +1741,7 @@ namespace LottieToWinComp
 
             if (transform.Anchor.IsAnimated)
             {
-                var centerPointExpression = CreateExpressionAnimation("my.Anchor");
+                var centerPointExpression = CreateExpressionAnimation(ExpressionFactory.MyAnchor2);
                 centerPointExpression.SetReferenceParameter("my", container);
                 StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
@@ -1720,7 +1764,7 @@ namespace LottieToWinComp
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation("my.Position-my.Anchor");
+                var offsetExpression = CreateExpressionAnimation(ExpressionFactory.PositionMinusAnchor);
                 offsetExpression.SetReferenceParameter("my", container);
                 StartAnimation(container, nameof(container.Offset), offsetExpression);
             }
@@ -1763,6 +1807,7 @@ namespace LottieToWinComp
         {
             Debug.Assert(offset >= 0);
             Debug.Assert(scale <= 1);
+            Debug.Assert(animation.KeyFrameCount > 0);
 
             // Start the animation ...
             compObject.StartAnimation(target, animation);
@@ -1776,22 +1821,10 @@ namespace LottieToWinComp
             var key = new ScaleAndOffset(scale, offset);
             if (!_progressBindingAnimations.TryGetValue(key, out var bindingAnimation))
             {
-                Expression expr = s_rootProgress;
-
-                if (scale != 1)
-                {
-                    expr = new Multiply(expr, new Number(scale));
-                }
-                if (offset != 0)
-                {
-                    expr = new Sum(expr, offset);
-                }
-
-                bindingAnimation = CreateExpressionAnimation(expr.ToString());
+                bindingAnimation = CreateExpressionAnimation(ExpressionFactory.ScaledAndOffsetRootProgress(scale, offset));
                 bindingAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 _progressBindingAnimations.Add(key, bindingAnimation);
             }
-
 
             // Bind the controller's Progress with a single Progress property on the scene root.
             // The Progress property provides the time reference for the animation.
@@ -1926,7 +1959,7 @@ namespace LottieToWinComp
             Animatable<T> value,
             Func<CA> compositionAnimationFactory,
             Action<CA, float, T, CompositionEasingFunction> insertKeyFrame,
-            Action<CA, float, Expression, CompositionEasingFunction> insertExpressionKeyFrame,
+            Action<CA, float, Expr, CompositionEasingFunction> insertExpressionKeyFrame,
             CompositionObject targetObject,
             string targetPropertyName) where CA : KeyFrameAnimation_ where T : IEquatable<T>
         {
@@ -1982,6 +2015,7 @@ namespace LottieToWinComp
             var previousKeyFrameWasExpression = false;
             string progressMappingProperty = null;
             ScalarKeyFrameAnimation progressMappingAnimation = null;
+            bool progressMappingPropertyAdded = false;
 
             foreach (var keyFrame in trimmedKeyFrames)
             {
@@ -2000,31 +2034,30 @@ namespace LottieToWinComp
                     var cp3 = Vector2((Vector3)(object)keyFrame.Value);
                     CubicBezierFunction cb;
 
-#if !LinearEasingOnSpatialBeziers
-                    if (keyFrame.Easing.Type != Easing.EasingType.Step && progressMappingProperty == null)
-                    {
-                        // This is the first spatial bezier for this animation. Create a property
-                        // to hold the mapping of progress to t.
-                        progressMappingProperty = $"t{_tCounter++}";
-                        _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
-                        progressMappingAnimation = CreateScalarKeyFrameAnimation();
-                        progressMappingAnimation.Duration = _lc.Duration;
-                        // TODO - if all of the beziers are colinear we can avoid creating this animation.
-                    }
-#endif // !LinearEasingOnSpatialBeziers
                     switch (keyFrame.Easing.Type)
                     {
                         case Easing.EasingType.Linear:
                         case Easing.EasingType.CubicBezier:
+                            if (progressMappingProperty == null)
+                            {
+                                progressMappingProperty = $"t{_tCounter++}";
+                                progressMappingAnimation = CreateScalarKeyFrameAnimation();
+                                progressMappingAnimation.Duration = _lc.Duration;
+                            }
 #if LinearEasingOnSpatialBeziers
                             cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, GetRemappedProgress(previousProgress, adjustedProgress));
 #else
-                            cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, Expression.Name($"{c_rootName}.{progressMappingProperty}"));
+                            cb = CubicBezierFunction.Create(
+                                cp0, 
+                                (cp0 + cp1), 
+                                (cp2 + cp3), 
+                                cp3, 
+                                Expr.Scalar($"{c_rootName}.{progressMappingProperty}"));
 #endif
                             break;
                         case Easing.EasingType.Step:
                             // TODO - HACK - steps should never have interesting cubic beziers. So for now create one that is definitely colinear.
-                            cb = CubicBezierFunction.Create(cp0, cp0, cp0, cp0, "IgnoreMe");
+                            cb = CubicBezierFunction.Create(cp0, cp0, cp0, cp0, Expr.Scalar(0));
                             break;
                         default:
                             throw new InvalidOperationException();
@@ -2053,6 +2086,11 @@ namespace LottieToWinComp
                     else
                     {
                         // Expression key frame needed to for a spatial bezier.
+                        if (!progressMappingPropertyAdded)
+                        {
+                            _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
+                            progressMappingPropertyAdded = true;
+                        }
 
                         // Make the progress value just before the requested progress value
                         // so that there is room to add a key frame just after this to hold
@@ -2114,7 +2152,7 @@ namespace LottieToWinComp
             // Start the animation scaled and offset.
             StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
 
-            if (progressMappingAnimation != null)
+            if (progressMappingAnimation != null && progressMappingAnimation.KeyFrameCount > 0)
             {
                 StartAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
             }
@@ -2135,17 +2173,17 @@ namespace LottieToWinComp
             return (float)result;
         }
 
-        static string Scale(Expression expression, double scale)
+        static string Scale(Expr expression, double scale)
         {
-            return new Multiply(new Number(scale), expression).ToString();
+            return Expr.Multiply(Expr.Scalar(scale), expression).ToString();
         }
 
-        sealed class TimeRemap : Expression
+        sealed class TimeRemap : Expr
         {
             readonly double _tRangeLow;
             readonly double _tRangeHigh;
-            readonly Expression _t;
-            internal TimeRemap(double tRangeLow, double tRangeHigh, Expression t)
+            readonly Expr _t;
+            internal TimeRemap(double tRangeLow, double tRangeHigh, Expr t)
             {
                 if (tRangeLow >= tRangeHigh)
                 {
@@ -2157,22 +2195,27 @@ namespace LottieToWinComp
                 _t = t;
             }
 
-            public override Expression Simplified
+            public override Expr Simplified
             {
                 get
                 {
                     // Adjust t and (1-t) based on the given range. This will make T vary between
                     // 0..1 over the duration of the keyframe.
-                    return Multiply(1 / (_tRangeHigh - _tRangeLow), Subtract(_t, _tRangeLow));
+                    return Multiply(
+                        Scalar(1 / (_tRangeHigh - _tRangeLow)), 
+                        Subtract(_t, Scalar(_tRangeLow)));
                 }
             }
             public override string ToString() => Simplified.ToString();
+
+            public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
+
         }
 
         // Returns the name of a variable on the root property set that advances linearly from 0 to 1 over the
         // given range of Progress.
         TimeRemap GetRemappedProgress(double tRangeLow, double tRangeHigh) =>
-            new TimeRemap(tRangeLow, tRangeHigh, s_rootProgress);
+            new TimeRemap(tRangeLow, tRangeHigh, ExpressionFactory.RootProgress);
 
         int _tCounter = 0;
         struct RemappedProgressParameters
@@ -2182,31 +2225,31 @@ namespace LottieToWinComp
             internal Vector3 controlPoint1;
             internal Vector3 controlPoint2;
         }
-        readonly Dictionary<RemappedProgressParameters, Expression> _remappedProgressExpressions = new Dictionary<RemappedProgressParameters, Expression>();
+        readonly Dictionary<RemappedProgressParameters, Expr> _remappedProgressExpressions = new Dictionary<RemappedProgressParameters, Expr>();
 
         // Returns the name of a variable on the root property set that advances from 0 to 1 over the
         // given range of Progress, using the given cubic bezier easing.
-        Expression GetRemappedProgress(double tRangeLow, double tRangeHigh, Vector3 controlPoint1, Vector3 controlPoint2)
+        Expr GetRemappedProgress(double tRangeLow, double tRangeHigh, Vector3 controlPoint1, Vector3 controlPoint2)
         {
             // Use an existing property if a matching one has already been created.
             var parameters = new RemappedProgressParameters { tRangeLow = tRangeLow, tRangeHigh = tRangeHigh, controlPoint1 = controlPoint1, controlPoint2 = controlPoint2 };
-            if (!_remappedProgressExpressions.TryGetValue(parameters, out Expression result))
+            if (!_remappedProgressExpressions.TryGetValue(parameters, out Expr result))
             {
                 // Create a property to hold the value.
                 var propertyName = $"t{_tCounter++}";
                 _rootVisual.Properties.InsertScalar(propertyName, 0);
 
                 // Create the remapping expression.
-                var remap = new TimeRemap(tRangeLow, tRangeHigh, s_rootProgress);
+                var remap = new TimeRemap(tRangeLow, tRangeHigh, ExpressionFactory.RootProgress);
 
                 // Create a cubic bezier function to map the time using the given control points.
                 var oneOne = Vector2(1);
                 var easing = CubicBezierFunction.Create(Vector2(0), Vector2(controlPoint1), Vector2(controlPoint2), oneOne, remap);
 
-                var animation = CreateExpressionAnimation($"({easing}).Y");
+                var animation = CreateExpressionAnimation(Expr.Scalar($"({easing}).Y"));
                 animation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(_rootVisual, propertyName, animation);
-                result = Expression.Name($"{c_rootName}.{propertyName}");
+                result = Expr.Scalar($"{c_rootName}.{propertyName}");
                 _remappedProgressExpressions.Add(parameters, result);
             }
             return result;
@@ -2497,11 +2540,10 @@ namespace LottieToWinComp
             return _c.CreateSpriteShape();
         }
 
-        ExpressionAnimation CreateExpressionAnimation(string expression)
+        ExpressionAnimation CreateExpressionAnimation(Expr expression)
         {
             return _c.CreateExpressionAnimation(expression);
         }
-
 
         static CompositionStrokeCap StrokeCap(SolidColorStroke.LineCapType lineCapType)
         {
@@ -2564,18 +2606,20 @@ namespace LottieToWinComp
         // Sets the description of a layer on an object.
         void DescribeLayer(CompositionObject obj, Layer layer)
         {
-            Describe(obj, $"{layer.Type} layer: \"{layer.Name}\".");
+            Describe(obj, $"{layer.Type} layer: \"{layer.Name}\".", layer.Name);
         }
 
         // Sets a description on an object.
-        void Describe(CompositionObject obj, string description)
+        void Describe(IDescribable obj, string longDescription, string shortDescription = null)
         {
             if (_addDescriptions)
             {
-                obj.Description = description;
+                obj.ShortDescription = shortDescription ?? longDescription;
+                obj.LongDescription = longDescription;
             }
         }
 
+        // Sets a description on an object.
         static WinCompData.Wui.Color Color(LottieData.Color color) =>
             WinCompData.Wui.Color.FromArgb((byte)(255 * color.A), (byte)(255 * color.R), (byte)(255 * color.G), (byte)(255 * color.B));
 

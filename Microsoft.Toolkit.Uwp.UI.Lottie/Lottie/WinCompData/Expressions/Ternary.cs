@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Ternary : Expression
     {
         public Ternary(Expression condition, Expression trueValue, Expression falseValue)
@@ -23,6 +20,16 @@ namespace LottieToWinComp.Expressions
         public override Expression Simplified => this;
         public override string ToString()
             => $"{Parenthesize(Condition)} ? {Parenthesize(TrueValue)} : {Parenthesize(FalseValue)}";
+
+        public override ExpressionType InferredType
+        {
+            get
+            {
+                return Condition.InferredType.Constraints.HasFlag(TypeConstraint.Boolean)
+                    ? ExpressionType.ConstrainToTypes(TypeConstraint.AllValidTypes, TrueValue.InferredType, FalseValue.InferredType)
+                    : new ExpressionType(TypeConstraint.NoType);
+            }
+        }
 
     }
 }

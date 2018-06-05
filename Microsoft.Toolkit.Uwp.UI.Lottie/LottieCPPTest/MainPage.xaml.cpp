@@ -20,6 +20,6 @@ MainPage::MainPage()
 
 void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 {
-    anim->LoadAnimation(ref new _0351_pink_drink_machine);
+    anim->LoadAnimation(ref new MyComposition());
     anim->PlayAnimation(false, AnimationIterationBehavior::Forever);
 }

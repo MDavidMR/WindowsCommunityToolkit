@@ -11,8 +11,8 @@ namespace WinCompData.CodeGen
     {
         readonly CppStringifier _stringifier;
 
-        CxInstantiatorGenerator(CompositionObject graphRoot, bool setCommentProperties, CppStringifier stringifier)
-            : base(graphRoot, setCommentProperties, stringifier)
+        CxInstantiatorGenerator(CompositionObject graphRoot, TimeSpan duration, bool setCommentProperties, CppStringifier stringifier)
+            : base(graphRoot, duration, setCommentProperties, stringifier)
         {
             _stringifier = stringifier;
         }
@@ -29,15 +29,16 @@ namespace WinCompData.CodeGen
             CompositionPropertySet progressPropertySet,
             TimeSpan duration)
         {
-            var generator = new CxInstantiatorGenerator(rootVisual, false, new CppStringifier());
-            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, duration);
+            var generator = new CxInstantiatorGenerator(rootVisual, duration, false, new CppStringifier());
+            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet);
         }
 
         protected override void WritePreamble(CodeBuilder builder, bool requiresD2d)
         {
+            builder.WriteLine("#include \"pch.h\"");
+            builder.WriteLine("#include \"ICompositionSource.h\"");
             if (requiresD2d)
             {
-                builder.WriteLine("#include \"pch.h\"");
                 // D2D
                 builder.WriteLine("#include \"d2d1.h\"");
                 builder.WriteLine("#include <d2d1_1.h>");
@@ -69,14 +70,14 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"ref class {className} sealed");
+            builder.WriteLine($"ref class {className} sealed : public ICompositionSource");
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
             builder.UnIndent();
             builder.WriteLine("public:");
             builder.Indent();
-            builder.WriteLine("bool TryCreateInstance(");
+            builder.WriteLine("virtual bool TryCreateInstance(");
             builder.Indent();
             builder.WriteLine("Compositor^ compositor,");
             builder.WriteLine("Visual^* rootVisual,");
@@ -181,7 +182,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine($"sink.Get()));");
             builder.UnIndent();
             builder.WriteLine($"{FailFastWrapper("sink->Close()")};");
-            builder.WriteLine("result = new GeoSource(path.Get());");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(path.Get());");
         }
 
         protected override void WriteCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, string typeName, string fieldName)
@@ -194,7 +195,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine("&ellipse));");
             builder.UnIndent();
             builder.CloseScope();
-            builder.WriteLine("result = new GeoSource(ellipse.Get());");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(ellipse.Get());");
         }
 
         protected override void WriteCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, string typeName, string fieldName)
@@ -223,7 +224,7 @@ namespace WinCompData.CodeGen
                         break;
                     case CanvasPathBuilder.CommandType.AddCubicBezier:
                         var vectors = (Vector2[])command.Args;
-                        builder.WriteLine($"sink->AddBezier({{{Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])}}});");
+                        builder.WriteLine($"sink->AddBezier({{ {Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])} }});");
                         break;
                     case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
                         builder.WriteLine($"sink->SetFillMode({FilledRegionDetermination((CanvasFilledRegionDetermination)command.Args)});");
@@ -233,7 +234,7 @@ namespace WinCompData.CodeGen
                 }
             }
             builder.WriteLine($"{FailFastWrapper("sink->Close()")};");
-            builder.WriteLine("result = new GeoSource(path.Get());");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(path.Get());");
         }
 
         protected override void WriteCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, string typeName, string fieldName)
@@ -245,13 +246,14 @@ namespace WinCompData.CodeGen
             builder.WriteLine($"D2D1::RoundedRect({{{Float(obj.X)},{Float(obj.Y)}}}, {Float(obj.RadiusX)}, {Float(obj.RadiusY)}),");
             builder.WriteLine("&rect));");
             builder.UnIndent();
-            builder.WriteLine("result = new GeoSource(rect.Get());");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(rect.Get());");
         }
 
         string CanvasFigureLoop(CanvasFigureLoop value) => _stringifier.CanvasFigureLoop(value);
+        static string FieldAssignment(string fieldName) => (fieldName != null ? $"{fieldName} = " : "");
         string FilledRegionDetermination(CanvasFilledRegionDetermination value) => _stringifier.FilledRegionDetermination(value);
-        string Vector2(Vector2 value) => _stringifier.Vector2(value);
         string Float(float value) => _stringifier.Float(value);
         string FailFastWrapper(string value) => _stringifier.FailFastWrapper(value);
+        string Vector2(Vector2 value) => _stringifier.Vector2(value);
     }
 }

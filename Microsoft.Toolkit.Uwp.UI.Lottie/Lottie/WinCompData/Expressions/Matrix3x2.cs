@@ -1,5 +1,8 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Matrix3x2 : Expression
     {
         readonly string _representation;
@@ -18,5 +21,6 @@
 
         internal override bool IsAtomic => true;
 
+        public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Matrix3x2);
     }
 }

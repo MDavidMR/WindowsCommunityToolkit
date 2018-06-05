@@ -10,7 +10,7 @@ namespace WinCompData.Mgcg
 #if !WINDOWS_UWP
     public
 #endif
-    abstract class CanvasGeometry : IGeometrySource2D
+    abstract class CanvasGeometry : IGeometrySource2D, IDescribable
     {
         CanvasGeometry() { }
 
@@ -54,8 +54,11 @@ namespace WinCompData.Mgcg
              CombineMode = combineMode
          };
 
-
         public abstract GeometryType Type { get; }
+
+        public string LongDescription { get; set; }
+
+        public string ShortDescription { get; set; }
 
         public sealed class Combination : CanvasGeometry
         {

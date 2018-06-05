@@ -12,8 +12,8 @@ namespace WinCompData.CodeGen
     {
         readonly CSharpStringifier _stringifier;
 
-        CSharpInstantiatorGenerator(CompositionObject graphRoot, bool setCommentProperties, CSharpStringifier stringifier)
-            : base(graphRoot, setCommentProperties, stringifier)
+        CSharpInstantiatorGenerator(CompositionObject graphRoot, TimeSpan duration, bool setCommentProperties, CSharpStringifier stringifier)
+            : base(graphRoot, duration, setCommentProperties, stringifier)
         {
             _stringifier = stringifier;
         }
@@ -30,8 +30,8 @@ namespace WinCompData.CodeGen
             CompositionPropertySet progressPropertySet,
             TimeSpan duration)
         {
-            var generator = new CSharpInstantiatorGenerator(rootVisual, setCommentProperties: false, stringifier: new CSharpStringifier());
-            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet, duration);
+            var generator = new CSharpInstantiatorGenerator(rootVisual, duration, setCommentProperties: false, stringifier: new CSharpStringifier());
+            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet);
         }
 
         protected override void WritePreamble(CodeBuilder builder, bool requiresWin2d)
@@ -114,7 +114,7 @@ namespace WinCompData.CodeGen
 
         protected override void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName)
         {
-            builder.WriteLine($"var result = {(fieldName != null ? $" {fieldName} = " : "")}{CallFactoryFor(obj.A)}.");
+            builder.WriteLine($"var result = {FieldAssignment(fieldName)}{CallFactoryFor(obj.A)}.");
             builder.Indent();
             builder.WriteLine($"CombineWith({CallFactoryFor(obj.B)},");
             if (obj.Matrix.IsIdentity)
@@ -131,7 +131,7 @@ namespace WinCompData.CodeGen
 
         protected override void WriteCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, string typeName, string fieldName)
         {
-            builder.WriteLine($"var result = {(fieldName != null ? $" {fieldName} " : "")}CanvasGeometry.CreateEllipse(");
+            builder.WriteLine($"var result = {FieldAssignment(fieldName)}CanvasGeometry.CreateEllipse(");
             builder.Indent();
             builder.WriteLine($"null,");
             builder.WriteLine($"{Float(obj.X)},");
@@ -171,13 +171,13 @@ namespace WinCompData.CodeGen
                         throw new InvalidOperationException();
                 }
             }
-            builder.WriteLine($"result = {(fieldName != null ? $" {fieldName} = " : "")}CanvasGeometry.CreatePath(builder);");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}CanvasGeometry.CreatePath(builder);");
             builder.CloseScope();
         }
 
         protected override void WriteCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, string typeName, string fieldName)
         {
-            builder.WriteLine($"var result = {(fieldName != null ? $" {fieldName} " : "")}CanvasGeometry.CreateRoundedRectangle(");
+            builder.WriteLine($"var result = {FieldAssignment(fieldName)}CanvasGeometry.CreateRoundedRectangle(");
             builder.Indent();
             builder.WriteLine("null,");
             builder.WriteLine($"{Float(obj.X)},");
@@ -188,6 +188,8 @@ namespace WinCompData.CodeGen
             builder.WriteLine($"{Float(obj.RadiusY)};");
             builder.UnIndent();
         }
+
+        static string FieldAssignment(string fieldName) => (fieldName != null ? $"{fieldName} = " : "");
 
         string Float(float value) => _stringifier.Float(value);
 
@@ -260,7 +262,8 @@ namespace WinCompData.CodeGen
 
             string IStringifier.Float(float value) => Float(value);
 
-            string IStringifier.Int(int value) => value.ToString();
+            string IStringifier.Int32(int value) => value.ToString();
+            public string Int64(long value) => value.ToString();
 
             public string Matrix3x2(Matrix3x2 value)
             {
@@ -269,14 +272,16 @@ namespace WinCompData.CodeGen
 
             string IStringifier.Readonly => "readonly";
 
+            string IStringifier.Int64TypeName => "long";
+
             string IStringifier.ReferenceTypeName(string value) => value;
 
             public string ReferenceTypeName(string value) => value;
 
             string IStringifier.String(string value) => $"\"{value}\"";
 
-
-            public string TimeSpan(TimeSpan value) => $"TimeSpan.FromTicks({value.Ticks})";
+            public string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
+            public string TimeSpan(string ticks) => $"TimeSpan.FromTicks({ticks})";
 
             public string Vector2(Vector2 value) => $"new Vector2({ Float(value.X) }, { Float(value.Y)})";
 
@@ -288,6 +293,7 @@ namespace WinCompData.CodeGen
                     : value.ToString("0.######################################") + "F";
                 
             static string Hex(int value) => $"0x{value.ToString("X2")}";
+
         }
     }
 

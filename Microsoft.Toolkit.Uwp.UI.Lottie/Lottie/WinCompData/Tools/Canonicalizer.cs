@@ -107,11 +107,11 @@ namespace WinCompData.Tools
             }
 
 
-            ValueTuple<string, string, string, CompositionObject> GetExpressionAnimationKey1(NodeAndObject<ExpressionAnimation> item)
+            (WinCompData.Expressions.Expression, string, string, CompositionObject) GetExpressionAnimationKey1(NodeAndObject<ExpressionAnimation> item)
             {
                 var rp0 = item.Obj.ReferenceParameters.First();
 
-                return ValueTuple.Create(item.Obj.Expression, item.Obj.Target, rp0.Key, CanonicalObject<CompositionObject>(rp0.Value));
+                return (item.Obj.Expression, item.Obj.Target, rp0.Key, CanonicalObject<CompositionObject>(rp0.Value));
             }
 
             void CanonicalizeKeyFrameAnimations<A, V>(CompositionObjectType animationType) where A : KeyFrameAnimation<V>
@@ -372,9 +372,13 @@ namespace WinCompData.Tools
             {
                 foreach (var group in grouping)
                 {
-                    var canonical = group.First();
-                    var groupArray = group.ToArray();
+                    // The canonical node is the node that appears first in the
+                    // preorder traversal of the tree.
+                    var orderedGroup = group.OrderBy(n => n.PreorderPosition);
+                    var groupArray = orderedGroup.ToArray();
+                    var canonical = groupArray[0];
 
+                    // Point every node to the canonical node..
                     foreach (var node in group)
                     {
                         node.Canonical = canonical;

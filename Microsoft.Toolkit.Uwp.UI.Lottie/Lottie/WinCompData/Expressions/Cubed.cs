@@ -1,8 +1,11 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
     /// <summary>
     /// Raises a value to the power of 3. 
     /// </summary>
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Cubed : Expression
     {
         public Cubed(Expression value)
@@ -32,5 +35,7 @@
 
             return $"Pow({simplifiedValue}, 3)";
         }
+
+        public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
     }
 }

@@ -398,7 +398,7 @@ namespace Lottie
             {
                 result.Target = obj.Target;
             }
-            result.Expression = obj.Expression;
+            result.Expression = obj.Expression.Simplified.ToString();
             result.ClearAllParameters();
             foreach (var parameter in obj.ReferenceParameters)
             {

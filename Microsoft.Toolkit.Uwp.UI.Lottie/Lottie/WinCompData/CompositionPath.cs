@@ -3,7 +3,7 @@
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class CompositionPath
+    sealed class CompositionPath : IDescribable
     {
         public CompositionPath(Wg.IGeometrySource2D source)
         {
@@ -11,5 +11,7 @@
         }
 
         public Wg.IGeometrySource2D Source { get; }
+        public string LongDescription { get; set; }
+        public string ShortDescription { get; set; }
     }
 }

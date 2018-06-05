@@ -1,13 +1,12 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
-    sealed class Subtract : Expression
+#if !WINDOWS_UWP
+    public
+#endif
+    sealed class Subtract : BinaryExpression
     {
-        public Expression Left { get; }
-        public Expression Right { get; }
-        internal Subtract(Expression left, Expression right)
+        internal Subtract(Expression left, Expression right) : base(left, right)
         {
-            Left = left;
-            Right = right;
         }
 
         public override Expression Simplified
@@ -33,6 +32,16 @@
                 return this;
             }
         }
-        public override string ToString() => $"{Parenthesize(Left.Simplified)} - {Parenthesize(Right.Simplified)}";
+
+        public override string ToString()
+        {
+            return $"{Parenthesize(Left.Simplified)} - {Parenthesize(Right.Simplified)}";
+        }
+
+
+        public override ExpressionType InferredType =>
+            ExpressionType.ConstrainToTypes(TypeConstraint.Scalar, Left.InferredType, Right.InferredType);
+
+
     }
 }

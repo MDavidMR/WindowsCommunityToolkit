@@ -13,21 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Cubed.cs" Link="LottieToWinComp\Expressions\Cubed.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\CubicBezierFunction.cs" Link="LottieToWinComp\Expressions\CubicBezierFunction.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Expression.cs" Link="LottieToWinComp\Expressions\Expression.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\LessThan.cs" Link="LottieToWinComp\Expressions\LessThan.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Matrix3x2.cs" Link="LottieToWinComp\Expressions\Matrix3x2.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Multiply.cs" Link="LottieToWinComp\Expressions\Multiply.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Name.cs" Link="LottieToWinComp\Expressions\Name.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Number.cs" Link="LottieToWinComp\Expressions\Number.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\ProgressExpression.cs" Link="LottieToWinComp\Expressions\ProgressExpression.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Squared.cs" Link="LottieToWinComp\Expressions\Squared.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Subtract.cs" Link="LottieToWinComp\Expressions\Subtract.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Sum.cs" Link="LottieToWinComp\Expressions\Sum.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Ternary.cs" Link="LottieToWinComp\Expressions\Ternary.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\UntypedExpression.cs" Link="LottieToWinComp\Expressions\UntypedExpression.cs" />
-    <Compile Include="..\Lottie\LottieToWinComp\Expressions\Vector2.cs" Link="LottieToWinComp\Expressions\Vector2.cs" />
+    <Compile Include="..\Lottie\LottieToWinComp\ExpressionFactory.cs" Link="LottieToWinComp\ExpressionFactory.cs" />
     <Compile Include="..\Lottie\LottieToWinComp\LottieToWinCompTranslator.cs" Link="LottieToWinComp\LottieToWinCompTranslator.cs" />
   </ItemGroup>
   <ItemGroup>

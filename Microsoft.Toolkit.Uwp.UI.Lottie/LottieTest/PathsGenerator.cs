@@ -26,11 +26,11 @@ namespace LottieTest
             var cgs = GetCanvasGeometries(root);
 
             var instance = new PathsGenerator(root);
-            instance.GenerateCode("", (Visual)root, 0, 0, root.Properties, TimeSpan.Zero);
+            instance.GenerateCode("", (Visual)root, 0, 0, root.Properties);
             return instance._paths.ToArray();
         }
 
-        PathsGenerator(CompositionObject graphRoot) : base(graphRoot, setCommentProperties: false, stringifier: new Stringifier())
+        PathsGenerator(CompositionObject graphRoot) : base(graphRoot, TimeSpan.Zero, setCommentProperties: false, stringifier: new Stringifier())
         {
         }
 
@@ -142,6 +142,8 @@ namespace LottieTest
 
             public string Var => "";
 
+            public string Int64TypeName => "";
+
             public string FactoryCall(string value) => "";
 
             public string Bool(bool value)
@@ -199,12 +201,27 @@ namespace LottieTest
                 return "";
             }
 
+            public string TimeSpan(string ticks)
+            {
+                return "";
+            }
+
             public string Vector2(Vector2 value)
             {
                 return "";
             }
 
             public string Vector3(Vector3 value)
+            {
+                return "";
+            }
+
+            public string Int32(int value)
+            {
+                return "";
+            }
+
+            public string Int64(long value)
             {
                 return "";
             }

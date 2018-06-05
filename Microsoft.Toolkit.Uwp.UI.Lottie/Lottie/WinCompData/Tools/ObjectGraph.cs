@@ -37,6 +37,11 @@ namespace WinCompData.Tools
 
             public NodeType Type { get; private set; }
 
+            /// <summary>
+            /// The position of this node in a pre-order traversal of the graph.
+            /// </summary>
+            public int PreorderPosition { get; private set; }
+
             List<T> INodePrivate<T>.InReferences
             {
                 get
@@ -49,9 +54,10 @@ namespace WinCompData.Tools
                 }
             }
 
-            void INodePrivate<T>.Initialize(NodeType type)
+            void INodePrivate<T>.Initialize(NodeType type, int preorderPosition)
             {
                 Type = type;
+                PreorderPosition = preorderPosition;
             }
         }
 
@@ -63,8 +69,8 @@ namespace WinCompData.Tools
         }
 
 
-        protected void InitializeNode<T>(T node, NodeType type) where T : Node<T>, new()
-            => NodePrivate(node).Initialize(type);
+        protected void InitializeNode<T>(T node, NodeType type, int preorderPosition) where T : Node<T>, new()
+            => NodePrivate(node).Initialize(type, preorderPosition);
 
         protected void AddVertex<T>(T from, T to) where T : Node<T>, new()
         {
@@ -80,7 +86,7 @@ namespace WinCompData.Tools
         // Private inteface that allows ObjectGraph to modify Nodes.
         interface INodePrivate<T> where T : Node<T>, new()
         {
-            void Initialize(NodeType type);
+            void Initialize(NodeType type, int preorderPosition);
             List<T> InReferences { get; }
         }
     }
@@ -96,6 +102,7 @@ namespace WinCompData.Tools
         readonly bool _includeVertices;
         readonly Dictionary<object, T> _references = new Dictionary<object, T>();
         readonly Dictionary<CompositionObjectType, int> _compositionObjectCounter = new Dictionary<CompositionObjectType, int>();
+        int _preorderPositionCounter;
 
         ObjectGraph(bool includeVertices)
         {
@@ -148,7 +155,7 @@ namespace WinCompData.Tools
             // Create a node for the object.
             node = new T { Object = obj };
 
-            InitializeNode(node, NodeType.CompositionObject);
+            InitializeNode(node, NodeType.CompositionObject, _preorderPositionCounter++);
 
             // Link the nodes in the graph.
             if (_includeVertices && from != null)
@@ -218,7 +225,7 @@ namespace WinCompData.Tools
             else
             {
                 node = new T { Object = obj };
-                InitializeNode(node, NodeType.CompositionPath);
+                InitializeNode(node, NodeType.CompositionPath, _preorderPositionCounter++);
                 AddVertex(from, node);
                 _references.Add(obj, node);
             }
@@ -236,7 +243,7 @@ namespace WinCompData.Tools
             else
             {
                 node = new T { Object = obj };
-                InitializeNode(node, NodeType.CanvasGeometry);
+                InitializeNode(node, NodeType.CanvasGeometry, _preorderPositionCounter++);
                 AddVertex(from, node);
                 _references.Add(obj, node);
             }

@@ -90,8 +90,16 @@ namespace WinCompData.CodeGen
                 }
                 else
                 {
-                    sb.Append(new string(' ', (line.IndentCount + indentCount) * c_indentSize));
-                    sb.AppendLine(line.Text.ToString());
+                    var lineText = line.Text.ToString();
+                    if (string.IsNullOrWhiteSpace(lineText))
+                    {
+                        sb.AppendLine();
+                    }
+                    else
+                    {
+                        sb.Append(new string(' ', (line.IndentCount + indentCount) * c_indentSize));
+                        sb.AppendLine(lineText);
+                    }
                 }
             }
 
@@ -154,17 +162,18 @@ namespace WinCompData.CodeGen
                             break;
                         case '\r':
                             // CR found. Break immediately
-                            if (breakLookahead + 1 < text.Length && text[breakLookahead] == '\n')
+                            if (breakLookahead + 1 < text.Length && text[breakLookahead + 1] == '\n')
                             {
                                 // CRLF pair - step over both
                                 if (breakLookahead > maxLineLength)
                                 {
+                                    // Breaking at the end of the line makes the line too long. Break earlier.
                                     remainder = text.Substring(breakAt);
                                     return text.Substring(0, breakAt);
                                 }
                                 else
                                 {
-                                    // Jump over the CRLF
+                                    // Jump over the CRLF.
                                     remainder = text.Substring(breakLookahead + 2);
                                     return text.Substring(0, breakLookahead);
                                 }
@@ -215,7 +224,6 @@ namespace WinCompData.CodeGen
             remainder = text.Substring(breakAt);
             return text.Substring(0, breakAt);
         }
-
 
         struct CodeLine
         {

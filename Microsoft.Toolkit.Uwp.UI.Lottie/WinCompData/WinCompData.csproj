@@ -36,7 +36,30 @@
     <Compile Include="..\Lottie\WinCompData\ContainerVisual.cs" Link="WinCompData\ContainerVisual.cs" />
     <Compile Include="..\Lottie\WinCompData\CubicBezierEasingFunction.cs" Link="WinCompData\CubicBezierEasingFunction.cs" />
     <Compile Include="..\Lottie\WinCompData\ExpressionAnimation.cs" Link="WinCompData\ExpressionAnimation.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\BinaryExpression.cs" Link="WinCompData\Expressions\BinaryExpression.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Cubed.cs" Link="WinCompData\Expressions\Cubed.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\CubicBezierFunction.cs" Link="WinCompData\Expressions\CubicBezierFunction.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Divide.cs" Link="WinCompData\Expressions\Divide.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Expression.cs" Link="WinCompData\Expressions\Expression.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\ExpressionType.cs" Link="WinCompData\Expressions\ExpressionType.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\LessThan.cs" Link="WinCompData\Expressions\LessThan.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Matrix3x2.cs" Link="WinCompData\Expressions\Matrix3x2.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Max.cs" Link="WinCompData\Expressions\Max.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Min.cs" Link="WinCompData\Expressions\Min.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Multiply.cs" Link="WinCompData\Expressions\Multiply.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Name.cs" Link="WinCompData\Expressions\Name.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Number.cs" Link="WinCompData\Expressions\Number.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Squared.cs" Link="WinCompData\Expressions\Squared.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Subtract.cs" Link="WinCompData\Expressions\Subtract.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Sum.cs" Link="WinCompData\Expressions\Sum.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Ternary.cs" Link="WinCompData\Expressions\Ternary.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\TypeAssert.cs" Link="WinCompData\Expressions\TypeAssert.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\TypeConstraint.cs" Link="WinCompData\Expressions\TypeConstraint.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\UntypedExpression.cs" Link="WinCompData\Expressions\UntypedExpression.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Vector2.cs" Link="WinCompData\Expressions\Vector2.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Vector3.cs" Link="WinCompData\Expressions\Vector3.cs" />
     <Compile Include="..\Lottie\WinCompData\IContainShapes.cs" Link="WinCompData\IContainShapes.cs" />
+    <Compile Include="..\Lottie\WinCompData\IDescribable.cs" Link="WinCompData\IDescribable.cs" />
     <Compile Include="..\Lottie\WinCompData\InsetClip.cs" Link="WinCompData\InsetClip.cs" />
     <Compile Include="..\Lottie\WinCompData\KeyFrameAnimation.cs" Link="WinCompData\KeyFrameAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\LinearEasingFunction.cs" Link="WinCompData\LinearEasingFunction.cs" />
@@ -68,6 +91,7 @@
     <Folder Include="WinCompData\CodeGen\" />
     <Folder Include="WinCompData\Mgcg\" />
     <Folder Include="WinCompData\Mgc\" />
+    <Folder Include="WinCompData\Expressions\" />
     <Folder Include="WinCompData\Serialization\" />
     <Folder Include="WinCompData\Wg\" />
     <Folder Include="WinCompData\Wui\" />

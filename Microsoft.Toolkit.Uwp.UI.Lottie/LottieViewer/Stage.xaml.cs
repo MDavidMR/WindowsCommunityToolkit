@@ -104,7 +104,7 @@ namespace LottieViewer
 
 
         // Returns a pleasantly simplified ratio for the given value.
-        static ValueTuple<double, double> FloatToRatio(double value)
+        static (double, double) FloatToRatio(double value)
         {
             const int maxRatioProduct = 200;
             var candidateN = 1.0;
@@ -146,7 +146,7 @@ namespace LottieViewer
                     candidateD = candidateN / value;
                 }
             }
-            return ValueTuple.Create(candidateN, candidateD);
+            return (candidateN, candidateD);
         }
 
     }

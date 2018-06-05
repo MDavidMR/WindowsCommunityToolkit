@@ -1,13 +1,12 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
-    sealed class Sum : Expression
+#if !WINDOWS_UWP
+    public
+#endif
+    sealed class Sum : BinaryExpression
     {
-        public Expression Left { get; }
-        public Expression Right { get; }
-        internal Sum(Expression left, Expression right)
+        public Sum(Expression left, Expression right) : base(left, right)
         {
-            Left = left;
-            Right = right;
         }
 
         public override Expression Simplified
@@ -44,5 +43,8 @@
 
             return $"{aString} + {bString}";
         }
+
+        public override ExpressionType InferredType =>
+            ExpressionType.ConstrainToTypes(TypeConstraint.Scalar, Left.InferredType, Right.InferredType);
     }
 }

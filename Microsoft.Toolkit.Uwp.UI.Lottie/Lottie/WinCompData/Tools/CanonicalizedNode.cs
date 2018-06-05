@@ -33,6 +33,7 @@ namespace WinCompData.Tools
                     from n in NodesInGroup
                     from r in n.InReferences
                     where r.IsCanonical
+                    orderby r.PreorderPosition
                     select r.Canonical;
             }
         }

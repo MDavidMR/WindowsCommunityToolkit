@@ -14,7 +14,7 @@ namespace WinCompData
 
         public CompositionViewBox CreateViewBox() => new CompositionViewBox();
 
-        public ExpressionAnimation CreateExpressionAnimation(string expression) => new ExpressionAnimation(expression);
+        public ExpressionAnimation CreateExpressionAnimation(WinCompData.Expressions.Expression expression) => new ExpressionAnimation(expression);
 
         public InsetClip CreateInsetClip() => new InsetClip();
 

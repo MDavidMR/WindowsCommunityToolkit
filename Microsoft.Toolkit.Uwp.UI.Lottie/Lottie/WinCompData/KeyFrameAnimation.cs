@@ -11,6 +11,8 @@ namespace WinCompData
     {
         public TimeSpan Duration { get; set; }
 
+        public abstract int KeyFrameCount { get; }
+
         internal KeyFrameAnimation_(KeyFrameAnimation_ other) : base(other) { }
     }
 
@@ -50,7 +52,7 @@ namespace WinCompData
 
         public IEnumerable<KeyFrame> KeyFrames => _keyFrames.Values.OrderBy(kf => kf.Progress);
 
-        public int KeyFrameCount => _keyFrames.Count;
+        public override int KeyFrameCount => _keyFrames.Count;
 
         void CopyStateFrom(KeyFrameAnimation<T> other)
         {

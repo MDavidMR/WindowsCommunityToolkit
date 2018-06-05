@@ -8,7 +8,7 @@ namespace WinCompData
 #if !WINDOWS_UWP
     public
 #endif
-    abstract class CompositionObject : IDisposable
+    abstract class CompositionObject : IDisposable, IDescribable
     {
         readonly ListOfNeverNull<Animator> _animators = new ListOfNeverNull<Animator>();
         CompositionPropertySet _propertySet;
@@ -29,7 +29,14 @@ namespace WinCompData
         /// Cf. the <see cref="Comment"/> property which is a property on real composition
         /// objects that is used for debugging.
         /// </summary>
-        public string Description { get; set; }
+        public string LongDescription { get; set; }
+
+        /// <summary>
+        /// A description of the object. This may be used to add comments to generated code.
+        /// Cf. the <see cref="Comment"/> property which is a property on real composition
+        /// objects that is used for debugging.
+        /// </summary>
+        public string ShortDescription { get; set; }
 
         public CompositionPropertySet Properties
         {

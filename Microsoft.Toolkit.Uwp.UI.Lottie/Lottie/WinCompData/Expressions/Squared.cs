@@ -1,8 +1,11 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
     /// <summary>
     /// Raises a value to the power of 2. 
     /// </summary>
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Squared : Expression
     {
         public Squared(Expression value)
@@ -24,8 +27,18 @@
             }
         }
 
-        public override string ToString() => $"Square({Parenthesize(Value.Simplified)})";
+        public override string ToString() => $"Square({Value.Simplified})";
 
         internal override bool IsAtomic => true;
+
+        public override ExpressionType InferredType
+        {
+            get
+            {
+                return new ExpressionType(TypeConstraint.AllValidTypes);
+            }
+        }
+
+
     }
 }

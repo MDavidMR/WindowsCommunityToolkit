@@ -11,7 +11,6 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Navigation;
 
 namespace LottieViewer
 {
@@ -25,7 +24,6 @@ namespace LottieViewer
 
             // Connect the player's progress to the scrubber's progress.
             _scrubber.SetAnimatedCompositionObject(_stage.Player.ProgressObject);
-
         }
 
         async void SaveFile_Click(object sender, RoutedEventArgs e)
@@ -50,7 +48,7 @@ namespace LottieViewer
             //filePicker.FileTypeChoices.Add("C++/WinRT", new[] { ".cpp" });
 
             filePicker.FileTypeChoices.Add("Lottie XML", new[] { ".xml" });
-            
+
             // Note that the extension needs to be unique if we're going to 
             // recognize the choice when the file is saved.            
             //filePicker.FileTypeChoices.Add("WinComp XML", new[] { ".xml" });
@@ -351,7 +349,7 @@ namespace LottieViewer
         }
 
         // Returns a pleasantly simplified ratio for the given value.
-        static ValueTuple<double, double> FloatToRatio(double value)
+        static (double, double) FloatToRatio(double value)
         {
             const int maxRatioProduct = 200;
             var candidateN = 1.0;
@@ -393,7 +391,7 @@ namespace LottieViewer
                     candidateD = candidateN / value;
                 }
             }
-            return ValueTuple.Create(candidateN, candidateD);
+            return (candidateN, candidateD);
         }
     }
 }

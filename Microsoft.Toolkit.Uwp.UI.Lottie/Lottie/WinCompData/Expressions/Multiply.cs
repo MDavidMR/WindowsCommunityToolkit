@@ -1,13 +1,12 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
-    sealed class Multiply : Expression
+#if !WINDOWS_UWP
+    public
+#endif
+    sealed class Multiply : BinaryExpression
     {
-        public Expression Left { get; }
-        public Expression Right { get; }
-        internal Multiply(Expression left, Expression right)
+        public Multiply(Expression left, Expression right) : base(left, right)
         {
-            Left = left;
-            Right = right;
         }
 
         public override Expression Simplified
@@ -51,10 +50,22 @@
             var a = Left.Simplified;
             var b = Right.Simplified;
 
+            // Avoid the parentheses if the child is a Multiply - multiply
+            // is commutative.
             var aString = a is Multiply ? a.ToString() : Parenthesize(a);
-            var bString = b is Multiply ?  b.ToString() : Parenthesize(b);
+            var bString = b is Multiply ? b.ToString() : Parenthesize(b);
 
             return $"{aString} * {bString}";
         }
+
+        public override ExpressionType InferredType
+        {
+            get
+            {
+                // TODO - constrain this further.
+                return new ExpressionType(TypeConstraint.AllValidTypes);
+            }
+        }
+
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using SnVector2 = WinCompData.Sn.Vector2;
 
-namespace LottieToWinComp.Expressions
+namespace WinCompData.Expressions
 {
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class CubicBezierFunction : Expression
     {
         readonly SnVector2 _p0;
@@ -129,24 +132,26 @@ namespace LottieToWinComp.Expressions
         {
             get
             {
-                var OneMinusT = Subtract(1, _t);
+                var OneMinusT = Subtract(Scalar(1), _t);
 
                 // (1-t)^3P0
-                var p0Part = Multiply(Cubed(OneMinusT), _p0);
+                var p0Part = Multiply(Cubed(OneMinusT), Constant(_p0));
 
                 // (1-t)^2t3P1
-                var p1Part = Multiply(3, Squared(OneMinusT), _t, _p1);
+                var p1Part = Multiply(Scalar(3), Squared(OneMinusT), _t, Constant(_p1));
 
                 // (1-t)t^23P2
-                var p2Part = Multiply(3, OneMinusT, Squared(_t), _p2);
+                var p2Part = Multiply(Scalar(3), OneMinusT, Squared(_t), Constant(_p2));
 
                 // t^3P3
-                var p3Part = Multiply(Cubed(_t), _p3);
+                var p3Part = Multiply(Cubed(_t), Constant(_p3));
 
                 return Sum(p0Part, p1Part, p2Part, p3Part).Simplified;
             }
         }
 
         public override string ToString() => Simplified.ToString();
+
+        public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
     }
 }

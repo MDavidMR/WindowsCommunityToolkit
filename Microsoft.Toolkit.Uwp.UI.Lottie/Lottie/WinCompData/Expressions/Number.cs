@@ -1,5 +1,8 @@
-﻿namespace LottieToWinComp.Expressions
+﻿namespace WinCompData.Expressions
 {
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Number : Expression
     {
         public double Value { get; }
@@ -14,5 +17,7 @@
 
         public override Expression Simplified => this;
         internal static string ToString(double value) => ((float)value).ToString("0.######################################");
+
+        public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
     }
 }

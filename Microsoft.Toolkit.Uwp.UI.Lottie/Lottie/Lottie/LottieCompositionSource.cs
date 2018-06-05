@@ -316,12 +316,12 @@ namespace Lottie
                 }
             }
 
-            Task<ValueTuple<string, string>> ReadFileAsync()
+            Task<(string, string)> ReadFileAsync()
                     => _storageFile != null
                         ? ReadStorageFileAsync(_storageFile)
                         : ReadUriAsync(_uri);
 
-            async Task<ValueTuple<string, string>> ReadUriAsync(Uri uri)
+            async Task<(string, string)> ReadUriAsync(Uri uri)
             {
                 var absoluteUri = GetAbsoluteUri(uri);
                 if (absoluteUri != null)
@@ -335,17 +335,17 @@ namespace Lottie
                         var winrtClient = new Windows.Web.Http.HttpClient();
                         var response = await winrtClient.GetAsync(absoluteUri);
                         var result = await response.Content.ReadAsStringAsync();
-                        return ValueTuple.Create(absoluteUri.LocalPath, result);
+                        return (absoluteUri.LocalPath, result);
                     }
                 }
-                return ValueTuple.Create<string, string>(null, null);
+                return (null, null);
             }
 
-            async Task<ValueTuple<string, string>> ReadStorageFileAsync(StorageFile storageFile)
+            async Task<(string, string)> ReadStorageFileAsync(StorageFile storageFile)
             {
                 Debug.Assert(storageFile != null);
                 var result = await FileIO.ReadTextAsync(storageFile);
-                return ValueTuple.Create(storageFile.Name, result);
+                return (storageFile.Name, result);
             }
         }
 
