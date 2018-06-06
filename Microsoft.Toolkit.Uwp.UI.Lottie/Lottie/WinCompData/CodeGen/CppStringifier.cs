@@ -10,11 +10,9 @@ namespace WinCompData.CodeGen
     /// <summary>
     /// Stringifiers for C++ syntax.
     /// </summary>
-    sealed class CppStringifier : InstantiatorGeneratorBase.IStringifier
+    sealed class CppStringifier : InstantiatorGeneratorBase.StringifierBase
     {
-        string InstantiatorGeneratorBase.IStringifier.Bool(bool value) => value ? "true" : "false";
-
-        public string CanvasFigureLoop(Mgcg.CanvasFigureLoop value)
+        public override string CanvasFigureLoop(Mgcg.CanvasFigureLoop value)
         {
             switch (value)
             {
@@ -27,7 +25,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        public string CanvasGeometryCombine(Mgcg.CanvasGeometryCombine value)
+        public override string CanvasGeometryCombine(Mgcg.CanvasGeometryCombine value)
         {
             switch (value)
             {
@@ -44,13 +42,11 @@ namespace WinCompData.CodeGen
             }
         }
 
-        string InstantiatorGeneratorBase.IStringifier.Color(Color value) => $"ColorHelper::FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
+        public override string Color(Color value) => $"ColorHelper::FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
 
-        public string Deref => "->";
+        public override string Deref => "->";
 
-        string InstantiatorGeneratorBase.IStringifier.Float(float value) => Float(value);
-
-        public string FilledRegionDetermination(Mgcg.CanvasFilledRegionDetermination value)
+        public override string FilledRegionDetermination(Mgcg.CanvasFilledRegionDetermination value)
         {
             switch (value)
             {
@@ -63,53 +59,41 @@ namespace WinCompData.CodeGen
             }
         }
 
-        string InstantiatorGeneratorBase.IStringifier.Int32(int value) => value.ToString();
-        public string Int64(long value) => $"{value}L";
+        public override string Int64(long value) => $"{value}L";
 
-        string InstantiatorGeneratorBase.IStringifier.Int64TypeName => "int64_t";
+        public override string Int64TypeName => "int64_t";
 
-        string InstantiatorGeneratorBase.IStringifier.ScopeResolve => "::";
+        public override string ScopeResolve => "::";
 
-        public string MemberSelect => ".";
+        public override string New => "ref new";
 
-        public string New => "ref new";
+        public override string Null => "nullptr";
 
-        string InstantiatorGeneratorBase.IStringifier.Null => "nullptr";
-
-        public string Matrix3x2(Matrix3x2 value)
+        public override string Matrix3x2(Matrix3x2 value)
         {
             return $"{{{Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)}}}";
         }
 
-        string InstantiatorGeneratorBase.IStringifier.Readonly => "";
+        public override string Readonly => "";
 
-        string InstantiatorGeneratorBase.IStringifier.ReferenceTypeName(string value) =>
+        public override string ReferenceTypeName(string value) =>
             value == "CanvasGeometry"
                 // C++ uses a typdef for CanvasGeometry that is ComPtr<GeoSource>, thus no hat pointer
                 ? "CanvasGeometry"
                 : $"{value}^";
 
-        string InstantiatorGeneratorBase.IStringifier.String(string value) => $"\"{value}\"";
+        public override string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
+        public override string TimeSpan(string ticks) => $"{{ {ticks} }}";
 
-        public string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
-        public string TimeSpan(string ticks) => $"{{ {ticks} }}";
+        public override string Var => "auto";
 
-        string InstantiatorGeneratorBase.IStringifier.Var => "auto";
+        public override string Vector2(Vector2 value) => $"{{ {Float(value.X)}, {Float(value.Y)} }}";
 
-        public string Vector2(Vector2 value) => $"{{ {Float(value.X)}, {Float(value.Y)} }}";
+        public override string Vector3(Vector3 value) => $"{{ {Float(value.X)}, {Float(value.Y)}, {Float(value.Z)} }}";
 
-        string InstantiatorGeneratorBase.IStringifier.Vector3(Vector3 value) => $"{{ {Float(value.X)}, {Float(value.Y)}, {Float(value.Z)} }}";
+        public override string IListAdd => "Append";
 
-        public string Float(float value) =>
-            Math.Floor(value) == value
-                ? value.ToString("0")
-                : value.ToString("0.######################################") + "F";
-
-        static string Hex(int value) => $"0x{value.ToString("X2")}";
-
-        string InstantiatorGeneratorBase.IStringifier.IListAdd => "Append";
-
-        string InstantiatorGeneratorBase.IStringifier.FactoryCall(string value) => $"CanvasGeometryToIGeometrySource2D({value})";
+        public override string FactoryCall(string value) => $"CanvasGeometryToIGeometrySource2D({value})";
 
         public string FailFastWrapper(string value) => $"FFHR({value})";
 

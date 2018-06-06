@@ -1381,6 +1381,69 @@ namespace WinCompData.CodeGen
             string Vector3(Vector3 value);
         }
 
+        /// <summary>
+        /// A stringifier implementation for some common string formats that are shared
+        /// by most languages.
+        /// </summary>
+        protected internal abstract class StringifierBase : IStringifier
+        {
+            public abstract string Deref { get; }
+
+            public abstract string IListAdd { get; }
+
+            public abstract string Int64TypeName { get; }
+
+            public virtual string MemberSelect => ".";
+
+            public abstract string New { get; }
+
+            public abstract string Null { get; }
+
+            public abstract string Readonly { get; }
+
+            public abstract string ScopeResolve { get; }
+
+            public abstract string Var { get; }
+
+            public virtual string Bool(bool value) => value ? "true" : "false";
+
+            public abstract string CanvasFigureLoop(CanvasFigureLoop value);
+
+            public abstract string CanvasGeometryCombine(CanvasGeometryCombine value);
+
+            public abstract string Color(Color value);
+
+            public abstract string FactoryCall(string value);
+
+            public abstract string FilledRegionDetermination(CanvasFilledRegionDetermination value);
+
+            public virtual string Float(float value) =>
+                Math.Floor(value) == value
+                    ? value.ToString("0")
+                    : value.ToString("G9") + "F";
+
+            public virtual string Int32(int value) => value.ToString();
+
+            public abstract string Int64(long value);
+
+            public abstract string Matrix3x2(Matrix3x2 value);
+
+            public abstract string ReferenceTypeName(string value);
+
+            public virtual string String(string value) => $"\"{value}\"";
+
+            public abstract string TimeSpan(TimeSpan value);
+
+            public abstract string TimeSpan(string ticks);
+
+            public abstract string Vector2(Vector2 value);
+
+            public abstract string Vector3(Vector3 value);
+
+            public string Hex(int value) => $"0x{value.ToString("X2")}";
+        }
+
+
         // A node in the object graph, annotated with extra stuff to assist in code generation.
         sealed class ObjectData : CanonicalizedNode<ObjectData>
         {

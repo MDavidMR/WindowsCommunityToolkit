@@ -193,32 +193,27 @@ namespace WinCompData.CodeGen
         }
 
         static string FieldAssignment(string fieldName) => (fieldName != null ? $"{fieldName} = " : "");
-
         string Float(float value) => _stringifier.Float(value);
-
         string Vector2(Vector2 value) => _stringifier.Vector2(value);
 
-        sealed class CSharpStringifier : IStringifier
+        sealed class CSharpStringifier : StringifierBase
         {
-            string IStringifier.Deref => ".";
+            public override string Deref => ".";
 
-            string IStringifier.MemberSelect => ".";
+            public override string ScopeResolve => ".";
 
-            string IStringifier.ScopeResolve => ".";
+            public override string Var => "var";
 
-            string IStringifier.Var => "var";
+            public override string New => "new";
 
-            string IStringifier.New => "new";
+            public override string Null => "null";
 
-            string IStringifier.Null => "null";
+            public override string IListAdd => "Add";
 
-            string IStringifier.IListAdd => "Add";
+            public override string FactoryCall(string value) => value;
 
-            string IStringifier.FactoryCall(string value) => value;
 
-            string IStringifier.Bool(bool value) => value ? "true" : "false";
-
-            public string CanvasFigureLoop(CanvasFigureLoop value)
+            public override string CanvasFigureLoop(CanvasFigureLoop value)
             {
                 switch (value)
                 {
@@ -231,7 +226,7 @@ namespace WinCompData.CodeGen
                 }
             }
 
-            public string CanvasGeometryCombine(CanvasGeometryCombine value)
+            public override string CanvasGeometryCombine(CanvasGeometryCombine value)
             {
                 switch (value)
                 {
@@ -248,9 +243,9 @@ namespace WinCompData.CodeGen
                 }
             }
 
-            string IStringifier.Color(Color value) => $"Color.FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
+            public override string Color(Color value) => $"Color.FromArgb({Hex(value.A)}, {Hex(value.R)}, {Hex(value.G)}, {Hex(value.B)})";
 
-            public string FilledRegionDetermination(CanvasFilledRegionDetermination value)
+            public override string FilledRegionDetermination(CanvasFilledRegionDetermination value)
             {
                 switch (value)
                 {
@@ -263,40 +258,26 @@ namespace WinCompData.CodeGen
                 }
             }
 
-            string IStringifier.Float(float value) => Float(value);
+            public override string Int64(long value) => value.ToString();
 
-            string IStringifier.Int32(int value) => value.ToString();
-            public string Int64(long value) => value.ToString();
-
-            public string Matrix3x2(Matrix3x2 value)
+            public override string Matrix3x2(Matrix3x2 value)
             {
                 return $"new Matrix3x2({Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)})";
             }
 
-            string IStringifier.Readonly => "readonly";
+            public override string Readonly => "readonly";
 
-            string IStringifier.Int64TypeName => "long";
+            public override string Int64TypeName => "long";
 
-            string IStringifier.ReferenceTypeName(string value) => value;
+            public override string ReferenceTypeName(string value) => value;
 
-            public string ReferenceTypeName(string value) => value;
+            public override string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
+            public override string TimeSpan(string ticks) => $"TimeSpan.FromTicks({ticks})";
 
-            string IStringifier.String(string value) => $"\"{value}\"";
+            public override string Vector2(Vector2 value) => $"new Vector2({ Float(value.X) }, { Float(value.Y)})";
 
-            public string TimeSpan(TimeSpan value) => TimeSpan(Int64(value.Ticks));
-            public string TimeSpan(string ticks) => $"TimeSpan.FromTicks({ticks})";
-
-            public string Vector2(Vector2 value) => $"new Vector2({ Float(value.X) }, { Float(value.Y)})";
-
-            string IStringifier.Vector3(Vector3 value) => $"new Vector3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
-
-            public string Float(float value) => 
-                Math.Floor(value) == value 
-                    ? value.ToString("0") 
-                    : value.ToString("0.######################################") + "F";
-                
-            static string Hex(int value) => $"0x{value.ToString("X2")}";
-
+            public override string Vector3(Vector3 value) => $"new Vector3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
+               
         }
     }
 
