@@ -1,4 +1,7 @@
-﻿// Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+// Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
 // for multiple trim paths, so it's possible this is actually the most correct.
 #define SimpleTrimPathCombining
 #define SpatialBeziers

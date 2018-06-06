@@ -1,4 +1,7 @@
-﻿namespace Lottie
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace Lottie
 {
     /// <summary>
     /// Defines a segment of a composition that can be played by the <see cref="CompositionPlayer"/>.

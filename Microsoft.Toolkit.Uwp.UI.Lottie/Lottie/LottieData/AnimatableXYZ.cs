@@ -1,4 +1,7 @@
-﻿namespace LottieData
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace LottieData
 {
     /// <summary>
     /// An animatable Vector3 value expressed as 3 animatable floating point values.

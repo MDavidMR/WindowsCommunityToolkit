@@ -1,4 +1,7 @@
-﻿// If defined, an issue will be reported for each field that is discovered
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+// If defined, an issue will be reported for each field that is discovered
 // but not parsed. This is used to help test that parsing is complete.
 #define CheckForUnparsedFields
 

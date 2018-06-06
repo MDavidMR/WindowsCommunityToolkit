@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using System;
 using WinCompData.Sn;
 using WinCompData.Wui;
 using WinCompData.Mgcg;

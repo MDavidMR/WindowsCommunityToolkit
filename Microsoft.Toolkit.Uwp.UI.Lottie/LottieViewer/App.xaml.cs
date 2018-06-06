@@ -1,4 +1,7 @@
-﻿using Compositions;
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using Compositions;
 using Lottie;
 using System;
 using System.Threading.Tasks;

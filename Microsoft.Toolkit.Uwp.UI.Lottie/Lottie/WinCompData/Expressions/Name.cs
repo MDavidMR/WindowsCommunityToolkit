@@ -1,4 +1,7 @@
-﻿namespace WinCompData.Expressions
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace WinCompData.Expressions
 {
     /// <summary>
     /// A name in an <see cref="Expression"/>.

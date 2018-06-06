@@ -1,4 +1,7 @@
-﻿namespace WinCompData
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace WinCompData
 {
     /// <summary>
     /// Interface implemented by objects to expose a description in plain language.

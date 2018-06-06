@@ -1,4 +1,7 @@
-﻿#define ReuseExpressionAnimation
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+#define ReuseExpressionAnimation
 
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;

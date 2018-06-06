@@ -1,4 +1,7 @@
-﻿namespace LottieData
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace LottieData
 {
     /// <summary>
     /// A <see cref="LayerCollection"/> stored in the assets section of a <see cref="LottieComposition"/>.

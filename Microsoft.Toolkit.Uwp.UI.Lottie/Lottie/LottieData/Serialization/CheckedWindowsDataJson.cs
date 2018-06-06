@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using System;
 using System.Collections.Generic;
 using Windows.Data.Json;
 using JsonArray = LottieData.Serialization.CheckedJsonArray;

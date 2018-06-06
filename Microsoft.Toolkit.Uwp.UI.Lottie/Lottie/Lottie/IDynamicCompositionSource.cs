@@ -1,4 +1,7 @@
-﻿namespace Lottie
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace Lottie
 {
     public delegate void DynamicCompositionSourceEventHandler(object sender);
 

@@ -1,4 +1,7 @@
-﻿namespace WinCompData.Sn
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+namespace WinCompData.Sn
 {
 #if !WINDOWS_UWP
     public

@@ -1,4 +1,7 @@
-﻿using WinCompData.Expressions;
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using WinCompData.Expressions;
 
 namespace WinCompData
 {

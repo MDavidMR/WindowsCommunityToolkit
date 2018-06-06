@@ -1,4 +1,7 @@
-﻿#if DEBUG
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+#if DEBUG
 // Uncomment this to slow down async awaits for testing.
 //#define SlowAwaits
 #endif

@@ -1,4 +1,7 @@
-﻿using static LottieData.SolidColorStroke;
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using static LottieData.SolidColorStroke;
 
 namespace LottieData
 {

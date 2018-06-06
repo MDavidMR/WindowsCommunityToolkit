@@ -1,4 +1,7 @@
-﻿#define DebugDragDrop
+// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+#define DebugDragDrop
 using Lottie;
 using System;
 using System.Collections.Generic;
