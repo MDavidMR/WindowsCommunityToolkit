@@ -12,7 +12,7 @@
         // TODO - could be simplified to a constant in some circumstances.
         public override Expression Simplified => this;
 
-        public override string ToString() => $"Max({Parenthesize(Left.Simplified)}, {Parenthesize(Right.Simplified)}";
+        public override string ToString() => $"Max({Parenthesize(Left.Simplified)}, {Parenthesize(Right.Simplified)})";
 
         public override ExpressionType InferredType =>
             ExpressionType.ConstrainToTypes(

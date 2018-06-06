@@ -113,6 +113,7 @@
     <Compile Include="LottieData\ShapeContentType.cs" />
     <Compile Include="LottieData\ShapeLayerContent.cs" />
     <Compile Include="LottieToWinComp\ExpressionFactory.cs" />
+    <Compile Include="LottieToWinComp\CanvasGeometryCombiner.cs" />
     <Compile Include="WinCompData\Expressions\BinaryExpression.cs" />
     <Compile Include="WinCompData\Expressions\Cubed.cs" />
     <Compile Include="WinCompData\Expressions\CubicBezierFunction.cs" />

@@ -3,6 +3,8 @@
 #define SimpleTrimPathCombining
 #define SpatialBeziers
 //#define LinearEasingOnSpatialBeziers
+// Use Win2D to create paths from geometry combines when merging shape layers.
+//#define PreCombineGeometries
 #if DEBUG
 // For diagnosing issues, give nothing a clip.
 //#define NoClipping
@@ -905,17 +907,38 @@ namespace LottieToWinComp
             var pathFillType = context.Fill == null ? SolidColorFill.PathFillType.EvenOdd : context.Fill.FillType;
             var geometries = CreateCanvasGeometries(context, stack, pathFillType).ToArray();
 
-            if (geometries.Length == 0)
+            switch (geometries.Length)
             {
-                return null;
-            }
+                case 0:
+                    return null;
+                case 1:
+                    return geometries[0];
 
+                default:
+                    if (geometries.Length > 50)
+                    {
+                        // There will be stack overflows if the CanvasGeometry.Combine is too large.
+                        // Usually not a problem, but handle degenerate cases.
+                        Unsupported("Merging of a very large number of shapes");
+                        geometries = geometries.Take(50).ToArray();
+                    }
+                    return CombineGeometries(geometries, combineMode);
+            }
+        }
+
+        // Combine all of the given geometries into a single geometry.
+        CanvasGeometry CombineGeometries(CanvasGeometry[] geometries, CanvasGeometryCombine combineMode)
+        {
+#if PreCombineGeometries
+            return CanvasGeometryCombiner.CombineGeometries(geometries, combineMode);
+#else
             var accumulator = geometries[0];
             for (var i = 1; i < geometries.Length; i++)
             {
                 accumulator = accumulator.CombineWith(geometries[i], Matrix3x2Identity, combineMode);
             }
             return accumulator;
+#endif
         }
 
         IEnumerable<CanvasGeometry> CreateCanvasGeometries(ShapeContentContext context, Stack<ShapeLayerContent> stack, SolidColorFill.PathFillType pathFillType)
@@ -2259,7 +2282,7 @@ namespace LottieToWinComp
 
         CompositionPath CompositionPathFromPathGeometry(PathGeometry pathGeometry, SolidColorFill.PathFillType fillType)
         {
-            using (var builder = new CanvasPathBuilder(null))
+            using (var builder = new WinCompData.Mgcg.CanvasPathBuilder(null))
             {
                 var canvasFilledRegionDetermination = FilledRegionDetermination(fillType);
 

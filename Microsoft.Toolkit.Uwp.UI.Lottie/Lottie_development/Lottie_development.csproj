@@ -139,7 +139,7 @@
       <Version>6.0.8</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
-      <Version>1.22.0</Version>
+      <Version>1.23.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -151,9 +151,9 @@
       <Project>{ae4e2f47-a73e-44ad-9e5b-4beec152329a}</Project>
       <Name>LottieJsonReader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LottieToVisual\LottieToVisual.csproj">
-      <Project>{4c88d697-fb3c-48e4-bab1-f285468162d0}</Project>
-      <Name>LottieToVisual</Name>
+    <ProjectReference Include="..\LottieToWinComp\LottieToWinComp.csproj">
+      <Project>{1750614f-fd5d-4dec-9dfc-91572073efc0}</Project>
+      <Name>LottieToWinComp</Name>
     </ProjectReference>
     <ProjectReference Include="..\WinCompData\WinCompData.csproj">
       <Project>{b1dd2d0c-f280-4e5a-a14d-e1856cbb648a}</Project>

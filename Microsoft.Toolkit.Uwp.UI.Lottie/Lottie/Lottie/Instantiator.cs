@@ -876,7 +876,6 @@ namespace Lottie
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Combination:
                     {
                         var combination = (Wd.Mgcg.CanvasGeometry.Combination)canvasGeometry;
-
                         return Cache(obj, GetCanvasGeometry(combination.A).CombineWith(
                             GetCanvasGeometry(combination.B),
                             Matrix3x2(combination.Matrix),
@@ -934,7 +933,6 @@ namespace Lottie
                     throw new InvalidOperationException();
             }
         }
-
 
         Wc.CompositionBrush GetCompositionBrush(Wd.CompositionBrush obj)
         {
