@@ -109,7 +109,7 @@ namespace WinCompData.Expressions
             }
         }
 
-        static TypeConstraint IntersectConstraints(TypeConstraint a, TypeConstraint b)
+        internal static TypeConstraint IntersectConstraints(TypeConstraint a, TypeConstraint b)
         {
             return a & b;
         }

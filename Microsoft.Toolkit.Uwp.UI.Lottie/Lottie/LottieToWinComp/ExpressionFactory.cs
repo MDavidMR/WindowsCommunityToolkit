@@ -134,7 +134,7 @@ namespace LottieToWinComp
                     var expression1 = CreateProgressExpression(new ArraySegment<Segment>(segmentsArray, segments.Offset + pivot, segments.Count - pivot), progress);
                     var pivotProgress = segmentsArray[segments.Offset + pivot - 1].ToProgress;
                     return new Ternary(
-                        condition: new LessThen(progress, new Number(pivotProgress)),
+                        condition: new LessThan(progress, new Number(pivotProgress)),
                         trueValue: expression0,
                         falseValue: expression1);
             }

@@ -265,7 +265,7 @@ namespace LottieData.Serialization
             IgnoreFieldThatIsNotYetSupported(obj, "t");
             IgnoreFieldThatIsNotYetSupported(obj, "td");
 
-            var name = obj.GetNamedString("nm");
+            var name = obj.GetNamedString("nm", "");
             var layerIndex = ReadInt(obj, "ind").Value;
             var parentIndex = ReadInt(obj, "parent");
             var is3d = ReadBool(obj, "ddd") == true;

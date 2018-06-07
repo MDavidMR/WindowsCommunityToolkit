@@ -19,18 +19,41 @@ namespace WinCompData.Expressions
         public Expression TrueValue;
         public Expression FalseValue;
 
-        // TODO - can be simplified if the condition is a constant.
-        public override Expression Simplified => this;
+        public override Expression Simplified
+        {
+            get
+            {
+                var c = Condition.Simplified;
+                var t = TrueValue.Simplified;
+                var f = FalseValue.Simplified;
+
+                if (c is Boolean cBool)
+                {
+                    return cBool.Value ? t : f;
+                }
+
+                if (t != TrueValue || f != FalseValue)
+                {
+                    return new Ternary(c, t, f);
+                }
+                return this;
+            }
+        }
+
         public override string ToString()
             => $"{Parenthesize(Condition)} ? {Parenthesize(TrueValue)} : {Parenthesize(FalseValue)}";
 
         public override ExpressionType InferredType
         {
-            get
-            {
-                return Condition.InferredType.Constraints.HasFlag(TypeConstraint.Boolean)
-                    ? ExpressionType.ConstrainToTypes(TypeConstraint.AllValidTypes, TrueValue.InferredType, FalseValue.InferredType)
-                    : new ExpressionType(TypeConstraint.NoType);
+            get {
+                var trueType = TrueValue.InferredType;
+                var falseType = FalseValue.InferredType;
+
+                return ExpressionType.AssertMatchingTypes(
+                    TypeConstraint.AllValidTypes,
+                    trueType,
+                    falseType,
+                    ExpressionType.IntersectConstraints(trueType.Constraints, falseType.Constraints));
             }
         }
 

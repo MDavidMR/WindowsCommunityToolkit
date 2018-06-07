@@ -6,14 +6,36 @@ namespace WinCompData.Expressions
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class LessThen : BinaryExpression
+    sealed class LessThan : BinaryExpression
     {
-        public LessThen(Expression left, Expression right) : base(left, right)
+        public LessThan(Expression left, Expression right) : base(left, right)
         {
         }
 
-        // TODO - could be simplified to a constant bool in some circumstances.
-        public override Expression Simplified => this;
+        public override Expression Simplified
+        {
+            get
+            {
+                var a = Left.Simplified;
+                var b = Right.Simplified;
+
+
+                var numberA = a as Number;
+                var numberB = b as Number;
+                if (numberA != null && numberB != null)
+                {
+                    // They're both constants. Evaluate them.
+                    return new Boolean(numberA.Value < numberB.Value);
+                }
+
+                if (a != Left || b != Right)
+                {
+                    return new LessThan(a, b);
+                }
+
+                return this;
+            }
+        }
 
         public override string ToString() => $"{Parenthesize(Left.Simplified)} < {Parenthesize(Right.Simplified)}";
 

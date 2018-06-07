@@ -37,6 +37,7 @@
     <Compile Include="..\Lottie\WinCompData\CubicBezierEasingFunction.cs" Link="WinCompData\CubicBezierEasingFunction.cs" />
     <Compile Include="..\Lottie\WinCompData\ExpressionAnimation.cs" Link="WinCompData\ExpressionAnimation.cs" />
     <Compile Include="..\Lottie\WinCompData\Expressions\BinaryExpression.cs" Link="WinCompData\Expressions\BinaryExpression.cs" />
+    <Compile Include="..\Lottie\WinCompData\Expressions\Boolean.cs" Link="WinCompData\Expressions\Boolean.cs" />
     <Compile Include="..\Lottie\WinCompData\Expressions\Cubed.cs" Link="WinCompData\Expressions\Cubed.cs" />
     <Compile Include="..\Lottie\WinCompData\Expressions\CubicBezierFunction.cs" Link="WinCompData\Expressions\CubicBezierFunction.cs" />
     <Compile Include="..\Lottie\WinCompData\Expressions\Divide.cs" Link="WinCompData\Expressions\Divide.cs" />

@@ -16,7 +16,11 @@ namespace WinCompData
 
         public CompositionObject TargetObject { get; }
         public string TargetProperty { get; }
-        public void Pause() { }
+        public bool IsPaused { get; private set; }
+        public void Pause()
+        {
+            IsPaused = true;
+        }
 
         public override CompositionObjectType Type => CompositionObjectType.AnimationController;
     }

@@ -243,9 +243,10 @@ namespace Lottie
                 if (controller != null)
                 {
                     var animationController = GetAnimationController(controller);
-                    //// TODO - should only pause if the mock controller was paused, but
-                    ////        for Lottie they're always paused, so this is good enough.
-                    animationController.Pause();
+                    if (controller.IsPaused)
+                    {
+                        animationController.Pause();
+                    }
                 }
             }
         }

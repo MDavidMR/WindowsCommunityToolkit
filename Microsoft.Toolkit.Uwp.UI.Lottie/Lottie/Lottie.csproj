@@ -115,6 +115,7 @@
     <Compile Include="LottieToWinComp\ExpressionFactory.cs" />
     <Compile Include="LottieToWinComp\CanvasGeometryCombiner.cs" />
     <Compile Include="WinCompData\Expressions\BinaryExpression.cs" />
+    <Compile Include="WinCompData\Expressions\Boolean.cs" />
     <Compile Include="WinCompData\Expressions\Cubed.cs" />
     <Compile Include="WinCompData\Expressions\CubicBezierFunction.cs" />
     <Compile Include="WinCompData\Expressions\Divide.cs" />

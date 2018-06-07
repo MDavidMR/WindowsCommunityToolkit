@@ -578,8 +578,10 @@ namespace WinCompData.CodeGen
                         // Initialize the controller variable.
                         builder.WriteLine($"controller = {localName}{Deref}TryGetAnimationController({String(animator.AnimatedProperty)});");
                     }
-                    // TODO - we always pause here, but really should only pause it if WinCompData does it. 
-                    builder.WriteLine($"controller{Deref}Pause();");
+                    if (animator.Controller.IsPaused)
+                    {
+                        builder.WriteLine($"controller{Deref}Pause();");
+                    }
                     // Recurse to start animations on the controller.
                     StartAnimations(builder, animator.Controller, node, "controller", "controller");
                 }

@@ -44,6 +44,11 @@ namespace WinCompData.Expressions
                     return new Number(numberA.Value * numberB.Value);
                 }
 
+                if (a != Left || b != Right)
+                {
+                    return new Multiply(a, b);
+                }
+
                 return this;
             }
         }
@@ -65,10 +70,15 @@ namespace WinCompData.Expressions
         {
             get
             {
-                // TODO - constrain this further.
-                return new ExpressionType(TypeConstraint.AllValidTypes);
+                var leftType = Left.InferredType;
+                var rightType = Right.InferredType;
+
+                return ExpressionType.AssertMatchingTypes(
+                        TypeConstraint.Scalar | TypeConstraint.Vector2 | TypeConstraint.Vector3 | TypeConstraint.Vector4,
+                        leftType,
+                        rightType,
+                        ExpressionType.IntersectConstraints(leftType.Constraints, rightType.Constraints));
             }
         }
-
     }
 }

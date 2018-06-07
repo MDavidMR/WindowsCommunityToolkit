@@ -38,14 +38,15 @@ namespace WinCompData.Wui
                     // Get the nearest named color.
                     result = GetNearestNamedColor(this).Name;
 
+                    // Indicate that the color is near the name, and include the hex value
+                    // so that it will be unique.
+                    result = $"Almost{result}_{Hex}";
+
                     if (A != 255)
                     {
                         // If the color has any transparency, indicate that in the name.
                         result = A == 0 ? $"Transparent{result}" : $"SemiTransparent{result}";
                     }
-                    // Indicate that the color is near the name, and include the hex value
-                    // so that it will be unique.
-                    result = $"Almost{result}_{Hex}";
                 }
                 return result;
             }
