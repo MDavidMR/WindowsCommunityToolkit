@@ -13,7 +13,6 @@
 #include <d2d1helper.h>
 #include "WindowsNumerics.h"
 #include <Windows.Graphics.Interop.h>
-#include <windows.ui.composition.interop.h>
 #include <wrl.h>
 
 using namespace Windows::Foundation;

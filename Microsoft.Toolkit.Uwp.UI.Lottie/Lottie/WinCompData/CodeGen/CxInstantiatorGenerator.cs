@@ -50,7 +50,6 @@ namespace WinCompData.CodeGen
                 builder.WriteLine("#include \"WindowsNumerics.h\"");
                 // Interop
                 builder.WriteLine("#include <Windows.Graphics.Interop.h>");
-                builder.WriteLine("#include <windows.ui.composition.interop.h>");
                 // ComPtr
                 builder.WriteLine("#include <wrl.h>");
             }
