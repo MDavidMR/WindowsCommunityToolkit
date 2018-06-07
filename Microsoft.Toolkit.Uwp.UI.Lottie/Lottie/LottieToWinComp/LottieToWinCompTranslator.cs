@@ -2122,7 +2122,10 @@ namespace LottieToWinComp
                             insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateJumpStepEasingFunction());
                         }
 
-                        insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
+                        // The easing for a keyframe at 0 is unimportant, so always use linear.
+                        var easing = adjustedProgress == 0 ? LinearEasing.Instance :  keyFrame.Easing;
+
+                        insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(easing));
                         previousKeyFrameWasExpression = false;
                     }
                     else
