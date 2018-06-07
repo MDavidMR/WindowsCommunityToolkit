@@ -265,7 +265,7 @@ namespace WinCompData.CodeGen
                 return $"new Matrix3x2({Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)})";
             }
 
-            public override string Readonly => "readonly";
+            public override string Readonly(string value) => $"readonly {value}";
 
             public override string Int64TypeName => "long";
 

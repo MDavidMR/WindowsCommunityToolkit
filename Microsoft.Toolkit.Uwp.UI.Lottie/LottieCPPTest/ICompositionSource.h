@@ -12,3 +12,4 @@ namespace Compositions
             Platform::Object^* diagnostics);
     };
 }
+

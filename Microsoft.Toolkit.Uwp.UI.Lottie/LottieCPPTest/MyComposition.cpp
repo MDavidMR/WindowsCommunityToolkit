@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 #include "pch.h"
-#include "ICompositionSource.h"
+#include "MyComposition.h"
 #include "d2d1.h"
 #include <d2d1_1.h>
 #include <d2d1helper.h>
@@ -39,7 +39,7 @@ namespace Compositions
             *rootVisual = Instantiator::InstantiateComposition(compositor);
             *size = { 1920, 1280 };
             *progressPropertySet = (*rootVisual)->Properties;
-            duration->Duration = { 169330000L };
+            duration->Duration = { 98670000L };
             diagnostics = nullptr;
             return true;
         }
@@ -129,182 +129,102 @@ namespace Compositions
         class Instantiator sealed
         {
             ComPtr<ID2D1Factory> _d2dFactory;
-            Compositor^ _c;
-            ExpressionAnimation^ _reusableExpressionAnimation;
-            CompositionColorBrush^ _colorBrush_AlmostCornflowerBlue_FF61AADD;
-            CompositionColorBrush^ _colorBrush_AlmostLemonChiffon_FFFFF6D2;
-            CompositionColorBrush^ _colorBrush_AlmostMediumAquamarine_FF6BC592;
-            CompositionColorBrush^ _colorBrush_AlmostSemiTransparentCornflowerBlue_7261AADD;
-            CompositionColorBrush^ _colorBrush_AlmostSemiTransparentMediumAquamarine_7F6BC592;
+            const int64_t c_durationTicks = 98670000L;
+            Compositor^ const _c;
+            ExpressionAnimation^ const _reusableExpressionAnimation;
+            ColorKeyFrameAnimation^ _colorAnimation_Black_to_Black;
             CompositionColorBrush^ _colorBrush_Black;
-            CompositionColorBrush^ _colorBrush_White;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_006;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_007;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_008;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_009;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_010;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_011;
             CubicBezierEasingFunction^ _cubicBezierEasingFunction_012;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_013;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_020;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_021;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_022;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_044;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_057;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_068;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_077;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_096;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_097;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_098;
-            CubicBezierEasingFunction^ _cubicBezierEasingFunction_134;
-            ExpressionAnimation^ _expressionAnimation_000;
-            ExpressionAnimation^ _expressionAnimation_001;
-            ExpressionAnimation^ _expressionAnimation_002;
-            ExpressionAnimation^ _expressionAnimation_003;
-            ExpressionAnimation^ _expressionAnimation_004;
-            ExpressionAnimation^ _expressionAnimation_005;
-            ExpressionAnimation^ _expressionAnimation_006;
-            ExpressionAnimation^ _expressionAnimation_007;
-            CanvasGeometry _geometry_032;
-            CanvasGeometry _geometry_040;
+            CubicBezierEasingFunction^ _cubicBezierEasingFunction_015;
             LinearEasingFunction^ _linearEasingFunction;
             ContainerVisual^ _root;
+            ScalarKeyFrameAnimation^ _scalarAnimation_0_to_1_000;
+            ScalarKeyFrameAnimation^ _scalarAnimation_0_to_1_001;
+            ScalarKeyFrameAnimation^ _scalarAnimation_0_to_1_003;
+            ScalarKeyFrameAnimation^ _scalarAnimation_0_to_1_004;
+            ExpressionAnimation^ _scalarExpressionAnimation;
 
-            // SolidLayer:'blackfading'
-            //   'blackfading'.Contents
-            //     SolidLayerRectangle
-            CompositionColorBrush^ AnimatedColorBrush_Black_to_Transparent()
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 4
+            //         Rectangle Path 1
+            CompositionColorBrush^ AnimatedColorBrush_Black_to_Black_000()
             {
                 auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00));
-                result->StartAnimation("Color", ColorAnimation_Black_to_Transparent());
+                result->StartAnimation("Color", ColorAnimation_Black_to_Black());
                 auto controller = result->TryGetAnimationController("Color");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            ColorKeyFrameAnimation^ ColorAnimation_Black_to_Transparent()
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 5
+            //         Rectangle Path 1
+            CompositionColorBrush^ AnimatedColorBrush_Black_to_Black_001()
             {
-                auto result = _c->CreateColorKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00));
+                result->StartAnimation("Color", _colorAnimation_Black_to_Black);
+                auto controller = result->TryGetAnimationController("Color");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 2
+            //         Rectangle Path 1
+            CompositionColorBrush^ AnimatedColorBrush_Black_to_Black_002()
+            {
+                auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00));
+                result->StartAnimation("Color", _colorAnimation_Black_to_Black);
+                auto controller = result->TryGetAnimationController("Color");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 1
+            //         Path 1
+            CompositionColorBrush^ AnimatedColorBrush_Black_to_Black_003()
+            {
+                auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00));
+                result->StartAnimation("Color", _colorAnimation_Black_to_Black);
+                auto controller = result->TryGetAnimationController("Color");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            ColorKeyFrameAnimation^ ColorAnimation_Black_to_Black()
+            {
+                auto result = _colorAnimation_Black_to_Black = _c->CreateColorKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
                 // Black
                 result->InsertKeyFrame(0, ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00), _linearEasingFunction);
-                // Transparent
-                result->InsertKeyFrame(0.0492126F, ColorHelper::FromArgb(0x00, 0x00, 0x00, 0x00), _cubicBezierEasingFunction_044);
+                // White
+                result->InsertKeyFrame(0.0878378376F, ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF), CubicBezierEasingFunction_006());
+                // White
+                result->InsertKeyFrame(0.126689196F, ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF), _linearEasingFunction);
+                // Black
+                result->InsertKeyFrame(0.212837845F, ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00), CubicBezierEasingFunction_007());
                 return result;
             }
 
-            CompositionColorBrush^ ColorBrush_AlmostCornflowerBlue_FF61AADD()
+            // 'txt_Hi'.Transforms
+            //   'bkg_white'.Contents
+            //     SolidLayerRectangle
+            CompositionColorBrush^ ColorBrush_AlmostLavender_FFEBEBEB()
             {
-                return _colorBrush_AlmostCornflowerBlue_FF61AADD = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x61, 0xAA, 0xDD));
-            }
-
-            // eula_stroke 3
-            //   'eula_stroke 3'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostKhaki_FFFFEA94()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xEA, 0x94));
-            }
-
-            CompositionColorBrush^ ColorBrush_AlmostLemonChiffon_FFFFF6D2()
-            {
-                return _colorBrush_AlmostLemonChiffon_FFFFF6D2 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xF6, 0xD2));
-            }
-
-            // privacy_brush 2
-            //   'privacy_brush 2'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostLightPink_FFF1A0B4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xF1, 0xA0, 0xB4));
-            }
-
-            CompositionColorBrush^ ColorBrush_AlmostMediumAquamarine_FF6BC592()
-            {
-                return _colorBrush_AlmostMediumAquamarine_FF6BC592 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x6B, 0xC5, 0x92));
-            }
-
-            // onedrive_brush 2
-            //   'onedrive_brush 2'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostPowderBlue_FFB4E6E8()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xB4, 0xE6, 0xE8));
-            }
-
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentCornflowerBlue_7261AADD()
-            {
-                return _colorBrush_AlmostSemiTransparentCornflowerBlue_7261AADD = _c->CreateColorBrush(ColorHelper::FromArgb(0x72, 0x61, 0xAA, 0xDD));
-            }
-
-            // privacy_brush
-            //   'privacy_brush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentLightPink_28F1A0B4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0x28, 0xF1, 0xA0, 0xB4));
-            }
-
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentMediumAquamarine_7F6BC592()
-            {
-                return _colorBrush_AlmostSemiTransparentMediumAquamarine_7F6BC592 = _c->CreateColorBrush(ColorHelper::FromArgb(0x7F, 0x6B, 0xC5, 0x92));
-            }
-
-            // onedrive_brush
-            //   'onedrive_brush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentPowderBlue_66B4E6E8()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0x66, 0xB4, 0xE6, 0xE8));
-            }
-
-            // wifi_brush
-            //   'wifi_brush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentSkyBlue_6693DBCA()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0x66, 0x93, 0xDB, 0xCA));
-            }
-
-            // fingerprint_brush
-            //   'fingerprint_brush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentThistle_66D2C1E4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0x66, 0xD2, 0xC1, 0xE4));
-            }
-
-            // pin_brush
-            //   'pin_brush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSemiTransparentThistle_66D3C2E4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0x66, 0xD3, 0xC2, 0xE4));
-            }
-
-            // wifi_btush
-            //   'wifi_btush'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostSkyBlue_FF92DBC9()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x92, 0xDB, 0xC9));
-            }
-
-            // fingerprint_brush 2
-            //   'fingerprint_brush 2'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostThistle_FFD2C1E4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xD2, 0xC1, 0xE4));
-            }
-
-            // pin_brush 2
-            //   'pin_brush 2'.Contents
-            //     Path 1
-            CompositionColorBrush^ ColorBrush_AlmostThistle_FFD3C2E4()
-            {
-                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xD3, 0xC2, 0xE4));
+                return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xEB, 0xEB, 0xEB));
             }
 
             CompositionColorBrush^ ColorBrush_Black()
@@ -312,304 +232,240 @@ namespace Compositions
                 return _colorBrush_Black = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x00, 0x00));
             }
 
-            CompositionColorBrush^ ColorBrush_White()
-            {
-                return _colorBrush_White = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            }
-
-            // SolidLayer:'whitebg'
+            // 'txt_Hi'.Transforms
+            // 'bkg_white'.Contents
             CompositionContainerShape^ ContainerShape_000()
             {
                 auto result = _c->CreateContainerShape();
                 result->CenterPoint = { 960, 540 };
                 result->Offset = { 0, 100 };
-                result->Scale = { 1.32F, 1.32F };
+                result->Scale = { 1.65999997F, 1.65999997F };
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_000());
                 return result;
             }
 
-            // Shape layer: "privacy_brush".
+            // 'txt_Hi'.Transforms
+            // 'stroke_main'.Contents
             CompositionContainerShape^ ContainerShape_001()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -466.786F, 45.662F };
-                result->Offset = { 866.5F, 578.5F };
+                result->Offset = { 960, 640 };
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_002());
                 return result;
             }
 
-            // privacy_brush
-            // 'privacy_brush'.Contents
+            // 'txt_Hi'.Transforms
+            //   'stroke_main'.Contents
+            // Group: Shape 1
             CompositionContainerShape^ ContainerShape_002()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_001());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.8976378) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "privacy_brush 2".
+            // 'txt_Hi'.Transforms
+            // 'UI_WindowsLogo 3'.Transforms
             CompositionContainerShape^ ContainerShape_003()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -414.326F, 51.762F };
-                result->Offset = { 866.5F, 578.5F };
+                result->CenterPoint = { 0.25F, 0.25F };
+                result->Offset = { 1440.30005F, 635.711975F };
+                result->Scale = { 1.70000005F, 1.70000005F };
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_004());
+                result->StartAnimation("Scale", Vector2Animation());
+                auto controller = result->TryGetAnimationController("Scale");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // privacy_brush 2
-            // 'privacy_brush 2'.Contents
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            // 'UI_WindowsLogo 3'.Contents
             CompositionContainerShape^ ContainerShape_004()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_002());
+                shapes->Append(ContainerShape_005());
+                shapes->Append(ContainerShape_006());
+                shapes->Append(ContainerShape_007());
+                shapes->Append(ContainerShape_008());
                 _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.9084646) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.214527) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0)";
                 _reusableExpressionAnimation->SetReferenceParameter("_", _root);
                 result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "privacy_stroke".
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            // Group: Group 4
             CompositionContainerShape^ ContainerShape_005()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -404.362F, 45.911F };
-                result->Offset = { 866.5F, 578.5F };
+                result->Offset = { -17, -16.5F };
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_006());
+                shapes->Append(SpriteShape_002());
                 return result;
             }
 
-            // privacy_stroke
-            // 'privacy_stroke'.Contents
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            // Group: Group 5
             CompositionContainerShape^ ContainerShape_006()
             {
                 auto result = _c->CreateContainerShape();
+                result->Offset = { 17.5079994F, -16.5F };
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_003());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_001());
                 return result;
             }
 
-            // Shape layer: "privacy_stroke 2".
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            // Group: Group 2
             CompositionContainerShape^ ContainerShape_007()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -507.6F, 14.477F };
-                result->Offset = { 866.5F, 578.5F };
+                result->Offset = { 17.5F, 17 };
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_008());
+                shapes->Append(SpriteShape_004());
                 return result;
             }
 
-            // privacy_stroke 2
-            // 'privacy_stroke 2'.Contents
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            // Group: Group 1
             CompositionContainerShape^ ContainerShape_008()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_004());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_001());
+                shapes->Append(SpriteShape_005());
                 return result;
             }
 
-            // Shape layer: "privacy_stroke 3".
+            // 'txt_Hi'.Transforms
+            // 'icon_chinese_2'.Transforms
             CompositionContainerShape^ ContainerShape_009()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -473.129F, 133.624F };
-                result->Offset = { 866.5F, 578.5F };
+                result->CenterPoint = { -451.433014F, -25.1730003F };
+                result->Offset = { 960, 640 };
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_010());
                 return result;
             }
 
-            // privacy_stroke 3
-            // 'privacy_stroke 3'.Contents
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            // 'icon_chinese_2'.Contents
             CompositionContainerShape^ ContainerShape_010()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_005());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_001());
+                shapes->Append(ContainerShape_011());
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6047297) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
+                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "privacy_stroke 4".
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            // Group: icon_chinese_2
             CompositionContainerShape^ ContainerShape_011()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -464.694F, 53.81F };
-                result->Offset = { 866.5F, 578.5F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_012());
-                return result;
-            }
-
-            // privacy_stroke 4
-            // 'privacy_stroke 4'.Contents
-            CompositionContainerShape^ ContainerShape_012()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_006());
+                shapes->Append(SpriteShape_007());
+                shapes->Append(SpriteShape_008());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            // 'icon_chinese_1'.Transforms
+            CompositionContainerShape^ ContainerShape_012()
+            {
+                auto result = _c->CreateContainerShape();
+                result->CenterPoint = { -451.433014F, -25.1730003F };
+                result->Offset = { 960, 640 };
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_013());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            // 'icon_chinese_1'.Contents
+            CompositionContainerShape^ ContainerShape_013()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_014());
                 _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.9557087) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6047297) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _reusableExpressionAnimation->SetReferenceParameter("_", _root);
                 result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "privacy_eraser".
-            CompositionContainerShape^ ContainerShape_013()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 906.5F, 690.5F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_014());
-                return result;
-            }
-
-            // privacy_eraser
-            // 'privacy_eraser'.Contents
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            //     'icon_chinese_1'.Contents
+            // Group: icon_chinese_1
             CompositionContainerShape^ ContainerShape_014()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_015());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.9783465) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                shapes->Append(SpriteShape_009());
+                shapes->Append(SpriteShape_010());
                 return result;
             }
 
-            // privacy_eraser
-            //   'privacy_eraser'.Contents
-            // Group: Shape 1
+            // 'txt_Hi'.Transforms
+            // 'icon_globe_outer'.Transforms
             CompositionContainerShape^ ContainerShape_015()
             {
                 auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
+                result->CenterPoint = { -451.433014F, -25.1730003F };
+                result->Offset = { 960, 640 };
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_007());
+                shapes->Append(ContainerShape_016());
                 return result;
             }
 
-            // Shape layer: "onedrive_brush".
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_outer'.Transforms
+            // 'icon_globe_outer'.Contents
             CompositionContainerShape^ ContainerShape_016()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -477.365F, 61.268F };
-                result->Offset = { 881, 566 };
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_017());
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6047297) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
+                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // onedrive_brush
-            // 'onedrive_brush'.Contents
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_outer'.Transforms
+            //     'icon_globe_outer'.Contents
+            // Group: icon_globe_outer
             CompositionContainerShape^ ContainerShape_017()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_008());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.7962598) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8976378) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "onedrive_brush 2".
-            CompositionContainerShape^ ContainerShape_018()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -423.161F, 54.238F };
-                result->Offset = { 881, 566 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_019());
-                return result;
-            }
-
-            // onedrive_brush 2
-            // 'onedrive_brush 2'.Contents
-            CompositionContainerShape^ ContainerShape_019()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_009());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.8080708) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8976378) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "onedrive_stroke".
-            CompositionContainerShape^ ContainerShape_020()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -521.476F, 47.205F };
-                result->Offset = { 881, 566 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_021());
-                return result;
-            }
-
-            // onedrive_stroke
-            // 'onedrive_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_021()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_010());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.8208662) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8976378) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "onedrive_stroke 2".
-            CompositionContainerShape^ ContainerShape_022()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -439.507F, 87.258F };
-                result->Offset = { 881, 566 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_023());
-                return result;
-            }
-
-            // onedrive_stroke 2
-            // 'onedrive_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_023()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_024());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.8218504) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8976378) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // onedrive_stroke 2
-            //   'onedrive_stroke 2'.Contents
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_024()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
@@ -617,2324 +473,349 @@ namespace Compositions
                 return result;
             }
 
-            // Shape layer: "onedrive_eraser".
-            CompositionContainerShape^ ContainerShape_025()
+            // 'txt_Hi'.Transforms
+            // 'icon_globe_inner'.Transforms
+            CompositionContainerShape^ ContainerShape_018()
             {
                 auto result = _c->CreateContainerShape();
-                result->Offset = { 921, 678 };
+                result->CenterPoint = { -451.433014F, -25.1730003F };
+                result->Offset = { 960, 640 };
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_026());
+                shapes->Append(ContainerShape_019());
                 return result;
             }
 
-            // onedrive_eraser
-            // 'onedrive_eraser'.Contents
-            CompositionContainerShape^ ContainerShape_026()
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            // 'icon_globe_inner'.Contents
+            CompositionContainerShape^ ContainerShape_019()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_027());
+                shapes->Append(ContainerShape_020());
                 _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.8759843) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.8976378) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6047297) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
                 _reusableExpressionAnimation->SetReferenceParameter("_", _root);
                 result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // onedrive_eraser
-            //   'onedrive_eraser'.Contents
-            // Group: Shape 1
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            // Group: icon_globe_inner
+            CompositionContainerShape^ ContainerShape_020()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(SpriteShape_012());
+                shapes->Append(SpriteShape_013());
+                shapes->Append(SpriteShape_014());
+                shapes->Append(SpriteShape_015());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            // 'A'.Transforms
+            CompositionContainerShape^ ContainerShape_021()
+            {
+                auto result = _c->CreateContainerShape();
+                result->CenterPoint = { -451.433014F, -25.1730003F };
+                result->Offset = { 960, 640 };
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_022());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            // 'A'.Contents
+            CompositionContainerShape^ ContainerShape_022()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_023());
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6047297) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
+                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            //     'A'.Contents
+            // Group: icon_A
+            CompositionContainerShape^ ContainerShape_023()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(SpriteShape_016());
+                shapes->Append(SpriteShape_017());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            // 'txt_Hi_dot'.Transforms
+            CompositionContainerShape^ ContainerShape_024()
+            {
+                auto result = _c->CreateContainerShape();
+                result->Offset = { 463, 579 };
+                result->Scale = { 1.91999996F, 1.91999996F };
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_025());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi_dot'.Transforms
+            // 'txt_Hi_dot'.Contents
+            CompositionContainerShape^ ContainerShape_025()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_026());
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.4814189) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6587838) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
+                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
+                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi_dot'.Transforms
+            //     'txt_Hi_dot'.Contents
+            // Group: Group 1
+            CompositionContainerShape^ ContainerShape_026()
+            {
+                auto result = _c->CreateContainerShape();
+                auto shapes = result->Shapes;
+                shapes->Append(SpriteShape_018());
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            // 'txt_Hi'.Transforms
             CompositionContainerShape^ ContainerShape_027()
             {
                 auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
+                result->Offset = { 463, 579 };
+                result->Scale = { 1.91999996F, 1.91999996F };
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_012());
+                shapes->Append(ContainerShape_028());
                 return result;
             }
 
-            // Shape layer: "outer_ring".
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            // 'txt_Hi'.Contents
             CompositionContainerShape^ ContainerShape_028()
             {
                 auto result = _c->CreateContainerShape();
-                result->Offset = { 404, 622.5F };
-                result->Scale = { 0.24F, 0.24F };
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_029());
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2736486) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
+                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
+                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // outer_ring
-            // 'outer_ring'.Contents
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            // Group: Group 2
             CompositionContainerShape^ ContainerShape_029()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(ContainerShape_030());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_002());
+                shapes->Append(ContainerShape_033());
                 return result;
             }
 
-            // outer_ring
-            //   'outer_ring'.Contents
-            // Group: Ellipse 1
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            // Group: Group 2
             CompositionContainerShape^ ContainerShape_030()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_013());
-                return result;
-            }
-
-            // Shape layer: "inner_ring".
-            CompositionContainerShape^ ContainerShape_031()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 404, 622.5F };
-                result->Scale = { 0.24F, 0.24F };
-                auto shapes = result->Shapes;
+                shapes->Append(ContainerShape_031());
                 shapes->Append(ContainerShape_032());
                 return result;
             }
 
-            // inner_ring
-            // 'inner_ring'.Contents
-            CompositionContainerShape^ ContainerShape_032()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_033());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_002());
-                return result;
-            }
-
-            // inner_ring
-            //   'inner_ring'.Contents
-            // Group: Ellipse 1
-            CompositionContainerShape^ ContainerShape_033()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_014());
-                return result;
-            }
-
-            // Shape layer: "outer_ring 7".
-            CompositionContainerShape^ ContainerShape_034()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 404, 622.5F };
-                result->Scale = { 0.24F, 0.24F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_035());
-                return result;
-            }
-
-            // outer_ring 7
-            // 'outer_ring 7'.Contents
-            CompositionContainerShape^ ContainerShape_035()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_036());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_003());
-                return result;
-            }
-
-            // outer_ring 7
-            //   'outer_ring 7'.Contents
-            // Group: Ellipse 1
-            CompositionContainerShape^ ContainerShape_036()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_015());
-                return result;
-            }
-
-            // Shape layer: "inner_ring 7".
-            CompositionContainerShape^ ContainerShape_037()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 404, 622.5F };
-                result->Scale = { 0.24F, 0.24F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_038());
-                return result;
-            }
-
-            // inner_ring 7
-            // 'inner_ring 7'.Contents
-            CompositionContainerShape^ ContainerShape_038()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_039());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_003());
-                return result;
-            }
-
-            // inner_ring 7
-            //   'inner_ring 7'.Contents
-            // Group: Ellipse 1
-            CompositionContainerShape^ ContainerShape_039()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_016());
-                return result;
-            }
-
-            // Shape layer: "pin_brush".
-            CompositionContainerShape^ ContainerShape_040()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -465.166F, 65.711F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_041());
-                return result;
-            }
-
-            // pin_brush
-            // 'pin_brush'.Contents
-            CompositionContainerShape^ ContainerShape_041()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_017());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.593504) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_brush 2".
-            CompositionContainerShape^ ContainerShape_042()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -404.442F, 39.39F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_043());
-                return result;
-            }
-
-            // pin_brush 2
-            // 'pin_brush 2'.Contents
-            CompositionContainerShape^ ContainerShape_043()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_018());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6102362) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke".
-            CompositionContainerShape^ ContainerShape_044()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -544.114F, -66.904F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_045());
-                return result;
-            }
-
-            // pin_stroke
-            // 'pin_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_045()
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 2
+            // Group: Group 1
+            CompositionContainerShape^ ContainerShape_031()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_019());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6043307) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "pin_stroke 2".
-            CompositionContainerShape^ ContainerShape_046()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -465.456F, -67.702F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_047());
-                return result;
-            }
-
-            // pin_stroke 2
-            // 'pin_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_047()
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 2
+            // Group: Group 2
+            CompositionContainerShape^ ContainerShape_032()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_020());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6220472) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Shape layer: "pin_stroke 3".
-            CompositionContainerShape^ ContainerShape_048()
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            // Group: Group 1
+            CompositionContainerShape^ ContainerShape_033()
             {
                 auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -386.729F, -67.268F };
-                result->Offset = { 869, 579 };
                 auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_049());
+                shapes->Append(ContainerShape_034());
                 return result;
             }
 
-            // pin_stroke 3
-            // 'pin_stroke 3'.Contents
-            CompositionContainerShape^ ContainerShape_049()
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 1
+            // Group: Group 1
+            CompositionContainerShape^ ContainerShape_034()
             {
                 auto result = _c->CreateContainerShape();
                 auto shapes = result->Shapes;
                 shapes->Append(SpriteShape_021());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6112205) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 4".
-            CompositionContainerShape^ ContainerShape_050()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -386.729F, 1.787F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_051());
-                return result;
-            }
-
-            // pin_stroke 4
-            // 'pin_stroke 4'.Contents
-            CompositionContainerShape^ ContainerShape_051()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_022());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.625) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 5".
-            CompositionContainerShape^ ContainerShape_052()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -463.822F, 1.787F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_053());
-                return result;
-            }
-
-            // pin_stroke 5
-            // 'pin_stroke 5'.Contents
-            CompositionContainerShape^ ContainerShape_053()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_023());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.632874) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 6".
-            CompositionContainerShape^ ContainerShape_054()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -544.114F, 1.787F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_055());
-                return result;
-            }
-
-            // pin_stroke 6
-            // 'pin_stroke 6'.Contents
-            CompositionContainerShape^ ContainerShape_055()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_024());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.621063) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 7".
-            CompositionContainerShape^ ContainerShape_056()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -544.114F, 74.582F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_057());
-                return result;
-            }
-
-            // pin_stroke 7
-            // 'pin_stroke 7'.Contents
-            CompositionContainerShape^ ContainerShape_057()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_025());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6269685) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 8".
-            CompositionContainerShape^ ContainerShape_058()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -463.822F, 76.002F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_059());
-                return result;
-            }
-
-            // pin_stroke 8
-            // 'pin_stroke 8'.Contents
-            CompositionContainerShape^ ContainerShape_059()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_026());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6427165) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 9".
-            CompositionContainerShape^ ContainerShape_060()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -386.729F, 71.825F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_061());
-                return result;
-            }
-
-            // pin_stroke 9
-            // 'pin_stroke 9'.Contents
-            CompositionContainerShape^ ContainerShape_061()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_027());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6309055) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_stroke 10".
-            CompositionContainerShape^ ContainerShape_062()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -462.845F, 147.638F };
-                result->Offset = { 869, 579 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_063());
-                return result;
-            }
-
-            // pin_stroke 10
-            // 'pin_stroke 10'.Contents
-            CompositionContainerShape^ ContainerShape_063()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_028());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.652559) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "pin_erser".
-            CompositionContainerShape^ ContainerShape_064()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 909, 691 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_065());
-                return result;
-            }
-
-            // pin_erser
-            // 'pin_erser'.Contents
-            CompositionContainerShape^ ContainerShape_065()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_066());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.6732283) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.6948819) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // pin_erser
-            //   'pin_erser'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_066()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_029());
-                return result;
-            }
-
-            // Shape layer: "fingerprint_brush".
-            CompositionContainerShape^ ContainerShape_067()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -8.152F, -2.395F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_068());
-                return result;
-            }
-
-            // fingerprint_brush
-            // 'fingerprint_brush'.Contents
-            CompositionContainerShape^ ContainerShape_068()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_030());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_004());
-                return result;
-            }
-
-            // Shape layer: "fingerprint_brush 2".
-            CompositionContainerShape^ ContainerShape_069()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -458.393F, 36.312F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_070());
-                return result;
-            }
-
-            // fingerprint_brush 2
-            // 'fingerprint_brush 2'.Contents
-            CompositionContainerShape^ ContainerShape_070()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_031());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_004());
-                return result;
-            }
-
-            // Shape layer: "fingerprint_stroke".
-            CompositionContainerShape^ ContainerShape_071()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -484.563F, -119.454F };
-                result->Offset = { 881.001F, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_072());
-                return result;
-            }
-
-            // fingerprint_stroke
-            // 'fingerprint_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_072()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_032());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.5049213) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "fingerprint_stroke 2".
-            CompositionContainerShape^ ContainerShape_073()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -476.575F, -46.066F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_074());
-                return result;
-            }
-
-            // fingerprint_stroke 2
-            // 'fingerprint_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_074()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_033());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.511811) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "fingerprint_stroke 3".
-            CompositionContainerShape^ ContainerShape_075()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -488.458F, 39.943F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_076());
-                return result;
-            }
-
-            // fingerprint_stroke 3
-            // 'fingerprint_stroke 3'.Contents
-            CompositionContainerShape^ ContainerShape_076()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_034());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.519685) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "fingerprint_stroke 4".
-            CompositionContainerShape^ ContainerShape_077()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -512.98F, 56.089F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_078());
-                return result;
-            }
-
-            // fingerprint_stroke 4
-            // 'fingerprint_stroke 4'.Contents
-            CompositionContainerShape^ ContainerShape_078()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_035());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.5265748) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "fingerprint_stroke 5".
-            CompositionContainerShape^ ContainerShape_079()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -533.085F, 72.023F };
-                result->Offset = { 881, 613 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_080());
-                return result;
-            }
-
-            // fingerprint_stroke 5
-            // 'fingerprint_stroke 5'.Contents
-            CompositionContainerShape^ ContainerShape_080()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_036());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.5501968) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "fingerprint_eraser".
-            CompositionContainerShape^ ContainerShape_081()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 921, 725 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_082());
-                return result;
-            }
-
-            // fingerprint_eraser
-            // 'fingerprint_eraser'.Contents
-            CompositionContainerShape^ ContainerShape_082()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_083());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.5718504) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // fingerprint_eraser
-            //   'fingerprint_eraser'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_083()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_037());
-                return result;
-            }
-
-            // Shape layer: "account_stroke".
-            CompositionContainerShape^ ContainerShape_084()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -530.86F, -91.491F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_085());
-                return result;
-            }
-
-            // account_stroke
-            // 'account_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_085()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_038());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_005());
-                return result;
-            }
-
-            // Shape layer: "account_stroke 2".
-            CompositionContainerShape^ ContainerShape_086()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -517.646F, -67.158F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_087());
-                return result;
-            }
-
-            // account_stroke 2
-            // 'account_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_087()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_088());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_005());
-                return result;
-            }
-
-            // account_stroke 2
-            //   'account_stroke 2'.Contents
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_088()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_039());
-                return result;
-            }
-
-            // Shape layer: "account_stroke 3".
-            CompositionContainerShape^ ContainerShape_089()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -538.487F, 64.685F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_090());
-                return result;
-            }
-
-            // account_stroke 3
-            // 'account_stroke 3'.Contents
-            CompositionContainerShape^ ContainerShape_090()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_040());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_005());
-                return result;
-            }
-
-            // Shape layer: "account_stroke 4".
-            CompositionContainerShape^ ContainerShape_091()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -497.559F, 58.102F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_092());
-                return result;
-            }
-
-            // account_stroke 4
-            // 'account_stroke 4'.Contents
-            CompositionContainerShape^ ContainerShape_092()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_041());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_005());
-                return result;
-            }
-
-            // Shape layer: "account_head".
-            CompositionContainerShape^ ContainerShape_093()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -560.001F, -88.163F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_094());
-                return result;
-            }
-
-            // account_head
-            // 'account_head'.Contents
-            CompositionContainerShape^ ContainerShape_094()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_042());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_005());
-                return result;
-            }
-
-            // Shape layer: "account_body".
-            CompositionContainerShape^ ContainerShape_095()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -544.904F, 65.371F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_096());
-                return result;
-            }
-
-            // account_body
-            // 'account_body'.Contents
-            CompositionContainerShape^ ContainerShape_096()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_043());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.402559) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.492126) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "account_bottom".
-            CompositionContainerShape^ ContainerShape_097()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -601.745F, 145.546F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_098());
-                return result;
-            }
-
-            // account_bottom
-            // 'account_bottom'.Contents
-            CompositionContainerShape^ ContainerShape_098()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_044());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.4064961) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.492126) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "account_eraser".
-            CompositionContainerShape^ ContainerShape_099()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 1000, 752 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_100());
-                return result;
-            }
-
-            // account_eraser
-            // 'account_eraser'.Contents
-            CompositionContainerShape^ ContainerShape_100()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_101());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.4704725) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.492126) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // account_eraser
-            //   'account_eraser'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_101()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_045());
-                return result;
-            }
-
-            // Shape layer: "eula_stroke".
-            CompositionContainerShape^ ContainerShape_102()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -555.213F, -19.694F };
-                result->Offset = { 957.75F, 643.25F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_103());
-                return result;
-            }
-
-            // eula_stroke
-            // 'eula_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_103()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_046());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_006());
-                return result;
-            }
-
-            // Shape layer: "eula_stroke 2".
-            CompositionContainerShape^ ContainerShape_104()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -613.624F, 110.546F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_105());
-                return result;
-            }
-
-            // eula_stroke 2
-            // 'eula_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_105()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_047());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_006());
-                return result;
-            }
-
-            // Shape layer: "eula_stroke 3".
-            CompositionContainerShape^ ContainerShape_106()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -488.54F, 36.484F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_107());
-                return result;
-            }
-
-            // eula_stroke 3
-            // 'eula_stroke 3'.Contents
-            CompositionContainerShape^ ContainerShape_107()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_048());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2962599) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "eula_papersheet".
-            CompositionContainerShape^ ContainerShape_108()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -544.972F, -25.082F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_109());
-                return result;
-            }
-
-            // eula_papersheet
-            // 'eula_papersheet'.Contents
-            CompositionContainerShape^ ContainerShape_109()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_049());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_007());
-                return result;
-            }
-
-            // Shape layer: "eula_papertop".
-            CompositionContainerShape^ ContainerShape_110()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -482.303F, -102.891F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_111());
-                return result;
-            }
-
-            // eula_papertop
-            // 'eula_papertop'.Contents
-            CompositionContainerShape^ ContainerShape_111()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_050());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.3149606) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "eula_batchcircle".
-            CompositionContainerShape^ ContainerShape_112()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -639.847F, -4.036F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_113());
-                return result;
-            }
-
-            // eula_batchcircle
-            // 'eula_batchcircle'.Contents
-            CompositionContainerShape^ ContainerShape_113()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_051());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2972441) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "eula_batch".
-            CompositionContainerShape^ ContainerShape_114()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -639.811F, 102.546F };
-                result->Offset = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_115());
-                return result;
-            }
-
-            // eula_batch
-            // 'eula_batch'.Contents
-            CompositionContainerShape^ ContainerShape_115()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_052());
-                result->StartAnimation("TransformMatrix", ExpressionAnimation_007());
-                return result;
-            }
-
-            // Shape layer: "eula_eraser".
-            CompositionContainerShape^ ContainerShape_116()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 1000, 752 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_117());
-                return result;
-            }
-
-            // eula_eraser
-            // 'eula_eraser'.Contents
-            CompositionContainerShape^ ContainerShape_117()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_118());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.3700787) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // eula_eraser
-            //   'eula_eraser'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_118()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_053());
-                return result;
-            }
-
-            // Shape layer: "wifi_brush".
-            CompositionContainerShape^ ContainerShape_119()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -470.767F, 22.047F };
-                result->Offset = { 874, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_120());
-                return result;
-            }
-
-            // wifi_brush
-            // 'wifi_brush'.Contents
-            CompositionContainerShape^ ContainerShape_120()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_054());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.1909449) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_btush".
-            CompositionContainerShape^ ContainerShape_121()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -413.232F, 7.104F };
-                result->Offset = { 874, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_122());
-                return result;
-            }
-
-            // wifi_btush
-            // 'wifi_btush'.Contents
-            CompositionContainerShape^ ContainerShape_122()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_055());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2027559) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_stroke".
-            CompositionContainerShape^ ContainerShape_123()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -407.504F, 97.282F };
-                result->Offset = { 873, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_124());
-                return result;
-            }
-
-            // wifi_stroke
-            // 'wifi_stroke'.Contents
-            CompositionContainerShape^ ContainerShape_124()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_056());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2096457) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_stroke 2".
-            CompositionContainerShape^ ContainerShape_125()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -436.046F, 73.996F };
-                result->Offset = { 873, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_126());
-                return result;
-            }
-
-            // wifi_stroke 2
-            // 'wifi_stroke 2'.Contents
-            CompositionContainerShape^ ContainerShape_126()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_057());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.238189) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_stroke 3".
-            CompositionContainerShape^ ContainerShape_127()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -455.421F, 34.281F };
-                result->Offset = { 873, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_128());
-                return result;
-            }
-
-            // wifi_stroke 3
-            // 'wifi_stroke 3'.Contents
-            CompositionContainerShape^ ContainerShape_128()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_058());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.246063) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_stroke 4".
-            CompositionContainerShape^ ContainerShape_129()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { -480, 0 };
-                result->Offset = { 873, 602 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_130());
-                return result;
-            }
-
-            // wifi_stroke 4
-            // 'wifi_stroke 4'.Contents
-            CompositionContainerShape^ ContainerShape_130()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_059());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2529528) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "wifi_eraser".
-            CompositionContainerShape^ ContainerShape_131()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 913, 714 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_132());
-                return result;
-            }
-
-            // wifi_eraser
-            // 'wifi_eraser'.Contents
-            CompositionContainerShape^ ContainerShape_132()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_133());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.2706693) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.2923228) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // wifi_eraser
-            //   'wifi_eraser'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_133()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_060());
-                return result;
-            }
-
-            // SolidLayer:'blackfading'
-            CompositionContainerShape^ ContainerShape_134()
-            {
-                auto result = _c->CreateContainerShape();
-                result->CenterPoint = { 960, 640 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_135());
-                return result;
-            }
-
-            // SolidLayer:'blackfading'
-            // 'blackfading'.Contents
-            CompositionContainerShape^ ContainerShape_135()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_061());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.06003937) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0)";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Shape layer: "txt_Hi".
-            CompositionContainerShape^ ContainerShape_136()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 405, 590 };
-                result->Scale = { 1.92F, 1.92F };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_137());
-                return result;
-            }
-
-            // txt_Hi
-            // 'txt_Hi'.Contents
-            CompositionContainerShape^ ContainerShape_137()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_138());
-                shapes->Append(ContainerShape_139());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.05905512) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.1909449) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_138()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_062());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            // Group: Group 2
-            CompositionContainerShape^ ContainerShape_139()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_140());
-                shapes->Append(ContainerShape_143());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            // Group: Group 2
-            CompositionContainerShape^ ContainerShape_140()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_141());
-                shapes->Append(ContainerShape_142());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_141()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_063());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            // Group: Group 2
-            CompositionContainerShape^ ContainerShape_142()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_064());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_143()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_144());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 1
-            // Group: Group 1
-            CompositionContainerShape^ ContainerShape_144()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_065());
-                return result;
-            }
-
-            // Shape layer: "eraser 9".
-            CompositionContainerShape^ ContainerShape_145()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { 942, 763 };
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_146());
-                return result;
-            }
-
-            // eraser 9
-            // 'eraser 9'.Contents
-            CompositionContainerShape^ ContainerShape_146()
-            {
-                auto result = _c->CreateContainerShape();
-                auto shapes = result->Shapes;
-                shapes->Append(ContainerShape_147());
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "(_.Progress < 0.1692913) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.1909449) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                result->StartAnimation("TransformMatrix", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // eraser 9
-            //   'eraser 9'.Contents
-            // Group: Shape 1
-            CompositionContainerShape^ ContainerShape_147()
-            {
-                auto result = _c->CreateContainerShape();
-                result->Offset = { -6, -10 };
-                auto shapes = result->Shapes;
-                shapes->Append(SpriteShape_066());
                 return result;
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_000()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.696F, 0 }, { 0.485F, 0.327F });
+                return _c->CreateCubicBezierEasingFunction({ 0.192000002F, 0 }, { 0.769999981F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_001()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.534F, 0.372F }, { 0.404F, 0.569F });
+                return _c->CreateCubicBezierEasingFunction({ 0.412F, 0 }, { 0.691999972F, 0.666999996F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_002()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.403F, 0.484F }, { 0.723F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.734000027F, 0 }, { 0.662F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_003()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.73F, 0 }, { 0.667F, 0.996F });
+                return _c->CreateCubicBezierEasingFunction({ 0, 0 }, { 0, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_004()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.747F, 0.006F }, { 0.667F, 0.997F });
+                return _c->CreateCubicBezierEasingFunction({ 0.333000004F, 0 }, { 0.666999996F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_005()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.768F, 0.011F }, { 0.667F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 1, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_006()
             {
-                return _cubicBezierEasingFunction_006 = _c->CreateCubicBezierEasingFunction({ 0.81F, 0 }, { 0.837F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.207000002F, 0 }, { 0.305999994F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_007()
             {
-                return _cubicBezierEasingFunction_007 = _c->CreateCubicBezierEasingFunction({ 0.934F, 0 }, { 0.887F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.836000025F, 0 }, { 0.828999996F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_008()
             {
-                return _cubicBezierEasingFunction_008 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.802F, 0.992F });
+                return _c->CreateCubicBezierEasingFunction({ 0, 0 }, { 0.36500001F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_009()
             {
-                return _cubicBezierEasingFunction_009 = _c->CreateCubicBezierEasingFunction({ 0.81F, 0.035F }, { 0.816F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.388999999F, 0 }, { 0.300000012F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_010()
             {
-                return _cubicBezierEasingFunction_010 = _c->CreateCubicBezierEasingFunction({ 0.942F, 0 }, { 0.815F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.0219999999F, 0 }, { 0.104000002F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_011()
             {
-                return _cubicBezierEasingFunction_011 = _c->CreateCubicBezierEasingFunction({ 0.845F, 0 }, { 0.81F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.451000005F, 0 }, { 0, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_012()
             {
-                return _cubicBezierEasingFunction_012 = _c->CreateCubicBezierEasingFunction({ 0.869F, 0 }, { 0.827F, 1 });
+                return _cubicBezierEasingFunction_012 = _c->CreateCubicBezierEasingFunction({ 0.194999993F, 0 }, { 0, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_013()
             {
-                return _cubicBezierEasingFunction_013 = _c->CreateCubicBezierEasingFunction({ 0.922F, 0 }, { 0.667F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.333000004F, 0 }, { 0.444999993F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_014()
             {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.009F }, { 0.776F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.166999996F, 0.166999996F }, { 0.666999996F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_015()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.782F, 0 }, { 0.886F, 1 });
+                return _cubicBezierEasingFunction_015 = _c->CreateCubicBezierEasingFunction({ 0.166999996F, 0.166999996F }, { 0.833000004F, 0.833000004F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_016()
             {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.788F, 0.999F });
+                return _c->CreateCubicBezierEasingFunction({ 0.656000018F, 0.0260000005F }, { 0.819000006F, 0.976999998F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_017()
             {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.005F }, { 0.918F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.56400001F, 0.0930000022F }, { 0.572000027F, 0.92900002F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_018()
             {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.86F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.527999997F, 0.125F }, { 0.345999986F, 0.949999988F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_019()
             {
-                return _c->CreateCubicBezierEasingFunction({ 0.813F, 0 }, { 0.602F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.0260000005F, 0.00600000005F }, { 0.54400003F, 1 });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_020()
             {
-                return _cubicBezierEasingFunction_020 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.892F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.833000004F, 0.833000004F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_021()
             {
-                return _cubicBezierEasingFunction_021 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.875F, 1 });
+                return _c->CreateCubicBezierEasingFunction({ 0.381999999F, 0 }, { 0.493000001F, 0.880999982F });
             }
 
             CubicBezierEasingFunction^ CubicBezierEasingFunction_022()
             {
-                return _cubicBezierEasingFunction_022 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.889F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_023()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.001F }, { 0.771F, 0.996F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_024()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.677F, 0.009F }, { 0.674F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_025()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.883F, 0 }, { 0.807F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_026()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.82F, 0 }, { 0.488F, 0.994F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_027()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.925F, 0.013F }, { 0.729F, 0.996F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_028()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.622F, 0.01F }, { 0.819F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_029()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.917F, 0 }, { 0.815F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_030()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.92F, 0 }, { 0.803F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_031()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.871F, 0 }, { 0.667F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_032()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.65F, 0 }, { 0.472F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_033()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.7F, 0.002F }, { 0.359F, 0.998F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_034()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.832F, 0.002F }, { 0.448F, 0.998F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_035()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.705F, 0.003F }, { 0.739F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_036()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.827F, 0 }, { 0.657F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_037()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.711F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_038()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.973F, 0 }, { 0.839F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_039()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.898F, 0 }, { 0.76F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_040()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.77F, 0 }, { 0.667F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_041()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.803F, 0 }, { 0.46F, 0.712F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_042()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.736F, 0.203F }, { 0.667F, 0.808F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_043()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.703F, 0.403F }, { 0.759F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_044()
-            {
-                return _cubicBezierEasingFunction_044 = _c->CreateCubicBezierEasingFunction({ 0.167F, 0.167F }, { 0.833F, 0.833F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_045()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.167F, 0.167F }, { 0.536F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_046()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.234F, 0 }, { 0.477F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_047()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.442F, 0 }, { 0.382F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_048()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.167F, 0.167F }, { 0.669F, 0.983F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_049()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.58F, 0 }, { 0.564F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_050()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.368F, 0 }, { 0.191F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_051()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.333F, 0 }, { 0.485F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_052()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.393F, 0 }, { 0.607F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_053()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.235F, 0 }, { 0.282F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_054()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.851F, 0 }, { 0.895F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_055()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.749F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_056()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.996F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_057()
-            {
-                return _cubicBezierEasingFunction_057 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_058()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.33F, 0 }, { 0.6F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_059()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.934F, 0.002F }, { 0.835F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_060()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.823F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_061()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.891F, 0 }, { 0.764F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_062()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.855F, 0 }, { 0.671F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_063()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.711F, 0 }, { 0.667F, 0.893F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_064()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.767F, 0.117F }, { 0.46F, 0.856F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_065()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.615F, 0.229F }, { 0.398F, 0.76F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_066()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.882F, 0.441F }, { 0.592F, 0.809F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_067()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.631F, 0.282F }, { 0.667F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_068()
-            {
-                return _cubicBezierEasingFunction_068 = _c->CreateCubicBezierEasingFunction({ 0.739F, 0 }, { 0.63F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_069()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.947F, 0 }, { 0.817F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_070()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.928F, 0 }, { 0.791F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_071()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.957F, 0 }, { 0.819F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_072()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.011F }, { 0.777F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_073()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.754F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_074()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.794F, 0.004F }, { 0.894F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_075()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.852F, 0.005F }, { 0.903F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_076()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.884F, 0 }, { 0.863F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_077()
-            {
-                return _cubicBezierEasingFunction_077 = _c->CreateCubicBezierEasingFunction({ 0.916F, 0 }, { 0.848F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_078()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.804F, 0 }, { 0.738F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_079()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.618F, 0 }, { 0.422F, 0.055F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_080()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.604F, 0.999F }, { 0.796F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_081()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.857F, 0 }, { 0.783F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_082()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.02F }, { 0.659F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_083()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.877F, 0 }, { 0.667F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_084()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.696F, 0 }, { 0.743F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_085()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.845F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_086()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.975F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_087()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.004F }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_088()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.006F }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_089()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.013F }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_090()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.665F, 0 }, { 0.938F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_091()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.386F, 0 }, { 0.31F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_092()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.899F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_093()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.911F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_094()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.828F, 0 }, { 0.964F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_095()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.78F, 0 }, { 0.583F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_096()
-            {
-                return _cubicBezierEasingFunction_096 = _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.861F, 0.998F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_097()
-            {
-                return _cubicBezierEasingFunction_097 = _c->CreateCubicBezierEasingFunction({ 0.878F, 0.008F }, { 0.921F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_098()
-            {
-                return _cubicBezierEasingFunction_098 = _c->CreateCubicBezierEasingFunction({ 1, 0.009F }, { 0.833F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_099()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.912F, 0 }, { 0.984F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_100()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.953F, 0 }, { 0.667F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_101()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.77F, 0 }, { 0.94F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_102()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.939F, 0 }, { 0.9F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_103()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.639F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_104()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.66F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_105()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.705F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_106()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.81F, 0 }, { 0.98F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_107()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.947F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_108()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.908F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_109()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.392F, 0 }, { 0.879F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_110()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.745F, 0 }, { 0.991F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_111()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.733F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_112()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.689F, 0 }, { 0.959F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_113()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.872F, 0 }, { 0.912F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_114()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.841F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_115()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.851F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_116()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.966F, 0 }, { 1, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_117()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.39F, 0 }, { 0, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_118()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.997F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_119()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.99F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_120()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.021F }, { 0.727F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_121()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.88F, 0 }, { 0.776F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_122()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.822F, 0 }, { 0.706F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_123()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.726F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_124()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.899F, 0 }, { 0.833F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_125()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.916F, 0 }, { 0.874F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_126()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.015F }, { 0.677F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_127()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.812F, 0 }, { 0.736F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_128()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.91F, 0.003F }, { 0.638F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_129()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.851F, 0 }, { 0.723F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_130()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 1, 0.003F }, { 0.666F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_131()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.901F, 0.002F }, { 0.689F, 0.999F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_132()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.964F, 0.003F }, { 0.837F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_133()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.312F, 0 }, { 0.308F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_134()
-            {
-                return _cubicBezierEasingFunction_134 = _c->CreateCubicBezierEasingFunction({ 0.753F, 0 }, { 0.63F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_135()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.753F, 0 }, { 0.408F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_136()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.333F, 0 }, { 0.833F, 0.833F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_137()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.656F, 0.026F }, { 0.819F, 0.977F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_138()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.564F, 0.093F }, { 0.572F, 0.929F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_139()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.528F, 0.125F }, { 0.346F, 0.95F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_140()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.026F, 0.006F }, { 0.544F, 1 });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_141()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.382F, 0 }, { 0.493F, 0.881F });
-            }
-
-            CubicBezierEasingFunction^ CubicBezierEasingFunction_142()
-            {
-                return _c->CreateCubicBezierEasingFunction({ 0.48F, 0.11F }, { 0.352F, 1 });
-            }
-
-            // inner_ring 7
-            //   'inner_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            // Ellipse Path 1.EllipseGeometry
-            CompositionEllipseGeometry^ Ellipse_401p5()
-            {
-                auto result = _c->CreateEllipseGeometry();
-                result->Radius = { 401.5F, 401.5F };
-                result->StartAnimation("Radius", Vector2Animation_003());
-                auto controller = result->TryGetAnimationController("Radius");
-                controller->Pause();
-                _reusableExpressionAnimation->ClearAllParameters();
-                _reusableExpressionAnimation->Expression = "_.Progress * 0.7180212";
-                _reusableExpressionAnimation->SetReferenceParameter("_", _root);
-                controller->StartAnimation("Progress", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // outer_ring
-            //   'outer_ring'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            // Ellipse Path 1.EllipseGeometry
-            CompositionEllipseGeometry^ Ellipse_472p5()
-            {
-                auto result = _c->CreateEllipseGeometry();
-                result->Radius = { 472.5F, 472.5F };
-                result->StartAnimation("Radius", Vector2Animation_000());
-                auto controller = result->TryGetAnimationController("Radius");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // outer_ring 7
-            //   'outer_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            // Ellipse Path 1.EllipseGeometry
-            CompositionEllipseGeometry^ Ellipse_536p5()
-            {
-                auto result = _c->CreateEllipseGeometry();
-                result->Radius = { 536.5F, 536.5F };
-                result->StartAnimation("Radius", Vector2Animation_002());
-                auto controller = result->TryGetAnimationController("Radius");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // inner_ring
-            //   'inner_ring'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            // Ellipse Path 1.EllipseGeometry
-            CompositionEllipseGeometry^ Ellipse_580p5()
-            {
-                auto result = _c->CreateEllipseGeometry();
-                result->Radius = { 580.5F, 580.5F };
-                result->StartAnimation("Radius", Vector2Animation_001());
-                auto controller = result->TryGetAnimationController("Radius");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_000()
-            {
-                auto result = _expressionAnimation_000 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "_.Progress";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_001()
-            {
-                auto result = _expressionAnimation_001 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.9153543) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_002()
-            {
-                auto result = _expressionAnimation_002 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.6948819) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.7746063) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_003()
-            {
-                auto result = _expressionAnimation_003 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.7746063) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.7962598) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_004()
-            {
-                auto result = _expressionAnimation_004 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.492126) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.593504) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_005()
-            {
-                auto result = _expressionAnimation_005 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.3917323) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.492126) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_006()
-            {
-                auto result = _expressionAnimation_006 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.2923228) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
-            }
-
-            ExpressionAnimation^ ExpressionAnimation_007()
-            {
-                auto result = _expressionAnimation_007 = _c->CreateExpressionAnimation();
-                result->SetReferenceParameter("_", _root);
-                result->Expression = "(_.Progress < 0.3011811) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.3917323) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                return result;
+                return _c->CreateCubicBezierEasingFunction({ 0.479999989F, 0.109999999F }, { 0.351999998F, 1 });
             }
 
             CanvasGeometry Geometry_000()
@@ -2945,20 +826,9 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -479.851F, 5.603F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -511.567F, 15.49F },{ -532.431F, 35.434F },{ -524.104F, 67.595F } });
-                sink->AddBezier({ { -515.777F, 99.756F },{ -479.101F, 121.759F },{ -446.956F, 113.37F } });
-                sink->AddBezier({ { -414.811F, 104.981F },{ -393.542F, 67.211F },{ -403.613F, 35.553F } });
-                sink->AddBezier({ { -409.26F, 17.804F },{ -422.922F, 3.493F },{ -438.571F, -6.608F } });
-                sink->AddBezier({ { -449.316F, -13.544F },{ -461.576F, -18.882F },{ -474.365F, -18.872F } });
-                sink->AddBezier({ { -494.161F, -18.857F },{ -511.743F, -6.19F },{ -525.417F, 8.124F } });
-                sink->AddBezier({ { -537.899F, 21.19F },{ -548.639F, 36.503F },{ -553.196F, 53.989F } });
-                sink->AddBezier({ { -557.753F, 71.475F },{ -555.383F, 91.382F },{ -544.007F, 105.421F } });
-                sink->AddBezier({ { -532.671F, 119.411F },{ -514.49F, 125.708F },{ -496.994F, 129.962F } });
-                sink->AddBezier({ { -470.863F, 136.315F },{ -441.833F, 139.225F },{ -418.316F, 126.182F } });
-                sink->AddBezier({ { -400.492F, 116.296F },{ -388.191F, 98.162F },{ -382.298F, 78.65F } });
-                sink->AddBezier({ { -371.552F, 43.068F },{ -382.271F, 1.317F },{ -410.394F, -22.987F } });
-                sink->AddBezier({ { -438.517F, -47.291F },{ -482.984F, -51.4F },{ -513.914F, -30.786F } });
+                sink->BeginFigure({ -634.375F, -102.25F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -657.002991F, 116.794998F },{ -571.969971F, 240.615005F },{ -374.625F, 333.718994F } });
+                sink->AddBezier({ { -90, 468 },{ 180, 298 },{ 477.501007F, -3.75F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -2972,15 +842,13 @@ namespace Compositions
                 FFHR(_d2dFactory->CreatePathGeometry(&path));
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -455.813F, 119.751F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -448.996F, 121.369F },{ -438.565F, 115.028F },{ -432.726F, 111.156F } });
-                sink->AddBezier({ { -426.887F, 107.284F },{ -421.618F, 102.438F },{ -415.201F, 99.626F } });
-                sink->AddBezier({ { -404.21F, 94.81F },{ -378.774F, 95.338F },{ -369.843F, 103.353F } });
-                sink->AddBezier({ { -385.719F, 90.813F },{ -407.881F, 73.29F },{ -409.78F, 53.148F } });
-                sink->AddBezier({ { -411.679F, 33.006F },{ -401.662F, -1.2F },{ -388.409F, -16.486F } });
-                sink->AddBezier({ { -406.893F, -2.622F },{ -438.676F, 12.525F },{ -458.809F, 1.189F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
+                sink->SetFillMode(D2D1_FILL_MODE_WINDING);
+                sink->BeginFigure({ -32, 2 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -32, 2 },{ -2, 2 },{ -2, 2 } });
+                sink->AddBezier({ { -2, 2 },{ -2, 32 },{ -2, 32 } });
+                sink->AddBezier({ { -2, 32 },{ -32, 32 },{ -32, 32 } });
+                sink->AddBezier({ { -32, 32 },{ -32, 2 },{ -32, 2 } });
+                sink->EndFigure(D2D1_FIGURE_END_CLOSED);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
                 return result;
@@ -2994,15 +862,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -463.681F, -22.258F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -454.267F, -22.585F },{ -439.822F, -21.478F },{ -430.856F, -16.49F } });
-                sink->AddBezier({ { -422.918F, -22.272F },{ -403.521F, -42.275F },{ -395.583F, -48.057F } });
-                sink->AddBezier({ { -385.636F, -35.04F },{ -366.65F, -12.921F },{ -353.349F, -3.357F } });
-                sink->AddBezier({ { -361.604F, 5.156F },{ -382.371F, 21.052F },{ -390.623F, 29.107F } });
-                sink->AddBezier({ { -387.403F, 37.959F },{ -383.991F, 52.04F },{ -385.965F, 62.108F } });
-                sink->AddBezier({ { -378.013F, 67.871F },{ -352.995F, 80.136F },{ -345.043F, 85.899F } });
-                sink->AddBezier({ { -354.349F, 99.381F },{ -369.518F, 124.274F },{ -374.504F, 139.879F } });
-                sink->AddBezier({ { -385.151F, 134.658F },{ -406.687F, 119.82F },{ -416.898F, 114.461F } });
+                sink->BeginFigure({ -490.75F, 69 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -490.75F, 69 },{ -328.25F, 72.25F },{ -328.25F, 72.25F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3017,15 +878,9 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -529.359F, 91.888F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -539.18F, 91.9F },{ -566.629F, 96.682F },{ -576.45F, 96.694F } });
-                sink->AddBezier({ { -576.846F, 80.317F },{ -579.206F, 51.262F },{ -584.345F, 35.707F } });
-                sink->AddBezier({ { -572.663F, 33.672F },{ -546.518F, 33.018F },{ -535.107F, 31.352F } });
-                sink->AddBezier({ { -532.509F, 22.298F },{ -526.993F, 8.901F },{ -519.478F, 1.916F } });
-                sink->AddBezier({ { -522.524F, -7.421F },{ -535.554F, -32.048F },{ -538.6F, -41.385F } });
-                sink->AddBezier({ { -523.147F, -46.822F },{ -496.244F, -58.045F },{ -483.038F, -67.739F } });
-                sink->AddBezier({ { -477.493F, -57.257F },{ -468.792F, -32.595F },{ -463.681F, -22.258F } });
-                sink->AddBezier({ { -454.267F, -22.585F },{ -439.822F, -21.478F },{ -430.856F, -16.49F } });
+                sink->BeginFigure({ -414.25F, 53.5F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -414.25F, 53.5F },{ -410.5F, 120 },{ -411.5F, 124.75F } });
+                sink->AddBezier({ { -412.5F, 129.5F },{ -435, 136 },{ -448.75F, 123 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3040,12 +895,9 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -416.898F, 114.461F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -424.322F, 120.259F },{ -436.659F, 127.855F },{ -446.844F, 129.089F } });
-                sink->AddBezier({ { -449.867F, 138.433F },{ -453.802F, 166.016F },{ -456.825F, 175.36F } });
-                sink->AddBezier({ { -472.523F, 170.676F },{ -500.885F, 163.941F },{ -517.267F, 164.022F } });
-                sink->AddBezier({ { -515.592F, 152.283F },{ -508.135F, 127.216F },{ -506.194F, 115.849F } });
-                sink->AddBezier({ { -514.002F, 110.58F },{ -525.038F, 101.194F },{ -529.359F, 91.888F } });
+                sink->BeginFigure({ -453.75F, 24.5F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -453.75F, 24.5F },{ -365.75F, 26.25F },{ -365.75F, 26.25F } });
+                sink->AddBezier({ { -365.75F, 26.25F },{ -412, 66.25F },{ -412, 66.25F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3060,12 +912,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -494.646F, 23.885F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -506.888F, 36.717F },{ -509.659F, 57.657F },{ -501.098F, 73.189F } });
-                sink->AddBezier({ { -492.537F, 88.721F },{ -473.282F, 97.56F },{ -455.941F, 93.842F } });
-                sink->AddBezier({ { -438.6F, 90.124F },{ -424.64F, 74.101F },{ -423.421F, 56.408F } });
-                sink->AddBezier({ { -422.202F, 38.715F },{ -433.892F, 20.889F },{ -450.634F, 15.038F } });
-                sink->AddBezier({ { -467.376F, 9.187F },{ -487.678F, 15.898F },{ -497.561F, 30.624F } });
+                sink->BeginFigure({ -411.75F, -49.25F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -411.75F, -49.25F },{ -411.75F, -18.75F },{ -411.75F, -18.75F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3080,10 +928,11 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -386.089F, -209.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -501.973F, -147.67F },{ -733.74F, -24.68F },{ -701.803F, 30.542F } });
-                sink->AddBezier({ { -667.329F, 90.15F },{ -365.885F, -141.091F },{ -332.699F, -116.849F } });
-                sink->AddBezier({ { -308.66F, -99.289F },{ -512.7F, 105.986F },{ -548.803F, 142.308F } });
+                sink->BeginFigure({ -485.5F, 24 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -485.5F, 24 },{ -489.5F, -7.5F },{ -484, -10 } });
+                sink->AddBezier({ { -478.5F, -12.5F },{ -421, -14.5F },{ -409.75F, -14.25F } });
+                sink->AddBezier({ { -398.5F, -14 },{ -337.5F, -10 },{ -335.5F, -7.5F } });
+                sink->AddBezier({ { -333.5F, -5 },{ -335, 29 },{ -335, 29 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3098,20 +947,14 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -626.038F, 65.338F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -608.391F, 14.538F },{ -542.32F, -19.433F },{ -488.562F, -20.883F } });
-                sink->AddBezier({ { -516.03F, 7.299F },{ -543.499F, 35.48F },{ -570.967F, 63.662F } });
-                sink->AddBezier({ { -586.43F, 79.527F },{ -603.156F, 100.945F },{ -594.925F, 121.513F } });
-                sink->AddBezier({ { -541.81F, 76.841F },{ -488.694F, 32.169F },{ -435.579F, -12.503F } });
-                sink->AddBezier({ { -463.422F, 22.347F },{ -491.266F, 57.198F },{ -519.109F, 92.048F } });
-                sink->AddBezier({ { -523.035F, 96.962F },{ -527.084F, 102.132F },{ -528.328F, 108.298F } });
-                sink->AddBezier({ { -529.572F, 114.464F },{ -527.012F, 121.89F },{ -521.092F, 124.016F } });
-                sink->AddBezier({ { -515.454F, 126.041F },{ -509.426F, 122.737F },{ -504.35F, 119.556F } });
-                sink->AddBezier({ { -476.108F, 101.857F },{ -447.868F, 84.156F },{ -419.626F, 66.457F } });
-                sink->AddBezier({ { -430.775F, 84.718F },{ -438.888F, 104.829F },{ -443.533F, 125.714F } });
-                sink->AddBezier({ { -414.569F, 118.084F },{ -386.281F, 107.896F },{ -359.102F, 95.309F } });
-                sink->AddBezier({ { -367.213F, 110.942F },{ -375.325F, 126.576F },{ -383.436F, 142.209F } });
-                sink->AddBezier({ { -365.024F, 145.145F },{ -345.786F, 142.703F },{ -328.693F, 135.257F } });
+                sink->BeginFigure({ -350.875F, 2.56299996F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -318.057007F, -37.5900002F },{ -278, -104.5F },{ -267.5F, -218 } });
+                sink->AddBezier({ { -254.778F, -355.522003F },{ -340.098999F, -462.563995F },{ -497, -457 } });
+                sink->AddBezier({ { -638, -452 },{ -748, -346.5F },{ -772.5F, -205 } });
+                sink->AddBezier({ { -795.965027F, -69.4800034F },{ -708.85498F, 66.7710037F },{ -596, 72.5F } });
+                sink->AddBezier({ { -497.5F, 77.5F },{ -475.11499F, 23.4360008F },{ -458, -29 } });
+                sink->AddBezier({ { -434.5F, -101 },{ -476, -158 },{ -539.5F, -155.5F } });
+                sink->AddBezier({ { -603, -153 },{ -656, -77 },{ -603, 0 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3126,15 +969,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -514.364F, -19.521F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -497.725F, -24.888F },{ -479.893F, -28.731F },{ -462.862F, -24.812F } });
-                sink->AddBezier({ { -445.831F, -20.893F },{ -429.948F, -7.394F },{ -428.037F, 10.123F } });
-                sink->AddBezier({ { -427.379F, 16.156F },{ -428.363F, 22.241F },{ -428.341F, 28.31F } });
-                sink->AddBezier({ { -428.319F, 34.379F },{ -427.082F, 40.853F },{ -422.852F, 45.169F } });
-                sink->AddBezier({ { -413.077F, 55.144F },{ -394.275F, 47.993F },{ -383.798F, 57.215F } });
-                sink->AddBezier({ { -376.29F, 63.823F },{ -376.462F, 75.956F },{ -370.107F, 83.697F } });
-                sink->AddBezier({ { -364.956F, 89.971F },{ -356.539F, 92.222F },{ -349.685F, 96.531F } });
-                sink->AddBezier({ { -337.162F, 104.403F },{ -330.048F, 120.198F },{ -332.406F, 134.892F } });
+                sink->BeginFigure({ -614.25F, -28 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -614.25F, -28 },{ -508.25F, -28.25F },{ -508.25F, -28.25F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3149,15 +985,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -419.859F, 26.855F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -409.82F, 8.739F },{ -414.616F, -13.111F },{ -425.294F, -23.427F } });
-                sink->AddBezier({ { -438.49F, -36.175F },{ -450.302F, -41.944F },{ -468.599F, -40.572F } });
-                sink->AddBezier({ { -486.896F, -39.2F },{ -502.867F, -33.624F },{ -511.587F, -17.481F } });
-                sink->AddBezier({ { -525.952F, -29.215F },{ -548.251F, -29.927F },{ -563.336F, -19.135F } });
-                sink->AddBezier({ { -578.421F, -8.343F },{ -584.946F, 12.99F },{ -578.479F, 30.375F } });
-                sink->AddBezier({ { -597.124F, 32.899F },{ -614.505F, 44.625F },{ -622.984F, 61.422F } });
-                sink->AddBezier({ { -631.463F, 78.219F },{ -630.383F, 99.683F },{ -619.494F, 115.027F } });
-                sink->AddBezier({ { -608.605F, 130.371F },{ -586.414F, 138.498F },{ -568.169F, 133.899F } });
+                sink->BeginFigure({ -618.25F, -89.75F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -618.25F, -89.75F },{ -454.75F, -90 },{ -454.75F, -90 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3172,18 +1001,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -524.611F, 73.569F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -536.459F, 75.553F },{ -545.75F, 81.577F },{ -550.985F, 92.454F } });
-                sink->AddBezier({ { -557.878F, 106.777F },{ -554.268F, 125.426F },{ -542.527F, 136.141F } });
-                sink->AddBezier({ { -529.675F, 147.871F },{ -510.697F, 145.824F },{ -493.301F, 146.207F } });
-                sink->AddBezier({ { -447.69F, 147.212F },{ -402.062F, 146.142F },{ -356.453F, 145.072F } });
-                sink->AddBezier({ { -345.125F, 144.806F },{ -335.459F, 142.025F },{ -328.826F, 132.838F } });
-                sink->AddBezier({ { -322.939F, 124.684F },{ -323.159F, 112.753F },{ -329.281F, 104.774F } });
-                sink->AddBezier({ { -335.403F, 96.795F },{ -343.157F, 93.751F },{ -352.602F, 90.296F } });
-                sink->AddBezier({ { -350.733F, 72.97F },{ -360.107F, 54.951F },{ -375.367F, 46.536F } });
-                sink->AddBezier({ { -390.627F, 38.121F },{ -410.868F, 39.811F },{ -424.523F, 50.638F } });
-                sink->AddBezier({ { -434.41F, 33.913F },{ -455.579F, 24.722F },{ -474.55F, 28.917F } });
-                sink->AddBezier({ { -493.521F, 33.112F },{ -512.472F, 50.124F },{ -510.754F, 82.357F } });
+                sink->BeginFigure({ -527.75F, -149.5F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -527.75F, -149.5F },{ -493.5F, -112 },{ -508, -28.75F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3198,10 +1017,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -359.089F, -187.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -484.455F, -134.046F },{ -735.188F, -27.807F },{ -701.803F, 30.542F } });
-                sink->AddBezier({ { -665.502F, 93.989F },{ -340.949F, -119.257F },{ -305.699F, -93.849F } });
-                sink->AddBezier({ { -280.962F, -76.019F },{ -500.889F, 113.733F },{ -539.803F, 147.308F } });
+                sink->BeginFigure({ -538.75F, -152.75F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -538.75F, -152.75F },{ -582, -128.25F },{ -565, -13 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3216,19 +1033,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -574.87F, -53.944F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -506.824F, -68.047F },{ -422.551F, -64.99F },{ -354.391F, -51.45F } });
-                sink->AddBezier({ { -348.103F, -50.201F },{ -340.427F, -47.289F },{ -340.078F, -40.888F } });
-                sink->AddBezier({ { -339.704F, -34.024F },{ -347.997F, -30.476F },{ -354.692F, -28.914F } });
-                sink->AddBezier({ { -406.319F, -16.872F },{ -457.946F, -8.18F },{ -509.573F, 3.862F } });
-                sink->AddBezier({ { -533.57F, 9.459F },{ -551.436F, 13.619F },{ -572.011F, 27.179F } });
-                sink->AddBezier({ { -581.481F, 33.42F },{ -590.629F, 42.766F },{ -590.255F, 54.101F } });
-                sink->AddBezier({ { -589.949F, 63.373F },{ -583.017F, 71.43F },{ -574.711F, 75.563F } });
-                sink->AddBezier({ { -566.405F, 79.696F },{ -556.895F, 80.579F },{ -547.626F, 80.967F } });
-                sink->AddBezier({ { -486.044F, 83.545F },{ -430.951F, 69.05F },{ -369.81F, 76.84F } });
-                sink->AddBezier({ { -365.751F, 77.357F },{ -360.495F, 79.528F },{ -361.217F, 83.556F } });
-                sink->AddBezier({ { -361.619F, 85.797F },{ -363.821F, 87.181F },{ -365.813F, 88.284F } });
-                sink->AddBezier({ { -407.104F, 111.151F },{ -483.535F, 154.231F },{ -502.896F, 194.588F } });
+                sink->BeginFigure({ -583, 105 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -583, 105 },{ -529, 107 },{ -529, 107 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3243,15 +1049,9 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -414.987F, -63.167F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -403.903F, -63.551F },{ -371.365F, -50.961F },{ -365.614F, -41.478F } });
-                sink->AddBezier({ { -360.589F, -33.193F },{ -364.281F, -22.13F },{ -370.541F, -14.734F } });
-                sink->AddBezier({ { -376.801F, -7.338F },{ -385.278F, -2.122F },{ -391.81F, 5.035F } });
-                sink->AddBezier({ { -398.342F, 12.192F },{ -402.833F, 22.745F },{ -398.769F, 31.541F } });
-                sink->AddBezier({ { -395.585F, 38.433F },{ -388.13F, 42.263F },{ -383.59F, 48.348F } });
-                sink->AddBezier({ { -375.415F, 59.306F },{ -378.54F, 75.505F },{ -386.725F, 86.455F } });
-                sink->AddBezier({ { -394.91F, 97.405F },{ -407.05F, 104.54F },{ -418.35F, 112.235F } });
-                sink->AddBezier({ { -429.65F, 119.93F },{ -440.902F, 129.122F },{ -445.618F, 141.954F } });
+                sink->BeginFigure({ -603.5F, 152 }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -603.5F, 152 },{ -560, 22 },{ -560, 22 } });
+                sink->AddBezier({ { -560, 22 },{ -511, 152 },{ -511, 152 } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3266,11 +1066,8 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -555.674F, -85.022F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -563.887F, -79.022F },{ -566.694F, -66.649F },{ -561.718F, -57.778F } });
-                sink->AddBezier({ { -556.742F, -48.907F },{ -544.55F, -44.876F },{ -535.34F, -49.193F } });
-                sink->AddBezier({ { -526.13F, -53.51F },{ -521.446F, -65.635F },{ -525.521F, -74.954F } });
-                sink->AddBezier({ { -529.596F, -84.273F },{ -541.858F, -89.048F },{ -551.091F, -84.78F } });
+                sink->BeginFigure({ 39.2550011F, -2.91599989F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { 39.2550011F, -2.91599989F },{ 39.5810013F, -2.921F },{ 39.6860008F, -3.08400011F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3285,13 +1082,15 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -472.377F, -80.504F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -480.949F, -81.219F },{ -488.666F, -72.685F },{ -488.148F, -64.099F } });
-                sink->AddBezier({ { -487.63F, -55.513F },{ -480.034F, -48.273F },{ -471.531F, -46.975F } });
-                sink->AddBezier({ { -463.028F, -45.677F },{ -454.23F, -49.686F },{ -448.568F, -56.161F } });
-                sink->AddBezier({ { -443.912F, -61.486F },{ -441.14F, -69.163F },{ -443.74F, -75.741F } });
-                sink->AddBezier({ { -445.632F, -80.53F },{ -450.067F, -83.955F },{ -454.868F, -85.817F } });
-                sink->AddBezier({ { -459.669F, -87.679F },{ -464.871F, -88.184F },{ -469.997F, -88.673F } });
+                sink->BeginFigure({ 9.34300041F, -41.9500008F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -17.5890007F, 1.07200003F },{ -22.4720001F, 21.1650009F },{ -26.6580009F, 61.1399994F } });
+                sink->AddBezier({ { -33.1500015F, 39.3170013F },{ -45.9500008F, 28.5939999F },{ -54.7249985F, 15.4390001F } });
+                sink->AddBezier({ { -58.2360001F, 10.1750002F },{ -62.5880013F, 5.04099989F },{ -68.5500031F, 2.92199993F } });
+                sink->AddBezier({ { -70.2139969F, 2.33100009F },{ -72.0579987F, 1.99600005F },{ -73.7369995F, 2.54200006F } });
+                sink->AddBezier({ { -76.8880005F, 3.56599998F },{ -78.3649979F, 8.89299965F },{ -77.5889969F, 12.1140003F } });
+                sink->AddBezier({ { -76.8130035F, 15.335F },{ -72.9570007F, 17.8850002F },{ -70.3119965F, 19.8799992F } });
+                sink->AddBezier({ { -58.3720016F, 28.8850002F },{ -35.2179985F, 29.9260006F },{ -21.25F, 24.5839996F } });
+                sink->AddBezier({ { -7.28200006F, 19.2420006F },{ 4.93400002F, 8.2869997F },{ 15.1210003F, -2.66199994F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3306,11 +1105,12 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -397.022F, -83.625F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -406.494F, -78.371F },{ -409.832F, -64.578F },{ -403.946F, -55.485F } });
-                sink->AddBezier({ { -398.06F, -46.392F },{ -384.28F, -43.736F },{ -375.342F, -49.856F } });
-                sink->AddBezier({ { -366.404F, -55.976F },{ -363.846F, -69.618F },{ -369.821F, -78.653F } });
-                sink->AddBezier({ { -375.796F, -87.688F },{ -389.185F, -90.717F },{ -398.553F, -85.279F } });
+                sink->BeginFigure({ -71.9700012F, 61.1399994F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { -58.4169998F, 35.3419991F },{ -42.769001F, 2.23699999F },{ -29.2159996F, -23.5610008F } });
+                sink->AddBezier({ { -25.1200008F, -31.3579998F },{ -20.9020004F, -40.1650009F },{ -23.3530006F, -48.625F } });
+                sink->AddBezier({ { -24.5170002F, -52.6450005F },{ -29.1669998F, -62.2400017F },{ -42.7410011F, -61.0830002F } });
+                sink->AddBezier({ { -52.3569984F, -60.2639999F },{ -56.6290016F, -55.1430016F },{ -60.7089996F, -50.4589996F } });
+                sink->AddBezier({ { -66.6660004F, -43.6199989F },{ -71.3539963F, -30.4689999F },{ -71.5350037F, -20.9009991F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -3325,856 +1125,12 @@ namespace Compositions
                 ComPtr<ID2D1GeometrySink> sink;
                 FFHR(path->Open(&sink));
                 sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -383.39F, -16.065F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -391.259F, -20.605F },{ -402.425F, -17.065F },{ -406.917F, -9.168F } });
-                sink->AddBezier({ { -411.409F, -1.271F },{ -409.2F, 9.548F },{ -402.498F, 15.682F } });
-                sink->AddBezier({ { -395.796F, 21.816F },{ -385.434F, 23.217F },{ -376.982F, 19.885F } });
-                sink->AddBezier({ { -370.393F, 17.287F },{ -364.63F, 11.409F },{ -364.216F, 4.339F } });
-                sink->AddBezier({ { -363.688F, -4.675F },{ -371.593F, -11.949F },{ -379.645F, -16.034F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_018()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -469.861F, -15.014F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -477.682F, -10.45F },{ -486.464F, -4.355F },{ -486.738F, 4.696F } });
-                sink->AddBezier({ { -486.894F, 9.864F },{ -483.933F, 14.838F },{ -479.713F, 17.824F } });
-                sink->AddBezier({ { -475.493F, 20.81F },{ -470.172F, 21.965F },{ -465.004F, 21.82F } });
-                sink->AddBezier({ { -457.861F, 21.62F },{ -450.618F, 18.871F },{ -445.89F, 13.513F } });
-                sink->AddBezier({ { -441.162F, 8.155F },{ -439.383F, 0.052F },{ -442.355F, -6.446F } });
-                sink->AddBezier({ { -444.803F, -11.8F },{ -450.085F, -15.492F },{ -455.749F, -17.096F } });
-                sink->AddBezier({ { -461.413F, -18.7F },{ -467.448F, -18.434F },{ -473.269F, -17.552F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_019()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -548.662F, -15.75F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -557.041F, -17.43F },{ -565.971F, -11.454F },{ -568.402F, -3.262F } });
-                sink->AddBezier({ { -570.833F, 4.93F },{ -567.12F, 14.314F },{ -560.224F, 19.361F } });
-                sink->AddBezier({ { -553.328F, 24.408F },{ -543.825F, 25.257F },{ -535.778F, 22.383F } });
-                sink->AddBezier({ { -529.341F, 20.084F },{ -523.633F, 15.39F },{ -520.846F, 9.148F } });
-                sink->AddBezier({ { -518.059F, 2.906F },{ -518.511F, -4.862F },{ -522.628F, -10.319F } });
-                sink->AddBezier({ { -528.15F, -17.639F },{ -538.266F, -19.324F },{ -547.367F, -20.447F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_020()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -540.24F, 52.242F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -551.808F, 51.211F },{ -563.505F, 60.112F },{ -565.265F, 71.592F } });
-                sink->AddBezier({ { -567.025F, 83.072F },{ -558.235F, 95.225F },{ -546.733F, 96.828F } });
-                sink->AddBezier({ { -535.231F, 98.431F },{ -523.315F, 88.823F },{ -522.758F, 77.223F } });
-                sink->AddBezier({ { -522.201F, 65.623F },{ -533.495F, 54.826F },{ -545.026F, 56.21F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_021()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -463.611F, 55.375F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -467.441F, 54.343F },{ -471.638F, 55.531F },{ -474.848F, 57.861F } });
-                sink->AddBezier({ { -478.058F, 60.191F },{ -480.385F, 63.554F },{ -482.18F, 67.092F } });
-                sink->AddBezier({ { -486.409F, 75.427F },{ -487.373F, 86.859F },{ -480.38F, 93.06F } });
-                sink->AddBezier({ { -475.029F, 97.805F },{ -466.856F, 97.755F },{ -460.037F, 95.6F } });
-                sink->AddBezier({ { -450.722F, 92.656F },{ -441.841F, 84.77F },{ -442.158F, 75.006F } });
-                sink->AddBezier({ { -442.363F, 68.68F },{ -446.544F, 62.898F },{ -452.03F, 59.742F } });
-                sink->AddBezier({ { -457.516F, 56.586F },{ -464.119F, 55.804F },{ -470.416F, 56.437F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_022()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -389.141F, 50.31F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -397.837F, 50.104F },{ -406.38F, 55.718F },{ -409.642F, 63.782F } });
-                sink->AddBezier({ { -412.904F, 71.846F },{ -410.666F, 81.821F },{ -404.273F, 87.719F } });
-                sink->AddBezier({ { -395.563F, 95.755F },{ -381.048F, 95.048F },{ -371.458F, 88.085F } });
-                sink->AddBezier({ { -366.689F, 84.622F },{ -362.752F, 79.468F },{ -362.359F, 73.588F } });
-                sink->AddBezier({ { -361.875F, 66.346F },{ -366.932F, 59.642F },{ -373.219F, 56.014F } });
-                sink->AddBezier({ { -379.506F, 52.386F },{ -386.869F, 51.222F },{ -394.044F, 50.122F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_023()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -454.72F, 129.238F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -463.539F, 128.576F },{ -472.58F, 132.281F },{ -478.399F, 138.94F } });
-                sink->AddBezier({ { -481.311F, 142.272F },{ -483.477F, 146.458F },{ -483.536F, 150.883F } });
-                sink->AddBezier({ { -483.6F, 155.668F },{ -481.148F, 160.272F },{ -477.599F, 163.482F } });
-                sink->AddBezier({ { -470.689F, 169.733F },{ -459.492F, 170.608F },{ -451.694F, 165.507F } });
-                sink->AddBezier({ { -443.896F, 160.406F },{ -440.212F, 149.795F },{ -443.172F, 140.959F } });
-                sink->AddBezier({ { -446.132F, 132.123F },{ -455.463F, 125.872F },{ -464.76F, 126.497F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_024()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -482.089F, -329.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -598.792F, -228.695F },{ -832.197F, -27.754F },{ -757.803F, 16.541F } });
-                sink->AddBezier({ { -654.405F, 78.106F },{ -393.762F, -262.193F },{ -281.699F, -209.849F } });
-                sink->AddBezier({ { -207.842F, -175.351F },{ -475.451F, 80.956F },{ -522.803F, 126.308F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_025()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -562.365F, -98.708F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -536.972F, -115.698F },{ -506.681F, -126.742F },{ -476.193F, -124.752F } });
-                sink->AddBezier({ { -445.705F, -122.762F },{ -415.386F, -106.258F },{ -401.323F, -79.134F } });
-                sink->AddBezier({ { -431.918F, -82.712F },{ -462.99F, -86.282F },{ -493.388F, -81.303F } });
-                sink->AddBezier({ { -523.786F, -76.324F },{ -553.963F, -61.572F },{ -570.639F, -35.673F } });
-                sink->AddBezier({ { -549.179F, -43.484F },{ -526.598F, -49.269F },{ -503.772F, -48.528F } });
-                sink->AddBezier({ { -480.946F, -47.787F },{ -457.723F, -39.95F },{ -441.689F, -23.687F } });
-                sink->AddBezier({ { -424.774F, -6.53F },{ -417.406F, 18.522F },{ -418.327F, 42.597F } });
-                sink->AddBezier({ { -419.248F, 66.672F },{ -427.762F, 89.91F },{ -438.991F, 111.226F } });
-                sink->AddBezier({ { -430.327F, 89.19F },{ -428.918F, 63.882F },{ -437.641F, 41.87F } });
-                sink->AddBezier({ { -446.364F, 19.858F },{ -465.845F, 1.794F },{ -489.077F, -2.78F } });
-                sink->AddBezier({ { -512.309F, -7.353F },{ -538.407F, 3.031F },{ -550.147F, 23.593F } });
-                sink->AddBezier({ { -539.013F, 21.011F },{ -527.058F, 20.103F },{ -516.366F, 24.141F } });
-                sink->AddBezier({ { -505.674F, 28.179F },{ -496.639F, 38.105F },{ -496.415F, 49.532F } });
-                sink->AddBezier({ { -496.198F, 60.629F },{ -503.849F, 70.241F },{ -511.825F, 77.96F } });
-                sink->AddBezier({ { -523.587F, 89.342F },{ -536.996F, 99.019F },{ -551.503F, 106.597F } });
-                sink->AddBezier({ { -561.659F, 111.902F },{ -572.65F, 116.246F },{ -584.106F, 116.469F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_026()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -430.601F, -55.694F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -403.755F, -41.112F },{ -392.642F, -6.869F },{ -396.271F, 23.466F } });
-                sink->AddBezier({ { -399.9F, 53.801F },{ -415.298F, 81.276F },{ -430.385F, 107.842F } });
-                sink->AddBezier({ { -429.443F, 72.221F },{ -436.657F, 36.408F },{ -451.317F, 3.93F } });
-                sink->AddBezier({ { -461.325F, 26.956F },{ -463.573F, 52.59F },{ -471.665F, 76.357F } });
-                sink->AddBezier({ { -479.757F, 100.124F },{ -496.493F, 123.767F },{ -521.184F, 128.319F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_027()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -558.022F, -109.415F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -533.541F, -124.736F },{ -504.134F, -132.045F },{ -475.328F, -129.971F } });
-                sink->AddBezier({ { -452.587F, -128.333F },{ -430.315F, -120.853F },{ -411.103F, -108.59F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_028()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -577.256F, -48.389F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -559.548F, -71.412F },{ -532.681F, -87.183F },{ -503.946F, -91.42F } });
-                sink->AddBezier({ { -475.211F, -95.657F },{ -444.935F, -88.311F },{ -421.336F, -71.378F } });
-                sink->AddBezier({ { -397.737F, -54.445F },{ -381.083F, -28.116F },{ -375.894F, 0.462F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_029()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -568.021F, 28.488F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -567.948F, 5.024F },{ -556.819F, -18.17F },{ -538.563F, -32.91F } });
-                sink->AddBezier({ { -520.307F, -47.65F },{ -495.287F, -53.64F },{ -472.335F, -48.767F } });
-                sink->AddBezier({ { -449.383F, -43.894F },{ -428.956F, -28.254F },{ -418.264F, -7.368F } });
-                sink->AddBezier({ { -407.03F, 14.578F },{ -406.664F, 40.942F },{ -413.116F, 64.737F } });
-                sink->AddBezier({ { -419.568F, 88.532F },{ -432.341F, 110.13F },{ -446.495F, 130.317F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_030()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -576.07F, 70.968F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -561.946F, 70.149F },{ -549.428F, 61.054F },{ -540.648F, 49.96F } });
-                sink->AddBezier({ { -531.868F, 38.866F },{ -526.101F, 25.758F },{ -519.484F, 13.254F } });
-                sink->AddBezier({ { -515.374F, 5.488F },{ -510.607F, -2.406F },{ -503.1F, -6.973F } });
-                sink->AddBezier({ { -494.28F, -12.339F },{ -482.654F, -12.086F },{ -473.446F, -7.416F } });
-                sink->AddBezier({ { -464.238F, -2.746F },{ -457.403F, 5.907F },{ -453.721F, 15.552F } });
-                sink->AddBezier({ { -450.039F, 25.197F },{ -449.315F, 35.779F },{ -450.273F, 46.059F } });
-                sink->AddBezier({ { -453.261F, 78.122F },{ -473.288F, 108.1F },{ -501.764F, 123.136F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_031()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -576.569F, 110.384F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -555.683F, 109.497F },{ -535.183F, 101.245F },{ -519.506F, 87.415F } });
-                sink->AddBezier({ { -503.829F, 73.585F },{ -493.086F, 54.274F },{ -489.601F, 33.662F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_032()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -406.089F, -263.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -535.379F, -218.515F },{ -793.959F, -129.216F },{ -748.803F, -22.459F } });
-                sink->AddBezier({ { -700.418F, 91.929F },{ -383.865F, -158.628F },{ -349.699F, -129.849F } });
-                sink->AddBezier({ { -324.512F, -108.634F },{ -565.213F, 65.497F },{ -607.803F, 96.308F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = _geometry_032 = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_033()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -502.735F, -105.293F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -497.507F, -87.201F },{ -500.143F, -66.529F },{ -511.535F, -51.533F } });
-                sink->AddBezier({ { -522.927F, -36.537F },{ -543.406F, -28.369F },{ -561.56F, -33.377F } });
-                sink->AddBezier({ { -541.824F, -45.317F },{ -528.522F, -67.279F },{ -527.082F, -90.301F } });
-                sink->AddBezier({ { -525.642F, -113.323F },{ -536.102F, -136.772F },{ -554.196F, -151.079F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_034()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -531.472F, -42.69F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -514.723F, -52.832F },{ -503.866F, -72.046F },{ -503.821F, -91.626F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_035()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -619.787F, 37.87F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -607.068F, 33.726F },{ -594.35F, 29.583F },{ -581.631F, 25.439F } });
-                sink->AddBezier({ { -606.629F, 52.367F },{ -626.718F, 83.838F },{ -640.621F, 117.849F } });
-                sink->AddBezier({ { -593.946F, 81.047F },{ -547.272F, 44.245F },{ -500.597F, 7.443F } });
-                sink->AddBezier({ { -527.144F, 45.604F },{ -553.691F, 83.766F },{ -580.238F, 121.927F } });
-                sink->AddBezier({ { -561.661F, 114.951F },{ -548.028F, 99.264F },{ -534.211F, 85.021F } });
-                sink->AddBezier({ { -520.394F, 70.778F },{ -504.123F, 56.747F },{ -484.368F, 54.875F } });
-                sink->AddBezier({ { -494.301F, 72.982F },{ -504.234F, 91.089F },{ -514.167F, 109.196F } });
-                sink->AddBezier({ { -496.139F, 102.942F },{ -479.793F, 91.908F },{ -467.251F, 77.526F } });
-                sink->AddBezier({ { -465.74F, 87.942F },{ -479.813F, 99.165F },{ -472.752F, 106.97F } });
-                sink->AddBezier({ { -467.978F, 112.248F },{ -459.159F, 108.233F },{ -454.109F, 103.218F } });
-                sink->AddBezier({ { -449.059F, 98.203F },{ -443.349F, 91.8F },{ -436.352F, 93.098F } });
-                sink->AddBezier({ { -441.247F, 101.937F },{ -446.141F, 110.775F },{ -451.036F, 119.614F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_036()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -523.566F, 5.513F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -492.758F, 31.406F },{ -473.43F, 70.491F },{ -471.552F, 110.691F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_037()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -565.46F, -155.763F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -590.941F, -154.644F },{ -614.639F, -136.692F },{ -623.448F, -112.756F } });
-                sink->AddBezier({ { -632.257F, -88.82F },{ -626.164F, -60.293F },{ -609.003F, -41.424F } });
-                sink->AddBezier({ { -596.703F, -27.9F },{ -578.496F, -19.164F },{ -560.284F, -20.748F } });
-                sink->AddBezier({ { -538.201F, -22.669F },{ -519.99F, -32.701F },{ -505.811F, -49.74F } });
-                sink->AddBezier({ { -501.733F, -54.641F },{ -497.789F, -65.763F },{ -495.396F, -71.673F } });
-                sink->AddBezier({ { -491.87F, -80.382F },{ -491.971F, -90.195F },{ -493.765F, -99.417F } });
-                sink->AddBezier({ { -496.882F, -115.439F },{ -505.258F, -130.675F },{ -518.198F, -140.623F } });
-                sink->AddBezier({ { -531.138F, -150.571F },{ -554.975F, -151.127F },{ -568.892F, -142.614F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_038()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -436.856F, 92.73F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -442.881F, 100.902F },{ -465.497F, 112.077F },{ -476.179F, 116.108F } });
-                sink->AddBezier({ { -531.814F, 137.101F },{ -600.553F, 134.243F },{ -652.952F, 108.402F } });
-                sink->AddBezier({ { -652.952F, 108.402F },{ -652.952F, 108.402F },{ -652.952F, 108.402F } });
-                sink->AddBezier({ { -651.361F, 80.746F },{ -645.473F, 24.635F },{ -606.581F, 2.197F } });
-                sink->AddBezier({ { -606.581F, 2.197F },{ -573.334F, 23.333F },{ -528.062F, 10.75F } });
-                sink->AddBezier({ { -514.56F, 6.997F },{ -507.856F, 0.701F },{ -507.856F, 0.701F } });
-                sink->AddBezier({ { -473.452F, 15.659F },{ -454.486F, 69.002F },{ -448.77F, 99.427F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_039()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -676.886F, 132.335F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -638.331F, 151.349F },{ -577.969F, 161.97F },{ -526.603F, 157.891F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_040()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -554.089F, -233.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -639.903F, -185.292F },{ -811.533F, -89.545F },{ -761.803F, -63.459F } });
-                sink->AddBezier({ { -686.028F, -23.71F },{ -429.548F, -195.279F },{ -406.699F, -155.849F } });
-                sink->AddBezier({ { -386.928F, -121.729F },{ -627.275F, 62.678F },{ -669.803F, 95.308F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = _geometry_040 = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_041()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -657.211F, -113.546F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -635.266F, -137.537F },{ -586.656F, -147.863F },{ -554.153F, -148.705F } });
-                sink->AddBezier({ { -581.611F, -115.785F },{ -611.765F, -83.51F },{ -639.223F, -50.59F } });
-                sink->AddBezier({ { -592.247F, -79.863F },{ -542.575F, -108.493F },{ -495.599F, -137.766F } });
-                sink->AddBezier({ { -532.815F, -107.949F },{ -570.561F, -77.574F },{ -597.909F, -38.508F } });
-                sink->AddBezier({ { -603.03F, -31.192F },{ -619.484F, -8.406F },{ -613.041F, -2.223F } });
-                sink->AddBezier({ { -605.813F, 4.713F },{ -582.24F, -14.344F },{ -574.699F, -20.938F } });
-                sink->AddBezier({ { -545.964F, -46.066F },{ -512.78F, -66.091F },{ -477.155F, -79.801F } });
-                sink->AddBezier({ { -473.222F, -81.315F },{ -468.547F, -82.687F },{ -465.021F, -80.38F } });
-                sink->AddBezier({ { -458.292F, -75.977F },{ -463.69F, -65.539F },{ -469.671F, -60.164F } });
-                sink->AddBezier({ { -492.755F, -39.417F },{ -520.352F, -24.317F },{ -544.291F, -4.563F } });
-                sink->AddBezier({ { -568.23F, 15.191F },{ -589.259F, 41.723F },{ -591.594F, 72.672F } });
-                sink->AddBezier({ { -567.261F, 54.842F },{ -542.929F, 37.01F },{ -518.596F, 19.18F } });
-                sink->AddBezier({ { -499.98F, 5.539F },{ -479.112F, -8.776F },{ -456.118F, -6.795F } });
-                sink->AddBezier({ { -469.632F, 14.246F },{ -490.985F, 28.696F },{ -510.036F, 44.895F } });
-                sink->AddBezier({ { -529.087F, 61.094F },{ -547.179F, 81.427F },{ -549.858F, 106.29F } });
-                sink->AddBezier({ { -525.75F, 76.378F },{ -490.903F, 55.311F },{ -453.214F, 47.865F } });
-                sink->AddBezier({ { -464.37F, 68.349F },{ -475.528F, 88.832F },{ -486.684F, 109.316F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_042()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -610.796F, 61.839F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -606.816F, 94.378F },{ -609.375F, 127.704F },{ -618.276F, 159.254F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_043()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -456.529F, -25.117F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -454.16F, 2.822F },{ -453.238F, 30.883F },{ -453.766F, 58.917F } });
-                sink->AddBezier({ { -453.949F, 68.621F },{ -454.579F, 79.092F },{ -460.72F, 86.608F } });
-                sink->AddBezier({ { -467.661F, 95.104F },{ -479.703F, 97.369F },{ -490.674F, 97.294F } });
-                sink->AddBezier({ { -501.645F, 97.219F },{ -512.819F, 95.409F },{ -523.459F, 98.084F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_044()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -633.878F, -68.375F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -635.542F, -89.834F },{ -637.205F, -111.294F },{ -638.869F, -132.753F } });
-                sink->AddBezier({ { -639.229F, -137.398F },{ -639.396F, -142.635F },{ -636.226F, -146.049F } });
-                sink->AddBezier({ { -633.257F, -149.247F },{ -628.429F, -149.67F },{ -624.071F, -149.884F } });
-                sink->AddBezier({ { -599.862F, -151.074F },{ -575.654F, -152.264F },{ -551.445F, -153.454F } });
-                sink->AddBezier({ { -540.524F, -153.991F },{ -529.188F, -154.46F },{ -519.077F, -150.298F } });
-                sink->AddBezier({ { -506.446F, -145.099F },{ -497.75F, -133.559F },{ -489.69F, -122.532F } });
-                sink->AddBezier({ { -476.832F, -104.94F },{ -463.765F, -86.943F },{ -457.169F, -66.175F } });
-                sink->AddBezier({ { -450.855F, -46.294F },{ -450.846F, -25.038F },{ -450.895F, -4.178F } });
-                sink->AddBezier({ { -450.968F, 26.866F },{ -451.04F, 57.911F },{ -451.113F, 88.955F } });
-                sink->AddBezier({ { -451.122F, 92.957F },{ -451.287F, 97.373F },{ -454.017F, 100.3F } });
-                sink->AddBezier({ { -457.105F, 103.611F },{ -462.224F, 103.726F },{ -466.75F, 103.607F } });
-                sink->AddBezier({ { -504.359F, 102.617F },{ -541.968F, 101.626F },{ -579.577F, 100.636F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_045()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -523.786F, -150.205F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -522.02F, -121.861F },{ -520.253F, -93.516F },{ -518.487F, -65.172F } });
-                sink->AddBezier({ { -518.345F, -62.886F },{ -518.093F, -60.359F },{ -516.405F, -58.81F } });
-                sink->AddBezier({ { -514.837F, -57.371F },{ -512.51F, -57.228F },{ -510.382F, -57.163F } });
-                sink->AddBezier({ { -493.147F, -56.635F },{ -458.054F, -56.106F },{ -440.819F, -55.578F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_046()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -645.58F, -39.015F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -628.304F, -42.01F },{ -609.826F, -26.295F },{ -606.453F, -9.089F } });
-                sink->AddBezier({ { -603.08F, 8.117F },{ -615.39F, 26.869F },{ -632.518F, 30.618F } });
-                sink->AddBezier({ { -649.646F, 34.367F },{ -668.663F, 22.471F },{ -672.786F, 5.429F } });
-                sink->AddBezier({ { -676.909F, -11.613F },{ -668.661F, -34.695F },{ -643.988F, -35.381F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_047()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -670.17F, 55.992F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -670.31F, 82.474F },{ -669.283F, 108.923F },{ -671.383F, 135.303F } });
-                sink->AddBezier({ { -660.485F, 123.712F },{ -649.586F, 112.121F },{ -638.688F, 100.53F } });
-                sink->AddBezier({ { -630.125F, 117.537F },{ -621.561F, 137.542F },{ -612.998F, 154.549F } });
-                sink->AddBezier({ { -606.341F, 121.751F },{ -603.234F, 85.425F },{ -603.719F, 52.033F } });
-                sink->AddBezier({ { -603.719F, 52.033F },{ -645, 67.5F },{ -676, 49.75F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_048()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -600.432F, 151.023F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -601.441F, 84.672F },{ -576.514F, 18.265F },{ -532.093F, -31.033F } });
-                sink->AddBezier({ { -487.672F, -80.331F },{ -424.211F, -112.016F },{ -358.114F, -117.899F } });
-                sink->AddBezier({ { -354.207F, -118.247F },{ -350.102F, -118.477F },{ -346.527F, -116.863F } });
-                sink->AddBezier({ { -342.952F, -115.249F },{ -340.173F, -111.179F },{ -341.345F, -107.435F } });
-                sink->AddBezier({ { -342.456F, -103.887F },{ -346.358F, -102.157F },{ -349.827F, -100.819F } });
-                sink->AddBezier({ { -404.032F, -79.905F },{ -456.21F, -49.115F },{ -491.048F, -2.618F } });
-                sink->AddBezier({ { -525.886F, 43.879F },{ -540.638F, 108.127F },{ -518.087F, 161.672F } });
-                sink->AddBezier({ { -520.477F, 123.309F },{ -509.517F, 84.242F },{ -487.52F, 52.722F } });
-                sink->AddBezier({ { -465.523F, 21.202F },{ -432.635F, -2.563F },{ -395.803F, -13.554F } });
-                sink->AddBezier({ { -391.288F, -14.901F },{ -385.564F, -15.721F },{ -382.604F, -12.056F } });
-                sink->AddBezier({ { -378.351F, -6.79F },{ -384.473F, 0.409F },{ -389.883F, 4.477F } });
-                sink->AddBezier({ { -414.485F, 22.974F },{ -436.617F, 45.518F },{ -450.827F, 72.822F } });
-                sink->AddBezier({ { -465.037F, 100.126F },{ -470.788F, 132.562F },{ -462.641F, 162.244F } });
-                sink->AddBezier({ { -448.755F, 121.383F },{ -418.724F, 86.255F },{ -380.52F, 66.183F } });
-                sink->AddBezier({ { -391.451F, 85.279F },{ -399.895F, 105.797F },{ -405.571F, 127.056F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_049()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -470.867F, -77.606F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -442.357F, -97.11F },{ -407.646F, -107.4F },{ -373.112F, -106.585F } });
-                sink->AddBezier({ { -365.524F, -106.406F },{ -355.718F, -103.506F },{ -355.598F, -95.916F } });
-                sink->AddBezier({ { -355.517F, -90.787F },{ -360.247F, -87.024F },{ -364.627F, -84.354F } });
-                sink->AddBezier({ { -382.702F, -73.336F },{ -402.978F, -66.165F },{ -420.573F, -54.395F } });
-                sink->AddBezier({ { -438.168F, -42.625F },{ -453.519F, -24.409F },{ -453.879F, -3.244F } });
-                sink->AddBezier({ { -436.442F, -12.355F },{ -417.756F, -19.073F },{ -398.51F, -23.153F } });
-                sink->AddBezier({ { -391.182F, -24.706F },{ -381.044F, -24.223F },{ -379.291F, -16.94F } });
-                sink->AddBezier({ { -378.181F, -12.329F },{ -381.479F, -7.927F },{ -384.565F, -4.325F } });
-                sink->AddBezier({ { -399.277F, 12.849F },{ -413.987F, 30.023F },{ -428.699F, 47.197F } });
-                sink->AddBezier({ { -432.109F, 51.178F },{ -435.74F, 55.843F },{ -435.077F, 61.043F } });
-                sink->AddBezier({ { -433.885F, 70.398F },{ -421.261F, 72.303F },{ -411.859F, 71.577F } });
-                sink->AddBezier({ { -402.457F, 70.851F },{ -389.936F, 72.114F },{ -388.047F, 81.353F } });
-                sink->AddBezier({ { -386.968F, 86.63F },{ -390.384F, 91.756F },{ -394.158F, 95.599F } });
-                sink->AddBezier({ { -397.932F, 99.442F },{ -402.395F, 102.961F },{ -404.31F, 107.995F } });
-                sink->AddBezier({ { -406.225F, 113.029F },{ -403.982F, 120.137F },{ -398.642F, 120.839F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_050()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -401.986F, 84.011F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -413.074F, 78.845F },{ -422.424F, 82.406F },{ -427.39F, 90.947F } });
-                sink->AddBezier({ { -432.356F, 99.488F },{ -430.328F, 111.843F },{ -422.112F, 117.331F } });
-                sink->AddBezier({ { -417.34F, 120.519F },{ -411.187F, 121.188F },{ -405.561F, 120.054F } });
-                sink->AddBezier({ { -395.029F, 117.931F },{ -385.825F, 108.896F },{ -384.981F, 98.185F } });
-                sink->AddBezier({ { -384.137F, 87.474F },{ -395.421F, 74.089F },{ -406.165F, 73.996F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_051()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -487.554F, 120.568F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -486.867F, 94.096F },{ -475.055F, 68.088F },{ -455.573F, 50.152F } });
-                sink->AddBezier({ { -436.091F, 32.216F },{ -410.976F, 26.144F },{ -384.537F, 27.642F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_052()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -553.572F, 120.568F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -549.766F, 71.792F },{ -526.918F, 26.53F },{ -490.933F, -6.617F } });
-                sink->AddBezier({ { -454.948F, -39.764F },{ -418.31F, -55.482F },{ -357.27F, -51.363F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_053()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -613.182F, 120.568F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -614.663F, 52.875F },{ -585.288F, -20.226F },{ -534.872F, -65.423F } });
-                sink->AddBezier({ { -484.456F, -110.62F },{ -413.895F, -127.111F },{ -346.765F, -118.272F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_054()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ 39.255F, -2.916F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { 39.255F, -2.916F },{ 39.581F, -2.921F },{ 39.686F, -3.084F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_055()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ 9.343F, -41.95F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -17.589F, 1.072F },{ -22.472F, 21.165F },{ -26.658F, 61.14F } });
-                sink->AddBezier({ { -33.15F, 39.317F },{ -45.95F, 28.594F },{ -54.725F, 15.439F } });
-                sink->AddBezier({ { -58.236F, 10.175F },{ -62.588F, 5.041F },{ -68.55F, 2.922F } });
-                sink->AddBezier({ { -70.214F, 2.331F },{ -72.058F, 1.996F },{ -73.737F, 2.542F } });
-                sink->AddBezier({ { -76.888F, 3.566F },{ -78.365F, 8.893F },{ -77.589F, 12.114F } });
-                sink->AddBezier({ { -76.813F, 15.335F },{ -72.957F, 17.885F },{ -70.312F, 19.88F } });
-                sink->AddBezier({ { -58.372F, 28.885F },{ -35.218F, 29.926F },{ -21.25F, 24.584F } });
-                sink->AddBezier({ { -7.282F, 19.242F },{ 4.934F, 8.287F },{ 15.121F, -2.662F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_056()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -71.97F, 61.14F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -58.417F, 35.342F },{ -42.769F, 2.237F },{ -29.216F, -23.561F } });
-                sink->AddBezier({ { -25.12F, -31.358F },{ -20.902F, -40.165F },{ -23.353F, -48.625F } });
-                sink->AddBezier({ { -24.517F, -52.645F },{ -29.167F, -62.24F },{ -42.741F, -61.083F } });
-                sink->AddBezier({ { -52.357F, -60.264F },{ -56.629F, -55.143F },{ -60.709F, -50.459F } });
-                sink->AddBezier({ { -66.666F, -43.62F },{ -71.354F, -30.469F },{ -71.535F, -20.901F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_057()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -7.166F, 61.14F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { 5.054F, 51.775F },{ 23.12F, 25.718F },{ 31.215F, 14.758F } });
-                sink->AddBezier({ { 28.639F, 20.594F },{ 24.895F, 39.322F },{ 24.96F, 45.701F } });
-                sink->AddBezier({ { 25.025F, 52.08F },{ 28.56F, 59.36F },{ 34.686F, 61.14F } });
-                sink->AddBezier({ { 40.478F, 62.823F },{ 46.508F, 59.217F },{ 51.483F, 55.806F } });
-                sink->AddBezier({ { 61.489F, 48.945F },{ 70.405F, 40.497F },{ 77.793F, 30.873F } });
-                sink->EndFigure(D2D1_FIGURE_END_OPEN);
-                FFHR(sink->Close());
-                result = new GeoSource(path.Get());
-                return result;
-            }
-
-            CanvasGeometry Geometry_058()
-            {
-                CanvasGeometry result;
-                ComPtr<ID2D1PathGeometry> path;
-                FFHR(_d2dFactory->CreatePathGeometry(&path));
-                ComPtr<ID2D1GeometrySink> sink;
-                FFHR(path->Open(&sink));
-                sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-                sink->BeginFigure({ -566.089F, -276.165F }, D2D1_FIGURE_BEGIN_FILLED);
-                sink->AddBezier({ { -651.063F, -204.579F },{ -821.013F, -61.407F },{ -765.803F, -51.459F } });
-                sink->AddBezier({ { -664.869F, -33.272F },{ -368.702F, -247.561F },{ -325.699F, -232.849F } });
-                sink->AddBezier({ { -300.555F, -224.247F },{ -492.789F, -7.962F },{ -526.803F, 30.308F } });
+                sink->BeginFigure({ -7.16599989F, 61.1399994F }, D2D1_FIGURE_BEGIN_FILLED);
+                sink->AddBezier({ { 5.0539999F, 51.7750015F },{ 23.1200008F, 25.7180004F },{ 31.2150002F, 14.7580004F } });
+                sink->AddBezier({ { 28.6389999F, 20.5939999F },{ 24.8950005F, 39.3219986F },{ 24.9599991F, 45.7010002F } });
+                sink->AddBezier({ { 25.0249996F, 52.0800018F },{ 28.5599995F, 59.3600006F },{ 34.6860008F, 61.1399994F } });
+                sink->AddBezier({ { 40.4780006F, 62.8230019F },{ 46.5079994F, 59.2169991F },{ 51.4830017F, 55.8059998F } });
+                sink->AddBezier({ { 61.4889984F, 48.9449997F },{ 70.4049988F, 40.4970016F },{ 77.7929993F, 30.8729992F } });
                 sink->EndFigure(D2D1_FIGURE_END_OPEN);
                 FFHR(sink->Close());
                 result = new GeoSource(path.Get());
@@ -4186,938 +1142,350 @@ namespace Compositions
                 return _linearEasingFunction = _c->CreateLinearEasingFunction();
             }
 
-            // privacy_brush
-            //   'privacy_brush'.Contents
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_000()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_000())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_000());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                auto propertySet = result->Properties;
+                propertySet->InsertScalar("TStart", 0.99000001F);
+                propertySet->InsertScalar("TEnd", 1);
+                result->StartAnimation("TStart", ScalarAnimation_0p99_to_0());
+                auto controller = result->TryGetAnimationController("TStart");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                result->StartAnimation("TEnd", ScalarAnimation_1_to_0_000());
+                controller = result->TryGetAnimationController("TEnd");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Min(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimStart", _reusableExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Max(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimEnd", _reusableExpressionAnimation);
                 return result;
             }
 
-            // privacy_brush 2
-            //   'privacy_brush 2'.Contents
-            //     Path 1
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 1
+            //         Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_001()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_001())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_001());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
                 return result;
             }
 
-            // privacy_stroke
-            //   'privacy_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            //         Path 4
+            // Path 4.PathGeometry
             CompositionPathGeometry^ PathGeometry_002()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_002())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_000());
-                auto controller = result->TryGetAnimationController("TrimStart");
+                result->TrimEnd = 0;
+                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_000());
+                auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // privacy_stroke 2
-            //   'privacy_stroke 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            //         Path 5
+            // Path 5.PathGeometry
             CompositionPathGeometry^ PathGeometry_003()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_003())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_001());
-                auto controller = result->TryGetAnimationController("TrimStart");
+                result->TrimEnd = 0;
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_000);
+                auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // privacy_stroke 3
-            //   'privacy_stroke 3'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            //         Path 3
+            // Path 3.PathGeometry
             CompositionPathGeometry^ PathGeometry_004()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_004())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_002());
-                auto controller = result->TryGetAnimationController("TrimStart");
+                result->TrimEnd = 0;
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_000);
+                auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // privacy_stroke 4
-            //   'privacy_stroke 4'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            //     'icon_chinese_1'.Contents
+            //       Group: icon_chinese_1
+            //         Path 2
+            // Path 2.PathGeometry
             CompositionPathGeometry^ PathGeometry_005()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_005())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_002());
+                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_001());
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // privacy_eraser
-            //   'privacy_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            //     'icon_chinese_1'.Contents
+            //       Group: icon_chinese_1
+            //         Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_006()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_006())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_003());
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_001);
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // onedrive_brush
-            //   'onedrive_brush'.Contents
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_007()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_007())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_004());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                auto propertySet = result->Properties;
+                propertySet->InsertScalar("TStart", 0);
+                propertySet->InsertScalar("TEnd", 0);
+                result->StartAnimation("TStart", ScalarAnimation_0_to_0p837());
+                auto controller = result->TryGetAnimationController("TStart");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                result->StartAnimation("TEnd", ScalarAnimation_0_to_1_002());
+                controller = result->TryGetAnimationController("TEnd");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Min(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimStart", _reusableExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Max(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimEnd", _reusableExpressionAnimation);
                 return result;
             }
 
-            // onedrive_brush 2
-            //   'onedrive_brush 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            //         Path 4
+            // Path 4.PathGeometry
             CompositionPathGeometry^ PathGeometry_008()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_008())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_005());
+                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_003());
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // onedrive_stroke
-            //   'onedrive_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            //         Path 3
+            // Path 3.PathGeometry
             CompositionPathGeometry^ PathGeometry_009()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_009())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_003());
-                auto controller = result->TryGetAnimationController("TrimStart");
+                result->TrimEnd = 0;
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_003);
+                auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // onedrive_stroke 2
-            //   'onedrive_stroke 2'.Contents
-            //     Group: Group 1
-            //       Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            //         Path 2
+            // Path 2.PathGeometry
             CompositionPathGeometry^ PathGeometry_010()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_010())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_004());
-                auto controller = result->TryGetAnimationController("TrimStart");
+                result->TrimEnd = 0;
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_003);
+                auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // onedrive_eraser
-            //   'onedrive_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            //         Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_011()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_011())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_006());
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_003);
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // pin_brush
-            //   'pin_brush'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            //     'A'.Contents
+            //       Group: icon_A
+            //         Path 2
+            // Path 2.PathGeometry
             CompositionPathGeometry^ PathGeometry_012()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_012())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_007());
+                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_004());
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // pin_brush 2
-            //   'pin_brush 2'.Contents
-            //     Path 1
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            //     'A'.Contents
+            //       Group: icon_A
+            //         Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_013()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_013())));
                 result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_008());
+                result->StartAnimation("TrimEnd", _scalarAnimation_0_to_1_004);
                 auto controller = result->TryGetAnimationController("TrimEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // pin_stroke
-            //   'pin_stroke'.Contents
-            //     Path 1
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi_dot'.Transforms
+            //     'txt_Hi_dot'.Contents
+            //       Group: Group 1
+            //         Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_014()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_014())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_009());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
                 return result;
             }
 
-            // pin_stroke 2
-            //   'pin_stroke 2'.Contents
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_015()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_015())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_010());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                auto propertySet = result->Properties;
+                propertySet->InsertScalar("TStart", 0);
+                propertySet->InsertScalar("TEnd", 0);
+                result->StartAnimation("TStart", ScalarAnimation_0_to_1_005());
+                auto controller = result->TryGetAnimationController("TStart");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                result->StartAnimation("TEnd", ScalarAnimation_0_to_1_006());
+                controller = result->TryGetAnimationController("TEnd");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Min(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimStart", _reusableExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Max(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimEnd", _reusableExpressionAnimation);
                 return result;
             }
 
-            // pin_stroke 3
-            //   'pin_stroke 3'.Contents
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_016()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_016())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_011());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                auto propertySet = result->Properties;
+                propertySet->InsertScalar("TStart", 1);
+                propertySet->InsertScalar("TEnd", 1);
+                result->StartAnimation("TStart", ScalarAnimation_1_to_0_001());
+                auto controller = result->TryGetAnimationController("TStart");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                result->StartAnimation("TEnd", ScalarAnimation_1_to_0_002());
+                controller = result->TryGetAnimationController("TEnd");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Min(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimStart", _reusableExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Max(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimEnd", _reusableExpressionAnimation);
                 return result;
             }
 
-            // pin_stroke 4
-            //   'pin_stroke 4'.Contents
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry^ PathGeometry_017()
             {
                 auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_017())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_012());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                auto propertySet = result->Properties;
+                propertySet->InsertScalar("TStart", 0);
+                propertySet->InsertScalar("TEnd", 0);
+                result->StartAnimation("TStart", ScalarAnimation_0_to_1_007());
+                auto controller = result->TryGetAnimationController("TStart");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_stroke 5
-            //   'pin_stroke 5'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_018()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_018())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_013());
-                auto controller = result->TryGetAnimationController("TrimEnd");
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                result->StartAnimation("TEnd", ScalarAnimation_0_to_1_008());
+                controller = result->TryGetAnimationController("TEnd");
                 controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Min(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimStart", _reusableExpressionAnimation);
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Max(my.TStart, my.TEnd)";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("TrimEnd", _reusableExpressionAnimation);
                 return result;
             }
 
-            // pin_stroke 6
-            //   'pin_stroke 6'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_019()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_019())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_014());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_stroke 7
-            //   'pin_stroke 7'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_020()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_020())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_015());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_stroke 8
-            //   'pin_stroke 8'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_021()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_021())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_016());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_stroke 9
-            //   'pin_stroke 9'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_022()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_022())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_017());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_stroke 10
-            //   'pin_stroke 10'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_023()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_023())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_018());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // pin_erser
-            //   'pin_erser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_024()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_024())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_019());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_brush
-            //   'fingerprint_brush'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_025()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_025())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_020());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_brush 2
-            //   'fingerprint_brush 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_026()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_026())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_021());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_stroke
-            //   'fingerprint_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_027()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_027())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_022());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_stroke 2
-            //   'fingerprint_stroke 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_028()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_028())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_023());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_stroke 3
-            //   'fingerprint_stroke 3'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_029()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_029())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_024());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_stroke 4
-            //   'fingerprint_stroke 4'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_030()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_030())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_025());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_stroke 5
-            //   'fingerprint_stroke 5'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_031()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_031())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_005());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // fingerprint_eraser
-            //   'fingerprint_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_032()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_032())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_026());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_stroke
-            //   'account_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_033()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_033())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_027());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_stroke 2
-            //   'account_stroke 2'.Contents
-            //     Group: Group 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_034()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_034())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_028());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_stroke 3
-            //   'account_stroke 3'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_035()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_035())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_029());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_stroke 4
-            //   'account_stroke 4'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_036()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_036())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_006());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_head
-            //   'account_head'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_037()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_037())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_030());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_body
-            //   'account_body'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_038()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_038())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_007());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_bottom
-            //   'account_bottom'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_039()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_039())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_031());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // account_eraser
-            //   'account_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_040()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_040())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_032());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_stroke
-            //   'eula_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_041()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_041())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_033());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_stroke 2
-            //   'eula_stroke 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_042()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_042())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_008());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_stroke 3
-            //   'eula_stroke 3'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_043()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_043())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_034());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_papersheet
-            //   'eula_papersheet'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_044()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_044())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_035());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_papertop
-            //   'eula_papertop'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_045()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_045())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_036());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_batchcircle
-            //   'eula_batchcircle'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_046()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_046())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_037());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_batch
-            //   'eula_batch'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_047()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_047())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_038());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eula_eraser
-            //   'eula_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_048()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(_geometry_040)));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_039());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_brush
-            //   'wifi_brush'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_049()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_048())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_009());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_btush
-            //   'wifi_btush'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_050()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_049())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_010());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_stroke
-            //   'wifi_stroke'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_051()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_050())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_040());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_stroke 2
-            //   'wifi_stroke 2'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_052()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_051())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_011());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_stroke 3
-            //   'wifi_stroke 3'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_053()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_052())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_012());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_stroke 4
-            //   'wifi_stroke 4'.Contents
-            //     Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_054()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_053())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_013());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // wifi_eraser
-            //   'wifi_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_055()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(_geometry_032)));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_041());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_056()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_054())));
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 1
-            //           Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_057()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_055())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_042());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 2
-            //           Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_058()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_056())));
-                result->TrimStart = 1;
-                result->StartAnimation("TrimStart", ScalarAnimation_1_to_0_014());
-                auto controller = result->TryGetAnimationController("TrimStart");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 1
-            //         Group: Group 1
-            //           Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_059()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_057())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_043());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // eraser 9
-            //   'eraser 9'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry^ PathGeometry_060()
-            {
-                auto result = _c->CreatePathGeometry(ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_058())));
-                result->TrimEnd = 0;
-                result->StartAnimation("TrimEnd", ScalarAnimation_0_to_1_044());
-                auto controller = result->TryGetAnimationController("TrimEnd");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // SolidLayer:'whitebg'
-            //   SolidLayerRectangle
+            // 'txt_Hi'.Transforms
+            //   'bkg_white'.Contents
+            //     SolidLayerRectangle
             // .RectangleGeometry
             CompositionRectangleGeometry^ Rectangle_1920x1080()
             {
@@ -5126,14 +1494,45 @@ namespace Compositions
                 return result;
             }
 
-            // SolidLayer:'blackfading'
-            //   'blackfading'.Contents
-            //     SolidLayerRectangle
-            // .RectangleGeometry
-            CompositionRectangleGeometry^ Rectangle_1920x1280()
+            // Rectangle Path 1.RectangleGeometry
+            CompositionRectangleGeometry^ Rectangle_30_000()
             {
                 auto result = _c->CreateRectangleGeometry();
-                result->Size = { 1920, 1280 };
+                auto propertySet = result->Properties;
+                propertySet->InsertVector2("Position", { 0, 0 });
+                result->Size = { 30, 30 };
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Vector2((my.Position.X - (my.Size.X / 2)),(my.Position.Y - (my.Size.Y / 2)))";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Rectangle Path 1.RectangleGeometry
+            CompositionRectangleGeometry^ Rectangle_30_001()
+            {
+                auto result = _c->CreateRectangleGeometry();
+                auto propertySet = result->Properties;
+                propertySet->InsertVector2("Position", { 0, 0 });
+                result->Size = { 30, 30 };
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Vector2((my.Position.X - (my.Size.X / 2)),(my.Position.Y - (my.Size.Y / 2)))";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Rectangle Path 1.RectangleGeometry
+            CompositionRectangleGeometry^ Rectangle_30_002()
+            {
+                auto result = _c->CreateRectangleGeometry();
+                auto propertySet = result->Properties;
+                propertySet->InsertVector2("Position", { 0, 0 });
+                result->Size = { 30, 30 };
+                _reusableExpressionAnimation->ClearAllParameters();
+                _reusableExpressionAnimation->Expression = "Vector2((my.Position.X - (my.Size.X / 2)),(my.Position.Y - (my.Size.Y / 2)))";
+                _reusableExpressionAnimation->SetReferenceParameter("my", result);
+                result->StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -5148,1036 +1547,185 @@ namespace Compositions
                 return result;
             }
 
-            // privacy_brush
-            //   'privacy_brush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi_dot'.Transforms
+            //     'txt_Hi_dot'.Contents
+            //       Group: Group 1
+            //         Path 1
+            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_0()
+            {
+                auto result = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.481418908F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.493243247F, 9, CubicBezierEasingFunction_013());
+                result->InsertKeyFrame(0.650337815F, 9, _linearEasingFunction);
+                result->InsertKeyFrame(0.657094598F, 0, CubicBezierEasingFunction_014());
+                return result;
+            }
+
+            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_0p837()
+            {
+                auto result = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.668918908F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.792229712F, 0.837000012F, CubicBezierEasingFunction_010());
+                return result;
+            }
+
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_000()
             {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, LinearEasingFunction());
-                result->InsertKeyFrame(0.8976378F, 0, LinearEasingFunction());
-                result->InsertKeyFrame(0.915064F, 0.25926F, CubicBezierEasingFunction_000());
-                result->InsertKeyFrame(0.9290049F, 0.648F, CubicBezierEasingFunction_001());
-                result->InsertKeyFrame(0.9499165F, 1, CubicBezierEasingFunction_002());
+                auto result = _scalarAnimation_0_to_1_000 = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.77364862F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.858108103F, 1, CubicBezierEasingFunction_008());
                 return result;
             }
 
-            // privacy_brush 2
-            //   'privacy_brush 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_001()
             {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                auto result = _scalarAnimation_0_to_1_001 = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.9072224F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.9229055F, 0.29549F, CubicBezierEasingFunction_003());
-                result->InsertKeyFrame(0.9368464F, 0.75834F, CubicBezierEasingFunction_004());
-                result->InsertKeyFrame(0.9507874F, 1, CubicBezierEasingFunction_005());
+                result->InsertKeyFrame(0.73817569F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.8125F, 1, CubicBezierEasingFunction_009());
                 return result;
             }
 
-            // privacy_stroke 4
-            //   'privacy_stroke 4'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_002()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.9576772F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.976378F, 1, CubicBezierEasingFunction_019());
+                result->InsertKeyFrame(0.604729712F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.77364862F, 1, CubicBezierEasingFunction_011());
                 return result;
             }
 
-            // privacy_eraser
-            //   'privacy_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_003()
             {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                auto result = _scalarAnimation_0_to_1_003 = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.9783465F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.9862205F, 0.33481F, CubicBezierEasingFunction_020());
-                result->InsertKeyFrame(0.992126F, 0.68426F, CubicBezierEasingFunction_021());
-                result->InsertKeyFrame(0.9990157F, 1, CubicBezierEasingFunction_022());
+                result->InsertKeyFrame(0.690878391F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.826013505F, 1, CubicBezierEasingFunction_012());
                 return result;
             }
 
-            // onedrive_brush
-            //   'onedrive_brush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_004()
             {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                auto result = _scalarAnimation_0_to_1_004 = _c->CreateScalarKeyFrameAnimation();
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.7962598F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.8041338F, 0.14515F, CubicBezierEasingFunction_023());
-                result->InsertKeyFrame(0.8110236F, 0.3177F, CubicBezierEasingFunction_024());
-                result->InsertKeyFrame(0.8188977F, 0.50377F, CubicBezierEasingFunction_025());
-                result->InsertKeyFrame(0.8228347F, 0.61769F, CubicBezierEasingFunction_026());
-                result->InsertKeyFrame(0.8287402F, 0.7614F, CubicBezierEasingFunction_027());
-                result->InsertKeyFrame(0.8316929F, 0.82073F, CubicBezierEasingFunction_028());
-                result->InsertKeyFrame(0.8356299F, 0.90018F, CubicBezierEasingFunction_029());
-                result->InsertKeyFrame(0.8405512F, 0.951F, CubicBezierEasingFunction_030());
-                result->InsertKeyFrame(0.8454725F, 1, CubicBezierEasingFunction_031());
+                result->InsertKeyFrame(0.712837815F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.847972989F, 1, _cubicBezierEasingFunction_012);
                 return result;
             }
 
-            // onedrive_brush 2
-            //   'onedrive_brush 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_005()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.8080708F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.8228347F, 0.38102F, CubicBezierEasingFunction_032());
-                result->InsertKeyFrame(0.8346457F, 0.61898F, CubicBezierEasingFunction_033());
-                result->InsertKeyFrame(0.8444882F, 0.83235F, CubicBezierEasingFunction_034());
-                result->InsertKeyFrame(0.8572835F, 1, CubicBezierEasingFunction_035());
+                result->InsertKeyFrame(0.631756783F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.658783793F, 1, CubicBezierEasingFunction_015());
                 return result;
             }
 
-            // onedrive_eraser
-            //   'onedrive_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_006()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.8759843F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.8838583F, 0.33481F, _cubicBezierEasingFunction_020);
-                result->InsertKeyFrame(0.8897638F, 0.68426F, _cubicBezierEasingFunction_021);
-                result->InsertKeyFrame(0.8966535F, 1, _cubicBezierEasingFunction_022);
+                result->InsertKeyFrame(0.326640189F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.344983101F, 0.33792001F, CubicBezierEasingFunction_016());
+                result->InsertKeyFrame(0.363324314F, 0.592029989F, CubicBezierEasingFunction_017());
+                result->InsertKeyFrame(0.405405402F, 1, CubicBezierEasingFunction_018());
                 return result;
             }
 
-            // pin_brush
-            //   'pin_brush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_007()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.593504F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6122047F, 0.24966F, CubicBezierEasingFunction_059());
-                result->InsertKeyFrame(0.6240157F, 0.5363F, CubicBezierEasingFunction_060());
-                result->InsertKeyFrame(0.6358268F, 0.80901F, CubicBezierEasingFunction_061());
-                result->InsertKeyFrame(0.652559F, 1, CubicBezierEasingFunction_062());
+                result->InsertKeyFrame(0.640202701F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.667229712F, 1, _cubicBezierEasingFunction_015);
                 return result;
             }
 
-            // pin_brush 2
-            //   'pin_brush 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_008()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6102362F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6230315F, 0.1913F, CubicBezierEasingFunction_063());
-                result->InsertKeyFrame(0.6309055F, 0.44013F, CubicBezierEasingFunction_064());
-                result->InsertKeyFrame(0.6387795F, 0.61898F, CubicBezierEasingFunction_065());
-                result->InsertKeyFrame(0.6505905F, 0.83235F, CubicBezierEasingFunction_066());
-                result->InsertKeyFrame(0.6594488F, 1, CubicBezierEasingFunction_067());
+                result->InsertKeyFrame(0.405405402F, 0, _linearEasingFunction);
+                result->InsertKeyFrame(0.430743247F, 0.351179987F, CubicBezierEasingFunction_021());
+                result->InsertKeyFrame(0.476351351F, 1, CubicBezierEasingFunction_022());
                 return result;
             }
 
-            // pin_stroke
-            //   'pin_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_009()
+            ScalarKeyFrameAnimation^ ScalarAnimation_0p99_to_0()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6043307F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6240157F, 1, CubicBezierEasingFunction_068());
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, 0.99000001F, _linearEasingFunction);
+                result->InsertKeyFrame(0.217905402F, 0.99000001F, _linearEasingFunction);
+                result->InsertKeyFrame(0.271959454F, 0, CubicBezierEasingFunction_001());
                 return result;
             }
 
-            // pin_stroke 2
-            //   'pin_stroke 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_010()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6220472F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6417323F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 3
-            //   'pin_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_011()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6112205F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.632874F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 4
-            //   'pin_stroke 4'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_012()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.625F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6427165F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 5
-            //   'pin_stroke 5'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_013()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.632874F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6574803F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 6
-            //   'pin_stroke 6'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_014()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.621063F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6397638F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 7
-            //   'pin_stroke 7'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_015()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6269685F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6456693F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 8
-            //   'pin_stroke 8'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_016()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6427165F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6643701F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 9
-            //   'pin_stroke 9'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_017()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6309055F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.648622F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_stroke 10
-            //   'pin_stroke 10'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_018()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.652559F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6722441F, 1, _cubicBezierEasingFunction_068);
-                return result;
-            }
-
-            // pin_erser
-            //   'pin_erser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_019()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6732283F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.6811023F, 0.33481F, _cubicBezierEasingFunction_020);
-                result->InsertKeyFrame(0.6870078F, 0.68426F, _cubicBezierEasingFunction_021);
-                result->InsertKeyFrame(0.6938977F, 1, _cubicBezierEasingFunction_022);
-                return result;
-            }
-
-            // fingerprint_brush
-            //   'fingerprint_brush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_020()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.492126F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5029528F, 0.17541F, CubicBezierEasingFunction_069());
-                result->InsertKeyFrame(0.5127953F, 0.352F, CubicBezierEasingFunction_070());
-                result->InsertKeyFrame(0.5255905F, 0.62384F, CubicBezierEasingFunction_071());
-                result->InsertKeyFrame(0.5403543F, 0.82459F, CubicBezierEasingFunction_072());
-                result->InsertKeyFrame(0.5511811F, 1, CubicBezierEasingFunction_073());
-                return result;
-            }
-
-            // fingerprint_brush 2
-            //   'fingerprint_brush 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_021()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.519685F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.53125F, 0.42525F, CubicBezierEasingFunction_074());
-                result->InsertKeyFrame(0.5393701F, 0.67399F, CubicBezierEasingFunction_075());
-                result->InsertKeyFrame(0.5521653F, 1, CubicBezierEasingFunction_076());
-                return result;
-            }
-
-            // fingerprint_stroke
-            //   'fingerprint_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_022()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.503937F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5158134F, 1, CubicBezierEasingFunction_077());
-                return result;
-            }
-
-            // fingerprint_stroke 2
-            //   'fingerprint_stroke 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_023()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5128701F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5271189F, 1, _cubicBezierEasingFunction_077);
-                return result;
-            }
-
-            // fingerprint_stroke 3
-            //   'fingerprint_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_024()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5226801F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5404927F, 1, CubicBezierEasingFunction_078());
-                return result;
-            }
-
-            // fingerprint_stroke 4
-            //   'fingerprint_stroke 4'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_025()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5301142F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5455542F, 0.50258F, CubicBezierEasingFunction_079());
-                result->InsertKeyFrame(0.5609909F, 1, CubicBezierEasingFunction_080());
-                return result;
-            }
-
-            // fingerprint_eraser
-            //   'fingerprint_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_026()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5718504F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.5797244F, 0.33481F, _cubicBezierEasingFunction_020);
-                result->InsertKeyFrame(0.5856299F, 0.68426F, _cubicBezierEasingFunction_021);
-                result->InsertKeyFrame(0.5925197F, 1, _cubicBezierEasingFunction_022);
-                return result;
-            }
-
-            // account_stroke
-            //   'account_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_027()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3917323F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4075128F, 0.40059F, CubicBezierEasingFunction_082());
-                result->InsertKeyFrame(0.4281496F, 1, CubicBezierEasingFunction_083());
-                return result;
-            }
-
-            // account_stroke 2
-            //   'account_stroke 2'.Contents
-            //     Group: Group 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_028()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4192913F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4350394F, 1, CubicBezierEasingFunction_084());
-                return result;
-            }
-
-            // account_stroke 3
-            //   'account_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_029()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3917323F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3966535F, 0.04859F, CubicBezierEasingFunction_085());
-                result->InsertKeyFrame(0.4074803F, 0.17541F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4173228F, 0.40059F, CubicBezierEasingFunction_086());
-                result->InsertKeyFrame(0.4242126F, 0.57475F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4291339F, 0.71825F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4320866F, 0.80466F, CubicBezierEasingFunction_087());
-                result->InsertKeyFrame(0.4360236F, 0.86207F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4399606F, 0.91149F, CubicBezierEasingFunction_088());
-                result->InsertKeyFrame(0.4448819F, 0.96234F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4507874F, 1, CubicBezierEasingFunction_089());
-                return result;
-            }
-
-            // account_head
-            //   'account_head'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_030()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4153543F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4527559F, 1, CubicBezierEasingFunction_091());
-                return result;
-            }
-
-            // account_bottom
-            //   'account_bottom'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_031()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4576772F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4694882F, 1, CubicBezierEasingFunction_095());
-                return result;
-            }
-
-            // account_eraser
-            //   'account_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_032()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4704725F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.4773622F, 0.22F, CubicBezierEasingFunction_096());
-                result->InsertKeyFrame(0.484252F, 0.62045F, CubicBezierEasingFunction_097());
-                result->InsertKeyFrame(0.4911417F, 1, CubicBezierEasingFunction_098());
-                return result;
-            }
-
-            // eula_stroke
-            //   'eula_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_033()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.2923228F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3001969F, 0.07407F, CubicBezierEasingFunction_099());
-                result->InsertKeyFrame(0.3051181F, 0.15625F, CubicBezierEasingFunction_100());
-                result->InsertKeyFrame(0.3110236F, 0.28175F, CubicBezierEasingFunction_101());
-                result->InsertKeyFrame(0.3159449F, 0.40059F, CubicBezierEasingFunction_102());
-                result->InsertKeyFrame(0.3208661F, 0.52499F, CubicBezierEasingFunction_103());
-                result->InsertKeyFrame(0.3257874F, 0.648F, CubicBezierEasingFunction_104());
-                result->InsertKeyFrame(0.3307087F, 0.76268F, CubicBezierEasingFunction_105());
-                result->InsertKeyFrame(0.3366142F, 0.87951F, CubicBezierEasingFunction_106());
-                result->InsertKeyFrame(0.3415354F, 0.95141F, CubicBezierEasingFunction_107());
-                result->InsertKeyFrame(0.3494095F, 1, CubicBezierEasingFunction_108());
-                return result;
-            }
-
-            // eula_stroke 3
-            //   'eula_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_034()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3346457F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3425197F, 0.54025F, CubicBezierEasingFunction_110());
-                result->InsertKeyFrame(0.351378F, 1, CubicBezierEasingFunction_111());
-                return result;
-            }
-
-            // eula_papersheet
-            //   'eula_papersheet'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_035()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3208661F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3282215F, 0.12138F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.3355758F, 0.31451F, CubicBezierEasingFunction_112());
-                result->InsertKeyFrame(0.3429311F, 0.58463F, CubicBezierEasingFunction_113());
-                result->InsertKeyFrame(0.348815F, 0.80692F, CubicBezierEasingFunction_114());
-                result->InsertKeyFrame(0.3602362F, 1, _cubicBezierEasingFunction_057);
-                return result;
-            }
-
-            // eula_papertop
-            //   'eula_papertop'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_036()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3370945F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3447165F, 0.5F, CubicBezierEasingFunction_115());
-                result->InsertKeyFrame(0.3523391F, 1, CubicBezierEasingFunction_116());
-                return result;
-            }
-
-            // eula_batchcircle
-            //   'eula_batchcircle'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_037()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3297244F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3602901F, 1, CubicBezierEasingFunction_117());
-                return result;
-            }
-
-            // eula_batch
-            //   'eula_batch'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_038()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3356299F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.341812F, 0.20552F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.348875F, 0.33133F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.3559419F, 0.49784F, CubicBezierEasingFunction_118());
-                result->InsertKeyFrame(0.3621221F, 0.78766F, CubicBezierEasingFunction_119());
-                result->InsertKeyFrame(0.3700787F, 1, _cubicBezierEasingFunction_057);
-                return result;
-            }
-
-            // eula_eraser
-            //   'eula_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_039()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3700787F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.3769685F, 0.22F, _cubicBezierEasingFunction_096);
-                result->InsertKeyFrame(0.3838583F, 0.62045F, _cubicBezierEasingFunction_097);
-                result->InsertKeyFrame(0.390748F, 1, _cubicBezierEasingFunction_098);
-                return result;
-            }
-
-            // wifi_stroke
-            //   'wifi_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_040()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.2106299F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.2401575F, 1, CubicBezierEasingFunction_133());
-                return result;
-            }
-
-            // wifi_eraser
-            //   'wifi_eraser'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_041()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.2706693F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.2785433F, 0.33481F, _cubicBezierEasingFunction_020);
-                result->InsertKeyFrame(0.2844488F, 0.68426F, _cubicBezierEasingFunction_021);
-                result->InsertKeyFrame(0.2913386F, 1, _cubicBezierEasingFunction_022);
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 1
-            //           Path 1
-            //             Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_042()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.07853248F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.08527461F, 0.33792F, CubicBezierEasingFunction_137());
-                result->InsertKeyFrame(0.09201378F, 0.59203F, CubicBezierEasingFunction_138());
-                result->InsertKeyFrame(0.1074815F, 1, CubicBezierEasingFunction_139());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 1
-            //         Group: Group 1
-            //           Path 1
-            //             Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_043()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1074813F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1167933F, 0.35118F, CubicBezierEasingFunction_141());
-                result->InsertKeyFrame(0.1335565F, 1, CubicBezierEasingFunction_142());
-                return result;
-            }
-
-            // eraser 9
-            //   'eraser 9'.Contents
-            //     Group: Shape 1
-            //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_1_044()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1692913F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1761811F, 0.22F, _cubicBezierEasingFunction_096);
-                result->InsertKeyFrame(0.1830709F, 0.62045F, _cubicBezierEasingFunction_097);
-                result->InsertKeyFrame(0.1899606F, 1, _cubicBezierEasingFunction_098);
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 1
-            //       Path 1
-            ScalarKeyFrameAnimation^ ScalarAnimation_0_to_9()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1354173F, 0, _linearEasingFunction);
-                result->InsertKeyFrame(0.1397638F, 9, CubicBezierEasingFunction_136());
-                return result;
-            }
-
-            // privacy_stroke
-            //   'privacy_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_000()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9202756F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9255522F, 0.8761F, CubicBezierEasingFunction_006());
-                result->InsertKeyFrame(0.9317096F, 0.71107F, CubicBezierEasingFunction_007());
-                result->InsertKeyFrame(0.9369872F, 0.59211F, CubicBezierEasingFunction_008());
-                result->InsertKeyFrame(0.9413849F, 0.49951F, CubicBezierEasingFunction_009());
-                result->InsertKeyFrame(0.9466605F, 0.37086F, CubicBezierEasingFunction_010());
-                result->InsertKeyFrame(0.9510601F, 0.2111F, CubicBezierEasingFunction_011());
-                result->InsertKeyFrame(0.9563376F, 0.08878F, CubicBezierEasingFunction_012());
-                result->InsertKeyFrame(0.9616142F, 0, CubicBezierEasingFunction_013());
+                result->InsertKeyFrame(0.229729727F, 1, _linearEasingFunction);
+                result->InsertKeyFrame(0.298986495F, 0, CubicBezierEasingFunction_002());
                 return result;
             }
 
-            // privacy_stroke 2
-            //   'privacy_stroke 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_001()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9202756F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9255522F, 0.8761F, _cubicBezierEasingFunction_006);
-                result->InsertKeyFrame(0.9317096F, 0.71107F, _cubicBezierEasingFunction_007);
-                result->InsertKeyFrame(0.9369872F, 0.59211F, _cubicBezierEasingFunction_008);
-                result->InsertKeyFrame(0.9413849F, 0.49951F, _cubicBezierEasingFunction_009);
-                result->InsertKeyFrame(0.9466624F, 0.37086F, _cubicBezierEasingFunction_010);
-                result->InsertKeyFrame(0.9510601F, 0.2111F, _cubicBezierEasingFunction_011);
-                result->InsertKeyFrame(0.9563376F, 0.08878F, _cubicBezierEasingFunction_012);
-                result->InsertKeyFrame(0.9616142F, 0, _cubicBezierEasingFunction_013);
+                result->InsertKeyFrame(0.273648649F, 1, _linearEasingFunction);
+                result->InsertKeyFrame(0.326640368F, 0, CubicBezierEasingFunction_019());
                 return result;
             }
 
-            // privacy_stroke 3
-            //   'privacy_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
             ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_002()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
+                result->Duration = { c_durationTicks };
                 result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9202756F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.9285433F, 0.85485F, CubicBezierEasingFunction_014());
-                result->InsertKeyFrame(0.936812F, 0.63672F, CubicBezierEasingFunction_015());
-                result->InsertKeyFrame(0.944251F, 0.36006F, CubicBezierEasingFunction_016());
-                result->InsertKeyFrame(0.9525197F, 0.15436F, CubicBezierEasingFunction_017());
-                result->InsertKeyFrame(0.9616142F, 0, CubicBezierEasingFunction_018());
+                result->InsertKeyFrame(0.608108103F, 1, _linearEasingFunction);
+                result->InsertKeyFrame(0.631756783F, 0, CubicBezierEasingFunction_020());
                 return result;
             }
 
-            // onedrive_stroke
-            //   'onedrive_stroke'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_003()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.8208662F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.8337982F, 0.60718F, CubicBezierEasingFunction_036());
-                result->InsertKeyFrame(0.8490807F, 0.35254F, CubicBezierEasingFunction_037());
-                result->InsertKeyFrame(0.863189F, 0, CubicBezierEasingFunction_038());
-                return result;
-            }
-
-            // onedrive_stroke 2
-            //   'onedrive_stroke 2'.Contents
-            //     Group: Group 1
+            // 'txt_Hi'.Transforms
+            //   'stroke_main'.Contents
+            //     Group: Shape 1
             //       Path 1
-            //         Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_004()
+            ScalarKeyFrameAnimation^ ScalarAnimation_3155_to_13()
             {
                 auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.8218504F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.8326772F, 0.784F, CubicBezierEasingFunction_039());
-                result->InsertKeyFrame(0.8425197F, 0.60904F, CubicBezierEasingFunction_040());
-                result->InsertKeyFrame(0.855315F, 0.45614F, CubicBezierEasingFunction_041());
-                result->InsertKeyFrame(0.867126F, 0.18287F, CubicBezierEasingFunction_042());
-                result->InsertKeyFrame(0.875F, 0, CubicBezierEasingFunction_043());
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, 3155, LinearEasingFunction());
+                result->InsertKeyFrame(0.0540540554F, 3155, _linearEasingFunction);
+                result->InsertKeyFrame(0.243243247F, 13, CubicBezierEasingFunction_000());
                 return result;
             }
 
-            // fingerprint_stroke 5
-            //   'fingerprint_stroke 5'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_005()
+            ExpressionAnimation^ ScalarExpressionAnimation()
             {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.5590551F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.5708662F, 0, CubicBezierEasingFunction_081());
-                return result;
-            }
-
-            // account_stroke 4
-            //   'account_stroke 4'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_006()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.402559F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.4153543F, 0, CubicBezierEasingFunction_090());
-                return result;
-            }
-
-            // account_body
-            //   'account_body'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_007()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.402559F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.4156348F, 0.79455F, CubicBezierEasingFunction_092());
-                result->InsertKeyFrame(0.4295837F, 0.61978F, CubicBezierEasingFunction_093());
-                result->InsertKeyFrame(0.4426594F, 0.4136F, _cubicBezierEasingFunction_057);
-                result->InsertKeyFrame(0.4576772F, 0, CubicBezierEasingFunction_094());
-                return result;
-            }
-
-            // eula_stroke 2
-            //   'eula_stroke 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_008()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.3336614F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.3435039F, 0, CubicBezierEasingFunction_109());
-                return result;
-            }
-
-            // wifi_brush
-            //   'wifi_brush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_009()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.1909449F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.2012717F, 0.94995F, CubicBezierEasingFunction_120());
-                result->InsertKeyFrame(0.2078425F, 0.87398F, CubicBezierEasingFunction_121());
-                result->InsertKeyFrame(0.2153553F, 0.72932F, CubicBezierEasingFunction_122());
-                result->InsertKeyFrame(0.2238041F, 0.5536F, CubicBezierEasingFunction_123());
-                result->InsertKeyFrame(0.2332677F, 0.30173F, CubicBezierEasingFunction_124());
-                result->InsertKeyFrame(0.2440945F, 0, CubicBezierEasingFunction_125());
-                return result;
-            }
-
-            // wifi_btush
-            //   'wifi_btush'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_010()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.2027559F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.2057087F, 0.98846F, CubicBezierEasingFunction_126());
-                result->InsertKeyFrame(0.2106299F, 0.9321F, CubicBezierEasingFunction_127());
-                result->InsertKeyFrame(0.2165354F, 0.81595F, CubicBezierEasingFunction_128());
-                result->InsertKeyFrame(0.2244094F, 0.63763F, CubicBezierEasingFunction_129());
-                result->InsertKeyFrame(0.230315F, 0.49659F, CubicBezierEasingFunction_130());
-                result->InsertKeyFrame(0.2411417F, 0.2375F, CubicBezierEasingFunction_131());
-                result->InsertKeyFrame(0.2519685F, 0, CubicBezierEasingFunction_132());
-                return result;
-            }
-
-            // wifi_stroke 2
-            //   'wifi_stroke 2'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_011()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.238189F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.25F, 0, CubicBezierEasingFunction_134());
-                return result;
-            }
-
-            // wifi_stroke 3
-            //   'wifi_stroke 3'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_012()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.246063F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.2598425F, 0, _cubicBezierEasingFunction_134);
-                return result;
-            }
-
-            // wifi_stroke 4
-            //   'wifi_stroke 4'.Contents
-            //     Path 1
-            //       Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_013()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.2529528F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.269685F, 0, CubicBezierEasingFunction_135());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 2
-            //           Path 1
-            //             Path 1.PathGeometry
-            ScalarKeyFrameAnimation^ ScalarAnimation_1_to_0_014()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.05905512F, 1, _linearEasingFunction);
-                result->InsertKeyFrame(0.07853254F, 0, CubicBezierEasingFunction_140());
-                return result;
-            }
-
-            // inner_ring 7
-            //   'inner_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            ScalarKeyFrameAnimation^ ScalarAnimation_100_to_0()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 100, _linearEasingFunction);
-                result->InsertKeyFrame(0.7746063F, 100, _linearEasingFunction);
-                result->InsertKeyFrame(0.7942913F, 0, CubicBezierEasingFunction_056());
-                return result;
-            }
-
-            // outer_ring
-            //   'outer_ring'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            ScalarKeyFrameAnimation^ ScalarAnimation_145_to_310()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 145, _linearEasingFunction);
-                result->InsertKeyFrame(0.6948819F, 145, _linearEasingFunction);
-                result->InsertKeyFrame(0.7047244F, 123, CubicBezierEasingFunction_044());
-                result->InsertKeyFrame(0.7244095F, 297, CubicBezierEasingFunction_045());
-                result->InsertKeyFrame(0.75F, 304, CubicBezierEasingFunction_046());
-                result->InsertKeyFrame(0.773622F, 310, CubicBezierEasingFunction_047());
-                return result;
-            }
-
-            // outer_ring 7
-            //   'outer_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            ScalarKeyFrameAnimation^ ScalarAnimation_310_to_0()
-            {
-                auto result = _c->CreateScalarKeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, 310, _linearEasingFunction);
-                result->InsertKeyFrame(0.777559F, 310, _linearEasingFunction);
-                result->InsertKeyFrame(0.7942913F, 0, CubicBezierEasingFunction_054());
+                auto result = _scalarExpressionAnimation = _c->CreateExpressionAnimation();
+                result->SetReferenceParameter("_", _root);
+                result->Expression = "_.Progress";
                 return result;
             }
 
@@ -6186,202 +1734,139 @@ namespace Compositions
                 auto result = _c->CreateShapeVisual();
                 result->Size = { 1920, 1280 };
                 auto shapes = result->Shapes;
-                // SolidLayer:'whitebg'
+                // 'bkg_white'.Contents
                 shapes->Append(ContainerShape_000());
-                // privacy_brush
+                // 'stroke_main'.Contents
                 shapes->Append(ContainerShape_001());
-                // privacy_brush 2
+                // 'UI_WindowsLogo 3'.Transforms
                 shapes->Append(ContainerShape_003());
-                // privacy_stroke
-                shapes->Append(ContainerShape_005());
-                // privacy_stroke 2
-                shapes->Append(ContainerShape_007());
-                // privacy_stroke 3
+                // 'icon_chinese_2'.Transforms
                 shapes->Append(ContainerShape_009());
-                // privacy_stroke 4
-                shapes->Append(ContainerShape_011());
-                // privacy_eraser
-                shapes->Append(ContainerShape_013());
-                // onedrive_brush
-                shapes->Append(ContainerShape_016());
-                // onedrive_brush 2
+                // 'icon_chinese_1'.Transforms
+                shapes->Append(ContainerShape_012());
+                // 'icon_globe_outer'.Transforms
+                shapes->Append(ContainerShape_015());
+                // 'icon_globe_inner'.Transforms
                 shapes->Append(ContainerShape_018());
-                // onedrive_stroke
-                shapes->Append(ContainerShape_020());
-                // onedrive_stroke 2
-                shapes->Append(ContainerShape_022());
-                // onedrive_eraser
-                shapes->Append(ContainerShape_025());
-                // outer_ring
-                shapes->Append(ContainerShape_028());
-                // inner_ring
-                shapes->Append(ContainerShape_031());
-                // outer_ring 7
-                shapes->Append(ContainerShape_034());
-                // inner_ring 7
-                shapes->Append(ContainerShape_037());
-                // pin_brush
-                shapes->Append(ContainerShape_040());
-                // pin_brush 2
-                shapes->Append(ContainerShape_042());
-                // pin_stroke
-                shapes->Append(ContainerShape_044());
-                // pin_stroke 2
-                shapes->Append(ContainerShape_046());
-                // pin_stroke 3
-                shapes->Append(ContainerShape_048());
-                // pin_stroke 4
-                shapes->Append(ContainerShape_050());
-                // pin_stroke 5
-                shapes->Append(ContainerShape_052());
-                // pin_stroke 6
-                shapes->Append(ContainerShape_054());
-                // pin_stroke 7
-                shapes->Append(ContainerShape_056());
-                // pin_stroke 8
-                shapes->Append(ContainerShape_058());
-                // pin_stroke 9
-                shapes->Append(ContainerShape_060());
-                // pin_stroke 10
-                shapes->Append(ContainerShape_062());
-                // pin_erser
-                shapes->Append(ContainerShape_064());
-                // fingerprint_brush
-                shapes->Append(ContainerShape_067());
-                // fingerprint_brush 2
-                shapes->Append(ContainerShape_069());
-                // fingerprint_stroke
-                shapes->Append(ContainerShape_071());
-                // fingerprint_stroke 2
-                shapes->Append(ContainerShape_073());
-                // fingerprint_stroke 3
-                shapes->Append(ContainerShape_075());
-                // fingerprint_stroke 4
-                shapes->Append(ContainerShape_077());
-                // fingerprint_stroke 5
-                shapes->Append(ContainerShape_079());
-                // fingerprint_eraser
-                shapes->Append(ContainerShape_081());
-                // account_stroke
-                shapes->Append(ContainerShape_084());
-                // account_stroke 2
-                shapes->Append(ContainerShape_086());
-                // account_stroke 3
-                shapes->Append(ContainerShape_089());
-                // account_stroke 4
-                shapes->Append(ContainerShape_091());
-                // account_head
-                shapes->Append(ContainerShape_093());
-                // account_body
-                shapes->Append(ContainerShape_095());
-                // account_bottom
-                shapes->Append(ContainerShape_097());
-                // account_eraser
-                shapes->Append(ContainerShape_099());
-                // eula_stroke
-                shapes->Append(ContainerShape_102());
-                // eula_stroke 2
-                shapes->Append(ContainerShape_104());
-                // eula_stroke 3
-                shapes->Append(ContainerShape_106());
-                // eula_papersheet
-                shapes->Append(ContainerShape_108());
-                // eula_papertop
-                shapes->Append(ContainerShape_110());
-                // eula_batchcircle
-                shapes->Append(ContainerShape_112());
-                // eula_batch
-                shapes->Append(ContainerShape_114());
-                // eula_eraser
-                shapes->Append(ContainerShape_116());
-                // wifi_brush
-                shapes->Append(ContainerShape_119());
-                // wifi_btush
-                shapes->Append(ContainerShape_121());
-                // wifi_stroke
-                shapes->Append(ContainerShape_123());
-                // wifi_stroke 2
-                shapes->Append(ContainerShape_125());
-                // wifi_stroke 3
-                shapes->Append(ContainerShape_127());
-                // wifi_stroke 4
-                shapes->Append(ContainerShape_129());
-                // wifi_eraser
-                shapes->Append(ContainerShape_131());
-                // SolidLayer:'blackfading'
-                shapes->Append(ContainerShape_134());
-                // txt_Hi
-                shapes->Append(ContainerShape_136());
-                // eraser 9
-                shapes->Append(ContainerShape_145());
+                // 'A'.Transforms
+                shapes->Append(ContainerShape_021());
+                // 'txt_Hi_dot'.Transforms
+                shapes->Append(ContainerShape_024());
+                // 'txt_Hi'.Transforms
+                shapes->Append(ContainerShape_027());
                 return result;
             }
 
-            // SolidLayer:'whitebg'
+            // 'txt_Hi'.Transforms
+            //   'bkg_white'.Contents
             // SolidLayerRectangle
             CompositionSpriteShape^ SpriteShape_000()
             {
                 auto result = _c->CreateSpriteShape();
-                result->FillBrush = ColorBrush_White();
+                result->FillBrush = ColorBrush_AlmostLavender_FFEBEBEB();
                 result->Geometry = Rectangle_1920x1080();
                 return result;
             }
 
-            // privacy_brush
-            //   'privacy_brush'.Contents
+            // 'txt_Hi'.Transforms
+            //   'stroke_main'.Contents
+            //     Group: Shape 1
             // Path 1
             CompositionSpriteShape^ SpriteShape_001()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_000();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentLightPink_28F1A0B4();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
-                return result;
-            }
-
-            // privacy_brush 2
-            //   'privacy_brush 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_002()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_001();
-                result->StrokeBrush = ColorBrush_AlmostLightPink_FFF1A0B4();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // privacy_stroke
-            //   'privacy_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_003()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_002();
                 result->StrokeBrush = ColorBrush_Black();
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 3155;
+                result->StartAnimation("StrokeThickness", ScalarAnimation_3155_to_13());
+                auto controller = result->TryGetAnimationController("StrokeThickness");
+                controller->Pause();
+                controller->StartAnimation("Progress", ScalarExpressionAnimation());
                 return result;
             }
 
-            // privacy_stroke 2
-            //   'privacy_stroke 2'.Contents
-            // Path 1
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 4
+            // Rectangle Path 1
+            CompositionSpriteShape^ SpriteShape_002()
+            {
+                auto result = _c->CreateSpriteShape();
+                result->FillBrush = AnimatedColorBrush_Black_to_Black_000();
+                result->Geometry = Rectangle_30_000();
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 5
+            // Rectangle Path 1
+            CompositionSpriteShape^ SpriteShape_003()
+            {
+                auto result = _c->CreateSpriteShape();
+                result->FillBrush = AnimatedColorBrush_Black_to_Black_001();
+                result->Geometry = Rectangle_30_001();
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 2
+            // Rectangle Path 1
             CompositionSpriteShape^ SpriteShape_004()
+            {
+                auto result = _c->CreateSpriteShape();
+                result->FillBrush = AnimatedColorBrush_Black_to_Black_002();
+                result->Geometry = Rectangle_30_002();
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            //     'UI_WindowsLogo 3'.Contents
+            //       Group: Group 1
+            // Path 1
+            CompositionSpriteShape^ SpriteShape_005()
+            {
+                auto result = _c->CreateSpriteShape();
+                result->FillBrush = AnimatedColorBrush_Black_to_Black_003();
+                result->Geometry = PathGeometry_001();
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            // Path 4
+            CompositionSpriteShape^ SpriteShape_006()
+            {
+                auto result = _c->CreateSpriteShape();
+                result->Geometry = PathGeometry_002();
+                result->StrokeBrush = _colorBrush_Black;
+                result->StrokeDashCap = CompositionStrokeCap::Round;
+                result->StrokeEndCap = CompositionStrokeCap::Round;
+                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
+                result->StrokeStartCap = CompositionStrokeCap::Round;
+                result->StrokeMiterLimit = 4;
+                result->StrokeThickness = 13;
+                return result;
+            }
+
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            // Path 5
+            CompositionSpriteShape^ SpriteShape_007()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_003();
@@ -6391,14 +1876,16 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // privacy_stroke 3
-            //   'privacy_stroke 3'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_005()
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_2'.Transforms
+            //     'icon_chinese_2'.Contents
+            //       Group: icon_chinese_2
+            // Path 3
+            CompositionSpriteShape^ SpriteShape_008()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_004();
@@ -6408,14 +1895,16 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // privacy_stroke 4
-            //   'privacy_stroke 4'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_006()
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            //     'icon_chinese_1'.Contents
+            //       Group: icon_chinese_1
+            // Path 2
+            CompositionSpriteShape^ SpriteShape_009()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_005();
@@ -6425,66 +1914,73 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // privacy_eraser
-            //   'privacy_eraser'.Contents
-            //     Group: Shape 1
+            // 'txt_Hi'.Transforms
+            //   'icon_chinese_1'.Transforms
+            //     'icon_chinese_1'.Contents
+            //       Group: icon_chinese_1
             // Path 1
-            CompositionSpriteShape^ SpriteShape_007()
+            CompositionSpriteShape^ SpriteShape_010()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_006();
-                result->StrokeBrush = _colorBrush_White;
+                result->StrokeBrush = _colorBrush_Black;
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // onedrive_brush
-            //   'onedrive_brush'.Contents
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_outer'.Transforms
+            //     'icon_globe_outer'.Contents
+            //       Group: icon_globe_outer
             // Path 1
-            CompositionSpriteShape^ SpriteShape_008()
+            CompositionSpriteShape^ SpriteShape_011()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_007();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentPowderBlue_66B4E6E8();
+                result->StrokeBrush = _colorBrush_Black;
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // onedrive_brush 2
-            //   'onedrive_brush 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_009()
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            // Path 4
+            CompositionSpriteShape^ SpriteShape_012()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_008();
-                result->StrokeBrush = ColorBrush_AlmostPowderBlue_FFB4E6E8();
+                result->StrokeBrush = _colorBrush_Black;
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // onedrive_stroke
-            //   'onedrive_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_010()
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            // Path 3
+            CompositionSpriteShape^ SpriteShape_013()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_009();
@@ -6494,15 +1990,16 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // onedrive_stroke 2
-            //   'onedrive_stroke 2'.Contents
-            //     Group: Group 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_011()
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
+            // Path 2
+            CompositionSpriteShape^ SpriteShape_014()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_010();
@@ -6512,134 +2009,73 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // onedrive_eraser
-            //   'onedrive_eraser'.Contents
-            //     Group: Shape 1
+            // 'txt_Hi'.Transforms
+            //   'icon_globe_inner'.Transforms
+            //     'icon_globe_inner'.Contents
+            //       Group: icon_globe_inner
             // Path 1
-            CompositionSpriteShape^ SpriteShape_012()
+            CompositionSpriteShape^ SpriteShape_015()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_011();
-                result->StrokeBrush = _colorBrush_White;
+                result->StrokeBrush = _colorBrush_Black;
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // outer_ring
-            //   'outer_ring'.Contents
-            //     Group: Ellipse 1
-            // Ellipse Path 1
-            CompositionSpriteShape^ SpriteShape_013()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = Ellipse_472p5();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentCornflowerBlue_7261AADD();
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 145;
-                result->StartAnimation("StrokeThickness", ScalarAnimation_145_to_310());
-                auto controller = result->TryGetAnimationController("StrokeThickness");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // inner_ring
-            //   'inner_ring'.Contents
-            //     Group: Ellipse 1
-            // Ellipse Path 1
-            CompositionSpriteShape^ SpriteShape_014()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = Ellipse_580p5();
-                result->StrokeBrush = ColorBrush_AlmostCornflowerBlue_FF61AADD();
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 100;
-                return result;
-            }
-
-            // outer_ring 7
-            //   'outer_ring 7'.Contents
-            //     Group: Ellipse 1
-            // Ellipse Path 1
-            CompositionSpriteShape^ SpriteShape_015()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = Ellipse_536p5();
-                result->StrokeBrush = _colorBrush_AlmostSemiTransparentCornflowerBlue_7261AADD;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 310;
-                result->StartAnimation("StrokeThickness", ScalarAnimation_310_to_0());
-                auto controller = result->TryGetAnimationController("StrokeThickness");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // inner_ring 7
-            //   'inner_ring 7'.Contents
-            //     Group: Ellipse 1
-            // Ellipse Path 1
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            //     'A'.Contents
+            //       Group: icon_A
+            // Path 2
             CompositionSpriteShape^ SpriteShape_016()
             {
                 auto result = _c->CreateSpriteShape();
-                result->Geometry = Ellipse_401p5();
-                result->StrokeBrush = _colorBrush_AlmostCornflowerBlue_FF61AADD;
+                result->Geometry = PathGeometry_012();
+                result->StrokeBrush = _colorBrush_Black;
+                result->StrokeDashCap = CompositionStrokeCap::Round;
+                result->StrokeEndCap = CompositionStrokeCap::Round;
+                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
+                result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 100;
-                result->StartAnimation("StrokeThickness", ScalarAnimation_100_to_0());
-                auto controller = result->TryGetAnimationController("StrokeThickness");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // pin_brush
-            //   'pin_brush'.Contents
+            // 'txt_Hi'.Transforms
+            //   'A'.Transforms
+            //     'A'.Contents
+            //       Group: icon_A
             // Path 1
             CompositionSpriteShape^ SpriteShape_017()
             {
                 auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_012();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentThistle_66D3C2E4();
+                result->Geometry = PathGeometry_013();
+                result->StrokeBrush = _colorBrush_Black;
                 result->StrokeDashCap = CompositionStrokeCap::Round;
                 result->StrokeEndCap = CompositionStrokeCap::Round;
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
+                result->StrokeThickness = 13;
                 return result;
             }
 
-            // pin_brush 2
-            //   'pin_brush 2'.Contents
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi_dot'.Transforms
+            //     'txt_Hi_dot'.Contents
+            //       Group: Group 1
             // Path 1
             CompositionSpriteShape^ SpriteShape_018()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_013();
-                result->StrokeBrush = ColorBrush_AlmostThistle_FFD3C2E4();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // pin_stroke
-            //   'pin_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_019()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_014();
@@ -6649,14 +2085,22 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 0;
+                result->StartAnimation("StrokeThickness", ScalarAnimation_0_to_0());
+                auto controller = result->TryGetAnimationController("StrokeThickness");
+                controller->Pause();
+                controller->StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // pin_stroke 2
-            //   'pin_stroke 2'.Contents
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 2
+            //           Group: Group 1
             // Path 1
-            CompositionSpriteShape^ SpriteShape_020()
+            CompositionSpriteShape^ SpriteShape_019()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_015();
@@ -6666,14 +2110,18 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 6.80000019F;
                 return result;
             }
 
-            // pin_stroke 3
-            //   'pin_stroke 3'.Contents
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 2
+            //           Group: Group 2
             // Path 1
-            CompositionSpriteShape^ SpriteShape_021()
+            CompositionSpriteShape^ SpriteShape_020()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_016();
@@ -6683,14 +2131,18 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 6.80000019F;
                 return result;
             }
 
-            // pin_stroke 4
-            //   'pin_stroke 4'.Contents
+            // 'txt_Hi'.Transforms
+            //   'txt_Hi'.Transforms
+            //     'txt_Hi'.Contents
+            //       Group: Group 2
+            //         Group: Group 1
+            //           Group: Group 1
             // Path 1
-            CompositionSpriteShape^ SpriteShape_022()
+            CompositionSpriteShape^ SpriteShape_021()
             {
                 auto result = _c->CreateSpriteShape();
                 result->Geometry = PathGeometry_017();
@@ -6700,836 +2152,20 @@ namespace Compositions
                 result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
                 result->StrokeStartCap = CompositionStrokeCap::Round;
                 result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
+                result->StrokeThickness = 6.80000019F;
                 return result;
             }
 
-            // pin_stroke 5
-            //   'pin_stroke 5'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_023()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_018();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_stroke 6
-            //   'pin_stroke 6'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_024()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_019();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_stroke 7
-            //   'pin_stroke 7'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_025()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_020();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_stroke 8
-            //   'pin_stroke 8'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_026()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_021();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_stroke 9
-            //   'pin_stroke 9'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_027()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_022();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_stroke 10
-            //   'pin_stroke 10'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_028()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_023();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // pin_erser
-            //   'pin_erser'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_029()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_024();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 182;
-                return result;
-            }
-
-            // fingerprint_brush
-            //   'fingerprint_brush'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_030()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_025();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentThistle_66D2C1E4();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
-                return result;
-            }
-
-            // fingerprint_brush 2
-            //   'fingerprint_brush 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_031()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_026();
-                result->StrokeBrush = ColorBrush_AlmostThistle_FFD2C1E4();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // fingerprint_stroke
-            //   'fingerprint_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_032()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_027();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // fingerprint_stroke 2
-            //   'fingerprint_stroke 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_033()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_028();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // fingerprint_stroke 3
-            //   'fingerprint_stroke 3'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_034()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_029();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // fingerprint_stroke 4
-            //   'fingerprint_stroke 4'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_035()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_030();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // fingerprint_stroke 5
-            //   'fingerprint_stroke 5'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_036()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_031();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // fingerprint_eraser
-            //   'fingerprint_eraser'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_037()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_032();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
-                return result;
-            }
-
-            // account_stroke
-            //   'account_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_038()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_033();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentMediumAquamarine_7F6BC592();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
-                return result;
-            }
-
-            // account_stroke 2
-            //   'account_stroke 2'.Contents
-            //     Group: Group 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_039()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_034();
-                result->StrokeBrush = ColorBrush_AlmostMediumAquamarine_FF6BC592();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // account_stroke 3
-            //   'account_stroke 3'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_040()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_035();
-                result->StrokeBrush = _colorBrush_AlmostSemiTransparentMediumAquamarine_7F6BC592;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
-                return result;
-            }
-
-            // account_stroke 4
-            //   'account_stroke 4'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_041()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_036();
-                result->StrokeBrush = _colorBrush_AlmostMediumAquamarine_FF6BC592;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // account_head
-            //   'account_head'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_042()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_037();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // account_body
-            //   'account_body'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_043()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_038();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // account_bottom
-            //   'account_bottom'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_044()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_039();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // account_eraser
-            //   'account_eraser'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_045()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_040();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
-                return result;
-            }
-
-            // eula_stroke
-            //   'eula_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_046()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_041();
-                result->StrokeBrush = ColorBrush_AlmostLemonChiffon_FFFFF6D2();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 35;
-                return result;
-            }
-
-            // eula_stroke 2
-            //   'eula_stroke 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_047()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_042();
-                result->StrokeBrush = _colorBrush_AlmostLemonChiffon_FFFFF6D2;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 35;
-                return result;
-            }
-
-            // eula_stroke 3
-            //   'eula_stroke 3'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_048()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_043();
-                result->StrokeBrush = ColorBrush_AlmostKhaki_FFFFEA94();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // eula_papersheet
-            //   'eula_papersheet'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_049()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_044();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // eula_papertop
-            //   'eula_papertop'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_050()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_045();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // eula_batchcircle
-            //   'eula_batchcircle'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_051()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_046();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // eula_batch
-            //   'eula_batch'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_052()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_047();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // eula_eraser
-            //   'eula_eraser'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_053()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_048();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
-                return result;
-            }
-
-            // wifi_brush
-            //   'wifi_brush'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_054()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_049();
-                result->StrokeBrush = ColorBrush_AlmostSemiTransparentSkyBlue_6693DBCA();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 32;
-                return result;
-            }
-
-            // wifi_btush
-            //   'wifi_btush'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_055()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_050();
-                result->StrokeBrush = ColorBrush_AlmostSkyBlue_FF92DBC9();
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 40;
-                return result;
-            }
-
-            // wifi_stroke
-            //   'wifi_stroke'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_056()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_051();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // wifi_stroke 2
-            //   'wifi_stroke 2'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_057()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_052();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // wifi_stroke 3
-            //   'wifi_stroke 3'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_058()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_053();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // wifi_stroke 4
-            //   'wifi_stroke 4'.Contents
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_059()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_054();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 10;
-                return result;
-            }
-
-            // wifi_eraser
-            //   'wifi_eraser'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_060()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_055();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
-                return result;
-            }
-
-            // SolidLayer:'blackfading'
-            //   'blackfading'.Contents
-            // SolidLayerRectangle
-            CompositionSpriteShape^ SpriteShape_061()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->FillBrush = AnimatedColorBrush_Black_to_Transparent();
-                result->Geometry = Rectangle_1920x1280();
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_062()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_056();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 0;
-                result->StartAnimation("StrokeThickness", ScalarAnimation_0_to_9());
-                auto controller = result->TryGetAnimationController("StrokeThickness");
-                controller->Pause();
-                controller->StartAnimation("Progress", ExpressionAnimation_000());
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_063()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_057();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 6.8F;
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 2
-            //         Group: Group 2
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_064()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_058();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 6.8F;
-                return result;
-            }
-
-            // txt_Hi
-            //   'txt_Hi'.Contents
-            //     Group: Group 2
-            //       Group: Group 1
-            //         Group: Group 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_065()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_059();
-                result->StrokeBrush = _colorBrush_Black;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 6.8F;
-                return result;
-            }
-
-            // eraser 9
-            //   'eraser 9'.Contents
-            //     Group: Shape 1
-            // Path 1
-            CompositionSpriteShape^ SpriteShape_066()
-            {
-                auto result = _c->CreateSpriteShape();
-                result->Geometry = PathGeometry_060();
-                result->StrokeBrush = _colorBrush_White;
-                result->StrokeDashCap = CompositionStrokeCap::Round;
-                result->StrokeEndCap = CompositionStrokeCap::Round;
-                result->StrokeLineJoin = CompositionStrokeLineJoin::Round;
-                result->StrokeStartCap = CompositionStrokeCap::Round;
-                result->StrokeMiterLimit = 4;
-                result->StrokeThickness = 164;
-                return result;
-            }
-
-            // outer_ring
-            //   'outer_ring'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
-            Vector2KeyFrameAnimation^ Vector2Animation_000()
+            // 'txt_Hi'.Transforms
+            //   'UI_WindowsLogo 3'.Transforms
+            Vector2KeyFrameAnimation^ Vector2Animation()
             {
                 auto result = _c->CreateVector2KeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, { 472.5F, 472.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.6948819F, { 472.5F, 472.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.7007874F, { 490, 490 }, _cubicBezierEasingFunction_044);
-                result->InsertKeyFrame(0.7244095F, { 555, 555 }, CubicBezierEasingFunction_048());
-                result->InsertKeyFrame(0.75F, { 507, 507 }, CubicBezierEasingFunction_049());
-                result->InsertKeyFrame(0.773622F, { 536.5F, 536.5F }, CubicBezierEasingFunction_050());
-                return result;
-            }
-
-            // inner_ring
-            //   'inner_ring'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
-            Vector2KeyFrameAnimation^ Vector2Animation_001()
-            {
-                auto result = _c->CreateVector2KeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, { 580.5F, 580.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.6948819F, { 580.5F, 580.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.7165354F, { 364, 364 }, CubicBezierEasingFunction_051());
-                result->InsertKeyFrame(0.7470472F, { 414.79F, 414.79F }, CubicBezierEasingFunction_052());
-                result->InsertKeyFrame(0.773622F, { 401.5F, 401.5F }, CubicBezierEasingFunction_053());
-                return result;
-            }
-
-            // outer_ring 7
-            //   'outer_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
-            Vector2KeyFrameAnimation^ Vector2Animation_002()
-            {
-                auto result = _c->CreateVector2KeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, { 536.5F, 536.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.777559F, { 536.5F, 536.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.7942913F, { 0, 0 }, CubicBezierEasingFunction_055());
-                return result;
-            }
-
-            // inner_ring 7
-            //   'inner_ring 7'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
-            Vector2KeyFrameAnimation^ Vector2Animation_003()
-            {
-                auto result = _c->CreateVector2KeyFrameAnimation();
-                result->Duration = { 169330000L };
-                result->InsertKeyFrame(0, { 401.5F, 401.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.5561838F, { 401.5F, 401.5F }, _linearEasingFunction);
-                result->InsertKeyFrame(0.570318F, { 0, 0 }, CubicBezierEasingFunction_057());
-                result->InsertKeyFrame(1, { 387.5F, 387.5F }, CubicBezierEasingFunction_058());
+                result->Duration = { c_durationTicks };
+                result->InsertKeyFrame(0, { 1.70000005F, 1.70000005F }, _linearEasingFunction);
+                result->InsertKeyFrame(0.0878378376F, { 2.02999997F, 2.02999997F }, CubicBezierEasingFunction_003());
+                result->InsertKeyFrame(0.160472974F, { 2.02999997F, 2.02999997F }, CubicBezierEasingFunction_004());
+                result->InsertKeyFrame(0.212837845F, { 1.70000005F, 1.70000005F }, CubicBezierEasingFunction_005());
                 return result;
             }
 
@@ -7548,9 +2184,9 @@ namespace Compositions
             }
 
             Instantiator(Compositor^ compositor)
+                : _c(compositor)
+                , _reusableExpressionAnimation(compositor->CreateExpressionAnimation())
             {
-                _c = compositor;
-                _reusableExpressionAnimation = _c->CreateExpressionAnimation();
                 FFHR(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf()));
             }
 

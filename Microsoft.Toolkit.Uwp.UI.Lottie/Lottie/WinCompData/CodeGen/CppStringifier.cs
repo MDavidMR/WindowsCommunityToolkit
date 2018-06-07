@@ -74,7 +74,7 @@ namespace WinCompData.CodeGen
             return $"{{{Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)}}}";
         }
 
-        public override string Readonly => "";
+        public override string Readonly(string value) => $"{value} const";
 
         public override string ReferenceTypeName(string value) =>
             value == "CanvasGeometry"

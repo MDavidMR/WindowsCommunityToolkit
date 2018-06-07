@@ -11,6 +11,9 @@
     <Filter Include="Controls">
       <UniqueIdentifier>{9831166c-20b7-4b44-8975-aae587615ca8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compositions">
+      <UniqueIdentifier>{ec2bfac0-6183-4ef8-8455-72feb275c90d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -19,13 +22,20 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="MyComposition.cpp" />
+    <ClCompile Include="AnimationControl.xaml.cpp" />
+    <ClCompile Include="MyComposition.cpp">
+      <Filter>Compositions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="ICompositionSource.h" />
+    <ClInclude Include="AnimationControl.xaml.h" />
+    <ClInclude Include="MyComposition.h">
+      <Filter>Compositions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

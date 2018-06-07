@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -63,15 +64,17 @@ namespace LottieViewer
                 return;
             }
 
+            var suggestedClassName = Path.GetFileNameWithoutExtension(pickedFile.Name);
+
             switch (pickedFile.FileType)
             {
                 // If an unrecognized file type is specified, treat it as C#.
                 default:
                 case ".cs":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode(Path.GetFileNameWithoutExtension(pickedFile.Name)));
+                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode(suggestedClassName));
                     break;
                 case ".cpp":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCxCode(Path.GetFileNameWithoutExtension(pickedFile.Name)));
+                    await GenerateCxCode(diagnostics, suggestedClassName, pickedFile);
                     break;
                 case ".xml":
                     await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateLottieXml());
@@ -80,6 +83,67 @@ namespace LottieViewer
                     //case ".xml":
                     //    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateWinCompXml());
                     //    break;
+            }
+        }
+
+        async Task GenerateCxCode(LottieCompositionDiagnostics diagnostics, string suggestedClassName, IStorageFile cppFile)
+        {
+            // Ask the user to pick a name for the .h file.
+            var filePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                SuggestedFileName = diagnostics.SuggestedName,
+            };
+
+            // Dropdown of file types the user can save the file as
+            filePicker.FileTypeChoices.Add("C++ CX header", new[] { ".h" });
+
+            var hFile = await filePicker.PickSaveFileAsync();
+
+            // Ask the user to pick a name for the .h file.
+            var iCompositionSourceFilePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                SuggestedFileName = "ICompositionSource.h",
+            };
+
+            // Dropdown of file types the user can save the file as
+            iCompositionSourceFilePicker.FileTypeChoices.Add("ICompositionSource header", new[] { ".h" });
+            var iCompositionSourceHeader = await iCompositionSourceFilePicker.PickSaveFileAsync();
+
+            // Generate the .cpp and the .h text.
+            diagnostics.GenerateCxCode(suggestedClassName, hFile.Name, out var cppText, out var hText);
+            
+            // Write the .cpp file.
+            await FileIO.WriteTextAsync(cppFile, cppText);
+
+            // Write the .h file if the user specified one.
+            if (hFile != null)
+            {
+                await FileIO.WriteTextAsync(hFile, hText);
+            }
+
+            // Write the ICompositionSource.h file if the user specified it.
+            if (iCompositionSourceHeader != null)
+            {
+                await FileIO.WriteLinesAsync(iCompositionSourceHeader, new[]
+                {
+                    "#pragma once",
+                    "namespace Compositions",
+                    "{",
+                    "    public interface class ICompositionSource",
+                    "    {",
+                    "        virtual bool TryCreateInstance(",
+                    "        Windows::UI::Composition::Compositor^ compositor,",
+                    "        Windows::UI::Composition::Visual^* rootVisual,",
+                    "        Windows::Foundation::Numerics::float2* size,",
+                    "        Windows::UI::Composition::CompositionPropertySet^* progressPropertySet,",
+                    "        Windows::Foundation::TimeSpan* duration,",
+                    "        Platform::Object^* diagnostics);",
+                    "    };",
+                    "}",
+                    ""
+                });
             }
         }
 

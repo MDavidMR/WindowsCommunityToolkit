@@ -141,6 +141,7 @@
       <DependentUpon>AnimationControl.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="ICompositionSource.h" />
+    <ClInclude Include="MyComposition.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>

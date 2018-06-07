@@ -84,17 +84,24 @@ namespace Lottie
         }
 
 
-        public string GenerateCxCode(string suggestedClassName)
+        public void GenerateCxCode(string suggestedClassName, string headerFileName, out string cppText, out string hText)
         {
-            if (LottieComposition == null) { return null; }
-            return
-                WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
-                    MakeNameSuitableForTypeName(suggestedClassName),
-                    RootVisual,
-                    (float)LottieComposition.Width,
-                    (float)LottieComposition.Height,
-                    RootVisual.Properties,
-                    LottieComposition.Duration);
+            if (LottieComposition == null) {
+                cppText = null;
+                hText = null;
+                return;
+            }
+
+            WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
+                MakeNameSuitableForTypeName(suggestedClassName),
+                RootVisual,
+                (float)LottieComposition.Width,
+                (float)LottieComposition.Height,
+                RootVisual.Properties,
+                LottieComposition.Duration,
+                headerFileName,
+                out cppText,
+                out hText);
         }
 
         static string MakeNameSuitableForTypeName(string name)

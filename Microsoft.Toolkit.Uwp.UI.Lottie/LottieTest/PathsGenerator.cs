@@ -139,7 +139,7 @@ namespace LottieTest
 
             public string Null => "";
 
-            public string Readonly => "";
+            public string Readonly(string value) => "";
 
             public string ScopeResolve => "";
 
