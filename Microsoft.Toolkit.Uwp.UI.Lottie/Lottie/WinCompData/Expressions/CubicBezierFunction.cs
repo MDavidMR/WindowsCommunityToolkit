@@ -32,6 +32,11 @@ namespace WinCompData.Expressions
         }
 
         /// <summary>
+        /// A <see cref="CubicBezierFunction"/> that describes a line from 0 to 0.
+        /// </summary>
+        public static CubicBezierFunction Zero { get; } = Create(new SnVector2(0,0), new SnVector2(0, 0), new SnVector2(0, 0), new SnVector2(0, 0), Scalar(0));
+
+        /// <summary>
         /// True iff the cubic bezier is equivalent to a line drawn from point 0 to point 3.
         /// </summary>
         public bool IsEquivalentToLinear

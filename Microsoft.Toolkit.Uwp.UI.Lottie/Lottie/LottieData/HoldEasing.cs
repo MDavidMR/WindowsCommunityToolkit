@@ -18,7 +18,7 @@ namespace LottieData
 
         public static HoldEasing Instance { get; } = new HoldEasing();
 
-        public override EasingType Type => EasingType.Step;
+        public override EasingType Type => EasingType.Hold;
 
         // All SetpEeasings are equivalent.
         public override int GetHashCode() => (int)Type;

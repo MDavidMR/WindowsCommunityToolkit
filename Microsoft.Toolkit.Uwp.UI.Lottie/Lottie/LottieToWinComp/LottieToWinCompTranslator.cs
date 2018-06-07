@@ -2098,23 +2098,22 @@ namespace LottieToWinComp
                                 Expr.Scalar($"{c_rootName}.{progressMappingProperty}"));
 #endif
                             break;
-                        case Easing.EasingType.Step:
-                            // TODO - HACK - steps should never have interesting cubic beziers. So for now create one that is definitely colinear.
-                            cb = CubicBezierFunction.Create(cp0, cp0, cp0, cp0, Expr.Scalar(0));
+                        case Easing.EasingType.Hold:
+                            // Holds should never have interesting cubic beziers, so replace with one that is definitely colinear.
+                            cb = CubicBezierFunction.Zero;
                             break;
                         default:
                             throw new InvalidOperationException();
                     }
-                    var cbExpression = cb.ToString();
 
-
-                    if (cb.IsEquivalentToLinear
+                    if (cb.IsEquivalentToLinear || adjustedProgress == 0
 #if !SpatialBeziers
                         || true
 #endif
                         )
                     {
-                        // The cubic bezier function is equivalent to a line, so just use a regular key frame.
+                        // The cubic bezier function is equivalent to a line, or its value starts at the start of the animation, so no need
+                        // for an expression to do spatial beziers on it. Just use a regular key frame.
 
                         if (previousKeyFrameWasExpression)
                         {
@@ -2128,7 +2127,7 @@ namespace LottieToWinComp
                     }
                     else
                     {
-                        // Expression key frame needed to for a spatial bezier.
+                        // Expression key frame needed for a spatial bezier.
                         if (!progressMappingPropertyAdded)
                         {
                             _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
@@ -2481,7 +2480,7 @@ namespace LottieToWinComp
                     return CreateLinearEasingFunction();
                 case Easing.EasingType.CubicBezier:
                     return CreateCubicBezierEasingFunction((CubicBezierEasing)easingFunction);
-                case Easing.EasingType.Step:
+                case Easing.EasingType.Hold:
                     return CreateHoldStepEasingFunction();
                 default:
                     throw new InvalidOperationException();

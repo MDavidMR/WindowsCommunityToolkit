@@ -30,8 +30,9 @@ namespace LottieData
             }
             switch (Type)
             {
+                case EasingType.Hold:
                 case EasingType.Linear:
-                    // Linear easings have no parameters, so they're all equivalent to each other.
+                    // Linear and hold easings have no parameters, so they're all equivalent to each other.
                     return true;
                 case EasingType.CubicBezier:
                     var xCb = (CubicBezierEasing)this;
@@ -50,7 +51,7 @@ namespace LottieData
         {
             Linear,
             CubicBezier,
-            Step,
+            Hold,
         }
 
     }

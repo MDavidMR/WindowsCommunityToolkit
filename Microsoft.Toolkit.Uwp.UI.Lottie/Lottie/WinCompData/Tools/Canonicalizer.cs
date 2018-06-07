@@ -46,6 +46,7 @@ namespace WinCompData.Tools
                 // Easing functions must be canonicalized before keyframes are canonicalized.
                 CanonicalizeLinearEasingFunctions();
                 CanonicalizeCubicBezierEasingFunctions();
+                CanonicalizeStepEasingFunctions();
 
                 CanonicalizeExpressionAnimations();
 
@@ -360,6 +361,29 @@ namespace WinCompData.Tools
 
                 CanonicalizeGrouping(grouping);
             }
+
+            void CanonicalizeStepEasingFunctions()
+            {
+                var items = GetCanonicalizableCompositionObjects<StepEasingFunction>(CompositionObjectType.StepEasingFunction);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Obj
+                    group item.Node by
+                    new
+                    {
+                        obj.FinalStep,
+                        obj.InitialStep,
+                        obj.IsFinalStepSingleFrame,
+                        obj.IsInitialStepSingleFrame,
+                        obj.StepCount,
+                    }
+                    into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
 
             static NodeAndObject<C> NewNodeAndObject<C>(T node, C obj)
                 => new NodeAndObject<C> { Node = node, Obj = obj };
