@@ -1285,7 +1285,7 @@ namespace WinCompData.CodeGen
         string Float(float value) => _stringifier.Float(value);
 
         // A float for use in an id.
-        static string FloatId(float value) => value.ToString("0.###").Replace('.', 'p');
+        static string FloatId(float value) => value.ToString("0.###").Replace('.', 'p').Replace('-', 'm');
 
         string Int(int value) => _stringifier.Int32(value);
         string Int64(long value) => _stringifier.Int64(value);

@@ -135,7 +135,7 @@ namespace LottieToWinComp
             // Set up the translator.
             using (var translator = new LottieToWinCompTranslator(
                 lottieComposition,
-                new WinCompData.Compositor(),
+                new Compositor(),
                 strictTranslation,
                 annotateCompositionObjects,
                 addCodegenDescriptions))
@@ -155,7 +155,7 @@ namespace LottieToWinComp
         void Translate()
         {
             var context = new TranslationContext(_lc);
-            AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers);
+            AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers, compositionDescription: "");
             if (_lc.Is3d)
             {
                 if (_lc.Is3d)
@@ -165,15 +165,35 @@ namespace LottieToWinComp
             }
         }
 
-        void AddTranslatedLayersToContainerVisual(ContainerVisual container, TranslationContext context, LayerCollection layers)
+        void AddTranslatedLayersToContainerVisual(
+            ContainerVisual container,
+            TranslationContext context,
+            LayerCollection layers,
+            string compositionDescription)
         {
             var translatedLayers =
                 (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select translatedLayer);
+                 select (translatedLayer: translatedLayer, layer));
 
-            var translatedAsVisuals = VisualsAndShapesToVisuals(context, translatedLayers);
+            foreach (var (translatedLayer, layer) in translatedLayers)
+            {
+                // Add a description to the resulting object for use in codegen comments.
+                var shortDescription = string.IsNullOrWhiteSpace(compositionDescription)
+                    ? layer.Name
+                    : $"{compositionDescription}.{layer.Name}";
+
+                var longDescription = string.IsNullOrWhiteSpace(compositionDescription)
+                    ? $"{layer.Type} layer: \"{layer.Name}\"."
+                    : $"{layer.Type} layer: \"{layer.Name}\" in asset: \"{compositionDescription}\".";
+
+                Describe(translatedLayer, longDescription, shortDescription);
+            }
+
+            // Layers are translated into either a Visual tree or a Shape tree. Convert the list of Visual and
+            // Shape roots to a list of Visual roots by wrapping the Shape trees in ShapeVisuals.
+            var translatedAsVisuals = VisualsAndShapesToVisuals(context, translatedLayers.Select(a => a.translatedLayer));
 
             container.Children.AddRange(translatedAsVisuals);
         }
@@ -200,6 +220,8 @@ namespace LottieToWinComp
 #endif 
                         }
                         shapeVisual.Shapes.Add((CompositionShape)item);
+                        // TODO - combine the descriptions beter.
+                        shapeVisual.ShortDescription = item.ShortDescription;
                         break;
                     case CompositionObjectType.ContainerVisual:
                     case CompositionObjectType.ShapeVisual:
@@ -358,8 +380,6 @@ namespace LottieToWinComp
 
             // Return the root of the chain of transforms (might be the same as the contents node)
             Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
-            Describe(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
-
             return true;
         }
 
@@ -435,7 +455,7 @@ namespace LottieToWinComp
                 leafTransformNode.Children.Add(contentsNode);
 
 #if !NoInvisibility
-                var invisible =  Expr.Scalar(0);
+                var invisible = Expr.Scalar(0);
                 var visible = Expr.Scalar(1);
 
                 var visibilityExpression =
@@ -456,13 +476,9 @@ namespace LottieToWinComp
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                     : $"'{layer.Name}'.Contents");
 
-            Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
-
             Describe(contentsNode, contentsNode.Comment != null
                 ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                 : $"'{layer.Name}'.Contents");
-
-            Describe(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
 
             return true;
         }
@@ -500,10 +516,11 @@ namespace LottieToWinComp
             switch (referencedLayersAsset.Type)
             {
                 case Asset.AssetType.LayerCollection:
-                    var referencedLayers = ((LayerCollectionAsset)referencedLayersAsset).Layers;
+                    var layerCollectionAsset = (LayerCollectionAsset)referencedLayersAsset;
+                    var referencedLayers = layerCollectionAsset.Layers;
                     // Push the reference layers onto the stack. These will be used to look up parent transforms for layers under this precomp.
                     var subContext = new TranslationContext(context, layer, referencedLayers);
-                    AddTranslatedLayersToContainerVisual(contentsNode, subContext, referencedLayers);
+                    AddTranslatedLayersToContainerVisual(contentsNode, subContext, referencedLayers, $"{layer.Name}:{layerCollectionAsset.Id}");
                     break;
                 case Asset.AssetType.Image:
                     Unsupported("Image assets.");
@@ -512,8 +529,7 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
 
-            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'"); ;
-            DescribeLayer(result, layer);
+            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'");
             return result;
         }
 
@@ -769,10 +785,6 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 contentsNode.Shapes.AddRange(contents);
-
-                Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-                DescribeLayer(rootNode, layer);
-
                 return rootNode;
             }
             else
@@ -1579,11 +1591,8 @@ namespace LottieToWinComp
 
             Annotate(rectangle, "SolidLayerRectangle");
             Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
-            Annotate(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
             Describe(rectangle, "SolidLayerRectangle");
             Describe(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
-            Describe(rootNode, $"{layer.Type}Layer:'{layer.Name}'");
-
             return rootNode;
         }
 
@@ -1712,7 +1721,7 @@ namespace LottieToWinComp
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation( 
+                var offsetExpression = CreateExpressionAnimation(
                     Expr.Vector3(
                         Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar("my.Anchor.X")),
                         Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar("my.Anchor.Y")),
@@ -2000,6 +2009,14 @@ namespace LottieToWinComp
                 // TODO - handle this earlier.
                 return;
             }
+            else if (trimmedKeyFrames.Length == 1)
+            {
+                // If only 1 keyframe is returned, it should always be the first keyframe.
+                Debug.Assert(trimmedKeyFrames[0].Value.Equals(value.InitialValue));
+
+                // TODO - handle this earlier
+                return;
+            }
 
             var firstKeyFrame = trimmedKeyFrames[0];
             var lastKeyFrame = trimmedKeyFrames[trimmedKeyFrames.Length - 1];
@@ -2035,7 +2052,7 @@ namespace LottieToWinComp
 
             // Insert the keyframes with the progress adjusted so the first keyframe is at 0 and the remaining
             // progress values are scaled appropriately.
-            var previousValue = value.InitialValue;
+            var previousValue = firstKeyFrame.Value;
             var previousProgress = 0.0 - c_keyFrameProgressEpsilon;
             var rootReferenceAdded = false;
             var previousKeyFrameWasExpression = false;
@@ -2074,10 +2091,10 @@ namespace LottieToWinComp
                             cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, GetRemappedProgress(previousProgress, adjustedProgress));
 #else
                             cb = CubicBezierFunction.Create(
-                                cp0, 
-                                (cp0 + cp1), 
-                                (cp2 + cp3), 
-                                cp3, 
+                                cp0,
+                                (cp0 + cp1),
+                                (cp2 + cp3),
+                                cp3,
                                 Expr.Scalar($"{c_rootName}.{progressMappingProperty}"));
 #endif
                             break;
@@ -2228,7 +2245,7 @@ namespace LottieToWinComp
                     // Adjust t and (1-t) based on the given range. This will make T vary between
                     // 0..1 over the duration of the keyframe.
                     return Multiply(
-                        Scalar(1 / (_tRangeHigh - _tRangeLow)), 
+                        Scalar(1 / (_tRangeHigh - _tRangeLow)),
                         Subtract(_t, Scalar(_tRangeLow)));
                 }
             }
@@ -2629,11 +2646,6 @@ namespace LottieToWinComp
             }
         }
 
-        // Sets the description of a layer on an object.
-        void DescribeLayer(CompositionObject obj, Layer layer)
-        {
-            Describe(obj, $"{layer.Type} layer: \"{layer.Name}\".", layer.Name);
-        }
 
         // Sets a description on an object.
         void Describe(IDescribable obj, string longDescription, string shortDescription = null)
@@ -2712,7 +2724,7 @@ namespace LottieToWinComp
             internal double DurationInFrames { get; }
 
             // Constructs the root context.
-            internal TranslationContext(LottieData.LottieComposition lottieComposition)
+            internal TranslationContext(LottieComposition lottieComposition)
             {
                 Layers = lottieComposition.Layers;
                 StartTime = lottieComposition.InPoint;
