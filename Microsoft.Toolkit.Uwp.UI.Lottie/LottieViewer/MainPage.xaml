@@ -5,8 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:LottieViewer"
-    xmlns:lottie="using:Lottie"
-    xmlns:compositions="using:Compositions"
     mc:Ignorable="d" Visibility="Visible" RequestedTheme="Default">
     <Page.Resources>
         <local:VisiblityConverter x:Key="VisibilityConverter"/>
@@ -30,9 +28,27 @@
                 <Button Style="{StaticResource ControlsButtonStyle}" Click="PickFile_Click" 
                         ToolTipService.ToolTip="Pick a Lottie file"
                         >&#xf12b;</Button>
-
             </StackPanel>
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- Issues -->
+                <Button Style="{StaticResource ControlsButtonStyle}"
+                        IsEnabled="{x:Bind _stage.PlayerHasIssues, Mode=OneWay}"
+                        ToolTipService.ToolTip="View issues"
+                        Foreground="Orange"
+                        >
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <TextBlock HorizontalAlignment="Center" FontWeight="Bold">This Lottie has some issues ...</TextBlock>
+                                <ItemsControl Margin="12" ItemsSource="{x:Bind _stage.PlayerIssues, Mode=OneWay}">
+                                </ItemsControl>
+                                <Button HorizontalAlignment="Center" Click="CopyIssuesToClipboard">Copy to clipboard</Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                    &#xE7BA;
+                </Button>
                 <!-- Paint palette -->
                 <Button Style="{StaticResource ControlsButtonStyle}"
                         IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
@@ -42,20 +58,20 @@
                         <Flyout FlyoutPresenterStyle="{StaticResource AcrylicFlyoutPresenter}">
                             <ColorPicker
                                 Background="Transparent"
-                                     ColorSpectrumShape="Ring"
-                                     IsColorPreviewVisible="True"
-                                     IsColorChannelTextInputVisible="False"
-                                     IsHexInputVisible="True"
-                                     Color="{Binding Source={StaticResource ArtboardBrush}, Path=Color, Mode=TwoWay}" 
-                                        IsColorSpectrumVisible="True" 
-                                        IsColorSliderVisible="True" 
-                                        ColorSpectrumComponents="HueSaturation"  />
+                                ColorSpectrumShape="Ring"
+                                IsColorPreviewVisible="True"
+                                IsColorChannelTextInputVisible="False"
+                                IsHexInputVisible="True"
+                                Color="{Binding Source={StaticResource ArtboardBrush}, Path=Color, Mode=TwoWay}" 
+                                IsColorSpectrumVisible="True" 
+                                IsColorSliderVisible="True" 
+                                ColorSpectrumComponents="HueSaturation"  />
                         </Flyout>
                     </Button.Flyout>
                     &#xe790;
                 </Button>
 
-                    <!-- Save as: e792. Save: e74e-->
+                <!-- Save as: e792. Save: e74e-->
                 <Button Style="{StaticResource ControlsButtonStyle}" 
                     IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
                     ToolTipService.ToolTip="Save Lottie as code"

@@ -302,6 +302,15 @@ namespace LottieViewer
             }
         }
 
+        void CopyIssuesToClipboard(object sender, RoutedEventArgs e)
+        {
+            var issues = _stage.PlayerIssues;
+            var dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetText(string.Join("\r\n", issues));
+            Clipboard.SetContent(dataPackage);
+            Clipboard.Flush();
+        }
     }
 
     public sealed class VisiblityConverter : IValueConverter

@@ -288,14 +288,12 @@ namespace LottieData.Serialization
 
             if (obj.ContainsKey("ef"))
             {
-                ReportIssue("Layer effects are not supported. If you are using them for " +
-                                "fills, strokes, trim paths etc. then try adding them directly as contents " +
-                                "in your shape layer.");
+                ReportIssue("Layer effects");
             }
 
             if (obj.ContainsKey("tt"))
             {
-                ReportIssue("Mattes are not supported.");
+                ReportIssue("Mattes");
             }
 
             if (obj.ContainsKey("maskProperties") || obj.ContainsKey("hasMask"))
@@ -643,7 +641,7 @@ namespace LottieData.Serialization
             var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
 
-            ReportIssue("Gradients are not supported.");
+            ReportIssue("Gradient strokes");
 
             AssertAllFieldsRead(obj);
             return new LinearGradientStroke(
@@ -674,7 +672,7 @@ namespace LottieData.Serialization
             var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
 
-            ReportIssue("Gradients are not supported.");
+            ReportIssue("Gradient strokes");
 
             AssertAllFieldsRead(obj);
             return new RadialGradientStroke(
@@ -1383,7 +1381,7 @@ namespace LottieData.Serialization
 
                         // Property expression. Currently ignored because we don't support expressions.
                         case "x":
-                            reader.ReportIssue("Expressions are not supported.");
+                            reader.ReportIssue("Expressions");
                             break;
                         default:
                             throw new LottieJsonReaderException($"Unexpected field: {field.Key}");

@@ -3,6 +3,7 @@
 
 using Lottie;
 using System;
+using System.Linq;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -16,19 +17,29 @@ namespace LottieViewer
         public static DependencyProperty ArtboardColorProperty =
             DependencyProperty.Register(nameof(ArtboardColor), typeof(Color), typeof(Stage), new PropertyMetadata(Colors.White));
 
+
         public static DependencyProperty PlayerProperty =
-                DependencyProperty.Register(nameof(Player), typeof(CompositionPlayer), typeof(Stage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Player), typeof(CompositionPlayer), typeof(Stage), new PropertyMetadata(null));
+
+        public static DependencyProperty PlayerHasIssuesProperty =
+            DependencyProperty.Register(nameof(PlayerHasIssues), typeof(bool), typeof(Stage), new PropertyMetadata(false));
+
+        public static DependencyProperty PlayerIssuesProperty =
+            DependencyProperty.Register(nameof(PlayerIssues), typeof(string[]), typeof(Stage), new PropertyMetadata(null));
+
 
         public Stage()
         {
             this.InitializeComponent();
             SetValue(PlayerProperty, _player);
 
+            // Subscribe to events from the player so we can react to loading and unloading of the composition.
             _player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, UpdateFileInfo);
 
             Reset();
         }
 
+        // Called when a composition is loaded or unloaded in the player.
         void UpdateFileInfo(DependencyObject obj, DependencyProperty property)
         {
             var diagnostics = _player.Diagnostics;
@@ -37,6 +48,7 @@ namespace LottieViewer
                 _txtFileName.Text = "";
                 _txtDuration.Text = "";
                 _txtSize.Text = "";
+                PlayerHasIssues = false;
             }
             else
             {
@@ -45,10 +57,26 @@ namespace LottieViewer
                 _txtDuration.Text = $"{diags.Duration.TotalSeconds} secs";
                 var aspectRatio = FloatToRatio(diags.LottieWidth / diags.LottieHeight);
                 _txtSize.Text = $"{diags.LottieWidth}x{diags.LottieHeight} ({aspectRatio.Item1.ToString("0.##")}:{aspectRatio.Item2.ToString("0.##")})";
+
+                var issues = diags.JsonParsingIssues.Concat(diags.LottieValidationIssues).Concat(diags.TranslationIssues).OrderBy(a => a).ToArray();
+                PlayerIssues = issues;
+                PlayerHasIssues = issues.Any();
             }
         }
 
         internal CompositionPlayer Player => _player;
+
+        internal bool PlayerHasIssues
+        {
+            get => (bool)GetValue(PlayerHasIssuesProperty);
+            private set => SetValue(PlayerHasIssuesProperty, value);
+        }
+
+        internal string[] PlayerIssues
+        {
+            get => (string[])GetValue(PlayerIssuesProperty);
+            private set => SetValue(PlayerIssuesProperty, value);
+        }
 
         internal LottieCompositionSource Source => _playerSource;
 
