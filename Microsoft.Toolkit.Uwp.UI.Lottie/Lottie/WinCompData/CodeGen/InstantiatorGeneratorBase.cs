@@ -37,6 +37,7 @@ namespace WinCompData.CodeGen
         readonly ObjectData[] _canonicalNodes;
         readonly IStringifier _stringifier;
         readonly HashSet<(ObjectData, ObjectData)> _factoriesAlreadyCalled = new HashSet<(ObjectData, ObjectData)>();
+        readonly ObjectData _rootNode;
         TimeSpan _compositionDuration;
 
         protected InstantiatorGeneratorBase(CompositionObject graphRoot, TimeSpan duration, bool setCommentProperties, IStringifier stringifier)
@@ -72,8 +73,8 @@ namespace WinCompData.CodeGen
             SetCanonicalMethodNames(canonicals);
 
             // Give the root node a special name.
-            var rootNode = NodeFor(graphRoot);
-            rootNode.Name = "Root";
+            _rootNode = NodeFor(graphRoot);
+            _rootNode.Name = "Root";
 
             // Save the canonical nodes, ordered by the name that was just set.
             _canonicalNodes = canonicals.OrderBy(node => node.Name).ToArray();
@@ -100,9 +101,9 @@ namespace WinCompData.CodeGen
             // Ensure the root object has storage if it is referenced by anything else in the graph.
             // This is necessary because the root node is referenced from the instantiator entrypoint
             // but that isn't counted in the CanonicalInRefs.
-            if (rootNode.CanonicalInRefs.Any())
+            if (_rootNode.CanonicalInRefs.Any())
             {
-                rootNode.RequiresStorage = true;
+                _rootNode.RequiresStorage = true;
             }
         }
 
@@ -224,12 +225,29 @@ namespace WinCompData.CodeGen
         // Returns the code to call the factory for the given node from the given node.
         string CallFactoryFromFor(ObjectData callerNode, ObjectData calleeNode)
         {
-            // If the object does not have a higher preorder traversal position 
-            // than the caller then the object will have already been created by
-            // the time the caller code runs, so that object can be read directly 
-            // out of the cache field.
-            if (callerNode.PreorderPosition >= calleeNode.PreorderPosition)
+            // Calling into the root node is handled specially. The root node is always
+            // created before the first vertex to it.
+            if (calleeNode == _rootNode)
             {
+                Debug.Assert(calleeNode.RequiresStorage);
+                return calleeNode.FieldName;
+            }
+
+            // Find the vertex from caller to callee.
+            var firstVertexFromCallerToCallee =
+                    (from inref in calleeNode.CanonicalInRefs
+                     where inref.Node == callerNode
+                     orderby inref.Position
+                     select inref).First();
+
+            // Find the first vertex to the callee from any caller.
+            var firstVertexToCallee = calleeNode.CanonicalInRefs.First();
+
+            // If the object has a vertex with a lower position then the object
+            // will have already been created by the time the caller needs the object.
+            if (firstVertexToCallee.Position < firstVertexFromCallerToCallee.Position)
+            {
+                // The object was created by another caller. Just access the field.
                 Debug.Assert(calleeNode.RequiresStorage);
                 return calleeNode.FieldName;
             }
@@ -264,8 +282,10 @@ namespace WinCompData.CodeGen
         IEnumerable<ObjectData> FilteredCanonicalInRefs(ObjectData node)
         {
             // Examine all of the inrefs to the node.
-            foreach (var item in node.CanonicalInRefs)
+            foreach (var vertex in node.CanonicalInRefs)
             {
+                var item = vertex.Node;
+
                 // If the inref is from an ExpressionAnimation ...
                 if (item.Object is ExpressionAnimation exprAnim)
                 {
@@ -276,7 +296,7 @@ namespace WinCompData.CodeGen
                         continue;
                     }
 
-                    // ... is the anmation animating a property on the current node or its property set.
+                    // ... is the animation animating a property on the current node or its property set.
                     bool isExpressionOnThisNode = false;
 
                     var compObject = node.Object as CompositionObject;
@@ -387,6 +407,8 @@ namespace WinCompData.CodeGen
 
         bool GenerateObjectFactory(CodeBuilder builder, CompositionObject obj, ObjectData node)
         {
+            // Uncomment to see the order of creation.
+            //builder.WriteComment($"Traversal order: {node.Position}");
             switch (obj.Type)
             {
                 case CompositionObjectType.AnimationController:
@@ -529,62 +551,76 @@ namespace WinCompData.CodeGen
 
         void StartAnimations(CodeBuilder builder, CompositionObject obj, ObjectData node, string localName = "result", string animationNamePrefix = "")
         {
-            var animators = obj.Properties.Animators.Concat(obj.Animators);
             bool controllerVariableAdded = false;
-            foreach (var animator in animators)
+
+            // Start the animations for properties on the object.
+            foreach (var animator in obj.Animators)
             {
-                // ExpressionAnimations are treated specially - a singleton
-                // ExpressionAnimation is reset before each use, unless the animation
-                // is shared.
-                var anim = NodeFor(animator.Animation);
-                if (anim.NodesInGroup.Count() == 1 && animator.Animation is ExpressionAnimation expressionAnimation)
+                StartAnimation(builder, obj, node, localName, ref controllerVariableAdded, animator);
+            }
+
+            // Start the animations for properties on the property set.
+            foreach (var animator in obj.Properties.Animators)
+            {
+                StartAnimation(builder, obj.Properties, NodeFor(obj.Properties), localName, ref controllerVariableAdded, animator);
+            }
+        }
+
+        void StartAnimation(CodeBuilder builder, CompositionObject obj, ObjectData node, string localName, ref bool controllerVariableAdded, CompositionObject.Animator animator)
+        {
+            // ExpressionAnimations are treated specially - a singleton
+            // ExpressionAnimation is reset before each use, unless the animation
+            // is shared.
+            var animationNode = NodeFor(animator.Animation);
+            if (animationNode.NodesInGroup.Count() == 1 && animator.Animation is ExpressionAnimation expressionAnimation)
+            {
+                builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}ClearAllParameters();");
+                builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Expression = {String(expressionAnimation.Expression.Simplified.ToString())};");
+                // If there is a Target set it. Note however that the Target isn't used for anything
+                // interesting in this scenario, and there is no way to reset the Target to an
+                // empty string (the Target API disallows empty). In reality, for all our uses
+                // the Target will not be set and it doesn't matter if it was set previously.
+                if (!string.IsNullOrWhiteSpace(expressionAnimation.Target))
                 {
-                    builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}ClearAllParameters();");
-                    builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Expression = {String(expressionAnimation.Expression.Simplified.ToString())};");
-                    // If there is a Target set it. Note however that the Target isn't used for anything
-                    // interesting in this scenario, and there is no way to reset the Target to an
-                    // empty string (the Target API disallows empty). In reality, for all our uses
-                    // the Target will not be set and it doesn't matter if it was set previously.
-                    if (!string.IsNullOrWhiteSpace(expressionAnimation.Target))
-                    {
-                        builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Target = {String(expressionAnimation.Target)};");
-                    }
-                    foreach (var rp in expressionAnimation.ReferenceParameters)
-                    {
-                        var referenceParamenterValueName = rp.Value == obj
-                            ? localName
-                            : CallFactoryFromFor(anim, rp.Value);
-                        builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}SetReferenceParameter({String(rp.Key)}, {referenceParamenterValueName});");
-                    }
-                    builder.WriteLine($"{localName}{Deref}StartAnimation({String(animator.AnimatedProperty)}, {c_singletonExpressionAnimationName});");
+                    builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Target = {String(expressionAnimation.Target)};");
+                }
+                foreach (var rp in expressionAnimation.ReferenceParameters)
+                {
+                    var referenceParamenterValueName = rp.Value == obj
+                        ? localName
+                        : CallFactoryFromFor(animationNode, rp.Value);
+                    builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}SetReferenceParameter({String(rp.Key)}, {referenceParamenterValueName});");
+                }
+                builder.WriteLine($"{localName}{Deref}StartAnimation({String(animator.AnimatedProperty)}, {c_singletonExpressionAnimationName});");
+            }
+            else
+            {
+                // KeyFrameAnimation or shared animation
+                var animationFactoryCall = CallFactoryFromFor(node, animationNode);
+                builder.WriteLine($"{localName}{Deref}StartAnimation({String(animator.AnimatedProperty)}, {animationFactoryCall});");
+            }
+
+            // If the animation has a controller, get the controller, optionally pause it, and recurse to start the animations
+            // on the controller.
+            if (animator.Controller != null)
+            {
+                if (!controllerVariableAdded)
+                {
+                    // Declare and initialize the controller variable.
+                    builder.WriteLine($"{Var} controller = {localName}{Deref}TryGetAnimationController({String(animator.AnimatedProperty)});");
+                    controllerVariableAdded = true;
                 }
                 else
                 {
-                    // KeyFrameAnimation or shared animation
-                    var animationFactoryCall = CallFactoryFromFor(node, anim);
-                    builder.WriteLine($"{localName}{Deref}StartAnimation({String(animator.AnimatedProperty)}, {animationFactoryCall});");
+                    // Initialize the controller variable.
+                    builder.WriteLine($"controller = {localName}{Deref}TryGetAnimationController({String(animator.AnimatedProperty)});");
                 }
-
-                if (animator.Controller != null)
+                if (animator.Controller.IsPaused)
                 {
-                    if (!controllerVariableAdded)
-                    {
-                        // Declare and initialize the controller variable.
-                        builder.WriteLine($"{Var} controller = {localName}{Deref}TryGetAnimationController({String(animator.AnimatedProperty)});");
-                        controllerVariableAdded = true;
-                    }
-                    else
-                    {
-                        // Initialize the controller variable.
-                        builder.WriteLine($"controller = {localName}{Deref}TryGetAnimationController({String(animator.AnimatedProperty)});");
-                    }
-                    if (animator.Controller.IsPaused)
-                    {
-                        builder.WriteLine($"controller{Deref}Pause();");
-                    }
-                    // Recurse to start animations on the controller.
-                    StartAnimations(builder, animator.Controller, node, "controller", "controller");
+                    builder.WriteLine($"controller{Deref}Pause();");
                 }
+                // Recurse to start animations on the controller.
+                StartAnimations(builder, animator.Controller, NodeFor(animator.Controller), "controller", "controller");
             }
         }
 
@@ -1479,7 +1515,7 @@ namespace WinCompData.CodeGen
             IEnumerable<string> GetAncestorShortComments()
             {
                 // Get the nodes that reference this node.
-                var parents = CanonicalInRefs.ToArray();
+                var parents = CanonicalInRefs.Select(v => v.Node).ToArray();
                 if (parents.Length == 1)
                 {
                     // There is exactly one parent.

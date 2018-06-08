@@ -45,7 +45,7 @@ namespace LottieTest
                 // Filter to CanvasGeometry nodes.
                 where node.Type == Graph.NodeType.CanvasGeometry
                 // Filter to nodes that are not referenced by a CanvasGeometry.
-                where !node.InReferences.Where(n => n.Type == Graph.NodeType.CanvasGeometry).Any()
+                where !node.InReferences.Where(n => n.Node.Type == Graph.NodeType.CanvasGeometry).Any()
                 select (CanvasGeometry)node.Object;
 
             return result.ToArray();

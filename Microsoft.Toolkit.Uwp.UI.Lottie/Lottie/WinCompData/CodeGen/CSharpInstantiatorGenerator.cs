@@ -46,7 +46,6 @@ namespace WinCompData.CodeGen
             }
             builder.WriteLine("using System;");
             builder.WriteLine("using System.Numerics;");
-            builder.WriteLine("using Windows.Graphics;");
             builder.WriteLine("using Windows.UI;");
             builder.WriteLine("using Windows.UI.Composition;");
         }

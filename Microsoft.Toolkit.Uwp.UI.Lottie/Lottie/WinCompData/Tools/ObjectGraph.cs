@@ -14,12 +14,14 @@ namespace WinCompData.Tools
 #endif
     abstract class Graph
     {
+        int _vertexCounter;
+
         internal Graph() { }
 
         /// <summary>
         /// Returns the graph of nodes reachable from the given <see cref="CompositionObject"/> root.
         /// </summary>
-        public static ObjectGraph<Node> FromCompositionObject(CompositionObject root, bool includeVertices) 
+        public static ObjectGraph<Node> FromCompositionObject(CompositionObject root, bool includeVertices)
             => ObjectGraph<Node>.FromCompositionObject(root, includeVertices);
 
         /// <summary>
@@ -29,39 +31,55 @@ namespace WinCompData.Tools
 
         public class Node<T> : INodePrivate<T> where T : Node<T>, new()
         {
-            static readonly T[] s_emptyArray = new T[0];
+            static readonly Vertex[] s_emptyArray = new Vertex[0];
 
-            List<T> _inReferences;
+            List<Vertex> _inReferences;
 
-            public object Object;
-            public T[] InReferences => _inReferences == null ? s_emptyArray : _inReferences.ToArray();
+            public object Object { get; set; }
+
+            public Vertex[] InReferences => _inReferences == null ? s_emptyArray : _inReferences.ToArray();
 
             public int ReferenceCount => InReferences.Length;
 
             public NodeType Type { get; private set; }
 
             /// <summary>
-            /// The position of this node in a pre-order traversal of the graph.
+            /// The position of this node in a traversal of the graph.
             /// </summary>
-            public int PreorderPosition { get; private set; }
+            public int Position { get; private set; }
 
-            List<T> INodePrivate<T>.InReferences
+            public struct Vertex
+            {
+                /// <summary>
+                /// The position of this vertex in a traversal of the graph.
+                /// </summary>
+                public int Position { get; internal set; }
+
+                /// <summary>
+                /// The node at the other end of the <see cref="Vertex"/>.
+                /// </summary>
+                public T Node { get; internal set; }
+            }
+
+
+            List<Vertex> INodePrivate<T>.InReferences
             {
                 get
                 {
                     if (_inReferences == null)
                     {
-                        _inReferences = new List<T>();
+                        _inReferences = new List<Vertex>();
                     }
                     return _inReferences;
                 }
             }
 
-            void INodePrivate<T>.Initialize(NodeType type, int preorderPosition)
+            void INodePrivate<T>.Initialize(NodeType type, int position)
             {
                 Type = type;
-                PreorderPosition = preorderPosition;
+                Position = position;
             }
+
         }
 
         public enum NodeType
@@ -72,13 +90,13 @@ namespace WinCompData.Tools
         }
 
 
-        protected void InitializeNode<T>(T node, NodeType type, int preorderPosition) where T : Node<T>, new()
-            => NodePrivate(node).Initialize(type, preorderPosition);
+        protected void InitializeNode<T>(T node, NodeType type, int position) where T : Node<T>, new()
+            => NodePrivate(node).Initialize(type, position);
 
         protected void AddVertex<T>(T from, T to) where T : Node<T>, new()
         {
             var toNode = NodePrivate(to);
-            toNode.InReferences.Add(from);
+            toNode.InReferences.Add(new Node<T>.Vertex { Position = _vertexCounter++, Node = from });
         }
 
         static INodePrivate<T> NodePrivate<T>(T node) where T : Node<T>, new()
@@ -89,8 +107,8 @@ namespace WinCompData.Tools
         // Private inteface that allows ObjectGraph to modify Nodes.
         interface INodePrivate<T> where T : Node<T>, new()
         {
-            void Initialize(NodeType type, int preorderPosition);
-            List<T> InReferences { get; }
+            void Initialize(NodeType type, int position);
+            List<Node<T>.Vertex> InReferences { get; }
         }
     }
 
@@ -105,7 +123,7 @@ namespace WinCompData.Tools
         readonly bool _includeVertices;
         readonly Dictionary<object, T> _references = new Dictionary<object, T>();
         readonly Dictionary<CompositionObjectType, int> _compositionObjectCounter = new Dictionary<CompositionObjectType, int>();
-        int _preorderPositionCounter;
+        int _positionCounter;
 
         ObjectGraph(bool includeVertices)
         {
@@ -134,14 +152,11 @@ namespace WinCompData.Tools
 
         internal T this[Object obj] => _references[obj];
 
-        // The return value currently has no meaning. Having a return value makes it
-        // possible to write the case statements as single statements rather than
-        // a call then a break.
-        bool Reference(T from, CompositionObject obj)
+        void Reference(T from, CompositionObject obj)
         {
             if (obj == null)
             {
-                return true;
+                return;
             }
 
             // Object has been seen before. Just add the reference.
@@ -151,14 +166,14 @@ namespace WinCompData.Tools
                 {
                     AddVertex(from, node);
                 }
-                return true;
+                return;
             }
 
             // Object has not been seen before. Register it, and visit it.
             // Create a node for the object.
             node = new T { Object = obj };
 
-            InitializeNode(node, NodeType.CompositionObject, _preorderPositionCounter++);
+            InitializeNode(node, NodeType.CompositionObject, _positionCounter++);
 
             // Link the nodes in the graph.
             if (_includeVertices && from != null)
@@ -170,51 +185,85 @@ namespace WinCompData.Tools
             switch (obj.Type)
             {
                 case CompositionObjectType.AnimationController:
-                    return VisitAnimationController((AnimationController)obj, node);
+                    VisitAnimationController((AnimationController)obj, node);
+                    break;
                 case CompositionObjectType.ColorKeyFrameAnimation:
-                    return VisitColorKeyFrameAnimation((ColorKeyFrameAnimation)obj, node);
+                    VisitColorKeyFrameAnimation((ColorKeyFrameAnimation)obj, node);
+                    break;
                 case CompositionObjectType.CompositionColorBrush:
-                    return VisitCompositionColorBrush((CompositionColorBrush)obj, node);
+                    VisitCompositionColorBrush((CompositionColorBrush)obj, node);
+                    break;
                 case CompositionObjectType.CompositionContainerShape:
-                    return VisitCompositionContainerShape((CompositionContainerShape)obj, node);
+                    VisitCompositionContainerShape((CompositionContainerShape)obj, node);
+                    break;
                 case CompositionObjectType.CompositionEllipseGeometry:
-                    return VisitCompositionEllipseGeometry((CompositionEllipseGeometry)obj, node);
+                    VisitCompositionEllipseGeometry((CompositionEllipseGeometry)obj, node);
+                    break;
                 case CompositionObjectType.CompositionPathGeometry:
-                    return VisitCompositionPathGeometry((CompositionPathGeometry)obj, node);
+                    VisitCompositionPathGeometry((CompositionPathGeometry)obj, node);
+                    break;
                 case CompositionObjectType.CompositionPropertySet:
-                    return VisitCompositionPropertySet((CompositionPropertySet)obj, node);
+                    VisitCompositionPropertySet((CompositionPropertySet)obj, node);
+                    break;
                 case CompositionObjectType.CompositionRectangleGeometry:
-                    return VisitCompositionRectangleGeometry((CompositionRectangleGeometry)obj, node);
+                    VisitCompositionRectangleGeometry((CompositionRectangleGeometry)obj, node);
+                    break;
                 case CompositionObjectType.CompositionRoundedRectangleGeometry:
-                    return VisitCompositionRoundedRectangleGeometry((CompositionRoundedRectangleGeometry)obj, node);
+                    VisitCompositionRoundedRectangleGeometry((CompositionRoundedRectangleGeometry)obj, node);
+                    break;
                 case CompositionObjectType.CompositionSpriteShape:
-                    return VisitCompositionSpriteShape((CompositionSpriteShape)obj, node);
+                    VisitCompositionSpriteShape((CompositionSpriteShape)obj, node);
+                    break;
                 case CompositionObjectType.CompositionViewBox:
-                    return VisitCompositionViewBox((CompositionViewBox)obj, node);
+                    VisitCompositionViewBox((CompositionViewBox)obj, node);
+                    break;
                 case CompositionObjectType.ContainerVisual:
-                    return VisitContainerVisual((ContainerVisual)obj, node);
+                    VisitContainerVisual((ContainerVisual)obj, node);
+                    break;
                 case CompositionObjectType.CubicBezierEasingFunction:
-                    return VisitCubicBezierEasingFunction(node, (CubicBezierEasingFunction)obj);
+                    VisitCubicBezierEasingFunction(node, (CubicBezierEasingFunction)obj);
+                    break;
                 case CompositionObjectType.ExpressionAnimation:
-                    return VisitExpressionAnimation((ExpressionAnimation)obj, node);
+                    VisitExpressionAnimation((ExpressionAnimation)obj, node);
+                    break;
                 case CompositionObjectType.InsetClip:
-                    return VisitInsetClip((InsetClip)obj, node);
+                    VisitInsetClip((InsetClip)obj, node);
+                    break;
                 case CompositionObjectType.LinearEasingFunction:
-                    return VisitLinearEasingFunction((LinearEasingFunction)obj, node);
+                    VisitLinearEasingFunction((LinearEasingFunction)obj, node);
+                    break;
                 case CompositionObjectType.PathKeyFrameAnimation:
-                    return VisitPathKeyFrameAnimation((PathKeyFrameAnimation)obj, node);
+                    VisitPathKeyFrameAnimation((PathKeyFrameAnimation)obj, node);
+                    break;
                 case CompositionObjectType.ScalarKeyFrameAnimation:
-                    return VisitScalarKeyFrameAnimation((ScalarKeyFrameAnimation)obj, node);
+                    VisitScalarKeyFrameAnimation((ScalarKeyFrameAnimation)obj, node);
+                    break;
                 case CompositionObjectType.ShapeVisual:
-                    return VisitShapeVisual((ShapeVisual)obj, node);
+                    VisitShapeVisual((ShapeVisual)obj, node);
+                    break;
                 case CompositionObjectType.StepEasingFunction:
-                    return VisitStepEasingFunction((StepEasingFunction)obj, node);
+                    VisitStepEasingFunction((StepEasingFunction)obj, node);
+                    break;
                 case CompositionObjectType.Vector2KeyFrameAnimation:
-                    return VisitVector2KeyFrameAnimation((Vector2KeyFrameAnimation)obj, node);
+                    VisitVector2KeyFrameAnimation((Vector2KeyFrameAnimation)obj, node);
+                    break;
                 case CompositionObjectType.Vector3KeyFrameAnimation:
-                    return VisitVector3KeyFrameAnimation((Vector3KeyFrameAnimation)obj, node);
+                    VisitVector3KeyFrameAnimation((Vector3KeyFrameAnimation)obj, node);
+                    break;
                 default:
                     throw new InvalidOperationException();
+            }
+
+            // Reference the animators after referencing all the other contents of the object. This is
+            // done to ensure the position of animators is higher than the position of other
+            // references. This ordering is consistent with how CompositionObjects are initialized:
+            // 1. Instantiate the object
+            // 2. Assign the values for the object's properties
+            // 3. Start the animations
+            foreach (var animator in obj.Animators)
+            {
+                Reference(node, animator.Animation);
+                Reference(node, animator.Controller);
             }
         }
 
@@ -228,7 +277,7 @@ namespace WinCompData.Tools
             else
             {
                 node = new T { Object = obj };
-                InitializeNode(node, NodeType.CompositionPath, _preorderPositionCounter++);
+                InitializeNode(node, NodeType.CompositionPath, _positionCounter++);
                 AddVertex(from, node);
                 _references.Add(obj, node);
             }
@@ -246,7 +295,7 @@ namespace WinCompData.Tools
             else
             {
                 node = new T { Object = obj };
-                InitializeNode(node, NodeType.CanvasGeometry, _preorderPositionCounter++);
+                InitializeNode(node, NodeType.CanvasGeometry, _positionCounter++);
                 AddVertex(from, node);
                 _references.Add(obj, node);
             }
@@ -307,12 +356,9 @@ namespace WinCompData.Tools
             {
                 Reference(node, obj.Properties);
             }
-
-            foreach (var animator in obj.Animators)
-            {
-                Reference(node, animator.Animation);
-                Reference(node, animator.Controller);
-            }
+            // Do not visit the animators here. That is done after visiting the
+            // references from the derived class' properties. This is to be consistent
+            // the with the order of initialization of objects.
             return true;
         }
 

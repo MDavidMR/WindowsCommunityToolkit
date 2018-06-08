@@ -26,7 +26,7 @@ namespace WinCompData.Tools
 
         public bool IsCanonical => Canonical == this;
 
-        public IEnumerable<T> CanonicalInRefs
+        public IEnumerable<Vertex> CanonicalInRefs
         {
             get
             {
@@ -35,9 +35,9 @@ namespace WinCompData.Tools
                     // that reference all versions of this node.
                     from n in NodesInGroup
                     from r in n.InReferences
-                    where r.IsCanonical
-                    orderby r.PreorderPosition
-                    select r.Canonical;
+                    where r.Node.IsCanonical
+                    orderby r.Position
+                    select r;
             }
         }
     }

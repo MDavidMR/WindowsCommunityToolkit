@@ -400,8 +400,8 @@ namespace WinCompData.Tools
                 foreach (var group in grouping)
                 {
                     // The canonical node is the node that appears first in the
-                    // preorder traversal of the tree.
-                    var orderedGroup = group.OrderBy(n => n.PreorderPosition);
+                    // traversal of the tree.
+                    var orderedGroup = group.OrderBy(n => n.Position);
                     var groupArray = orderedGroup.ToArray();
                     var canonical = groupArray[0];
 
