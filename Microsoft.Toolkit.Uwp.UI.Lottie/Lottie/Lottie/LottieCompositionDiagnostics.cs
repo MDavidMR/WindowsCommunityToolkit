@@ -15,6 +15,7 @@ namespace Lottie
     public sealed class LottieCompositionDiagnostics
     {
         static readonly string[] s_emptyStrings = new string[0];
+        static readonly Issue[] s_emptyIssues = new Issue[0];
         static readonly KeyValuePair<string, double>[] s_emptyMarkers = new KeyValuePair<string, double>[0];
 
         public string FileName { get; internal set; } = "";
@@ -44,7 +45,7 @@ namespace Lottie
 
         public IEnumerable<string> LottieValidationIssues { get; internal set; } = s_emptyStrings;
 
-        public IEnumerable<string> TranslationIssues { get; internal set; } = s_emptyStrings;
+        public IEnumerable<Issue> TranslationIssues { get; internal set; } = s_emptyIssues;
 
         public double LottieWidth => LottieComposition?.Width ?? 0;
 

@@ -45,7 +45,7 @@ namespace LottieToWinComp
         // to each other.
         const float c_keyFrameProgressEpsilon = 0.0000001F;
         readonly LottieData.LottieComposition _lc;
-        readonly HashSet<string> _issues = new HashSet<string>();
+        readonly HashSet<TranslationIssues.Id> _issues = new HashSet<TranslationIssues.Id>();
         readonly bool _strictTranslation;
         readonly bool _annotate;
         readonly bool _addDescriptions;
@@ -106,7 +106,7 @@ namespace LottieToWinComp
             LottieData.LottieComposition lottieComposition,
             bool strictTranslation,
             out Visual visual,
-            out string[] translationIssues) =>
+            out (string Code, string Description)[] translationIssues) =>
             TryTranslateLottieComposition(
                 lottieComposition,
                 strictTranslation,
@@ -130,7 +130,7 @@ namespace LottieToWinComp
             bool annotateCompositionObjects,
             bool addCodegenDescriptions,
             out Visual visual,
-            out string[] translationIssues)
+            out (string Code, string Description)[] translationIssues)
         {
             // Set up the translator.
             using (var translator = new LottieToWinCompTranslator(
@@ -146,7 +146,7 @@ namespace LottieToWinComp
 
                 // Set the out parameters.
                 visual = translator._rootVisual;
-                translationIssues = translator._issues.ToArray();
+                translationIssues = translator._issues.Select(id => TranslationIssues.GetIssueById(id)).ToArray();
             }
 
             return true;
@@ -160,7 +160,7 @@ namespace LottieToWinComp
             {
                 if (_lc.Is3d)
                 {
-                    Unsupported("3d composition");
+                    Unsupported(TranslationIssues.Id.ThreeD);
                 }
             }
         }
@@ -249,17 +249,63 @@ namespace LottieToWinComp
         {
             if (layer.Is3d)
             {
-                Unsupported("3d layer");
+                Unsupported(TranslationIssues.Id.ThreeDLayer);
             }
-
-            if (layer.BlendMode != BlendMode.Normal)
+            switch (layer.BlendMode)
             {
-                Unsupported($"Blend mode: {layer.BlendMode}");
+                case BlendMode.Normal:
+                    break;
+                case BlendMode.Multiply:
+                    Unsupported(TranslationIssues.Id.BlendModeMultiply);
+                    break;
+                case BlendMode.Screen:
+                    Unsupported(TranslationIssues.Id.BlendModeScreen);
+                    break;
+                case BlendMode.Overlay:
+                    Unsupported(TranslationIssues.Id.BlendModeOverlay);
+                    break;
+                case BlendMode.Darken:
+                    Unsupported(TranslationIssues.Id.BlendModeDarken);
+                    break;
+                case BlendMode.Lighten:
+                    Unsupported(TranslationIssues.Id.BlendModeLighten);
+                    break;
+                case BlendMode.ColorDodge:
+                    Unsupported(TranslationIssues.Id.BlendModeColorDodge);
+                    break;
+                case BlendMode.ColorBurn:
+                    Unsupported(TranslationIssues.Id.BlendModeColorBurn);
+                    break;
+                case BlendMode.HardLight:
+                    Unsupported(TranslationIssues.Id.BlendModeHardLight);
+                    break;
+                case BlendMode.SoftLight:
+                    Unsupported(TranslationIssues.Id.BlendModeSoftLight);
+                    break;
+                case BlendMode.Difference:
+                    Unsupported(TranslationIssues.Id.BlendModeDifference);
+                    break;
+                case BlendMode.Exclusion:
+                    Unsupported(TranslationIssues.Id.BlendModeExclusion);
+                    break;
+                case BlendMode.Hue:
+                    Unsupported(TranslationIssues.Id.BlendModeHue);
+                    break;
+                case BlendMode.Saturation:
+                    Unsupported(TranslationIssues.Id.BlendModeSaturation);
+                    break;
+                case BlendMode.Color:
+                    Unsupported(TranslationIssues.Id.BlendModeColor);
+                    break;
+                case BlendMode.Luminosity:
+                    Unsupported(TranslationIssues.Id.BlendModeLuminosity);
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
-
             if (layer.TimeStretch != 1)
             {
-                Unsupported("Time stretch");
+                Unsupported(TranslationIssues.Id.TimeStretch);
             }
 
             if (layer.IsHidden)
@@ -487,7 +533,7 @@ namespace LottieToWinComp
         {
             // Not yet implemented. Currently CompositionShape does not support SurfaceBrush as of RS4.
             // TODO - but this is a visual now, so we could support it.
-            Unsupported("Image layer");
+            Unsupported(TranslationIssues.Id.ImageLayer);
             return null;
         }
 
@@ -523,7 +569,7 @@ namespace LottieToWinComp
                     AddTranslatedLayersToContainerVisual(contentsNode, subContext, referencedLayers, $"{layer.Name}:{layerCollectionAsset.Id}");
                     break;
                 case Asset.AssetType.Image:
-                    Unsupported("Image assets.");
+                    Unsupported(TranslationIssues.Id.ImageAssets);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -558,12 +604,12 @@ namespace LottieToWinComp
                     {
                         case ShapeContentType.LinearGradientFill:
                         case ShapeContentType.RadialGradientFill:
-                            Unsupported("Gradient fill");
+                            Unsupported(TranslationIssues.Id.GradientFill);
                             break;
 
                         case ShapeContentType.LinearGradientStroke:
                         case ShapeContentType.RadialGradientStroke:
-                            Unsupported("Gradient stroke");
+                            Unsupported(TranslationIssues.Id.GradientStroke);
                             break;
 
                         case ShapeContentType.SolidColorFill:
@@ -629,7 +675,7 @@ namespace LottieToWinComp
 
                 if (a.IsAnimated && b.IsAnimated)
                 {
-                    Unsupported("Animation multiplication.");
+                    Unsupported(TranslationIssues.Id.AnimationMultiplication);
                     return a;
                 }
 
@@ -687,8 +733,7 @@ namespace LottieToWinComp
                     }
                 }
 
-                // TODO - this is not correct behavior. Colors should blend.
-                Unsupported("Multiple fills");
+                Unsupported(TranslationIssues.Id.MultipleFills);
                 return b;
             }
 
@@ -714,9 +759,8 @@ namespace LottieToWinComp
                     }
                 }
 
-                // TODO - this is not correct behavior. The new stroke should be in addition
-                //        to the existing stroke. And colors should blend.
-                Unsupported("Multiple strokes");
+                // The new stroke should be in addition to the existing stroke. And colors should blend.
+                Unsupported(TranslationIssues.Id.MultipleStrokes);
                 return b;
             }
 
@@ -745,8 +789,7 @@ namespace LottieToWinComp
                     }
                 }
 
-                // TODO - this is not correct behavior.
-                Unsupported("Multiple animated rounded corners");
+                Unsupported(TranslationIssues.Id.MultipleAnimatedRoundedCorners);
                 return b;
             }
 
@@ -761,12 +804,11 @@ namespace LottieToWinComp
                     return a;
                 }
 
-                // TODO - this is not correct behavior.
-                Unsupported("Multiple trim paths");
+                Unsupported(TranslationIssues.Id.MultipleTrimPaths);
                 return b;
             }
 
-            void Unsupported(string details) => _owner.Unsupported(details);
+            void Unsupported(TranslationIssues.Id id) => _owner.Unsupported(id);
         }
 
         // May return null if the layer does not produce any renderable content.
@@ -872,10 +914,10 @@ namespace LottieToWinComp
                         yield return TranslateRectangleContent(context, shapeContext, (Rectangle)shapeContent);
                         break;
                     case ShapeContentType.Polystar:
-                        Unsupported("Polystar");
+                        Unsupported(TranslationIssues.Id.Polystar);
                         break;
                     case ShapeContentType.Repeater:
-                        Unsupported("Repeater");
+                        Unsupported(TranslationIssues.Id.Repeater);
                         break;
                     case ShapeContentType.MergePaths:
                         var mergedPaths = TranslateMergePathsContent(context, shapeContext, stack, ((MergePaths)shapeContent).Mode);
@@ -934,7 +976,7 @@ namespace LottieToWinComp
                     {
                         // There will be stack overflows if the CanvasGeometry.Combine is too large.
                         // Usually not a problem, but handle degenerate cases.
-                        Unsupported("Merging of a very large number of shapes");
+                        Unsupported(TranslationIssues.Id.MergingALargeNumberOfShapes);
                         geometries = geometries.Take(50).ToArray();
                     }
                     return CombineGeometries(geometries, combineMode);
@@ -979,7 +1021,7 @@ namespace LottieToWinComp
                         yield return MergeShapeLayerContent(context, stack, ((MergePaths)shapeContent).Mode);
                         break;
                     case ShapeContentType.Repeater:
-                        Unsupported("Repeater");
+                        Unsupported(TranslationIssues.Id.Repeater);
                         break;
                     case ShapeContentType.Transform:
                         // Ignore transforms applied to geometries.
@@ -1007,7 +1049,7 @@ namespace LottieToWinComp
                         yield return CreateWin2dRectangleGeometry(context, (Rectangle)shapeContent);
                         break;
                     case ShapeContentType.Polystar:
-                        Unsupported("Polystar");
+                        Unsupported(TranslationIssues.Id.Polystar);
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -1117,7 +1159,7 @@ namespace LottieToWinComp
         {
             if (path.PathData.IsAnimated)
             {
-                Unsupported("Combining of shapes that are animated");
+                Unsupported(TranslationIssues.Id.CombiningAnimatedShapes);
             }
 
             var pathData = path.PathData.InitialValue;
@@ -1170,7 +1212,7 @@ namespace LottieToWinComp
 
             if (ellipsePosition.IsAnimated || ellipseDiameter.IsAnimated)
             {
-                Unsupported("Combining of shapes that are animated");
+                Unsupported(TranslationIssues.Id.CombiningAnimatedShapes);
             }
 
             var xRadius = ellipseDiameter.InitialValue.X / 2;
@@ -1196,7 +1238,7 @@ namespace LottieToWinComp
 
             if (position.IsAnimated || size.IsAnimated || cornerRadius.IsAnimated)
             {
-                Unsupported("Combining of shapes that are animated");
+                Unsupported(TranslationIssues.Id.CombiningAnimatedShapes);
             }
 
             var width = size.InitialValue.X;
@@ -1306,7 +1348,7 @@ namespace LottieToWinComp
             if (shapeContent.Size.IsAnimated && isPartialTrimPath)
             {
                 // Warn that we might be getting things wrong
-                Unsupported("Rectangle with animated size or TrimPath may produce incorrect result.");
+                Unsupported(TranslationIssues.Id.AnimatedRectangleWithTrimPath);
             }
             var width = shapeContent.Size.InitialValue.X;
             var height = shapeContent.Size.InitialValue.Y;
@@ -1327,7 +1369,7 @@ namespace LottieToWinComp
                 (shapeContext.RoundedCorner.Radius.IsAnimated || shapeContext.RoundedCorner.Radius.InitialValue != 0))
             {
                 // TODO - can rounded corners be implemented by composing cubic beziers?
-                Unsupported("Rounded corners on path");
+                Unsupported(TranslationIssues.Id.PathWithRoundedCorners);
             }
 
             // Map Path's Geometry data to PathGeometry.Path
@@ -1507,8 +1549,8 @@ namespace LottieToWinComp
             {
                 if (trimOffsetDegrees != 0)
                 {
-                    // TODO - we can handle this with another properyt.
-                    Unsupported("Animated trim offset with static trim offset.");
+                    // TODO - can be handled with another property.
+                    Unsupported(TranslationIssues.Id.AnimatedTrimOffsetWithStaticTrimOffset);
                 }
 
                 geometry.TrimOffset = Float(trimPath.OffsetDegrees.InitialValue / 360);
@@ -1599,7 +1641,7 @@ namespace LottieToWinComp
         Visual TranslateTextLayer(TranslationContext context, TextLayer layer)
         {
             // Text layers are not yet suported.
-            Unsupported("Text layer");
+            Unsupported(TranslationIssues.Id.TextLayer);
             return null;
         }
 
@@ -2339,7 +2381,7 @@ namespace LottieToWinComp
                 {
 
                     // TOOD: multiply animations to produce a new set of key frames for the opacity-multiplied color.
-                    Unsupported("Opacity and color animated at the same time");
+                    Unsupported(TranslationIssues.Id.OpacityAndColorAnimatedTogether);
                     return color;
                 }
                 else
@@ -2696,12 +2738,12 @@ namespace LottieToWinComp
             return Math.Min(Math.Max(min, value), max);
         }
 
-        void Unsupported(string details)
+        void Unsupported(TranslationIssues.Id issue)
         {
-            _issues.Add(details);
+            _issues.Add(issue);
             if (_strictTranslation)
             {
-                throw new NotSupportedException(details);
+                throw new NotSupportedException(TranslationIssues.GetIssueById(issue).Code);
             }
         }
 

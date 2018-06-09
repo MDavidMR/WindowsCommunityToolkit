@@ -201,10 +201,10 @@ namespace LottieTest
             internal string FileName { get; set; }
             internal string[] ValidationIssues { get; set; } = s_emptyStrings;
             internal string[] ReaderIssues { get; set; } = s_emptyStrings;
-            internal string[] TranslationIssues { get; set; } = s_emptyStrings;
+            internal (string Code, string Description)[] TranslationIssues { get; set; } = new (string, string)[0];
 
             internal string[] AllIssues =>
-                ReaderIssues.Concat(TranslationIssues).Concat(ValidationIssues).ToArray();
+                ReaderIssues.Concat(TranslationIssues.Select(i => i.Description)).Concat(ValidationIssues).ToArray();
         }
     }
 }

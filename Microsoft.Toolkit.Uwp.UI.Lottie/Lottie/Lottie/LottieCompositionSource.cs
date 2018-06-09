@@ -292,7 +292,7 @@ namespace Lottie
 
                     if (diagnostics != null)
                     {
-                        diagnostics.TranslationIssues = translationIssues;
+                        diagnostics.TranslationIssues = translationIssues.Select(issue => new Issue { Code = issue.Code, Description = issue.Description });
                     }
                 }));
 

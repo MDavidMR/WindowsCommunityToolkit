@@ -122,6 +122,9 @@
     <Compile Include="..\Lottie\Lottie\Instantiator.cs">
       <Link>Lottie\Instantiator.cs</Link>
     </Compile>
+    <Compile Include="..\Lottie\Lottie\Issue.cs">
+      <Link>Lottie\Issue.cs</Link>
+    </Compile>
     <Compile Include="..\Lottie\Lottie\LottieCompositionDiagnostics.cs">
       <Link>Lottie\LottieCompositionDiagnostics.cs</Link>
     </Compile>

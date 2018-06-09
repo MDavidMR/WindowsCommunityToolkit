@@ -106,11 +106,17 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Lottie\LottieToWinComp\CanvasGeometryCombiner.cs">
+      <Link>LottieToWinComp\CanvasGeometryCombiner.cs</Link>
+    </Compile>
     <Compile Include="..\Lottie\LottieToWinComp\ExpressionFactory.cs">
       <Link>LottieToWinComp\ExpressionFactory.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\LottieToWinComp\LottieToWinCompTranslator.cs">
       <Link>LottieToWinComp\LottieToWinCompTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\Lottie\LottieToWinComp\TranslationIssues.cs">
+      <Link>LottieToWinComp\TranslationIssues.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LottieToWinComp.rd.xml" />

@@ -44,7 +44,7 @@ namespace LottieToWinComp
 
             public Wcd.Mgcg.CanvasGeometry ToCanvasGeometry()
             {
-                return new Wcd.Mgcg.CanvasGeometry.Path(_builder.Commands);
+                return Wcd.Mgcg.CanvasGeometry.CreatePath(_builder);
             }
 
             void Win2D.ICanvasPathReceiver.BeginFigure(System.Numerics.Vector2 startPoint, Win2D.CanvasFigureFill figureFill)

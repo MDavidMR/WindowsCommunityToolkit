@@ -58,7 +58,7 @@ namespace LottieViewer
                 var aspectRatio = FloatToRatio(diags.LottieWidth / diags.LottieHeight);
                 _txtSize.Text = $"{diags.LottieWidth}x{diags.LottieHeight} ({aspectRatio.Item1.ToString("0.##")}:{aspectRatio.Item2.ToString("0.##")})";
 
-                var issues = diags.JsonParsingIssues.Concat(diags.LottieValidationIssues).Concat(diags.TranslationIssues).OrderBy(a => a).ToArray();
+                var issues = diags.JsonParsingIssues.Concat(diags.LottieValidationIssues).Concat(diags.TranslationIssues.Select(iss => iss.Description)).OrderBy(a => a).ToArray();
                 PlayerIssues = issues;
                 PlayerHasIssues = issues.Any();
             }
