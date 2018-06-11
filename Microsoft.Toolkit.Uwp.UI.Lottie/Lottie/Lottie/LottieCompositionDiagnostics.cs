@@ -41,7 +41,7 @@ namespace Lottie
 
         public TimeSpan InstantiationTime { get; internal set; }
 
-        public IEnumerable<string> JsonParsingIssues { get; internal set; } = s_emptyStrings;
+        public IEnumerable<Issue> JsonParsingIssues { get; internal set; } = s_emptyIssues;
 
         public IEnumerable<string> LottieValidationIssues { get; internal set; } = s_emptyStrings;
 

@@ -355,7 +355,7 @@ namespace LottieViewer
                 case "Issues":
                     {
                         if (diagnostics == null) { return null; }
-                        var allIssues = diagnostics.JsonParsingIssues.Concat(diagnostics.TranslationIssues.Select(iss => iss.Description));
+                        var allIssues = diagnostics.JsonParsingIssues.Select(iss => iss.Description).Concat(diagnostics.TranslationIssues.Select(iss => iss.Description));
                         if (targetType == typeof(Visibility))
                         {
                             return allIssues.Any() ? Visibility.Visible : Visibility.Collapsed;

@@ -31,7 +31,7 @@ namespace LottieData.Serialization
         static readonly AnimatableColorParser s_animatableColorParser = new AnimatableColorParser();
         static readonly AnimatableGeometryParser s_animatableGeometryParser = new AnimatableGeometryParser();
 
-        readonly HashSet<string> m_issues = new HashSet<string>();
+        readonly ParsingIssues _issues = new ParsingIssues();
 
         Options _options;
 
@@ -54,7 +54,7 @@ namespace LottieData.Serialization
         /// <summary>
         /// Parses a Json string to create a <see cref="LottieData.LottieComposition"/>.
         /// </summary>
-        public static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out string[] issues)
+        public static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out (string Code, string Description)[] issues)
         {
             JsonObject obj;
             try
@@ -63,7 +63,9 @@ namespace LottieData.Serialization
             }
             catch (Exception e)
             {
-                issues = new[] { $"Failed to parse JSON. {e.Message}" };
+                var issueCollector = new ParsingIssues();
+                issueCollector.FailedToParseJson(e.Message);
+                issues = issueCollector.GetIssues();
                 return null;
             }
 
@@ -72,7 +74,7 @@ namespace LottieData.Serialization
 
         LottieCompositionJsonReader(Options options) { _options = options; }
 
-        static LottieComposition ReadLottieCompositionFromJson(JsonObject obj, Options options, out string[] issues)
+        static LottieComposition ReadLottieCompositionFromJson(JsonObject obj, Options options, out (string Code, string Description)[] issues)
         {
             var reader = new LottieCompositionJsonReader(options);
             LottieComposition result = null;
@@ -82,9 +84,9 @@ namespace LottieData.Serialization
             }
             catch (LottieJsonReaderException e)
             {
-                reader.ReportIssue(e.Message);
+                reader._issues.FatalError(e.Message);
             }
-            issues = reader.m_issues.ToArray();
+            issues = reader._issues.GetIssues();
             return result;
         }
 
@@ -148,10 +150,10 @@ namespace LottieData.Serialization
                         name = field.Value.GetString();
                         break;
                     case "chars":
-                        ReportIssue("chars: is not supported.");
+                        _issues.Chars();
                         break;
                     case "fonts":
-                        ReportIssue("fonts: is not supported.");
+                        _issues.Fonts();
                         break;
                     default:
                         throw new LottieJsonReaderException($"Unexpected field: {field.Key}");
@@ -246,7 +248,7 @@ namespace LottieData.Serialization
 
                 if (double.IsNaN(w) || double.IsNaN(h) || u == null || p == null)
                 {
-                    ReportIssue("Unsupported asset type.");
+                    _issues.AssetType("NaN");
                     AssertAllFieldsRead(obj);
                     return null;
                 }
@@ -276,29 +278,29 @@ namespace LottieData.Serialization
 
             if (!render)
             {
-                ReportIssue("Layer with render:false");
+                _issues.LayerWithRenderFalse();
                 return null;
             }
 
             // Warnings
             if (name.EndsWith(".ai") || obj.GetNamedString("cl", "") == "ai")
             {
-                ReportIssue("Illustrator layers must be converted to shape layers.");
+                _issues.IllustratorLayers();
             }
 
             if (obj.ContainsKey("ef"))
             {
-                ReportIssue("Layer effects");
+                _issues.LayerEffects();
             }
 
             if (obj.ContainsKey("tt"))
             {
-                ReportIssue("Mattes");
+                _issues.Mattes();
             }
 
             if (obj.ContainsKey("maskProperties") || obj.ContainsKey("hasMask"))
             {
-                ReportIssue("Masks are not supported.");
+                _issues.Masks();
             }
 
             // ----------------------
@@ -329,7 +331,7 @@ namespace LottieData.Serialization
                         var tm = obj.GetNamedObject("tm", null);
                         if (tm != null)
                         {
-                            ReportIssue("Time remapping of PreComps is not supported.");
+                            _issues.TimeRemappingOfPreComps();
                         }
 
                         AssertAllFieldsRead(obj);
@@ -525,7 +527,7 @@ namespace LottieData.Serialization
                 default:
                     break;
             }
-            ReportIssue($"Unexpected shape content type: {type}");
+            _issues.UnexpectedShapeContentType(type);
             return null;
         }
 
@@ -623,6 +625,8 @@ namespace LottieData.Serialization
 
         LinearGradientStroke ReadLinearGradientStroke(JsonObject obj)
         {
+            _issues.GradientStrokes();
+
             // Not clear whether we need to read these fields.
             IgnoreFieldThatIsNotYetSupported(obj, "hd");
             IgnoreFieldThatIsNotYetSupported(obj, "g");
@@ -641,8 +645,6 @@ namespace LottieData.Serialization
             var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
 
-            ReportIssue("Gradient strokes");
-
             AssertAllFieldsRead(obj);
             return new LinearGradientStroke(
                 name.Name,
@@ -656,6 +658,8 @@ namespace LottieData.Serialization
 
         RadialGradientStroke ReadRadialGradientStroke(JsonObject obj)
         {
+            _issues.GradientStrokes();
+
             // Not clear whether we need to read these fields.
             IgnoreFieldThatIsNotYetSupported(obj, "t");
             // highlightLength - ReadAnimatableFloat(obj.GetNamedObject("h")) - but is optional
@@ -671,8 +675,6 @@ namespace LottieData.Serialization
             var miterLimit = obj.GetNamedNumber("ml", 4); // Default miter limit in AfterEffects is 4
             var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
-
-            ReportIssue("Gradient strokes");
 
             AssertAllFieldsRead(obj);
             return new RadialGradientStroke(
@@ -777,31 +779,31 @@ namespace LottieData.Serialization
             var points = ReadAnimatableFloat(obj.GetNamedObject("pt"));
             if (points.IsAnimated)
             {
-                ReportIssue("PolyStar.Points animation is not supported.");
+                _issues.PolystarAnimation("points");
             }
 
             var position = ReadAnimatableVector3(obj.GetNamedObject("p"));
             if (position.IsAnimated)
             {
-                ReportIssue("PolyStar.Position animation is not supported.");
+                _issues.PolystarAnimation("position");
             }
 
             var rotation = ReadAnimatableFloat(obj.GetNamedObject("r"));
             if (rotation.IsAnimated)
             {
-                ReportIssue("PolyStar.Rotation animation is not supported.");
+                _issues.PolystarAnimation("rotation");
             }
 
             var outerRadius = ReadAnimatableFloat(obj.GetNamedObject("or"));
             if (outerRadius.IsAnimated)
             {
-                ReportIssue("PolyStar.OuterRadius animation is not supported.");
+                _issues.PolystarAnimation("outer radius");
             }
 
             var outerRoundedness = ReadAnimatableFloat(obj.GetNamedObject("os"));
             if (outerRoundedness.IsAnimated)
             {
-                ReportIssue("PolyStar.OuterRoundedness animation is not supported.");
+                _issues.PolystarAnimation("outer roundedness");
             }
 
             Animatable<double> innerRadius;
@@ -812,13 +814,13 @@ namespace LottieData.Serialization
                 innerRadius = ReadAnimatableFloat(obj.GetNamedObject("ir"));
                 if (innerRadius.IsAnimated)
                 {
-                    ReportIssue("PolyStar.InnerRadius animation is not supported.");
+                    _issues.PolystarAnimation("inner radius");
                 }
 
                 innerRoundedness = ReadAnimatableFloat(obj.GetNamedObject("is"));
                 if (innerRoundedness.IsAnimated)
                 {
-                    ReportIssue("PolyStar.InnerRoundedness animation is not supported.");
+                    _issues.PolystarAnimation("inner roundedness");
                 }
             }
             else
@@ -1156,11 +1158,6 @@ namespace LottieData.Serialization
             return result;
         }
 
-        void ReportIssue(string issue)
-        {
-            m_issues.Add(issue);
-        }
-
         sealed class AnimatableVector3Parser : AnimatableParser<Vector3>
         {
             internal AnimatableVector3Parser() : base((IJsonValue obj) => ReadVector3FromJsonArray(obj.GetArray())) { }
@@ -1381,7 +1378,7 @@ namespace LottieData.Serialization
 
                         // Property expression. Currently ignored because we don't support expressions.
                         case "x":
-                            reader.ReportIssue("Expressions");
+                            reader._issues.Expressions();
                             break;
                         default:
                             throw new LottieJsonReaderException($"Unexpected field: {field.Key}");
@@ -1708,7 +1705,7 @@ namespace LottieData.Serialization
             unread.Sort();
             foreach (var unreadField in unread)
             {
-                ReportIssue($"{memberName} ignored {unreadField}");
+                _issues.IgnoredField($"{memberName}.{unreadField}");
             }
         }
     }

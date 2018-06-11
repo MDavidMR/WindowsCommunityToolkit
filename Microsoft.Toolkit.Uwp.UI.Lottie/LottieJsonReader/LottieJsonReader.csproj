@@ -115,6 +115,9 @@
     <Compile Include="..\Lottie\LottieData\Serialization\LottieJsonReaderException.cs">
       <Link>LottieData\Serialization\LottieJsonReaderException.cs</Link>
     </Compile>
+    <Compile Include="..\Lottie\LottieData\Serialization\ParsingIssues.cs">
+      <Link>LottieData\Serialization\ParsingIssues.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LottieJsonReader.rd.xml" />
   </ItemGroup>

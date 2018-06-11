@@ -197,14 +197,15 @@ namespace LottieTest
 
         sealed class LottieInfo
         {
+            static readonly (string, string)[] s_emptyIssues = new(string, string)[0];
             static readonly string[] s_emptyStrings = new string[0];
             internal string FileName { get; set; }
             internal string[] ValidationIssues { get; set; } = s_emptyStrings;
-            internal string[] ReaderIssues { get; set; } = s_emptyStrings;
-            internal (string Code, string Description)[] TranslationIssues { get; set; } = new (string, string)[0];
+            internal (string Code, string Description)[] ReaderIssues { get; set; } = s_emptyIssues;
+            internal (string Code, string Description)[] TranslationIssues { get; set; } = s_emptyIssues;
 
             internal string[] AllIssues =>
-                ReaderIssues.Concat(TranslationIssues.Select(i => i.Description)).Concat(ValidationIssues).ToArray();
+                ReaderIssues.Select(i => i.Description).Concat(TranslationIssues.Select(i => i.Description)).Concat(ValidationIssues).ToArray();
         }
     }
 }

@@ -181,6 +181,9 @@ namespace Lottie
             NotifyListenersThatCompositionChanged();
         }
 
+        static Issue[] ToIssues(IEnumerable<(string Code, string Description)> issues) 
+            => issues.Select(issue => new Issue { Code = issue.Code, Description = issue.Description }).ToArray();
+    
         // Handles loading a composition from a Lottie file.
         sealed class Loader
         {
@@ -237,7 +240,7 @@ namespace Lottie
 
                     if (diagnostics != null)
                     {
-                        diagnostics.JsonParsingIssues = readerIssues;
+                        diagnostics.JsonParsingIssues = ToIssues(readerIssues);
                     }
                 }));
 
@@ -292,7 +295,7 @@ namespace Lottie
 
                     if (diagnostics != null)
                     {
-                        diagnostics.TranslationIssues = translationIssues.Select(issue => new Issue { Code = issue.Code, Description = issue.Description });
+                        diagnostics.TranslationIssues = ToIssues(translationIssues);
                     }
                 }));
 
