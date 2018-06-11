@@ -64,6 +64,7 @@
     <Compile Include="..\Lottie\LottieData\TextLayer.cs" Link="LottieData\TextLayer.cs" />
     <Compile Include="..\Lottie\LottieData\Transform.cs" Link="LottieData\Transform.cs" />
     <Compile Include="..\Lottie\LottieData\TrimPath.cs" Link="LottieData\TrimPath.cs" />
+    <Compile Include="..\Lottie\LottieData\ValidationIssues.cs" Link="LottieData\ValidationIssues.cs" />
     <Compile Include="..\Lottie\LottieData\Vector3.cs" Link="LottieData\Vector3.cs" />
   </ItemGroup>
 

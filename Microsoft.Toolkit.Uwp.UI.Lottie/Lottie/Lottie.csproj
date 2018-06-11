@@ -113,6 +113,7 @@
     <Compile Include="LottieData\Serialization\ParsingIssues.cs" />
     <Compile Include="LottieData\ShapeContentType.cs" />
     <Compile Include="LottieData\ShapeLayerContent.cs" />
+    <Compile Include="LottieData\ValidationIssues.cs" />
     <Compile Include="LottieToWinComp\ExpressionFactory.cs" />
     <Compile Include="LottieToWinComp\CanvasGeometryCombiner.cs" />
     <Compile Include="LottieToWinComp\TranslationIssues.cs" />

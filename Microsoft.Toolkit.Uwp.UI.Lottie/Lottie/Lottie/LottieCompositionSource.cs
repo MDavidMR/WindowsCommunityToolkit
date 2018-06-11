@@ -270,7 +270,7 @@ namespace Lottie
                     }).ToArray();
 
                     // Validate the composition and report if issues are found.
-                    diagnostics.LottieValidationIssues = LottieCompositionValidator.Validate(lottieComposition);
+                    diagnostics.LottieValidationIssues = ToIssues(LottieCompositionValidator.Validate(lottieComposition));
                     diagnostics.ValidationTime = sw.Elapsed;
                     sw.Restart();
                 }

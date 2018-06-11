@@ -25,7 +25,7 @@ namespace LottieViewer
             DependencyProperty.Register(nameof(PlayerHasIssues), typeof(bool), typeof(Stage), new PropertyMetadata(false));
 
         public static DependencyProperty PlayerIssuesProperty =
-            DependencyProperty.Register(nameof(PlayerIssues), typeof(string[]), typeof(Stage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(PlayerIssues), typeof(Issue[]), typeof(Stage), new PropertyMetadata(null));
 
 
         public Stage()
@@ -58,7 +58,7 @@ namespace LottieViewer
                 var aspectRatio = FloatToRatio(diags.LottieWidth / diags.LottieHeight);
                 _txtSize.Text = $"{diags.LottieWidth}x{diags.LottieHeight} ({aspectRatio.Item1.ToString("0.##")}:{aspectRatio.Item2.ToString("0.##")})";
 
-                var issues = diags.JsonParsingIssues.Select(iss => iss.Description).Concat(diags.LottieValidationIssues).Concat(diags.TranslationIssues.Select(iss => iss.Description)).OrderBy(a => a).ToArray();
+                var issues = diags.JsonParsingIssues.Concat(diags.LottieValidationIssues).Concat(diags.TranslationIssues).OrderBy(a => a.Code).ThenBy(a => a.Description).ToArray();
                 PlayerIssues = issues;
                 PlayerHasIssues = issues.Any();
             }
@@ -72,9 +72,9 @@ namespace LottieViewer
             private set => SetValue(PlayerHasIssuesProperty, value);
         }
 
-        internal string[] PlayerIssues
+        internal Issue[] PlayerIssues
         {
-            get => (string[])GetValue(PlayerIssuesProperty);
+            get => (Issue[])GetValue(PlayerIssuesProperty);
             private set => SetValue(PlayerIssuesProperty, value);
         }
 

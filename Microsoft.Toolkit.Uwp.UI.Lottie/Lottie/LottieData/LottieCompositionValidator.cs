@@ -16,7 +16,7 @@ namespace LottieData
     sealed class LottieCompositionValidator
     {
         readonly LottieComposition _lottieComposition;
-        readonly List<string> _issues = new List<string>();
+        readonly ValidationIssues _issues = new ValidationIssues();
 
         LottieCompositionValidator(LottieComposition lottieComposition)
         {
@@ -27,7 +27,7 @@ namespace LottieData
         /// Validates the given <see cref="LottieComposition"/> against all of the validation rules.
         /// Returns a list of validation issues, or an empty list if no issues were found.
         /// </summary>
-        public static string[] Validate(LottieComposition lottieComposition)
+        public static (string Code, string Description)[] Validate(LottieComposition lottieComposition)
         {
             if (lottieComposition == null)
             {
@@ -39,7 +39,7 @@ namespace LottieData
             validator.ValidateLayerInPointBeforeOutPoint();
             validator.ValidateParentPointsToValidLayer();
             validator.ValidateNoParentCycles();
-            return validator._issues.ToArray();
+            return validator._issues.GetIssues();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace LottieData
             {
                 if (layer.InPoint >= layer.OutPoint)
                 {
-                    _issues.Add($"Layer {layer.Name} has in-point after out-point.");
+                    _issues.LayerHasInPointAfterOutPoint(layer.Name);
                 }
             }
         }
@@ -132,7 +132,7 @@ namespace LottieData
             // No more notIns were discovered. All the maybeIns are definitely in cycles.
             foreach (var layer in maybeInCycles)
             {
-                _issues.Add($"Layer with Parent {layer.Parent} is in a cycle.");
+                _issues.LayerInCycle(layer.Parent.ToString());
             }
         }
 
@@ -157,7 +157,7 @@ namespace LottieData
             {
                 if (layer.Parent.HasValue && layers.GetLayerById(layer.Parent) == null)
                 {
-                    _issues.Add($"Layer Parent {layer.Parent} is invalid.");
+                    _issues.InvalidLayerParent(layer.Parent.ToString());
                 }
             }
         }

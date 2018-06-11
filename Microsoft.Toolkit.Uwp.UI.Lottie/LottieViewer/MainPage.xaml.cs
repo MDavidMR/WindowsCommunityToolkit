@@ -307,7 +307,7 @@ namespace LottieViewer
             var issues = _stage.PlayerIssues;
             var dataPackage = new DataPackage();
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(string.Join("\r\n", issues));
+            dataPackage.SetText(string.Join("\r\n", issues.Select(iss => iss.ToString())));
             Clipboard.SetContent(dataPackage);
             Clipboard.Flush();
         }
