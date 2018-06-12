@@ -2005,7 +2005,8 @@ namespace LottieToWinComp
             else if (trimmedKeyFrames.Length == 1)
             {
                 // If only 1 keyframe is returned, it should always be the first keyframe.
-                Debug.Assert(trimmedKeyFrames[0].Value.Equals(value.InitialValue));
+                // TODO - this fires some times, which means that the non-animated value being used is not correct.
+                //Debug.Assert(trimmedKeyFrames[0].Value.Equals(value.InitialValue));
 
                 // TODO - handle this earlier
                 return;

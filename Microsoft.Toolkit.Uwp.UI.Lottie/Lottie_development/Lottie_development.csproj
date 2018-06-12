@@ -165,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CLEANUP_TODO.txt" />
+    <Content Include="LottieWindowsIssuesHelp.html" />
     <Content Include="WinCompIssues.txt" />
   </ItemGroup>
   <ItemGroup>

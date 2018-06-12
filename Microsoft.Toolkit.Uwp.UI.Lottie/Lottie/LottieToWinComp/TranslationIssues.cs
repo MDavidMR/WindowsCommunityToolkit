@@ -102,7 +102,7 @@ namespace LottieToWinComp
         }
         internal void ThreeD()
         {
-            Report("LT0020", "3d Composition");
+            Report("LT0020", "3d composition");
         }
         internal void ThreeDLayer()
         {

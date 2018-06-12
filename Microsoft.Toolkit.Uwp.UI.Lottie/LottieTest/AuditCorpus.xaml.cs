@@ -124,7 +124,7 @@ namespace LottieTest
             _txtProgressTotal.Text = files.Count().ToString();
 
             var lottieInfos = new List<LottieInfo>();
-            var paths = new List<string>();
+
             // Parse each file in the corpus.
             foreach (var file in files)
             {
@@ -184,12 +184,8 @@ namespace LottieTest
                     (float)lottieComposition.Height, 
                     wincompDataRootVisual.Properties, 
                     lottieComposition.Duration);
-
-                // Collect the paths that are used in the file.
-                paths.AddRange(PathsGenerator.GeneratePaths(wincompDataRootVisual));
             }
 
-            var allPaths = string.Join("\r\n", paths);
             return lottieInfos.ToArray();
         }
 

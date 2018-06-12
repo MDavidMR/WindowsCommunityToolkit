@@ -8,6 +8,7 @@ namespace Lottie
         public string Code { get; set; }
         public string Description { get; set; }
 
+        public string Url => $"https://airbnb.design/lottie/#{Code}";
 
         public override string ToString() => $"{Code}: {Description}";
     }

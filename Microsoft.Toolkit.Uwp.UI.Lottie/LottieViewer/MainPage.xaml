@@ -45,7 +45,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock MinWidth="60" Text="{Binding Path=Code}" FontWeight="Bold"/>
+                                                <TextBlock MinWidth="60"><Hyperlink NavigateUri="{Binding Path=Url}"><Run Text="{Binding Path=Code}" FontWeight="Bold"></Run></Hyperlink></TextBlock>
                                                 <TextBlock Text="{Binding Path=Description}"/>
                                             </StackPanel>
                                         </DataTemplate>
