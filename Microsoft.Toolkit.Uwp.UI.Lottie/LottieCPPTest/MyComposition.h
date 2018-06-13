@@ -9,3 +9,18 @@
 //------------------------------------------------------------------------------
 
 #include "ICompositionSource.h"
+
+namespace Compositions 
+{
+ref class MyComposition sealed : public ICompositionSource
+{
+public:
+    virtual bool TryCreateInstance(
+        Windows::UI::Composition::Compositor^ compositor,
+        Windows::UI::Composition::Visual^* rootVisual,
+        Windows::Foundation::Numerics::float2* size,
+        Windows::UI::Composition::CompositionPropertySet^* progressPropertySet,
+        Windows::Foundation::TimeSpan* duration,
+        Platform::Object^* diagnostics);
+};
+}

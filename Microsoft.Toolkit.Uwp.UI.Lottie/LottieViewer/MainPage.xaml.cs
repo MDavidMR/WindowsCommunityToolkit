@@ -61,6 +61,7 @@ namespace LottieViewer
 
             if (pickedFile == null)
             {
+                // No source file chosen - give up.
                 return;
             }
 
@@ -92,7 +93,7 @@ namespace LottieViewer
             var filePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-                SuggestedFileName = diagnostics.SuggestedName,
+                SuggestedFileName = suggestedClassName,
             };
 
             // Dropdown of file types the user can save the file as
@@ -100,7 +101,13 @@ namespace LottieViewer
 
             var hFile = await filePicker.PickSaveFileAsync();
 
-            // Ask the user to pick a name for the .h file.
+            if (hFile == null)
+            {
+                // No header file chosen - give up.
+                return;
+            }
+
+            // Ask the user to pick a name for the ICompositionSource.h file.
             var iCompositionSourceFilePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,

@@ -182,7 +182,6 @@ namespace LottieTest
                     wincompDataRootVisual, 
                     (float)lottieComposition.Width, 
                     (float)lottieComposition.Height, 
-                    wincompDataRootVisual.Properties, 
                     lottieComposition.Duration);
             }
 

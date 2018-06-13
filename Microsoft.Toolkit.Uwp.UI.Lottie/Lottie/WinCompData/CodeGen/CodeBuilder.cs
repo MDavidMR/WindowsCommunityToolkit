@@ -55,12 +55,6 @@ namespace WinCompData.CodeGen
             WriteLine("}");
         }
 
-        internal void CloseClassScope()
-        {
-            UnIndent();
-            WriteLine("};");
-        }
-
         internal void Indent()
         {
             _indentCount++;

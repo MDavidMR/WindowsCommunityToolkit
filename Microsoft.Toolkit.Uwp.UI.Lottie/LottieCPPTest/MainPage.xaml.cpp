@@ -5,12 +5,13 @@
 
 #include "pch.h"
 #include "MainPage.xaml.h"
-#include "MyComposition.cpp"
+#include "MyComposition.h"
 #include "AnimationControl.xaml.h"
 
 using namespace LottieCPPTest;
 using namespace Compositions;
 using namespace Platform;
+using namespace Windows::UI::Composition;
 using namespace Windows::UI::Xaml;
 
 MainPage::MainPage()

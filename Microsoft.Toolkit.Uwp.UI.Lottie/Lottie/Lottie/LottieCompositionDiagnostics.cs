@@ -79,7 +79,6 @@ namespace Lottie
                     RootVisual,
                     (float)LottieComposition.Width,
                     (float)LottieComposition.Height,
-                    RootVisual.Properties,
                     LottieComposition.Duration);
         }
 
@@ -97,7 +96,6 @@ namespace Lottie
                 RootVisual,
                 (float)LottieComposition.Width,
                 (float)LottieComposition.Height,
-                RootVisual.Properties,
                 LottieComposition.Duration,
                 headerFileName,
                 out cppText,

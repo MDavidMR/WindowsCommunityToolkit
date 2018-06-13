@@ -30,17 +30,17 @@ namespace WinCompData.CodeGen
             Visual rootVisual,
             float width,
             float height,
-            CompositionPropertySet progressPropertySet,
             TimeSpan duration)
         {
             var generator = new CSharpInstantiatorGenerator(rootVisual, duration, setCommentProperties: false, stringifier: new CSharpStringifier());
-            return generator.GenerateCode(className, rootVisual, width, height, progressPropertySet);
+            return generator.GenerateCode(className, rootVisual, width, height);
         }
 
-        protected override void WritePreamble(CodeBuilder builder, bool requiresWin2d)
+        // Called by the base class to write the start of the file (i.e. everything up to the body of the Instantiator class).
+        protected override void WriteFileStart(CodeBuilder builder, CodeGenInfo info)
         {
             builder.WriteLine("using Host = Lottie;");
-            if (requiresWin2d)
+            if (info.RequiresWin2d)
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
             }
@@ -48,19 +48,11 @@ namespace WinCompData.CodeGen
             builder.WriteLine("using System.Numerics;");
             builder.WriteLine("using Windows.UI;");
             builder.WriteLine("using Windows.UI.Composition;");
-        }
 
-        protected override void WriteClassStart(
-            CodeBuilder builder, 
-            string className, 
-            Vector2 size, 
-            CompositionPropertySet progressPropertySet, 
-            TimeSpan duration)
-        {
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"sealed class {className} : Host.ICompositionSource");
+            builder.WriteLine($"sealed class {info.ClassName} : Host.ICompositionSource");
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
@@ -75,33 +67,36 @@ namespace WinCompData.CodeGen
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine("rootVisual = Instantiator.InstantiateComposition(compositor);");
-            builder.WriteLine($"size = {Vector2(size)};");
+            builder.WriteLine($"size = {Vector2(info.CompositionDeclaredSize)};");
             builder.WriteLine("progressPropertySet = rootVisual.Properties;");
-            builder.WriteLine($"duration = {_stringifier.TimeSpan(duration)};");
+            builder.WriteLine($"duration = {_stringifier.TimeSpan(info.CompositionDuration)};");
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("return true;");
             builder.CloseScope();
             builder.WriteLine();
 
-            // Write the instantiator.
+            // Start the instantiator class.
             builder.WriteLine("sealed class Instantiator");
             builder.OpenScope();
         }
 
-        protected override void WriteClassEnd(CodeBuilder builder, Visual rootVisual, string reusableExpressionAnimationField)
+        // Called by the base class to write the end of the file (i.e. everything after the body of the Instantiator class).
+        protected override void WriteFileEnd(
+            CodeBuilder builder, 
+            CodeGenInfo info)
         {
             // Write the constructor for the instantiator.
             builder.WriteLine("Instantiator(Compositor compositor)");
             builder.OpenScope();
             builder.WriteLine("_c = compositor;");
-            builder.WriteLine($"{reusableExpressionAnimationField} = compositor.CreateExpressionAnimation();");
+            builder.WriteLine($"{info.ReusableExpressionAnimationFieldName} = compositor.CreateExpressionAnimation();");
             builder.CloseScope();
             builder.WriteLine();
 
             // Generate the code for the root method.
             builder.WriteLine("public static Visual InstantiateComposition(Compositor compositor)");
             builder.Indent();
-            builder.WriteLine($"=> new Instantiator(compositor).{CallFactoryFor(rootVisual)};");
+            builder.WriteLine($"=> new Instantiator(compositor).{CallFactoryFor(info.RootVisual)};");
             builder.UnIndent();
 
             // Close the scope for the instantiator class.
