@@ -229,21 +229,32 @@ namespace WinCompData.Tools
                 }
             }
 
-
-
             void CanonicalizeColorBrushes()
             {
-                var items = GetCanonicalizableCompositionObjects<CompositionColorBrush>(CompositionObjectType.CompositionColorBrush);
+                // Canonicalize color brushes that have no animations, or have just a Color animation.
+                var nodes = GetCompositionObjects(CompositionObjectType.CompositionColorBrush);
+
+                var items =
+                    from node in nodes
+                    let obj = (CompositionColorBrush)node.Object
+                    where (_ignoreCommentProperties || obj.Comment == null)
+                       && !obj.Properties.PropertyNames.Any()
+                    select NewNodeAndObject(node, obj);
 
                 var grouping =
                     from item in items
                     let obj = item.Obj
+                    let animators = obj.Animators.ToArray()
+                    where animators.Length == 0 || (animators.Length == 1 && animators[0].AnimatedProperty == "Color")
+                    let animator = animators.FirstOrDefault()
+                    let canonicalAnimator = animator == null ? null : CanonicalObject<ColorKeyFrameAnimation>(animator.Animation)
                     group item.Node by new
                     {
                         obj.Color.A,
                         obj.Color.R,
                         obj.Color.G,
-                        obj.Color.B
+                        obj.Color.B,
+                        canonicalAnimator
                     } into grouped
                     select grouped;
 

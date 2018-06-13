@@ -98,8 +98,8 @@ class Instantiator final
     const int64_t c_durationTicks = 20000000L;
     Compositor^ const _c;
     ExpressionAnimation^ const _reusableExpressionAnimation;
-    ColorKeyFrameAnimation^ _colorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686;
-    ColorKeyFrameAnimation^ _colorAnimation_White_to_TransparentWhite;
+    CompositionColorBrush^ _animatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686;
+    CompositionColorBrush^ _animatedColorBrush_White_to_TransparentWhite;
     CompositionColorBrush^ _colorBrush_AlmostLightGray_FFCCD1D9;
     CubicBezierEasingFunction^ _cubicBezierEasingFunction_001;
     CubicBezierEasingFunction^ _cubicBezierEasingFunction_003;
@@ -123,13 +123,9 @@ class Instantiator final
         return result;
     }
 
-    // 'ruoi'.Contents
-    //   Group: ruoi
-    //     Group: Group 3
-    //       Path 1
-    CompositionColorBrush^ AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_000()
+    CompositionColorBrush^ AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686()
     {
-        auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x86, 0x86, 0x86));
+        auto result = _animatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x86, 0x86, 0x86));
         result->StartAnimation("Color", ColorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686());
         auto controller = result->TryGetAnimationController("Color");
         controller->Pause();
@@ -137,56 +133,10 @@ class Instantiator final
         return result;
     }
 
-    // 'ruoi'.Contents
-    //   Group: ruoi
-    //     Group: Group 2
-    //       Path 1
-    CompositionColorBrush^ AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_001()
+    CompositionColorBrush^ AnimatedColorBrush_White_to_TransparentWhite()
     {
-        auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x86, 0x86, 0x86));
-        result->StartAnimation("Color", _colorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686);
-        auto controller = result->TryGetAnimationController("Color");
-        controller->Pause();
-        controller->StartAnimation("Progress", _scalarExpressionAnimation);
-        return result;
-    }
-
-    // 'ruoi'.Contents
-    //   Group: ruoi
-    //     Group: Group 1
-    //       Path 1
-    CompositionColorBrush^ AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_002()
-    {
-        auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x86, 0x86, 0x86));
-        result->StartAnimation("Color", _colorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686);
-        auto controller = result->TryGetAnimationController("Color");
-        controller->Pause();
-        controller->StartAnimation("Progress", _scalarExpressionAnimation);
-        return result;
-    }
-
-    // 'ruoi'.Contents
-    //   Group: ruoi
-    //     Group: Group 3
-    //       Path 1
-    CompositionColorBrush^ AnimatedColorBrush_White_to_TransparentWhite_000()
-    {
-        auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+        auto result = _animatedColorBrush_White_to_TransparentWhite = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
         result->StartAnimation("Color", ColorAnimation_White_to_TransparentWhite());
-        auto controller = result->TryGetAnimationController("Color");
-        controller->Pause();
-        controller->StartAnimation("Progress", _scalarExpressionAnimation);
-        return result;
-    }
-
-    // 'ruoi'.Contents
-    //   Group: ruoi
-    //     Group: Group 2
-    //       Path 1
-    CompositionColorBrush^ AnimatedColorBrush_White_to_TransparentWhite_001()
-    {
-        auto result = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-        result->StartAnimation("Color", _colorAnimation_White_to_TransparentWhite);
         auto controller = result->TryGetAnimationController("Color");
         controller->Pause();
         controller->StartAnimation("Progress", _scalarExpressionAnimation);
@@ -208,7 +158,7 @@ class Instantiator final
 
     ColorKeyFrameAnimation^ ColorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686()
     {
-        auto result = _colorAnimation_AlmostGray_FF868686_to_TransparentAlmostGray_00868686 = _c->CreateColorKeyFrameAnimation();
+        auto result = _c->CreateColorKeyFrameAnimation();
         result->Duration = { c_durationTicks };
         // AlmostGray_FF868686
         result->InsertKeyFrame(0, ColorHelper::FromArgb(0xFF, 0x86, 0x86, 0x86), _linearEasingFunction);
@@ -221,7 +171,7 @@ class Instantiator final
 
     ColorKeyFrameAnimation^ ColorAnimation_White_to_TransparentWhite()
     {
-        auto result = _colorAnimation_White_to_TransparentWhite = _c->CreateColorKeyFrameAnimation();
+        auto result = _c->CreateColorKeyFrameAnimation();
         result->Duration = { c_durationTicks };
         // White
         result->InsertKeyFrame(0, ColorHelper::FromArgb(0xFF, 0xFF, 0xFF, 0xFF), _linearEasingFunction);
@@ -858,9 +808,9 @@ class Instantiator final
     CompositionSpriteShape^ SpriteShape_005()
     {
         auto result = _c->CreateSpriteShape();
-        result->FillBrush = AnimatedColorBrush_White_to_TransparentWhite_000();
+        result->FillBrush = AnimatedColorBrush_White_to_TransparentWhite();
         result->Geometry = PathGeometry_005();
-        result->StrokeBrush = AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_000();
+        result->StrokeBrush = AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686();
         result->StrokeMiterLimit = 10;
         result->StrokeThickness = 0.699999988F;
         return result;
@@ -873,9 +823,9 @@ class Instantiator final
     CompositionSpriteShape^ SpriteShape_006()
     {
         auto result = _c->CreateSpriteShape();
-        result->FillBrush = AnimatedColorBrush_White_to_TransparentWhite_001();
+        result->FillBrush = _animatedColorBrush_White_to_TransparentWhite;
         result->Geometry = PathGeometry_006();
-        result->StrokeBrush = AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_001();
+        result->StrokeBrush = _animatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686;
         result->StrokeMiterLimit = 10;
         result->StrokeThickness = 0.699999988F;
         return result;
@@ -888,7 +838,7 @@ class Instantiator final
     CompositionSpriteShape^ SpriteShape_007()
     {
         auto result = _c->CreateSpriteShape();
-        result->FillBrush = AnimatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686_002();
+        result->FillBrush = _animatedColorBrush_AlmostGray_FF868686_to_TransparentAlmostGray_00868686;
         result->Geometry = PathGeometry_007();
         return result;
     }
