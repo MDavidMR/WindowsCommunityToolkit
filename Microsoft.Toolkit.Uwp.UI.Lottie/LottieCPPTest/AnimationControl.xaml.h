@@ -20,10 +20,11 @@ namespace LottieCPPTest
         void PlayAnimationFrames(float startFrame, float endFrame, float totalFrames, bool reversePlayback, Windows::UI::Composition::AnimationIterationBehavior iterationBehavior);
         void PlayAnimation(bool reversePlayback, Windows::UI::Composition::AnimationIterationBehavior iterationBehavior);
         void Pause();
+    protected:
+        virtual Windows::Foundation::Size MeasureOverride(Windows::Foundation::Size availableSize) override;
+        virtual Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
     private:
-        void ScaleVisual();
         void PlayAnimationInternal(float start, float stop, Windows::Foundation::TimeSpan duration, Windows::UI::Composition::AnimationIterationBehavior iterationBehavior);
-        void OnSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e);
 
         // Playback
         Windows::UI::Composition::SpriteVisual^ m_spriteVisual;

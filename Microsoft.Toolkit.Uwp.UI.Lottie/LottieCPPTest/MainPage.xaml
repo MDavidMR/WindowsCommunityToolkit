@@ -9,6 +9,18 @@
     mc:Ignorable="d">
 
     <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <local:AnimationControl x:Name="anim" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <local:AnimationControl
+                x:Name="anim"
+                Grid.Column="0"/>
+            <StackPanel Grid.Column="1">
+                <local:AnimationControl x:Name="anim2"/>
+                <local:AnimationControl x:Name="anim3"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

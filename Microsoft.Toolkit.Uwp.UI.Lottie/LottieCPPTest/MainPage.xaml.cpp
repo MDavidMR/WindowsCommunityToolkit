@@ -23,4 +23,10 @@ void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 {
     anim->LoadAnimation(ref new MyComposition());
     anim->PlayAnimation(false, AnimationIterationBehavior::Forever);
+
+    anim2->LoadAnimation(ref new MyComposition());
+    anim2->PlayAnimation(false, AnimationIterationBehavior::Forever);
+
+    anim3->LoadAnimation(ref new MyComposition());
+    anim3->PlayAnimation(false, AnimationIterationBehavior::Forever);
 }

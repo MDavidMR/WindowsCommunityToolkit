@@ -7,6 +7,10 @@
 #include "AnimationControl.xaml.h"
 #include "WindowsNumerics.h"
 
+#ifdef max
+#undef max
+#endif
+
 using namespace LottieCPPTest;
 using namespace Compositions;
 using namespace Platform;
@@ -25,10 +29,81 @@ AnimationControl::~AnimationControl()
 {
 }
 
-void AnimationControl::OnSizeChanged(Object ^ sender, SizeChangedEventArgs ^ e)
+static double AbstractInfinity(double value)
 {
-    // Rescale whenever control size changes
-    ScaleVisual();
+    if (value == std::numeric_limits<double>::infinity())
+    {
+        return std::numeric_limits<double>::max();
+    }
+    else
+    {
+        return value;
+    }
+}
+
+static bool isInfinity(double value)
+{
+    return (value == std::numeric_limits<double>::infinity());
+}
+
+Size AnimationControl::MeasureOverride(Size availableSize)
+{
+    Size measuredSize;
+    double epsilon = std::numeric_limits<double>::epsilon();
+
+    if (!m_animationLoaded || m_size == float2::zero())
+    {
+        measuredSize = Size((float)epsilon, (float)epsilon);
+        return measuredSize;
+    }
+
+    auto widthScale = AbstractInfinity(availableSize.Width) / m_size.x;
+    auto heightScale = AbstractInfinity(availableSize.Height) / m_size.y;
+
+    // Uniform
+    if (heightScale > widthScale)
+    {
+        measuredSize = Size(availableSize.Width, (float)(m_size.y * widthScale));
+    }
+    else
+    {
+        measuredSize = Size((float)(m_size.x * heightScale), availableSize.Height);
+    }
+
+    return measuredSize;
+}
+
+Size AnimationControl::ArrangeOverride(Size finalSize)
+{
+    if (!m_animationLoaded || m_size == float2::zero())
+    {
+        return finalSize;
+    }
+
+    auto widthScale = AbstractInfinity(finalSize.Width) / m_size.x;
+    auto heightScale = AbstractInfinity(finalSize.Height) / m_size.y;
+    if (widthScale < heightScale)
+    {
+        heightScale = widthScale;
+    }
+    else
+    {
+        widthScale = heightScale;
+    }
+    auto scaledSizeWidth = m_size.x * widthScale;
+    auto scaledSizeHeight = m_size.y * heightScale;
+
+    m_spriteVisual->Scale = float3{ (float)widthScale, (float)heightScale, 1 };
+    m_spriteVisual->Size = float2{
+        std::min<float>((float)(finalSize.Width / widthScale), m_size.x),
+        std::min<float>((float)(finalSize.Height / heightScale), m_size.y)};
+
+    auto xOffset = (finalSize.Width - scaledSizeWidth) / 2;
+    auto yOffset = (finalSize.Height - scaledSizeHeight) / 2;
+    m_spriteVisual->Offset = float3{ (float)xOffset, (float)yOffset, 0 };
+    m_spriteVisual->Clip->Offset = float2::zero();
+
+    return finalSize;
 }
 
 bool AnimationControl::LoadAnimation(ICompositionSource^ compositionFactory)
@@ -43,9 +118,14 @@ bool AnimationControl::LoadAnimation(ICompositionSource^ compositionFactory)
     }
     m_animationLoaded = true;
     m_spriteVisual = m_compositor->CreateSpriteVisual();
+    auto clip = m_compositor->CreateInsetClip();
+    m_spriteVisual->Clip = clip;
     Windows::UI::Xaml::Hosting::ElementCompositionPreview::SetElementChildVisual(animationGrid, m_spriteVisual);
     m_spriteVisual->Children->InsertAtTop(m_rootVisual);
-    ScaleVisual();
+
+    // With the new animation, we need to remeasure
+    this->InvalidateMeasure();
+
     return true;
 }
 
@@ -55,26 +135,6 @@ void AnimationControl::Pause()
     if (controller)
     {
         controller->Pause();
-    }
-}
-
-void AnimationControl::ScaleVisual()
-{
-    if ((animationGrid->ActualHeight > 0 || animationGrid->ActualWidth > 0)
-        && m_animationLoaded)
-    {
-        // Basic uniform scale
-        float ratioWidth = (float)animationGrid->ActualHeight / m_size.x;
-        float ratioHeight = (float)animationGrid->ActualWidth / m_size.y;
-        if (ratioWidth < ratioHeight)
-            ratioHeight = ratioWidth;
-        else
-            ratioWidth = ratioHeight;
-        m_spriteVisual->Scale = float3{ (float)ratioWidth, (float)ratioHeight, 1 };
-
-        float scaledSizeWidth = (float)m_size.x * ratioWidth;
-        float scaledSizeHeight = (float)m_size.y * ratioHeight;
-        m_spriteVisual->Size = float2{ scaledSizeWidth, scaledSizeHeight };
     }
 }
 
