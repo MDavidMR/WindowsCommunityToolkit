@@ -22,7 +22,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>1FC2381D85CB6B9131E884D1E13F4AE32BC4AA94</PackageCertificateThumbprint>
-    <AppxPackageDir>\\scratch2\scratch\simeonc\cscheib</AppxPackageDir>
+    <AppxPackageDir>\\scratch2\scratch\simeonc\Lottie</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>

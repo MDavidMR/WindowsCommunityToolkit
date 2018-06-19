@@ -911,7 +911,6 @@ namespace LottieToWinComp
 
         CanvasGeometry MergeShapeLayerContent(ShapeContentContext context, Stack<ShapeLayerContent> stack, MergePaths.MergeMode mergeMode)
         {
-            var combineMode = GeometryCombine(mergeMode);
             var pathFillType = context.Fill == null ? SolidColorFill.PathFillType.EvenOdd : context.Fill.FillType;
             var geometries = CreateCanvasGeometries(context, stack, pathFillType).ToArray();
 
@@ -921,32 +920,88 @@ namespace LottieToWinComp
                     return null;
                 case 1:
                     return geometries[0];
-
                 default:
-                    if (geometries.Length > 50)
-                    {
-                        // There will be stack overflows if the CanvasGeometry.Combine is too large.
-                        // Usually not a problem, but handle degenerate cases.
-                        _unsupported.MergingALargeNumberOfShapes();
-                        geometries = geometries.Take(50).ToArray();
-                    }
-                    return CombineGeometries(geometries, combineMode);
+                    return CombineGeometries(geometries, mergeMode);
             }
         }
 
-        // Combine all of the given geometries into a single geometry.
-        CanvasGeometry CombineGeometries(CanvasGeometry[] geometries, CanvasGeometryCombine combineMode)
+        // Merges the given paths with MergeMode.Merge.
+        CanvasGeometry MergePaths(CanvasGeometry.Path[] paths)
         {
+            Debug.Assert(paths.Length > 1);
+            var builder = new CanvasPathBuilder(null);
+            var filledRegionDetermination = paths[0].FilledRegionDetermination;
+            builder.SetFilledRegionDetermination(filledRegionDetermination);
+            foreach (var path in paths)
+            {
+                Debug.Assert(filledRegionDetermination == path.FilledRegionDetermination);
+                foreach (var command in path.Commands)
+                {
+                    switch (command.Type)
+                    {
+                        case CanvasPathBuilder.CommandType.BeginFigure:
+                            builder.BeginFigure(((CanvasPathBuilder.Command.BeginFigure)command).StartPoint);
+                            break;
+                        case CanvasPathBuilder.CommandType.EndFigure:
+                            builder.EndFigure(((CanvasPathBuilder.Command.EndFigure)command).FigureLoop);
+                            break;
+                        case CanvasPathBuilder.CommandType.AddCubicBezier:
+                            var cb = (CanvasPathBuilder.Command.AddCubicBezier)command;
+                            builder.AddCubicBezier(cb.ControlPoint1, cb.ControlPoint2, cb.EndPoint);
+                            break;
+                        case CanvasPathBuilder.CommandType.AddLine:
+                            builder.AddLine(((CanvasPathBuilder.Command.AddLine)command).EndPoint);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                }
+            }
+            return CanvasGeometry.CreatePath(builder);
+        }
+
+        // Combine all of the given geometries into a single geometry.
+        CanvasGeometry CombineGeometries(CanvasGeometry[] geometries, MergePaths.MergeMode mergeMode)
+        {
+            switch (geometries.Length)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return geometries[0];
+            }
+
+            // If MergeMode.Merge and they're all paths with the same FilledRegionDetermination, 
+            // combine into a single path.
+            if (mergeMode == LottieData.MergePaths.MergeMode.Merge && 
+                geometries.All(g => g.Type == CanvasGeometry.GeometryType.Path) && 
+                geometries.Select( g => ((CanvasGeometry.Path)g).FilledRegionDetermination).Distinct().Count() == 1)
+            {
+                return MergePaths(geometries.Cast<CanvasGeometry.Path>().ToArray());
+            }
+            else
+            {
+                if (geometries.Length > 50)
+                {
+                    // There will be stack overflows if the CanvasGeometry.Combine is too large.
+                    // Usually not a problem, but handle degenerate cases.
+                    _unsupported.MergingALargeNumberOfShapes();
+                    geometries = geometries.Take(50).ToArray();
+                }
+
+                var combineMode = GeometryCombine(mergeMode);
+
 #if PreCombineGeometries
             return CanvasGeometryCombiner.CombineGeometries(geometries, combineMode);
 #else
-            var accumulator = geometries[0];
-            for (var i = 1; i < geometries.Length; i++)
-            {
-                accumulator = accumulator.CombineWith(geometries[i], Matrix3x2Identity, combineMode);
-            }
-            return accumulator;
+                var accumulator = geometries[0];
+                for (var i = 1; i < geometries.Length; i++)
+                {
+                    accumulator = accumulator.CombineWith(geometries[i], Matrix3x2Identity, combineMode);
+                }
+                return accumulator;
 #endif
+            }
         }
 
         IEnumerable<CanvasGeometry> CreateCanvasGeometries(ShapeContentContext context, Stack<ShapeLayerContent> stack, SolidColorFill.PathFillType pathFillType)
@@ -2117,7 +2172,7 @@ namespace LottieToWinComp
                         }
 
                         // The easing for a keyframe at 0 is unimportant, so always use linear.
-                        var easing = adjustedProgress == 0 ? LinearEasing.Instance :  keyFrame.Easing;
+                        var easing = adjustedProgress == 0 ? LinearEasing.Instance : keyFrame.Easing;
 
                         insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(easing));
                         previousKeyFrameWasExpression = false;
@@ -2622,12 +2677,12 @@ namespace LottieToWinComp
         {
             switch (mergeMode)
             {
-                case MergePaths.MergeMode.Add: return CanvasGeometryCombine.Union;
-                case MergePaths.MergeMode.Subtract: return CanvasGeometryCombine.Exclude;
-                case MergePaths.MergeMode.Intersect: return CanvasGeometryCombine.Intersect;
+                case LottieData.MergePaths.MergeMode.Add: return CanvasGeometryCombine.Union;
+                case LottieData.MergePaths.MergeMode.Subtract: return CanvasGeometryCombine.Exclude;
+                case LottieData.MergePaths.MergeMode.Intersect: return CanvasGeometryCombine.Intersect;
                 // TODO - find out what merge should be - maybe should be a Union.
-                case MergePaths.MergeMode.Merge:
-                case MergePaths.MergeMode.ExcludeIntersections: return CanvasGeometryCombine.Xor;
+                case LottieData.MergePaths.MergeMode.Merge:
+                case LottieData.MergePaths.MergeMode.ExcludeIntersections: return CanvasGeometryCombine.Xor;
                 default:
                     throw new InvalidOperationException();
             }

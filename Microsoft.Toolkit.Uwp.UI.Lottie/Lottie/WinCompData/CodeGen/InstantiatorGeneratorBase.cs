@@ -80,21 +80,23 @@ namespace WinCompData.CodeGen
             _canonicalNodes = canonicals.OrderBy(node => node.Name).ToArray();
 
             // Force storage to be allocated for nodes that have multiple references to them.
-            foreach (var node in canonicals)
+            foreach (var node in _canonicalNodes)
             {
                 if (FilteredCanonicalInRefs(node).Count() > 1)
                 {
+                    // Node is referenced more than once, so it requires storage.
                     node.RequiresStorage = true;
                 }
-            }
-
-            // Force inlining on CompositionPath nodes because they are always very simple.
-            foreach (var node in canonicals.Where(node => node.Type == Graph.NodeType.CompositionPath))
-            {
-                if (node.CanonicalInRefs.Count() <= 1)
+                else
                 {
-                    var pathSourceFactoryCall = CallFactoryFromFor(node, ((CompositionPath)node.Object).Source);
-                    node.ForceInline($"{New} CompositionPath({_stringifier.FactoryCall(pathSourceFactoryCall)})");
+                    // Node is only referenced once.
+
+                    // Force inlining on CompositionPath nodes that are only referenced once, because they are always very simple.
+                    if (node.Type == Graph.NodeType.CompositionPath)
+                    {
+                        var pathSourceFactoryCall = CallFactoryFromFor(node, ((CompositionPath)node.Object).Source);
+                        node.ForceInline($"{New} CompositionPath({_stringifier.FactoryCall(pathSourceFactoryCall)})");
+                    }
                 }
             }
 
@@ -132,9 +134,9 @@ namespace WinCompData.CodeGen
         /// <param name="typeName">The type of the result.</param>
         /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
         protected abstract void WriteCanvasGeometryCombinationFactory(
-            CodeBuilder builder, 
-            CanvasGeometry.Combination obj, 
-            string typeName, 
+            CodeBuilder builder,
+            CanvasGeometry.Combination obj,
+            string typeName,
             string fieldName);
 
         /// <summary>
@@ -143,9 +145,9 @@ namespace WinCompData.CodeGen
         /// <param name="typeName">The type of the result.</param>
         /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
         protected abstract void WriteCanvasGeometryEllipseFactory(
-            CodeBuilder builder, 
-            CanvasGeometry.Ellipse obj, 
-            string typeName, 
+            CodeBuilder builder,
+            CanvasGeometry.Ellipse obj,
+            string typeName,
             string fieldName);
 
         /// <summary>
@@ -154,9 +156,9 @@ namespace WinCompData.CodeGen
         /// <param name="typeName">The type of the result.</param>
         /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
         protected abstract void WriteCanvasGeometryPathFactory(
-            CodeBuilder builder, 
-            CanvasGeometry.Path obj, 
-            string typeName, 
+            CodeBuilder builder,
+            CanvasGeometry.Path obj,
+            string typeName,
             string fieldName);
 
         /// <summary>
@@ -165,9 +167,9 @@ namespace WinCompData.CodeGen
         /// <param name="typeName">The type of the result.</param>
         /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
         protected abstract void WriteCanvasGeometryRoundedRectangleFactory(
-            CodeBuilder builder, 
-            CanvasGeometry.RoundedRectangle obj, 
-            string typeName, 
+            CodeBuilder builder,
+            CanvasGeometry.RoundedRectangle obj,
+            string typeName,
             string fieldName);
 
         /// <summary>
@@ -1319,9 +1321,14 @@ namespace WinCompData.CodeGen
                 else
                 {
                     // Multiple nodes of this type. Append a counter suffix.
+
+                    // Use only as many digits as necessary to express the largest count.
+                    var digitsRequired = (int)Math.Ceiling(Math.Log10(nodes.Count + 1));
+                    var counterFormat = new string('0', digitsRequired);
+
                     for (var i = 0; i < nodes.Count; i++)
                     {
-                        nodes[i].Name = $"{baseName}_{i.ToString("000")}";
+                        nodes[i].Name = $"{baseName}_{i.ToString(counterFormat)}";
                     }
                 }
             }

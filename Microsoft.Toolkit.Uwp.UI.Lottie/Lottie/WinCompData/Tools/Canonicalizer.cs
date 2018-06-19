@@ -43,6 +43,9 @@ namespace WinCompData.Tools
 
                 CanonicalizeCanvasGeometryPaths();
 
+                // CompositionPath must be canonicalized after CanvasGeometry paths.
+                CanonicalizeCompositionPaths();
+
                 // Easing functions must be canonicalized before keyframes are canonicalized.
                 CanonicalizeLinearEasingFunctions();
                 CanonicalizeCubicBezierEasingFunctions();
@@ -310,6 +313,24 @@ namespace WinCompData.Tools
                     from item in items
                     let obj = item.Obj
                     group item.Node by obj into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeCompositionPaths()
+            {
+                var items =
+                    from node in _graph
+                    where node.Type == Graph.NodeType.CompositionPath
+                    let obj = (CompositionPath)node.Object
+                    select NewNodeAndObject(node, obj);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Obj
+                    let canonicalSource = CanonicalObject<CanvasGeometry>(obj.Source)
+                    group item.Node by canonicalSource into grouped
                     select grouped;
 
                 CanonicalizeGrouping(grouping);

@@ -246,27 +246,29 @@ public:
             builder.WriteLine($"{FailFastWrapper("_d2dFactory->CreatePathGeometry(&path)")};");
             builder.WriteLine("ComPtr<ID2D1GeometrySink> sink;");
             builder.WriteLine($"{FailFastWrapper("path->Open(&sink)")};");
+
+            if (obj.FilledRegionDetermination != CanvasFilledRegionDetermination.Alternate)
+            {
+                builder.WriteLine($"sink->SetFillMode({FilledRegionDetermination(obj.FilledRegionDetermination)});");
+            }
+
             foreach (var command in obj.Commands)
             {
                 switch (command.Type)
                 {
                     case CanvasPathBuilder.CommandType.BeginFigure:
                         // Assume D2D1_FIGURE_BEGIN_FILLED
-                        builder.WriteLine($"sink->BeginFigure({Vector2((Vector2)command.Args)}, D2D1_FIGURE_BEGIN_FILLED);");
+                        builder.WriteLine($"sink->BeginFigure({Vector2(((CanvasPathBuilder.Command.BeginFigure)command).StartPoint)}, D2D1_FIGURE_BEGIN_FILLED);");
                         break;
                     case CanvasPathBuilder.CommandType.EndFigure:
-                        builder.WriteLine($"sink->EndFigure({CanvasFigureLoop((CanvasFigureLoop)command.Args)});");
+                        builder.WriteLine($"sink->EndFigure({CanvasFigureLoop(((CanvasPathBuilder.Command.EndFigure)command).FigureLoop)});");
                         break;
                     case CanvasPathBuilder.CommandType.AddLine:
-                        var endPoint = ((Vector2[])command.Args)[0];
-                        builder.WriteLine($"sink->AddLine({Vector2(endPoint)});");
+                        builder.WriteLine($"sink->AddLine({Vector2(((CanvasPathBuilder.Command.AddLine)command).EndPoint)});");
                         break;
                     case CanvasPathBuilder.CommandType.AddCubicBezier:
-                        var vectors = (Vector2[])command.Args;
-                        builder.WriteLine($"sink->AddBezier({{ {Vector2(vectors[0])}, {Vector2(vectors[1])}, {Vector2(vectors[2])} }});");
-                        break;
-                    case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                        builder.WriteLine($"sink->SetFillMode({FilledRegionDetermination((CanvasFilledRegionDetermination)command.Args)});");
+                        var cb = (CanvasPathBuilder.Command.AddCubicBezier)command;
+                        builder.WriteLine($"sink->AddBezier({{ {Vector2(cb.ControlPoint1)}, {Vector2(cb.ControlPoint2)}, {Vector2(cb.EndPoint)} }});");
                         break;
                     default:
                         throw new InvalidOperationException();

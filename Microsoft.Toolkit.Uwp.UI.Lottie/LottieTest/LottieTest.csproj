@@ -18,6 +18,10 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>LottieTest_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>764A47D2CD5152C8A5C9ECD2E1A73BE6B6897052</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -98,17 +102,24 @@
     <Compile Include="AuditCorpus.xaml.cs">
       <DependentUpon>AuditCorpus.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Compositions\_2052_obama_caricature.cs" />
+    <Compile Include="LargeComposition.xaml.cs">
+      <DependentUpon>LargeComposition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LottieFilesScraper.xaml.cs">
       <DependentUpon>LottieFilesScraper.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyComposition.cs" />
+    <Compile Include="Compositions\MyComposition.cs" />
     <Compile Include="MyComposition.xaml.cs">
       <DependentUpon>MyComposition.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RewardsApp.xaml.cs">
+      <DependentUpon>RewardsApp.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -136,6 +147,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LargeComposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LottieFilesScraper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,6 +160,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MyComposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RewardsApp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

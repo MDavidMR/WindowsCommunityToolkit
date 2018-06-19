@@ -12,6 +12,8 @@
             <NavigationViewItem Content="Scrape LottieFiles.com" Tag="ScrapeLottieFiles"/>
             <NavigationViewItem Content="Audit the Lottie corpus" Tag="AuditCorpus"/>
             <NavigationViewItem Content="Show MyComposition" Tag="MyComposition"/>
+            <NavigationViewItem Content="Show large (huge, slow) composition" Tag="LargeComposition"/>
+            <NavigationViewItem Content="Rewards App" Tag="RewardsApp"/>
         </NavigationView.MenuItems>
         <Frame x:Name="ContentFrame">
             

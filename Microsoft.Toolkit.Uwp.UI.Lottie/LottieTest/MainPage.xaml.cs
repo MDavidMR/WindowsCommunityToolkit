@@ -44,6 +44,12 @@ namespace LottieTest
                 case "MyComposition":
                     ContentFrame.Navigate(typeof(MyComposition));
                     break;
+                case "RewardsApp":
+                    ContentFrame.Navigate(typeof(RewardsApp));
+                    break;
+                case "LargeComposition":
+                    ContentFrame.Navigate(typeof(LargeComposition));
+                    break;
                 default:
                     throw new InvalidOperationException();
             }

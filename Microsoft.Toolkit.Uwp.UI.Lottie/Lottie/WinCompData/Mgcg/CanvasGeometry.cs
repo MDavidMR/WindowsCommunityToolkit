@@ -26,7 +26,7 @@ namespace WinCompData.Mgcg
         }
 
         public static CanvasGeometry CreatePath(CanvasPathBuilder pathBuilder)
-            => new Path(pathBuilder.Commands);
+            => new Path(pathBuilder);
 
         public static CanvasGeometry CreateRoundedRectangle(CanvasDevice device, float x, float y, float w, float h, float radiusX, float radiusY)
             => new RoundedRectangle
@@ -85,12 +85,15 @@ namespace WinCompData.Mgcg
 
         public sealed class Path : CanvasGeometry, IEquatable<Path>
         {
-            internal Path(IEnumerable<CanvasPathBuilder.Command> commands)
+            internal Path(CanvasPathBuilder builder)
             {
-                Commands = commands.ToArray();
+                FilledRegionDetermination = builder.FilledRegionDetermination;
+                Commands = builder.Commands.ToArray();
             }
 
             public CanvasPathBuilder.Command[] Commands { get; }
+
+            public CanvasFilledRegionDetermination FilledRegionDetermination { get; }
 
             public override GeometryType Type => GeometryType.Path;
 
@@ -106,6 +109,11 @@ namespace WinCompData.Mgcg
                     return false;
                 }
 
+                if (other.FilledRegionDetermination != FilledRegionDetermination)
+                {
+                    return false;
+                }
+
                 if (other.Commands.Length != Commands.Length)
                 {
                     return false;
@@ -116,57 +124,9 @@ namespace WinCompData.Mgcg
                     var thisCommand = Commands[i];
                     var otherCommand = other.Commands[i];
 
-                    if (thisCommand.Type != otherCommand.Type)
+                    if (!thisCommand.Equals(otherCommand))
                     {
                         return false;
-                    }
-
-                    switch (thisCommand.Type)
-                    {
-                        case CanvasPathBuilder.CommandType.BeginFigure:
-                            {
-                                var thisArg = (Vector2)thisCommand.Args;
-                                var otherArg = (Vector2)otherCommand.Args;
-                                if (!thisArg.Equals(otherArg))
-                                {
-                                    return false;
-                                }
-                            }
-                            break;
-                        case CanvasPathBuilder.CommandType.EndFigure:
-                            {
-                                var thisArg = (CanvasFigureLoop)thisCommand.Args;
-                                var otherArg = (CanvasFigureLoop)otherCommand.Args;
-                                if (thisArg != otherArg)
-                                {
-                                    return false;
-                                }
-                            }
-                            break;
-                        case CanvasPathBuilder.CommandType.AddCubicBezier:
-                            {
-                                var thisArg = (Vector2[])thisCommand.Args;
-                                var otherArg = (Vector2[])otherCommand.Args;
-                                if (!thisArg[0].Equals(otherArg[0]) ||
-                                    !thisArg[1].Equals(otherArg[1]) ||
-                                    !thisArg[2].Equals(otherArg[2]))
-                                {
-                                    return false;
-                                }
-                            }
-                            break;
-                        case CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                            {
-                                var thisArg = (CanvasFilledRegionDetermination)thisCommand.Args;
-                                var otherArg = (CanvasFilledRegionDetermination)otherCommand.Args;
-                                if (thisArg != otherArg)
-                                {
-                                    return false;
-                                }
-                            }
-                            break;
-                        default:
-                            throw new InvalidOperationException();
                     }
                 }
 

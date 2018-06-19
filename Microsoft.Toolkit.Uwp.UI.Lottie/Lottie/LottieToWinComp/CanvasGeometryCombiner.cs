@@ -110,26 +110,25 @@ namespace LottieToWinComp
                 case Wcd.Mgcg.CanvasGeometry.GeometryType.Path:
                     using (var builder = new Win2D.CanvasPathBuilder(null))
                     {
-                        foreach (var command in ((Wcd.Mgcg.CanvasGeometry.Path)geometry).Commands)
+                        var path = (Wcd.Mgcg.CanvasGeometry.Path)geometry;
+                        builder.SetFilledRegionDetermination(Win2DFilledRegionDetermination(path.FilledRegionDetermination));
+
+                        foreach (var command in path.Commands)
                         {
                             switch (command.Type)
                             {
-                                case WinCompData.Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
-                                    builder.BeginFigure(SnVector2((Wcd.Sn.Vector2)command.Args));
+                                case Wcd.Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
+                                    builder.BeginFigure( SnVector2(((Wcd.Mgcg.CanvasPathBuilder.Command.BeginFigure)command).StartPoint));
                                     break;
-                                case WinCompData.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
-                                    builder.EndFigure(Win2DCanvasFigureLoop((Wcd.Mgcg.CanvasFigureLoop)command.Args));
+                                case Wcd.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
+                                    builder.EndFigure(Win2DCanvasFigureLoop(((Wcd.Mgcg.CanvasPathBuilder.Command.EndFigure)command).FigureLoop));
                                     break;
-                                case WinCompData.Mgcg.CanvasPathBuilder.CommandType.AddLine:
-                                    var point = ((WinCompData.Sn.Vector2[])command.Args)[0];
-                                    builder.AddLine(SnVector2(point));
+                                case Wcd.Mgcg.CanvasPathBuilder.CommandType.AddLine:
+                                    builder.AddLine(SnVector2(((Wcd.Mgcg.CanvasPathBuilder.Command.AddLine)command).EndPoint));
                                     break;
-                                case WinCompData.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
-                                    var vectors = (WinCompData.Sn.Vector2[])command.Args;
-                                    builder.AddCubicBezier(SnVector2(vectors[0]), SnVector2(vectors[1]), SnVector2(vectors[2]));
-                                    break;
-                                case WinCompData.Mgcg.CanvasPathBuilder.CommandType.SetFilledRegionDetermination:
-                                    builder.SetFilledRegionDetermination(Win2DFilledRegionDetermination((Wcd.Mgcg.CanvasFilledRegionDetermination)command.Args));
+                                case Wcd.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
+                                    var cb = (Wcd.Mgcg.CanvasPathBuilder.Command.AddCubicBezier)command;
+                                    builder.AddCubicBezier(SnVector2(cb.ControlPoint1), SnVector2(cb.ControlPoint2), SnVector2(cb.EndPoint));
                                     break;
                                 default:
                                     throw new InvalidOperationException();
