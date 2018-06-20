@@ -1,6 +1,8 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using System;
+
 namespace WinCompData.Expressions
 {
     /// <summary>
@@ -23,7 +25,15 @@ namespace WinCompData.Expressions
 
         public override Expression Simplified => this;
 
-        internal static string ToString(double value) => ((float)value).ToString("G9");
+        internal static string ToString(double value)
+        {
+            // Do not use "G9" here - Composition expressions do not understand
+            // scientific notation (e.g. 1.2E06)
+            var fValue = (float)value;
+            return Math.Floor(fValue) == fValue
+                ? fValue.ToString("0")
+                : fValue.ToString("0.0####################");
+        }
 
         public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
     }

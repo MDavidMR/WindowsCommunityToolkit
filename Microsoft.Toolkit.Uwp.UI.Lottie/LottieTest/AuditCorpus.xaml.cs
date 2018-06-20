@@ -165,6 +165,10 @@ namespace LottieTest
                     continue;
                 }
 
+                // Show the lottie on the screen. This is to find issues in the instantiator. We won't actually
+                // run the animation.
+                await lottieSource.SetSourceAsync(file);
+
                 // Translate the Lottie
                 var translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
                         lottieComposition,

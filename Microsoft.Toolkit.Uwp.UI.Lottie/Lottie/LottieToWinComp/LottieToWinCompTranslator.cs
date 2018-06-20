@@ -2103,7 +2103,7 @@ namespace LottieToWinComp
             // progress values are scaled appropriately.
             var previousValue = firstKeyFrame.Value;
             var previousProgress = 0.0 - c_keyFrameProgressEpsilon;
-            var rootReferenceAdded = false;
+            var rootReferenceRequired = false;
             var previousKeyFrameWasExpression = false;
             string progressMappingProperty = null;
             ScalarKeyFrameAnimation progressMappingAnimation = null;
@@ -2202,13 +2202,9 @@ namespace LottieToWinComp
                             (float)adjustedProgress,
                             cb,                                 // Expression. 
                             CreateJumpStepEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.
-
-                        if (!rootReferenceAdded)
-                        {
-                            // Add a reference to the root. It is used by the expression.
-                            compositionAnimation.SetReferenceParameter(c_rootName, _rootVisual);
-                            rootReferenceAdded = true;
-                        }
+                        // Note that a reference to the root Visual is required by the animation because it
+                        // is used in the expression.
+                        rootReferenceRequired = true;
                         previousKeyFrameWasExpression = true;
                     }
                 }
@@ -2232,10 +2228,14 @@ namespace LottieToWinComp
             {
                 // Add a keyframe to hold the final value. Otherwise the expression on the last keyframe
                 // will get evaluated outside the bounds of its keyframe.
-                // TODO - weird cast because this only applies to Vector3
                 insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, (T)(object)previousValue, CreateJumpStepEasingFunction());
             }
 
+            // Add a reference to the root Visual if needed (i.e. if an expression keyframe was added).
+            if (rootReferenceRequired)
+            {
+                compositionAnimation.SetReferenceParameter(c_rootName, _rootVisual);
+            }
 
             // Start the animation scaled and offset.
             StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
