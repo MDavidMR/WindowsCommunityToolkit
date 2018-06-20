@@ -46,7 +46,6 @@ namespace LottieToWinComp
         const float c_keyFrameProgressEpsilon = 0.0000001F;
         readonly LottieComposition _lc;
         readonly TranslationIssues _unsupported;
-        readonly bool _annotate;
         readonly bool _addDescriptions;
         readonly Compositor _c;
         readonly ContainerVisual _rootVisual;
@@ -76,19 +75,16 @@ namespace LottieToWinComp
             LottieData.LottieComposition lottieComposition,
             Compositor compositor,
             bool strictTranslation,
-            bool annotateCompositionObjects,
             bool addDescriptions)
         {
             _lc = lottieComposition;
             _c = compositor;
             _unsupported = new TranslationIssues(strictTranslation);
-            _annotate = annotateCompositionObjects;
             _addDescriptions = addDescriptions;
 
             // Create the root.
             _rootVisual = CreateContainerVisual();
             Describe(_rootVisual, "The root of the composition.", "");
-            Annotate(_rootVisual, "Composition root");
 
             // Add the master progress property to the visual.
             _rootVisual.Properties.InsertScalar(ProgressPropertyName, 0);
@@ -109,7 +105,6 @@ namespace LottieToWinComp
             TryTranslateLottieComposition(
                 lottieComposition,
                 strictTranslation,
-                false,
                 true,   // add descriptions for codegen comments
                 out visual,
                 out translationIssues);
@@ -118,7 +113,6 @@ namespace LottieToWinComp
         /// Attempts to translates the given <see cref="LottieData.LottieComposition"/>.
         /// </summary>
         /// <param name="lottieComposition">The <see cref="LottieComposition"/> to translate.</param>
-        /// <param name="annotateCompositionObjects">Add a string to the .Comment property of the <see cref="CompositionObjects"/>s to help with debugging.</param>
         /// <param name="addCodegenDescriptions">Add descriptions to objects for comments on generated code.</param>
         /// <param name="visual">The <see cref="Visual"/> that contains the translated Lottie.</param>
         /// <param name="resources">Resources that must be kept alive as long as <paramref name="visual"/> is alive, and should be Disposed when no longer required.</param>
@@ -126,7 +120,6 @@ namespace LottieToWinComp
         public static bool TryTranslateLottieComposition(
             LottieComposition lottieComposition,
             bool strictTranslation,
-            bool annotateCompositionObjects,
             bool addCodegenDescriptions,
             out Visual visual,
             out (string Code, string Description)[] translationIssues)
@@ -136,7 +129,6 @@ namespace LottieToWinComp
                 lottieComposition,
                 new Compositor(),
                 strictTranslation,
-                annotateCompositionObjects,
                 addCodegenDescriptions))
             {
 
@@ -154,7 +146,7 @@ namespace LottieToWinComp
         void Translate()
         {
             var context = new TranslationContext(_lc);
-            AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers, compositionDescription: "");
+            AddTranslatedLayersToContainerVisual(_rootVisual, context, _lc.Layers, compositionDescription: "Root");
             if (_lc.Is3d)
             {
                 if (_lc.Is3d)
@@ -174,7 +166,7 @@ namespace LottieToWinComp
                 (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select (translatedLayer: translatedLayer, layer));
+                 select (translatedLayer: translatedLayer, layer)).ToArray();
 
             foreach (var (translatedLayer, layer) in translatedLayers)
             {
@@ -369,16 +361,11 @@ namespace LottieToWinComp
 #endif // !NoInvisibility
             }
 
-            Annotate(contentsNode, contentsNode.Comment != null
-                    ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                    : $"'{layer.Name}'.Contents");
-
             Describe(contentsNode, contentsNode.Comment != null
                     ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                     : $"'{layer.Name}'.Contents");
 
             // Return the root of the chain of transforms (might be the same as the contents node)
-            Annotate(rootNode, string.Join(" ", $"{layer.Type}Layer:'{layer.Name}'", rootNode.Comment));
             return true;
         }
 
@@ -471,10 +458,6 @@ namespace LottieToWinComp
 #endif // !NoInvisibility
             }
 
-            Annotate(contentsNode, contentsNode.Comment != null
-                    ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                    : $"'{layer.Name}'.Contents");
-
             Describe(contentsNode, contentsNode.Comment != null
                 ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
                 : $"'{layer.Name}'.Contents");
@@ -528,7 +511,8 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
 
-            Annotate(result, $"{layer.Type}Layer:'{layer.Name}'->'{layer.RefId}'");
+            Describe(result, $"PreComp layer: {layer.Name}", layer.Name);
+
             return result;
         }
 
@@ -795,7 +779,6 @@ namespace LottieToWinComp
 
             if (contents.Length > 0)
             {
-                Annotate(compositionNode, group.Name);
                 Describe(compositionNode, $"Group: {group.Name}");
                 compositionNode.Shapes.AddRange(contents);
                 return compositionNode;
@@ -973,9 +956,9 @@ namespace LottieToWinComp
 
             // If MergeMode.Merge and they're all paths with the same FilledRegionDetermination, 
             // combine into a single path.
-            if (mergeMode == LottieData.MergePaths.MergeMode.Merge && 
-                geometries.All(g => g.Type == CanvasGeometry.GeometryType.Path) && 
-                geometries.Select( g => ((CanvasGeometry.Path)g).FilledRegionDetermination).Distinct().Count() == 1)
+            if (mergeMode == LottieData.MergePaths.MergeMode.Merge &&
+                geometries.All(g => g.Type == CanvasGeometry.GeometryType.Path) &&
+                geometries.Select(g => ((CanvasGeometry.Path)g).FilledRegionDetermination).Distinct().Count() == 1)
             {
                 return MergePaths(geometries.Cast<CanvasGeometry.Path>().ToArray());
             }
@@ -1271,16 +1254,14 @@ namespace LottieToWinComp
 
             var compositionEllipseGeometry = CreateEllipseGeometry();
             compositionSpriteShape.Geometry = compositionEllipseGeometry;
-            Annotate(compositionSpriteShape, shapeContent.Name);
-            Annotate(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
             Describe(compositionSpriteShape, shapeContent.Name);
             Describe(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
 
             compositionEllipseGeometry.Center = Vector2(shapeContent.Position.InitialValue);
-            ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center");
+            ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center", "Center", null);
 
             compositionEllipseGeometry.Radius = Vector2(shapeContent.Diameter.InitialValue) * 0.5F;
-            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Diameter, 0.5, compositionEllipseGeometry, "Radius");
+            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Diameter, 0.5, compositionEllipseGeometry, "Radius", "Radius", null);
 
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape);
 
@@ -1305,11 +1286,11 @@ namespace LottieToWinComp
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position), "Position", null);
 
                 // Map Rectangle's size to RoundedRectangleGeometry.Size
                 geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size));
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size), "Size", null);
 
             }
             else
@@ -1326,11 +1307,11 @@ namespace LottieToWinComp
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, "Offset", compositionOffsetExpression);
 
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position");
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position", "Position", null);
 
                 // Map Rectangle's size to RoundedRectangleGeometry.Size
                 geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(geometry.Size));
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(geometry.Size), "Size", null);
 
                 // Map Rectangle's size to RoundedRectangleGeometry.CornerRadius
                 // If a RoundedRectangle is in the context, use it to override the corner radius.
@@ -1338,8 +1319,8 @@ namespace LottieToWinComp
                 if (cornerRadius.IsAnimated || cornerRadius.InitialValue != 0)
                 {
                     geometry.CornerRadius = Vector2((float)cornerRadius.InitialValue);
-                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.X");
-                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.Y");
+                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.X", "CornerRadius.X", null);
+                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.Y", "CornerRadius.Y", null);
                 }
             }
 
@@ -1361,8 +1342,6 @@ namespace LottieToWinComp
             var trimOffsetDegrees = (width / (2 * (width + height))) * 360;
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionRectangle, trimOffsetDegrees: trimOffsetDegrees);
 
-            Annotate(compositionRectangle, shapeContent.Name);
-            Annotate(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
             Describe(compositionRectangle, shapeContent.Name);
             Describe(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
 
@@ -1388,12 +1367,10 @@ namespace LottieToWinComp
             compositionSpriteShape.Geometry = compositionPathGeometry;
             compositionPathGeometry.Path = CompositionPathFromPathGeometry(geometry.InitialValue, GetPathFillType(shapeContext.Fill));
 
-            Annotate(compositionSpriteShape, shapeContent.Name);
-            Annotate(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
             Describe(compositionSpriteShape, shapeContent.Name);
             Describe(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
 
-            ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path");
+            ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path", "Path", null);
 
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape, 0);
 
@@ -1524,13 +1501,13 @@ namespace LottieToWinComp
                 // Add properties that will be animated. The TrimStart and TrimEnd properties
                 // will be set by these values through an expression.
                 geometry.Properties.InsertScalar("TStart", (float)(startPercent.InitialValue / 100));
-                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart");
+                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart", "TStart", null);
                 var trimStartExpression = CreateExpressionAnimation(ExpressionFactory.MinTStartTEnd);
                 trimStartExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
 
                 geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
-                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd");
+                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd", "TEnd", null);
                 var trimEndExpression = CreateExpressionAnimation(ExpressionFactory.MaxTStartTEnd);
                 trimEndExpression.SetReferenceParameter("my", geometry);
                 StartAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
@@ -1538,10 +1515,10 @@ namespace LottieToWinComp
             else
             {
                 geometry.TrimStart = Float(startPercent.InitialValue / 100);
-                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry, nameof(geometry.TrimStart));
+                ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry, nameof(geometry.TrimStart), "TrimStart", null);
 
                 geometry.TrimEnd = Float(endPercent.InitialValue / 100);
-                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd));
+                ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry, nameof(geometry.TrimEnd), "TrimEnd", null);
             }
 
             if (trimOffsetDegrees != 0 && !trimPath.OffsetDegrees.IsAnimated)
@@ -1560,7 +1537,7 @@ namespace LottieToWinComp
                 }
 
                 geometry.TrimOffset = Float(trimPath.OffsetDegrees.InitialValue / 360);
-                ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset));
+                ApplyScaledScalarKeyFrameAnimation(context, trimPath.OffsetDegrees, 1 / 360.0, geometry, nameof(geometry.TrimOffset), "TrimOffset", null);
             }
         }
 
@@ -1579,7 +1556,7 @@ namespace LottieToWinComp
 
             // Map ShapeStroke's width to SpriteShape.StrokeThickness
             sprite.StrokeThickness = (float)shapeStroke.Thickness.InitialValue;
-            ApplyScalarKeyFrameAnimation(context, shapeStroke.Thickness, sprite, nameof(sprite.StrokeThickness));
+            ApplyScalarKeyFrameAnimation(context, shapeStroke.Thickness, sprite, nameof(sprite.StrokeThickness), "StrokeThickness", null);
 
             // Map ShapeStroke's linecap to SpriteShape.StrokeStart/End/DashCap
             sprite.StrokeStartCap = sprite.StrokeEndCap = sprite.StrokeDashCap = StrokeCap(shapeStroke.CapType);
@@ -1599,7 +1576,7 @@ namespace LottieToWinComp
 
             // Set DashOffset
             sprite.StrokeDashOffset = (float)shapeStroke.DashOffset.InitialValue;
-            ApplyScalarKeyFrameAnimation(context, shapeStroke.DashOffset, sprite, nameof(sprite.StrokeDashOffset));
+            ApplyScalarKeyFrameAnimation(context, shapeStroke.DashOffset, sprite, nameof(sprite.StrokeDashOffset), "StrokeDashOffset", null);
         }
 
         CompositionColorBrush TranslateShapeFill(TranslationContext context, SolidColorFill shapeFill, Animatable<double> opacityPercent)
@@ -1637,8 +1614,6 @@ namespace LottieToWinComp
 
             rectangle.FillBrush = CreateAnimatedColorBrush(context, layer.Color, layer.Transform.OpacityPercent);
 
-            Annotate(rectangle, "SolidLayerRectangle");
-            Annotate(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
             Describe(rectangle, "SolidLayerRectangle");
             Describe(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
             return rootNode;
@@ -1665,7 +1640,6 @@ namespace LottieToWinComp
 
             // Apply the transform.
             TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
-            Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
             Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
@@ -1677,7 +1651,6 @@ namespace LottieToWinComp
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerVisualForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
-                Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
                 Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Children.Add(leafTransformNode);
@@ -1703,7 +1676,6 @@ namespace LottieToWinComp
 
             // Apply the transform from the layer.
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
-            Annotate(leafTransformNode, $"'{layer.Name}'.Transforms");
             Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
 
 #if NoTransformInheritance
@@ -1715,7 +1687,6 @@ namespace LottieToWinComp
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
 
-                Annotate(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
                 Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
 
                 parentLeafTransform.Shapes.Add(leafTransformNode);
@@ -1759,12 +1730,12 @@ namespace LottieToWinComp
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
                 var anchorValue = (AnimatableXYZ)transform.Anchor;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X", "Anchor.X", null);
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y", "Anchor.Y", null);
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor");
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor", "Anchor", null);
             }
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
@@ -1786,21 +1757,21 @@ namespace LottieToWinComp
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
                 var anchorValue = (AnimatableXYZ)transform.Position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X", "Position.X", null);
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y", "Position.Y", null);
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position");
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position", "Position", null);
             }
 
 #if !NoScaling
             container.Scale = Vector3DefaultIsOne(transform.ScalePercent.InitialValue * (1 / 100.0));
-            ApplyScaledVector3KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale));
+            ApplyScaledVector3KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale), "Scale", null);
 #endif
 
             container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
-            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees));
+            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees), "RotationAngleInDegress", null);
 
             if (transform.OpacityPercent.IsAnimated || transform.OpacityPercent.InitialValue != 100)
             {
@@ -1837,12 +1808,12 @@ namespace LottieToWinComp
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
                 var anchorValue = (AnimatableXYZ)transform.Anchor;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X", "Anchor.X", null);
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y", "Anchor.Y", null);
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor");
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor", "Anchor", null);
             }
 
             if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
@@ -1860,21 +1831,21 @@ namespace LottieToWinComp
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
                 var anchorValue = (AnimatableXYZ)transform.Position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X", "Position.X", null);
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y", "Position.Y", null);
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position");
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position", "Position", null);
             }
 
 #if !NoScaling
             container.Scale = Vector2DefaultIsOne(transform.ScalePercent.InitialValue * (1 / 100.0));
-            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale));
+            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale), "Scale", null);
 #endif
 
             container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
-            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees));
+            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees), "RotationAngleInDegrees", null);
 
             // set Skew and Skew Axis
             // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
@@ -1918,15 +1889,19 @@ namespace LottieToWinComp
             TranslationContext context,
             Animatable<double> value,
             CompositionObject targetObject,
-            string targetPropertyName)
-            => ApplyScaledScalarKeyFrameAnimation(context, value, 1, targetObject, targetPropertyName);
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
+            => ApplyScaledScalarKeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledScalarKeyFrameAnimation(
             TranslationContext context,
             Animatable<double> value,
             double scale,
             CompositionObject targetObject,
-            string targetPropertyName)
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
         {
             value = _lottieDataOptimizer.GetOptimized(value);
             if (value.IsAnimated)
@@ -1938,7 +1913,9 @@ namespace LottieToWinComp
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, (float)(val * scale), easing),
                     null,
                     targetObject,
-                    targetPropertyName);
+                    targetPropertyName,
+                    longDescription,
+                    shortDescription);
             }
         }
 
@@ -1946,7 +1923,9 @@ namespace LottieToWinComp
             TranslationContext context,
             Animatable<LottieData.Color> value,
             CompositionObject targetObject,
-            string targetPropertyName)
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
         {
             value = _lottieDataOptimizer.GetOptimized(value);
             if (value.IsAnimated)
@@ -1958,7 +1937,9 @@ namespace LottieToWinComp
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Color(val), easing),
                     null,
                     targetObject,
-                    targetPropertyName);
+                    targetPropertyName,
+                    longDescription,
+                    shortDescription);
             }
         }
 
@@ -1967,7 +1948,9 @@ namespace LottieToWinComp
             Animatable<PathGeometry> value,
             SolidColorFill.PathFillType fillType,
             CompositionObject targetObject,
-            string targetPropertyName)
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
         {
             value = _lottieDataOptimizer.GetOptimized(value);
             if (value.IsAnimated)
@@ -1979,7 +1962,9 @@ namespace LottieToWinComp
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, CompositionPathFromPathGeometry(val, fillType), easing),
                     null,
                     targetObject,
-                    targetPropertyName);
+                    targetPropertyName,
+                    longDescription,
+                    shortDescription);
             }
         }
 
@@ -1987,15 +1972,19 @@ namespace LottieToWinComp
             TranslationContext context,
             AnimatableVector3 value,
             CompositionObject targetObject,
-            string targetPropertyName)
-            => ApplyScaledVector2KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName);
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
+            => ApplyScaledVector2KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledVector2KeyFrameAnimation(
             TranslationContext context,
             AnimatableVector3 value,
             double scale,
             CompositionObject targetObject,
-            string targetPropertyName)
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
         {
             if (value.IsAnimated)
             {
@@ -2006,7 +1995,9 @@ namespace LottieToWinComp
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector2(val * scale), easing),
                     (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? Scale(expr, scale) : expr.ToString(), easing),
                     targetObject,
-                    targetPropertyName);
+                    targetPropertyName,
+                    longDescription,
+                    shortDescription);
             }
         }
 
@@ -2014,15 +2005,19 @@ namespace LottieToWinComp
             TranslationContext context,
             AnimatableVector3 value,
             CompositionObject targetObject,
-            string targetPropertyName)
-            => ApplyScaledVector3KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName);
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
+            => ApplyScaledVector3KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledVector3KeyFrameAnimation(
             TranslationContext context,
             AnimatableVector3 value,
             double scale,
             CompositionObject targetObject,
-            string targetPropertyName)
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription)
         {
             if (value.IsAnimated)
             {
@@ -2033,7 +2028,9 @@ namespace LottieToWinComp
                     (ca, progress, val, easing) => ca.InsertKeyFrame(progress, Vector3(val) * (float)scale, easing),
                     (ca, progress, expr, easing) => ca.InsertExpressionKeyFrame(progress, scale != 1 ? Scale(expr, scale).ToString() : expr.ToString(), easing),
                     targetObject,
-                    targetPropertyName);
+                    targetPropertyName,
+                    longDescription,
+                    shortDescription);
             }
         }
 
@@ -2044,9 +2041,12 @@ namespace LottieToWinComp
             Action<CA, float, T, CompositionEasingFunction> insertKeyFrame,
             Action<CA, float, Expr, CompositionEasingFunction> insertExpressionKeyFrame,
             CompositionObject targetObject,
-            string targetPropertyName) where CA : KeyFrameAnimation_ where T : IEquatable<T>
+            string targetPropertyName,
+            string longDescription,
+            string shortDescription) where CA : KeyFrameAnimation_ where T : IEquatable<T>
         {
             var compositionAnimation = compositionAnimationFactory();
+            Describe(compositionAnimation, longDescription, shortDescription);
             compositionAnimation.Duration = _lc.Duration;
 
             // Get only the key frames that exist from at or just before the animation starts, and end at or just after the animation ends.
@@ -2107,7 +2107,6 @@ namespace LottieToWinComp
             var previousKeyFrameWasExpression = false;
             string progressMappingProperty = null;
             ScalarKeyFrameAnimation progressMappingAnimation = null;
-            bool progressMappingPropertyAdded = false;
 
             foreach (var keyFrame in trimmedKeyFrames)
             {
@@ -2180,11 +2179,6 @@ namespace LottieToWinComp
                     else
                     {
                         // Expression key frame needed for a spatial bezier.
-                        if (!progressMappingPropertyAdded)
-                        {
-                            _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
-                            progressMappingPropertyAdded = true;
-                        }
 
                         // Make the progress value just before the requested progress value
                         // so that there is room to add a key frame just after this to hold
@@ -2246,8 +2240,10 @@ namespace LottieToWinComp
             // Start the animation scaled and offset.
             StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
 
+            // Start the animation that maps from the Progress property to a t value for use by the spatial beziers.
             if (progressMappingAnimation != null && progressMappingAnimation.KeyFrameCount > 0)
             {
+                _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
                 StartAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
             }
         }
@@ -2466,7 +2462,7 @@ namespace LottieToWinComp
             if (color.IsAnimated)
             {
                 var result = CreateColorBrush(color.InitialValue);
-                ApplyColorKeyFrameAnimation(context, color, result, nameof(result.Color));
+                ApplyColorKeyFrameAnimation(context, color, result, nameof(result.Color), "Color", null);
                 return result;
             }
             else
@@ -2687,16 +2683,6 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
         }
-
-        // Sets the comment property on the object.
-        void Annotate(CompositionObject obj, string comment)
-        {
-            if (_annotate)
-            {
-                obj.Comment = comment;
-            }
-        }
-
 
         // Sets a description on an object.
         void Describe(IDescribable obj, string longDescription, string shortDescription = null)

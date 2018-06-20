@@ -21,6 +21,10 @@ namespace LottieData
         public double Y { get; }
         public double Z { get; }
 
+        public static Vector3 Zero { get; } = new Vector3(0, 0, 0);
+
+        public static Vector3 One { get; } = new Vector3(1, 1, 1);
+
         public static Vector3 operator *(Vector3 left, double right) =>
             new Vector3(left.X * right, left.Y * right, left.Z * right);
 

@@ -288,7 +288,6 @@ namespace Lottie
                     translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
                         lottieComposition,
                         false, // strictTranslation
-                        false, // annotate
                         true,  // Add descriptions for codegen comments
                         out wincompDataRootVisual,
                         out var translationIssues);

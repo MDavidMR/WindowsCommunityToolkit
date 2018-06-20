@@ -33,8 +33,14 @@ namespace LottieData
         /// </summary>
         public double Frame { get; }
 
+        /// <summary>
+        /// Only valid on Vector3 keyframes. Defines the path the animation follows.
+        /// </summary>
         public Vector3 SpatialControlPoint1 { get; }
 
+        /// <summary>
+        /// Only valid on Vector3 keyframes. Defines the path the animation follows.
+        /// </summary>
         public Vector3 SpatialControlPoint2 { get; }
 
         /// <summary>

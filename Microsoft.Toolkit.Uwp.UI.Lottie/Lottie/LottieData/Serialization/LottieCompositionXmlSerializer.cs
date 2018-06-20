@@ -140,7 +140,7 @@ namespace LottieData.Tools
         XElement FromImageAsset(ImageAsset asset)
         {
             return new XElement(nameof(ImageAsset),
-                new XAttribute(nameof(asset.Id), asset.Id), 
+                new XAttribute(nameof(asset.Id), asset.Id),
                 new XAttribute(nameof(asset.Width), asset.Width),
                 new XAttribute(nameof(asset.Height), asset.Height),
                 new XAttribute(nameof(asset.Path), asset.Path),
@@ -481,12 +481,27 @@ namespace LottieData.Tools
             }
             else
             {
-                var keyframesString = $"{animatable.InitialValue}{string.Join("", animatable.KeyFrames.Select(kf => $", {kf.Value}@{kf.Frame}"))}";
+                var keyframesString = string.Join(", ", animatable.KeyFrames.Select(kf => $"{FromKeyFrame(kf)}"));
 
-                return new XAttribute(name, keyframesString);
+                return new XElement(name, keyframesString);
             }
         }
 
+        static string FromKeyFrame<T>(KeyFrame<T> keyFrame) where T : IEquatable<T>
+        {
+            if (keyFrame is KeyFrame<Vector3>)
+            {
+                var v3kf = (KeyFrame<Vector3>)(object)keyFrame;
+                var cp1 = v3kf.SpatialControlPoint1;
+                var cp2 = v3kf.SpatialControlPoint2;
+                if (cp1 != Vector3.Zero || cp2 != Vector3.Zero)
+                {
+                    // Spatial bezier
+                    return $"SpatialBezier:{keyFrame.Value},{cp1},{cp2}@{keyFrame.Frame}({keyFrame.Easing.Type})";
+                }
+            }
+            return $"{keyFrame.Value}@{keyFrame.Frame}({keyFrame.Easing.Type})";
+        }
 
         XElement FromPath(Shape content)
         {

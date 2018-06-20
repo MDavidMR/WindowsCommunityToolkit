@@ -21,6 +21,10 @@ namespace WinCompData
                     _referencedParameters.Add(pair.Key, pair.Value);
                 }
                 Target = other.Target;
+
+                LongDescription = other.LongDescription;
+                ShortDescription = other.ShortDescription;
+                Comment = other.Comment;
             }
         }
 
