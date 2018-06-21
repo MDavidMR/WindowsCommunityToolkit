@@ -1,0 +1,62 @@
+namespace CompPlayer
+{
+    [default_interface]
+    unsealed runtimeclass CompositionSource
+    {
+        CompositionSource();
+
+        Boolean TryCreateInstance(
+            Windows.UI.Composition.Compositor compositor,
+            out Windows.UI.Composition.Visual rootVisual,
+            out Windows.Foundation.Numerics.Vector2 size,
+            out Windows.UI.Composition.CompositionPropertySet progressPropertySet,
+            out Windows.Foundation.TimeSpan duration,
+            out IInspectable diagnostics);
+    }
+
+    [default_interface]
+    runtimeclass CompositionSegment
+    {
+        CompositionSegment();
+
+        String Name;
+        
+        Double FromProgress;
+        Double ToProgress;
+        Boolean IsLoopingEnabled;
+        Boolean ReverseAnimation;
+    }
+
+    [default_interface]
+    runtimeclass CompositionPlayer
+    {
+        CompositionPlayer();
+
+        IInspectable Diagnostics{ get; };
+        Windows.Foundation.TimeSpan Duration{ get; };
+
+        CompositionSource Source;
+        Double FromProgress;
+        Double ToProgress;
+
+        Boolean AutoPlay;
+        Boolean IsCompositionLoaded{ get; };
+        Boolean IsLoopingEnabled;
+        Boolean IsPlaying{ get; };
+        Boolean ReverseAnimation{ get; };
+        Double PlaybackRate;
+
+        Windows.UI.Composition.CompositionObject ProgressObject{ get; };
+
+        Windows.UI.Color BackgroundColor;
+        Windows.UI.Xaml.Media.Stretch Stretch;
+
+        void Pause();
+        void Play();
+        Windows.Foundation.IAsyncAction PlayAync();
+        Windows.Foundation.IAsyncAction PlayAync(CompositionSegment segment);
+        void Resume();
+        void SetProgress(Double progress);
+        void Stop();
+    }
+}

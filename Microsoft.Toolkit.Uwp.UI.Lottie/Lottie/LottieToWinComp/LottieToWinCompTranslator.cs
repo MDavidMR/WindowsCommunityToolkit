@@ -84,7 +84,10 @@ namespace LottieToWinComp
 
             // Create the root.
             _rootVisual = CreateContainerVisual();
-            Describe(_rootVisual, "The root of the composition.", "");
+            if (_addDescriptions)
+            {
+                Describe(_rootVisual, "The root of the composition.", "");
+            }
 
             // Add the master progress property to the visual.
             _rootVisual.Properties.InsertScalar(ProgressPropertyName, 0);
@@ -167,20 +170,6 @@ namespace LottieToWinComp
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
                  select (translatedLayer: translatedLayer, layer)).ToArray();
-
-            foreach (var (translatedLayer, layer) in translatedLayers)
-            {
-                // Add a description to the resulting object for use in codegen comments.
-                var shortDescription = string.IsNullOrWhiteSpace(compositionDescription)
-                    ? layer.Name
-                    : $"{compositionDescription}.{layer.Name}";
-
-                var longDescription = string.IsNullOrWhiteSpace(compositionDescription)
-                    ? $"{layer.Type} layer: \"{layer.Name}\"."
-                    : $"{layer.Type} layer: \"{layer.Name}\" in asset: \"{compositionDescription}\".";
-
-                Describe(translatedLayer, longDescription, shortDescription);
-            }
 
             // Layers are translated into either a Visual tree or a Shape tree. Convert the list of Visual and
             // Shape roots to a list of Visual roots by wrapping the Shape trees in ShapeVisuals.
@@ -342,9 +331,6 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerShape();
-                Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
-                    ? "Animates visibility of the layer."
-                    : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
                 leafTransformNode.Shapes.Add(contentsNode);
 #if !NoInvisibility
                 var visibilityExpression =
@@ -359,13 +345,14 @@ namespace LottieToWinComp
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
 #endif // !NoInvisibility
+                if (_addDescriptions)
+                {
+                    Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
+                        ? "Animates visibility of the layer."
+                        : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
+                }
             }
 
-            Describe(contentsNode, contentsNode.Comment != null
-                    ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                    : $"'{layer.Name}'.Contents");
-
-            // Return the root of the chain of transforms (might be the same as the contents node)
             return true;
         }
 
@@ -435,9 +422,6 @@ namespace LottieToWinComp
             {
                 // Insert another node to hold the visiblity property.
                 contentsNode = CreateContainerVisual();
-                Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
-                    ? "Animates visibility of the layer."
-                    : $"Animate visibility of layer: \"{layer.Name}\".", "Visibility");
                 leafTransformNode.Children.Add(contentsNode);
 
 #if !NoInvisibility
@@ -456,11 +440,13 @@ namespace LottieToWinComp
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 StartAnimation(contentsNode, "Opacity", visibilityAnimation);
 #endif // !NoInvisibility
+                if (_addDescriptions)
+                {
+                    Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
+                        ? "Animates visibility of the layer."
+                        : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
+                }
             }
-
-            Describe(contentsNode, contentsNode.Comment != null
-                ? $"{contentsNode.Comment} & '{layer.Name}'.Contents"
-                : $"'{layer.Name}'.Contents");
 
             return true;
         }
@@ -511,8 +497,10 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
 
-            Describe(result, $"PreComp layer: {layer.Name}", layer.Name);
-
+            if (_addDescriptions)
+            {
+                Describe(result, $"PreComp layer: {layer.Name}", layer.Name);
+            }
             return result;
         }
 
@@ -779,7 +767,10 @@ namespace LottieToWinComp
 
             if (contents.Length > 0)
             {
-                Describe(compositionNode, $"Group: {group.Name}");
+                if (_addDescriptions)
+                {
+                    Describe(compositionNode, $"Group: {group.Name}");
+                }
                 compositionNode.Shapes.AddRange(contents);
                 return compositionNode;
             }
@@ -1189,7 +1180,10 @@ namespace LottieToWinComp
                     builder.EndFigure(pathData.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
                 }
                 var result = CanvasGeometry.CreatePath(builder);
-                Describe(result, path.Name);
+                if (_addDescriptions)
+                {
+                    Describe(result, path.Name);
+                }
                 return result;
             }
         }
@@ -1214,7 +1208,10 @@ namespace LottieToWinComp
                 (float)xRadius,
                 (float)yRadius);
 
-            Describe(result, ellipse.Name);
+            if (_addDescriptions)
+            {
+                Describe(result, ellipse.Name);
+            }
             return result;
         }
 
@@ -1243,7 +1240,10 @@ namespace LottieToWinComp
                 (float)radius,
                 (float)radius);
 
-            Describe(result, rectangle.Name);
+            if (_addDescriptions)
+            {
+                Describe(result, rectangle.Name);
+            }
             return result;
         }
 
@@ -1254,9 +1254,11 @@ namespace LottieToWinComp
 
             var compositionEllipseGeometry = CreateEllipseGeometry();
             compositionSpriteShape.Geometry = compositionEllipseGeometry;
-            Describe(compositionSpriteShape, shapeContent.Name);
-            Describe(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
-
+            if (_addDescriptions)
+            {
+                Describe(compositionSpriteShape, shapeContent.Name);
+                Describe(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
+            }
             compositionEllipseGeometry.Center = Vector2(shapeContent.Position.InitialValue);
             ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center", "Center", null);
 
@@ -1342,9 +1344,11 @@ namespace LottieToWinComp
             var trimOffsetDegrees = (width / (2 * (width + height))) * 360;
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionRectangle, trimOffsetDegrees: trimOffsetDegrees);
 
-            Describe(compositionRectangle, shapeContent.Name);
-            Describe(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
-
+            if (_addDescriptions)
+            {
+                Describe(compositionRectangle, shapeContent.Name);
+                Describe(compositionRectangle.Geometry, $"{shapeContent.Name}.RectangleGeometry");
+            }
             return compositionRectangle;
         }
 
@@ -1367,9 +1371,11 @@ namespace LottieToWinComp
             compositionSpriteShape.Geometry = compositionPathGeometry;
             compositionPathGeometry.Path = CompositionPathFromPathGeometry(geometry.InitialValue, GetPathFillType(shapeContext.Fill));
 
-            Describe(compositionSpriteShape, shapeContent.Name);
-            Describe(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
-
+            if (_addDescriptions)
+            {
+                Describe(compositionSpriteShape, shapeContent.Name);
+                Describe(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
+            }
             ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path", "Path", null);
 
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape, 0);
@@ -1614,8 +1620,11 @@ namespace LottieToWinComp
 
             rectangle.FillBrush = CreateAnimatedColorBrush(context, layer.Color, layer.Transform.OpacityPercent);
 
-            Describe(rectangle, "SolidLayerRectangle");
-            Describe(rectangleGeometry, rectangle.Comment + ".RectangleGeometry");
+            if (_addDescriptions)
+            {
+                Describe(rectangle, "SolidLayerRectangle");
+                Describe(rectangleGeometry, "SolidLayerRectangle.RectangleGeometry");
+            }
             return rootNode;
         }
 
@@ -1640,7 +1649,10 @@ namespace LottieToWinComp
 
             // Apply the transform.
             TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
-            Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
+            if (_addDescriptions)
+            {
+                Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
+            }
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1650,9 +1662,6 @@ namespace LottieToWinComp
             {
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerVisualForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
-
-                Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
-
                 parentLeafTransform.Children.Add(leafTransformNode);
             }
             else
@@ -1676,8 +1685,10 @@ namespace LottieToWinComp
 
             // Apply the transform from the layer.
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
-            Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
-
+            if (_addDescriptions)
+            {
+                Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
+            }
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
 #else
@@ -1686,9 +1697,6 @@ namespace LottieToWinComp
             {
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
-
-                Describe(rootTransformNode, $"'{layer.Name}'.AncestorTransformFrom_{parentLayer.Name}");
-
                 parentLeafTransform.Shapes.Add(leafTransformNode);
             }
             else
@@ -2046,7 +2054,10 @@ namespace LottieToWinComp
             string shortDescription) where CA : KeyFrameAnimation_ where T : IEquatable<T>
         {
             var compositionAnimation = compositionAnimationFactory();
-            Describe(compositionAnimation, longDescription, shortDescription);
+            if (_addDescriptions)
+            {
+                Describe(compositionAnimation, longDescription, shortDescription);
+            }
             compositionAnimation.Duration = _lc.Duration;
 
             // Get only the key frames that exist from at or just before the animation starts, and end at or just after the animation ends.
@@ -2687,14 +2698,17 @@ namespace LottieToWinComp
         // Sets a description on an object.
         void Describe(IDescribable obj, string longDescription, string shortDescription = null)
         {
-            if (_addDescriptions)
-            {
-                obj.ShortDescription = shortDescription ?? longDescription;
-                obj.LongDescription = longDescription;
-            }
+            // This method should only be called if the user wanted descriptions.
+            Debug.Assert(_addDescriptions);
+
+            // Descriptions should never get set more than once.
+            Debug.Assert(obj.ShortDescription == null);
+            Debug.Assert(obj.LongDescription == null);
+
+            obj.ShortDescription = shortDescription ?? longDescription;
+            obj.LongDescription = longDescription;
         }
 
-        // Sets a description on an object.
         static WinCompData.Wui.Color Color(LottieData.Color color) =>
             WinCompData.Wui.Color.FromArgb((byte)(255 * color.A), (byte)(255 * color.R), (byte)(255 * color.G), (byte)(255 * color.B));
 
@@ -2761,7 +2775,6 @@ namespace LottieToWinComp
                 Height = lottieComposition.Height;
             }
 
-
             // Constructs a context for the given layer.
             internal TranslationContext(TranslationContext context, PreCompLayer layer, LayerCollection layers)
             {
@@ -2775,7 +2788,6 @@ namespace LottieToWinComp
                 Layers = layers;
                 DurationInFrames = context.DurationInFrames;
             }
-
         }
 
         // A pair of doubles used as a key in a dictionary.
