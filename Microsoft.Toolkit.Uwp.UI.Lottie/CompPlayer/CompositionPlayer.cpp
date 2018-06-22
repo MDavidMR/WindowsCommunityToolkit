@@ -5,27 +5,31 @@ namespace winrt::CompPlayer::implementation
 {
     Windows::Foundation::IInspectable CompositionPlayer::Diagnostics()
     {
-        throw hresult_not_implemented();
+        // TODO: support Diagnostics object.
+        return nullptr;
     }
 
     Windows::Foundation::TimeSpan CompositionPlayer::Duration()
     {
-        throw hresult_not_implemented();
+        // TODO: Return the correct value.
+        return Windows::Foundation::TimeSpan{ 1L };
     }
 
-    CompPlayer::CompositionSource CompositionPlayer::Source()
+    CompPlayer::ICompositionSource CompositionPlayer::Source()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return nullptr;
     }
 
-    void CompositionPlayer::Source(CompPlayer::CompositionSource const& value)
+    void CompositionPlayer::Source(CompPlayer::ICompositionSource const& value)
     {
-        throw hresult_not_implemented();
+        // TODO
     }
 
     double CompositionPlayer::FromProgress()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return 0;
     }
 
     void CompositionPlayer::FromProgress(double value)
@@ -35,7 +39,8 @@ namespace winrt::CompPlayer::implementation
 
     double CompositionPlayer::ToProgress()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return 0;
     }
 
     void CompositionPlayer::ToProgress(double value)
@@ -45,7 +50,8 @@ namespace winrt::CompPlayer::implementation
 
     bool CompositionPlayer::AutoPlay()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return true;
     }
 
     void CompositionPlayer::AutoPlay(bool value)
@@ -55,12 +61,14 @@ namespace winrt::CompPlayer::implementation
 
     bool CompositionPlayer::IsCompositionLoaded()
     {
-        throw hresult_not_implemented();
+        // TODO:
+        return true;
     }
 
     bool CompositionPlayer::IsLoopingEnabled()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return true;
     }
 
     void CompositionPlayer::IsLoopingEnabled(bool value)
@@ -70,17 +78,20 @@ namespace winrt::CompPlayer::implementation
 
     bool CompositionPlayer::IsPlaying()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return true;
     }
 
     bool CompositionPlayer::ReverseAnimation()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return false;
     }
 
     double CompositionPlayer::PlaybackRate()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return 1;
     }
 
     void CompositionPlayer::PlaybackRate(double value)
@@ -90,12 +101,14 @@ namespace winrt::CompPlayer::implementation
 
     Windows::UI::Composition::CompositionObject CompositionPlayer::ProgressObject()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return nullptr;
     }
 
     Windows::UI::Color CompositionPlayer::BackgroundColor()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return Windows::UI::Colors::White();
     }
 
     void CompositionPlayer::BackgroundColor(Windows::UI::Color const& value)
@@ -105,7 +118,8 @@ namespace winrt::CompPlayer::implementation
 
     Windows::UI::Xaml::Media::Stretch CompositionPlayer::Stretch()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return Windows::UI::Xaml::Media::Stretch::UniformToFill;
     }
 
     void CompositionPlayer::Stretch(Windows::UI::Xaml::Media::Stretch const& value)
@@ -123,12 +137,12 @@ namespace winrt::CompPlayer::implementation
         throw hresult_not_implemented();
     }
 
-    Windows::Foundation::IAsyncAction CompositionPlayer::PlayAync()
+    Windows::Foundation::IAsyncAction CompositionPlayer::PlayAsync()
     {
         throw hresult_not_implemented();
     }
 
-    Windows::Foundation::IAsyncAction CompositionPlayer::PlayAync(CompPlayer::CompositionSegment const& segment)
+    Windows::Foundation::IAsyncAction CompositionPlayer::PlayAsync(CompPlayer::CompositionSegment const& segment)
     {
         throw hresult_not_implemented();
     }

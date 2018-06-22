@@ -1,10 +1,7 @@
 namespace CompPlayer
 {
-    [default_interface]
-    unsealed runtimeclass CompositionSource
+    interface ICompositionSource
     {
-        CompositionSource();
-
         Boolean TryCreateInstance(
             Windows.UI.Composition.Compositor compositor,
             out Windows.UI.Composition.Visual rootVisual,
@@ -12,7 +9,7 @@ namespace CompPlayer
             out Windows.UI.Composition.CompositionPropertySet progressPropertySet,
             out Windows.Foundation.TimeSpan duration,
             out IInspectable diagnostics);
-    }
+    };
 
     [default_interface]
     runtimeclass CompositionSegment
@@ -28,14 +25,15 @@ namespace CompPlayer
     }
 
     [default_interface]
-    runtimeclass CompositionPlayer
+    [contentproperty("Source")]
+    runtimeclass CompositionPlayer : Windows.UI.Xaml.FrameworkElement
     {
         CompositionPlayer();
 
         IInspectable Diagnostics{ get; };
         Windows.Foundation.TimeSpan Duration{ get; };
 
-        CompositionSource Source;
+        ICompositionSource Source;
         Double FromProgress;
         Double ToProgress;
 
@@ -53,8 +51,8 @@ namespace CompPlayer
 
         void Pause();
         void Play();
-        Windows.Foundation.IAsyncAction PlayAync();
-        Windows.Foundation.IAsyncAction PlayAync(CompositionSegment segment);
+        Windows.Foundation.IAsyncAction PlayAsync();
+        Windows.Foundation.IAsyncAction PlayAsync(CompositionSegment segment);
         void Resume();
         void SetProgress(Double progress);
         void Stop();

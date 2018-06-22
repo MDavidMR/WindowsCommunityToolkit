@@ -10,8 +10,8 @@ namespace winrt::CompPlayer::implementation
 
         Windows::Foundation::IInspectable Diagnostics();
         Windows::Foundation::TimeSpan Duration();
-        CompPlayer::CompositionSource Source();
-        void Source(CompPlayer::CompositionSource const& value);
+        CompPlayer::ICompositionSource Source();
+        void Source(CompPlayer::ICompositionSource const& value);
         double FromProgress();
         void FromProgress(double value);
         double ToProgress();
@@ -32,8 +32,8 @@ namespace winrt::CompPlayer::implementation
         void Stretch(Windows::UI::Xaml::Media::Stretch const& value);
         void Pause();
         void Play();
-        Windows::Foundation::IAsyncAction PlayAync();
-        Windows::Foundation::IAsyncAction PlayAync(CompPlayer::CompositionSegment const& segment);
+        Windows::Foundation::IAsyncAction PlayAsync();
+        Windows::Foundation::IAsyncAction PlayAsync(CompPlayer::CompositionSegment const& segment);
         void Resume();
         void SetProgress(double progress);
         void Stop();

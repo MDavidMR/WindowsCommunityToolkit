@@ -102,6 +102,7 @@
     <Compile Include="AuditCorpus.xaml.cs">
       <DependentUpon>AuditCorpus.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Compositions\empty_box.cs" />
     <Compile Include="Compositions\_2052_obama_caricature.cs" />
     <Compile Include="LargeComposition.xaml.cs">
       <DependentUpon>LargeComposition.xaml</DependentUpon>
@@ -177,6 +178,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CompPlayer\CompPlayer.vcxproj">
+      <Project>{203d0bd3-365d-4956-b71a-4ac56b53e903}</Project>
+      <Name>CompPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>
       <Name>LottieData</Name>
