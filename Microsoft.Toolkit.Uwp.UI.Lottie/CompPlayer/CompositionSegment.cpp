@@ -5,7 +5,7 @@ namespace winrt::CompPlayer::implementation
 {
     hstring CompositionSegment::Name()
     {
-        throw hresult_not_implemented();
+        return L"TODO";
     }
 
     void CompositionSegment::Name(hstring const& value)
@@ -15,7 +15,8 @@ namespace winrt::CompPlayer::implementation
 
     double CompositionSegment::FromProgress()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return 0;
     }
 
     void CompositionSegment::FromProgress(double value)
@@ -25,7 +26,8 @@ namespace winrt::CompPlayer::implementation
 
     double CompositionSegment::ToProgress()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return 0;
     }
 
     void CompositionSegment::ToProgress(double value)
@@ -35,7 +37,8 @@ namespace winrt::CompPlayer::implementation
 
     bool CompositionSegment::IsLoopingEnabled()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return false;
     }
 
     void CompositionSegment::IsLoopingEnabled(bool value)
@@ -45,7 +48,8 @@ namespace winrt::CompPlayer::implementation
 
     bool CompositionSegment::ReverseAnimation()
     {
-        throw hresult_not_implemented();
+        // TODO
+        return false;
     }
 
     void CompositionSegment::ReverseAnimation(bool value)

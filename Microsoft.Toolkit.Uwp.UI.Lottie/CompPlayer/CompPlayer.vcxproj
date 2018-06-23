@@ -90,6 +90,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Hacks.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="CompositionPlayer.h">
       <DependentUpon>CompositionPlayer.idl</DependentUpon>

@@ -16,13 +16,12 @@
     </ClCompile>
     <ClCompile Include="CompositionPlayer.cpp" />
     <ClCompile Include="CompositionSegment.cpp" />
-    <ClCompile Include="CompositionSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="CompositionPlayer.h" />
     <ClInclude Include="CompositionSegment.h" />
-    <ClInclude Include="CompositionSource.h" />
+    <ClInclude Include="Hacks.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CompPlayer.def" />

@@ -18,12 +18,16 @@
             <NavigationViewItem Content="Rewards App" Tag="RewardsApp"/>
         </NavigationView.MenuItems>
         <StackPanel>
-            <cp:CompositionPlayer>
-                <comps:Empty_box/>
-            </cp:CompositionPlayer>
-        <Frame x:Name="ContentFrame">
-            
-        </Frame>
+            <Border BorderBrush="HotPink" BorderThickness="5">
+                <cp:CompositionPlayer x:Name="Player">
+                    <cp:CompositionPlayer.Source>
+                        <comps:Empty_box/>
+                    </cp:CompositionPlayer.Source>
+                </cp:CompositionPlayer>
+            </Border>
+            <Frame x:Name="ContentFrame">
+
+            </Frame>
         </StackPanel>
     </NavigationView>
 </Page>

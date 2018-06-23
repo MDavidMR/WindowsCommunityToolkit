@@ -28,6 +28,7 @@ namespace LottieTest
         public MainPage()
         {
             this.InitializeComponent();
+            var temp = Player.Source;
         }
 
         void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

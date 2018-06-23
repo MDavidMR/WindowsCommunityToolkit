@@ -56,5 +56,20 @@ namespace CompPlayer
         void Resume();
         void SetProgress(Double progress);
         void Stop();
+
+        // Dependency properties
+        static Windows.UI.Xaml.DependencyProperty AutoPlayProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty BackgroundColorProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty DiagnosticsProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty DurationProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty FromProgressProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty IsCompositionLoadedProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty IsLoopingEnabledProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty IsPlayingProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty PlaybackRateProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty ReverseAnimationProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty SourceProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty StretchProperty{ get; };
+        static Windows.UI.Xaml.DependencyProperty ToProgressProperty{ get; };
     }
 }
