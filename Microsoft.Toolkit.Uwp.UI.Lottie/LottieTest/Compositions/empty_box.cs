@@ -17,10 +17,6 @@ namespace Compositions
 {
     sealed class Empty_box : Host.ICompositionSource
     {
-        public Empty_box()
-        {
-
-        }
         public bool TryCreateInstance(
             Compositor compositor,
             out Visual rootVisual,

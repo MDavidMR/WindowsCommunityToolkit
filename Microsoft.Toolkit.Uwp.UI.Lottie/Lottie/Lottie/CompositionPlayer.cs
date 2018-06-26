@@ -644,7 +644,6 @@ namespace Lottie
 
             Visual rootVisual;
             Vector2 size;
-            CompositionPropertySet progressPropertySet;
             TimeSpan duration;
             object diagnostics;
 
@@ -652,7 +651,6 @@ namespace Lottie
             {
                 rootVisual = null;
                 size = default(Vector2);
-                progressPropertySet = null;
                 duration = default(TimeSpan);
                 diagnostics = null;
             }
@@ -662,7 +660,6 @@ namespace Lottie
                     Window.Current.Compositor,
                     out rootVisual,
                     out size,
-                    out progressPropertySet,
                     out duration,
                     out diagnostics);
             }
@@ -683,7 +680,7 @@ namespace Lottie
                 // Connect the content's progress property to our progress property.
                 var progressAnimation = Window.Current.Compositor.CreateExpressionAnimation($"my.{c_progressPropertyName}");
                 progressAnimation.SetReferenceParameter("my", _progressPropertySet);
-                progressPropertySet.StartAnimation("Progress", progressAnimation);
+                rootVisual.Properties.StartAnimation("Progress", progressAnimation);
 
                 if (AutoPlay)
                 {

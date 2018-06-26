@@ -6,7 +6,6 @@ namespace Microsoft_UI_Xaml_Controls
             Windows.UI.Composition.Compositor compositor,
             out Windows.UI.Composition.Visual rootVisual,
             out Windows.Foundation.Numerics.Vector2 size,
-            out Windows.UI.Composition.CompositionPropertySet progressPropertySet,
             out Windows.Foundation.TimeSpan duration,
             out IInspectable diagnostics);
     };

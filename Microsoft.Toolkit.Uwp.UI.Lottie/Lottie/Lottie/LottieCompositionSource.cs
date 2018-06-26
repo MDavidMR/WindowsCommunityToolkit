@@ -116,7 +116,6 @@ namespace Lottie
             Compositor compositor,
             out Visual rootVisual,
             out Vector2 size,
-            out CompositionPropertySet progressPropertySet,
             out TimeSpan duration,
             out object diagnostics)
         {
@@ -124,7 +123,6 @@ namespace Lottie
             {
                 rootVisual = null;
                 size = default(Vector2);
-                progressPropertySet = null;
                 duration = default(TimeSpan);
                 diagnostics = null;
                 return false;
@@ -135,7 +133,6 @@ namespace Lottie
                     compositor,
                     out rootVisual,
                     out size,
-                    out progressPropertySet,
                     out duration,
                     out diagnostics);
             }
@@ -414,7 +411,6 @@ namespace Lottie
                 Compositor compositor,
                 out Visual rootVisual,
                 out Vector2 size,
-                out CompositionPropertySet progressPropertySet,
                 out TimeSpan duration,
                 out object diagnostics)
             {
@@ -425,7 +421,6 @@ namespace Lottie
                 {
                     rootVisual = null;
                     size = default(Vector2);
-                    progressPropertySet = null;
                     duration = default(TimeSpan);
                     return false;
                 }
@@ -435,7 +430,6 @@ namespace Lottie
 
                     rootVisual = Instantiator.CreateVisual(compositor, _wincompDataRootVisual);
                     size = new Vector2((float)_width, (float)_height);
-                    progressPropertySet = rootVisual.Properties;
                     duration = _duration;
 
                     if (diags != null)
