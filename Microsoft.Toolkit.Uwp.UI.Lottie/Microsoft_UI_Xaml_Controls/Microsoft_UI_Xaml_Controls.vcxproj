@@ -4,9 +4,9 @@
     <CppWinRTEnabled>true</CppWinRTEnabled>
     <RequiredBundles>$(RequiredBundles);Microsoft.Windows.CppWinRT</RequiredBundles>
     <MinimalCoreWin>true</MinimalCoreWin>
-    <ProjectGuid>{203d0bd3-365d-4956-b71a-4ac56b53e903}</ProjectGuid>
-    <ProjectName>CompPlayer</ProjectName>
-    <RootNamespace>CompPlayer</RootNamespace>
+    <ProjectGuid>{c7f59620-47aa-4101-83ad-213a6749377e}</ProjectGuid>
+    <ProjectName>Microsoft_UI_Xaml_Controls</ProjectName>
+    <RootNamespace>Microsoft_UI_Xaml_Controls</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -81,7 +81,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>CompPlayer.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Microsoft_UI_Xaml_Controls.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
@@ -90,24 +90,14 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CompositionPlayer.h" />
     <ClInclude Include="Hacks.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="CompositionPlayer.h">
-      <DependentUpon>CompositionPlayer.idl</DependentUpon>
-    </ClInclude>
-    <ClInclude Include="CompositionSegment.h">
-      <DependentUpon>CompositionPlayer.idl</DependentUpon>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CompositionPlayer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="CompositionPlayer.cpp">
-      <DependentUpon>CompositionPlayer.idl</DependentUpon>
-    </ClCompile>
-    <ClCompile Include="CompositionSegment.cpp">
-      <DependentUpon>CompositionPlayer.idl</DependentUpon>
     </ClCompile>
     <ClCompile Include="Generated Files\module.g.cpp" />
   </ItemGroup>
@@ -115,7 +105,7 @@
     <Midl Include="CompositionPlayer.idl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CompPlayer.def" />
+    <None Include="Microsoft_UI_Xaml_Controls.def" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt">

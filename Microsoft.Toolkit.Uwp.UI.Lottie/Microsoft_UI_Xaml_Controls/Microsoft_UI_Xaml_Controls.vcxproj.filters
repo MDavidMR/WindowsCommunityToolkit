@@ -11,25 +11,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Generated Files\module.g.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
     <ClCompile Include="CompositionPlayer.cpp" />
-    <ClCompile Include="CompositionSegment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="CompositionPlayer.h" />
-    <ClInclude Include="CompositionSegment.h" />
     <ClInclude Include="Hacks.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CompPlayer.def" />
+    <Midl Include="CompositionPlayer.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft_UI_Xaml_Controls.def" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="CompositionPlayer.idl" />
   </ItemGroup>
 </Project>

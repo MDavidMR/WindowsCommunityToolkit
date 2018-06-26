@@ -1,4 +1,4 @@
-namespace CompPlayer
+namespace Microsoft_UI_Xaml_Controls
 {
     interface ICompositionSource
     {
@@ -11,18 +11,13 @@ namespace CompPlayer
             out IInspectable diagnostics);
     };
 
-    [default_interface]
-    runtimeclass CompositionSegment
+    struct CompositionSegment
     {
-        CompositionSegment();
-
-        String Name;
-        
         Double FromProgress;
         Double ToProgress;
         Boolean IsLoopingEnabled;
         Boolean ReverseAnimation;
-    }
+    };
 
     [default_interface]
     [contentproperty("Source")]
@@ -41,8 +36,8 @@ namespace CompPlayer
         Boolean IsCompositionLoaded{ get; };
         Boolean IsLoopingEnabled;
         Boolean IsPlaying{ get; };
-        Boolean ReverseAnimation{ get; };
         Double PlaybackRate;
+        Boolean ReverseAnimation{ get; };
 
         Windows.UI.Composition.CompositionObject ProgressObject{ get; };
 

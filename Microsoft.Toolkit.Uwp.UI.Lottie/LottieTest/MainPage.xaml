@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LottieTest"
-    xmlns:cp="using:CompPlayer"
+    xmlns:lottie ="using:Lottie"
+    xmlns:cp="using:Microsoft_UI_Xaml_Controls"
     xmlns:comps="using:Compositions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,10 +21,13 @@
         <StackPanel>
             <Border BorderBrush="HotPink" BorderThickness="5">
                 <cp:CompositionPlayer x:Name="Player">
-                    <cp:CompositionPlayer.Source>
-                        <comps:Empty_box/>
-                    </cp:CompositionPlayer.Source>
+                    <comps:Empty_box/>
                 </cp:CompositionPlayer>
+            </Border>
+            <Border BorderBrush="Green" BorderThickness="5">
+                <lottie:CompositionPlayer>
+                    <comps:MyComposition/>
+                </lottie:CompositionPlayer>
             </Border>
             <Frame x:Name="ContentFrame">
 

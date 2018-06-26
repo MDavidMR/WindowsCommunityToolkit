@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "CompositionPlayer.g.h"
 
-namespace winrt::CompPlayer::implementation
+
+namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 {
     struct CompositionPlayer : CompositionPlayerT<CompositionPlayer>
     {
@@ -10,8 +11,8 @@ namespace winrt::CompPlayer::implementation
 
         Windows::Foundation::IInspectable Diagnostics();
         Windows::Foundation::TimeSpan Duration();
-        CompPlayer::ICompositionSource Source();
-        void Source(CompPlayer::ICompositionSource const& value);
+        Microsoft_UI_Xaml_Controls::ICompositionSource Source();
+        void Source(Microsoft_UI_Xaml_Controls::ICompositionSource const& value);
         double FromProgress();
         void FromProgress(double value);
         double ToProgress();
@@ -33,7 +34,7 @@ namespace winrt::CompPlayer::implementation
         void Pause();
         void Play();
         Windows::Foundation::IAsyncAction PlayAsync();
-        Windows::Foundation::IAsyncAction PlayAsync(CompPlayer::CompositionSegment const& segment);
+        Windows::Foundation::IAsyncAction PlayAsync(Microsoft_UI_Xaml_Controls::CompositionSegment const segment);
         void Resume();
         void SetProgress(double progress);
         void Stop();
@@ -64,7 +65,16 @@ namespace winrt::CompPlayer::implementation
         static void OnPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
         void OnPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
-       //void OnSourcePropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args);
+        static void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
+        void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
+
+        static void OnSourcePropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
+        static void OnStretchPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
+
+        static CompositionPlayer* AsSelf(const Windows::UI::Xaml::DependencyObject& sender);
+
+        void UpdateContent(ICompositionSource const& newSource);
+        void UnloadComposition();
 
         static Windows::UI::Xaml::DependencyProperty s_AutoPlayProperty;
         static Windows::UI::Xaml::DependencyProperty s_BackgroundColorProperty;
@@ -83,12 +93,17 @@ namespace winrt::CompPlayer::implementation
         // The size of the current composition. Only valid if _compositionRoot is not nullptr.
         Windows::Foundation::Numerics::float2 _compositionSize;
         Windows::UI::Composition::Visual _compositionRoot = nullptr;
-
+        // A Visual used for clipping, background, and for parenting of _compositionRoot.
+        Windows::UI::Composition::SpriteVisual _rootVisual = nullptr;
+        // The property set that contains the Progress property that will be used to
+        // set the progress of the composition.
+        Windows::UI::Composition::CompositionPropertySet _progressPropertySet = nullptr;
+        Windows::UI::Composition::CompositionColorBrush _backgroundBrush = nullptr;
     };
 
 }
 
-namespace winrt::CompPlayer::factory_implementation
+namespace winrt::Microsoft_UI_Xaml_Controls::factory_implementation
 {
     struct CompositionPlayer : CompositionPlayerT<CompositionPlayer, implementation::CompositionPlayer>
     {

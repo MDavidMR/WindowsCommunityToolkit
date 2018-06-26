@@ -178,10 +178,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompPlayer\CompPlayer.vcxproj">
-      <Project>{203d0bd3-365d-4956-b71a-4ac56b53e903}</Project>
-      <Name>CompPlayer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>
       <Name>LottieData</Name>
@@ -198,12 +194,20 @@
       <Project>{dc73f166-0b2f-4494-979d-91273c4c3182}</Project>
       <Name>Lottie_development</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
+      <Name>Microsoft_UI_Xaml_Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WinCompData\WinCompData.csproj">
       <Project>{B1DD2D0C-F280-4E5A-A14D-E1856CBB648A}</Project>
       <Name>WinCompData</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Microsoft">
+      <HintPath>..\Debug\Microsoft.UI.Xaml.ControlsALPHA\Microsoft.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
