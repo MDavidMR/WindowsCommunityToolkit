@@ -53,6 +53,9 @@ namespace LottieTest
                 case "LargeComposition":
                     ContentFrame.Navigate(typeof(LargeComposition));
                     break;
+                case "LoadingPerfExerciser":
+                    ContentFrame.Navigate(typeof(LoadingPerfExerciser));
+                    break;
                 default:
                     throw new InvalidOperationException();
             }

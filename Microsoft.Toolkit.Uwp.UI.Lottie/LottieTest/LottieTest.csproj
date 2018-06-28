@@ -107,6 +107,9 @@
     <Compile Include="LargeComposition.xaml.cs">
       <DependentUpon>LargeComposition.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadingPerfExerciser.xaml.cs">
+      <DependentUpon>LoadingPerfExerciser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LottieFilesScraper.xaml.cs">
       <DependentUpon>LottieFilesScraper.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LargeComposition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingPerfExerciser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

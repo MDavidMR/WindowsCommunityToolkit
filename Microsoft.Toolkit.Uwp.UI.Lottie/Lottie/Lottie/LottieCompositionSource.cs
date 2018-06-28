@@ -86,13 +86,13 @@ namespace Lottie
         public IAsyncAction SetSourceAsync(StorageFile file)
         {
             _uriSource = null;
-            return LoadAsync(new Loader(file)).AsAsyncAction();
+            return LoadAsync(file == null ? null : new Loader(file)).AsAsyncAction();
         }
 
         public IAsyncAction SetSourceAsync(Uri sourceUri)
         {
             _uriSource = sourceUri;
-            return LoadAsync(new Loader(sourceUri)).AsAsyncAction();
+            return LoadAsync(sourceUri == null ? null : new Loader(sourceUri)).AsAsyncAction();
         }
 
         event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
@@ -153,10 +153,22 @@ namespace Lottie
         async Task LoadAsync(Loader loader)
         {
             var loadVersion = ++_loadVersion;
+
+            var oldContentFactory = _contentFactory;
             _contentFactory = null;
 
-            // Notify all listeners that their existing content is no longer valid.
-            NotifyListenersThatCompositionChanged();
+            if (oldContentFactory != null)
+            {
+                // Notify all listeners that their existing content is no longer valid.
+                // They should stop showing the content. We will notify them again if the load
+                // succeeds.
+                NotifyListenersThatCompositionChanged();
+            }
+
+            if (loader == null)
+            {
+                return;
+            }
 
             var contentFactory = await loader.Load(Options);
             if (loadVersion != _loadVersion)
@@ -165,22 +177,30 @@ namespace Lottie
                 return;
             }
 
+            if (contentFactory == null)
+            {
+                // Load didn't produce anything.
+                return;
+            }
+
             // We are the the most recent load. Save the result.
             _contentFactory = contentFactory;
 
-            // Notify all listeners that they should create their instance of the content again.
-            NotifyListenersThatCompositionChanged();
-
-            if (!contentFactory.CanInstantiate)
+            if (contentFactory.CanInstantiate)
             {
-                 // The load failed. Throw an exception so the caller knows.
+                // Notify all listeners that they should create their instance of the content again.
+                NotifyListenersThatCompositionChanged();
+            }
+            else
+            {
+                // The load failed. Throw an exception so the caller knows.
                 throw new ArgumentException("Failed to load composition.");
             }
         }
 
-        static Issue[] ToIssues(IEnumerable<(string Code, string Description)> issues) 
+        static Issue[] ToIssues(IEnumerable<(string Code, string Description)> issues)
             => issues.Select(issue => new Issue { Code = issue.Code, Description = issue.Description }).ToArray();
-    
+
         // Handles loading a composition from a Lottie file.
         sealed class Loader
         {
@@ -191,9 +211,18 @@ namespace Lottie
 
             internal Loader(StorageFile storageFile) { _storageFile = storageFile; }
 
+            // Null loader.
+            internal Loader() { }
+
             // Asynchronously loads WinCompData from a Lottie file.
             public async Task<ContentFactory> Load(LottieCompositionOptions Options)
             {
+                if (_uri == null && _storageFile == null)
+                {
+                    // Request to load null. Return a null ContentFactory.
+                    return null;
+                }
+
                 LottieCompositionDiagnostics diagnostics = null;
                 Stopwatch sw = null;
                 if (Options.HasFlag(LottieCompositionOptions.IncludeDiagnostics))

@@ -18,6 +18,7 @@
             <NavigationViewItem Content="Show MyComposition" Tag="MyComposition"/>
             <NavigationViewItem Content="Show large (huge, slow) composition" Tag="LargeComposition"/>
             <NavigationViewItem Content="Rewards App" Tag="RewardsApp"/>
+            <NavigationViewItem Content="Loading perf exerciser" Tag="LoadingPerfExerciser"/>
         </NavigationView.MenuItems>
         <StackPanel>
             <Border BorderBrush="HotPink" BorderThickness="5">
