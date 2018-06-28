@@ -32,23 +32,47 @@ namespace LottieTest
 
         async void ExerciseLoading()
         {
-            //TaskCompletionSource currentTaskSource;
-
-            //// Register to get loading callbacks from the player.
-            //player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, (dObj, dProp) => UpdateFileInfo());
 
             while (true)
             {
                 // Wait for the load. This does not wait for the instantiation.
                 await lottieSource.SetSourceAsync(new Uri("ms-appx:///assets/LottieLogo1.json"));
-                
-                //// Wait for the lottie to load
-                //await currentTaskSource.Task;
-                await Task.Delay(TimeSpan.FromSeconds(3));
+
+                // Wait for the lottie to load.
+                await WaitForCompositionLoadChange(true);
 
                 // Set the source to null to force unload.
                 await lottieSource.SetSourceAsync((Uri)null);
+
+                // Wait for the lottie to unload.
+                await WaitForCompositionLoadChange(false);
             }
+        }
+
+        Task<bool> WaitForCompositionLoadChange(bool loadState)
+        {
+            var currentTaskSource = new TaskCompletionSource<bool>();
+
+            if (player.IsCompositionLoaded == loadState)
+            {
+                currentTaskSource.SetResult(loadState);
+            }
+            else
+            {
+                // Register to get loading callbacks from the player.
+                long token = 0;
+                token = player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, Callback);
+
+                void Callback(DependencyObject dObj, DependencyProperty dProp)
+                {
+                    if (player.IsCompositionLoaded == loadState)
+                    {
+                        currentTaskSource.SetResult(loadState);
+                        player.UnregisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, token);
+                    }
+                }
+            }
+            return currentTaskSource.Task;
         }
     }
 }
