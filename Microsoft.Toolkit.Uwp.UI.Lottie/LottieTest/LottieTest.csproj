@@ -121,6 +121,9 @@
     <Compile Include="RewardsApp.xaml.cs">
       <DependentUpon>RewardsApp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RewardsScraper.xaml.cs">
+      <DependentUpon>RewardsScraper.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -165,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RewardsApp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RewardsScraper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

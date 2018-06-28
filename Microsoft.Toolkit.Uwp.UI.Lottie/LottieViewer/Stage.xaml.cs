@@ -34,13 +34,13 @@ namespace LottieViewer
             SetValue(PlayerProperty, _player);
 
             // Subscribe to events from the player so we can react to loading and unloading of the composition.
-            _player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, UpdateFileInfo);
+            _player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, (dObj, dProp) => UpdateFileInfo());
 
             Reset();
         }
 
         // Called when a composition is loaded or unloaded in the player.
-        void UpdateFileInfo(DependencyObject obj, DependencyProperty property)
+        void UpdateFileInfo()
         {
             var diagnostics = _player.Diagnostics;
             if (diagnostics == null)
@@ -100,6 +100,7 @@ namespace LottieViewer
             {
                 // Failed to load.
                 _player.Opacity = 1;
+                UpdateFileInfo();
                 await _feedbackLottie.PlayLoadFailedAnimation();
                 return;
             }

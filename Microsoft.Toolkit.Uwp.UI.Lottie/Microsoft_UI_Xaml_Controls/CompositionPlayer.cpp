@@ -429,12 +429,51 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
     void CompositionPlayer::Play()
     {
-        throw hresult_not_implemented();
+        PlayAsync();
     }
 
     winrt::IAsyncAction CompositionPlayer::PlayAsync()
     {
-        throw hresult_not_implemented();
+        // TODO - do the right thing here. Actually, not clear that we even want a PlayAsync without parameters.
+        return RunAnimationAsync(0, 1, true, false);
+    }
+
+    winrt::IAsyncAction CompositionPlayer::RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
+    {
+        // Used to detect reentrance.
+        auto version = ++_runAnimationAsyncVersion;
+
+        // Cause any other tasks waiting in this method to return. This call may
+        // cause reentrance.
+        Stop();
+
+
+        if (version != _runAnimationAsyncVersion)
+        {
+            // The call was overtaken by another call due to reentrance.
+            co_return;
+        }
+
+        // Create a new animation.
+        // TODO - handle to<from and looped and reversed.
+
+        auto compositor = Window::Current().Compositor();
+        auto animation = compositor.CreateScalarKeyFrameAnimation();
+        animation.Duration(Duration());
+        animation.InsertKeyFrame(static_cast<float>(fromProgress), static_cast<float>(toProgress), compositor.CreateLinearEasingFunction());
+        if (looped)
+        {
+            animation.IterationBehavior(AnimationIterationBehavior::Forever);
+        }
+        else 
+        {
+            animation.IterationBehavior(AnimationIterationBehavior::Count);
+            animation.IterationCount(1);
+        }
+        _progressPropertySet.StartAnimation(L"Progress", animation);
+
+
+        co_return;
     }
 
     winrt::IAsyncAction CompositionPlayer::PlayAsync(Microsoft_UI_Xaml_Controls::CompositionSegment const segment)
@@ -454,7 +493,9 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
     void CompositionPlayer::Stop()
     {
-        throw hresult_not_implemented();
+        // Stop the animation by setting the Progress value to 0.
+        // TODO - should we set it to FromProgress instead of 0?
+        _progressPropertySet.InsertScalar(L"Progress", 0);
     }
 
     void CompositionPlayer::OnPropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args)
@@ -519,7 +560,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             return;
         }
 
-        CompositionPropertySet progressPropertySet = nullptr;
         TimeSpan duration{};
         IInspectable diagnostics{};
 
@@ -527,7 +567,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             Window::Current().Compositor(),
             _compositionRoot,
             _compositionSize,
-            progressPropertySet,
             duration,
             diagnostics);
 
@@ -550,29 +589,30 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         auto rootChildren = _rootVisual.Children();
         rootChildren.InsertAtTop(_compositionRoot);
 
-        // Tie the composition's Progress property to the player Progress.
+        // Tie the composition's Progress property to the player Progress with an ExpressionAnimation.
         auto compositor = _rootVisual.Compositor();
-        auto progressAnimation = compositor.CreateExpressionAnimation(L"my.Progress");
-        progressAnimation.SetReferenceParameter(L"my", _progressPropertySet);
-        progressPropertySet.StartAnimation(L"Progress", progressAnimation);
+        //auto progressAnimation = compositor.CreateExpressionAnimation(L"my.Progress");
+        //progressAnimation.SetReferenceParameter(L"my", _progressPropertySet);
+        //_compositionRoot.Properties().StartAnimation(L"Progress", progressAnimation);
 
         // TODO - HACK - start playing immediately so we can see something.
+
+
         auto animation = compositor.CreateScalarKeyFrameAnimation();
         animation.Duration(duration);
-        auto easing = compositor.CreateLinearEasingFunction();
-        animation.InsertKeyFrame(1, 1, easing);
+        animation.InsertKeyFrame(0, 1, compositor.CreateLinearEasingFunction());
         animation.IterationBehavior(AnimationIterationBehavior::Forever);
-        _progressPropertySet.StartAnimation(L"Progress", animation);
+        //_progressPropertySet.StartAnimation(L"Progress", animation);
+        _compositionRoot.Properties().StartAnimation(L"Progress", animation);
+
+//        Play();
     }
 
     void CompositionPlayer::UnloadComposition()
     {
         if (_compositionRoot != nullptr)
         {
-            //            Stop();
-
-            // Stop the animation by setting the Progress value to 0.
-            _progressPropertySet.InsertScalar(L"Progress", 0);
+            Stop();
 
             // Remove the old composition (if any).
             _rootVisual.Children().RemoveAll();

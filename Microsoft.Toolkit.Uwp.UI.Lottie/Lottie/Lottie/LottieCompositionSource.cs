@@ -168,14 +168,14 @@ namespace Lottie
             // We are the the most recent load. Save the result.
             _contentFactory = contentFactory;
 
-            if (!contentFactory.CanInstantiate)
-            {
-                // The load failed.
-                throw new ArgumentException("Failed to load composition.");
-            }
-
             // Notify all listeners that they should create their instance of the content again.
             NotifyListenersThatCompositionChanged();
+
+            if (!contentFactory.CanInstantiate)
+            {
+                 // The load failed. Throw an exception so the caller knows.
+                throw new ArgumentException("Failed to load composition.");
+            }
         }
 
         static Issue[] ToIssues(IEnumerable<(string Code, string Description)> issues) 

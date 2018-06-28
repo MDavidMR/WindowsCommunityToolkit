@@ -21,13 +21,11 @@ namespace Compositions
             Compositor compositor,
             out Visual rootVisual,
             out Vector2 size,
-            out CompositionPropertySet progressPropertySet,
             out TimeSpan duration,
             out object diagnostics)
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(120, 120);
-            progressPropertySet = rootVisual.Properties;
             duration = TimeSpan.FromTicks(20000000);
             diagnostics = null;
             return true;

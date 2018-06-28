@@ -1375,6 +1375,12 @@ namespace LottieData.Serialization
                         case "ix":
                             // Do not report it as an issue - existence of "ix" doesn't mean that an expression is actually used.
                             break;
+                        
+                            // Extremely rare fields seen in 1 Lottie file. Ignore.
+                        case "nm":  // Name
+                        case "mn":  // ??
+                        case "hd":  // IsHidden
+                            break;
 
                         // Property expression. Currently ignored because we don't support expressions.
                         case "x":

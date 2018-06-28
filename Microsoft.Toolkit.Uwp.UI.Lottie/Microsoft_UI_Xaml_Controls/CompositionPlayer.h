@@ -76,6 +76,8 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         void UpdateContent(ICompositionSource const& newSource);
         void UnloadComposition();
 
+        Windows::Foundation::IAsyncAction RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed);
+
         static Windows::UI::Xaml::DependencyProperty s_AutoPlayProperty;
         static Windows::UI::Xaml::DependencyProperty s_BackgroundColorProperty;
         static Windows::UI::Xaml::DependencyProperty s_DiagnosticsProperty;
@@ -99,6 +101,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         // set the progress of the composition.
         Windows::UI::Composition::CompositionPropertySet _progressPropertySet = nullptr;
         Windows::UI::Composition::CompositionColorBrush _backgroundBrush = nullptr;
+        int _runAnimationAsyncVersion = 0;
     };
 
 }
