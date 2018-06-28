@@ -20,8 +20,9 @@ namespace WinCompData.Expressions
 
         public static Vector2 operator *(Vector2 left, double right) => new Vector2(Multiply(left.X, Scalar(right)), Multiply(left.Y, Scalar(right)));
 
-        public override Expression Simplified => this;
-        public override string ToString() => $"Vector2({Parenthesize(X)},{Parenthesize(Y)})";
+        protected override Expression Simplify() => this;
+
+        protected override string CreateExpressionString() => $"Vector2({Parenthesize(X)},{Parenthesize(Y)})";
 
         internal override bool IsAtomic => true;
 

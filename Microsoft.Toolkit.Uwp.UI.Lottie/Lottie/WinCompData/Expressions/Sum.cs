@@ -12,31 +12,28 @@ namespace WinCompData.Expressions
         {
         }
 
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
+            var a = Left.Simplified;
+            var b = Right.Simplified;
+            if (IsZero(a))
             {
-                var a = Left.Simplified;
-                var b = Right.Simplified;
-                if (IsZero(a))
-                {
-                    return b;
-                }
-                if (IsZero(b))
-                {
-                    return a;
-                }
-
-                if (a is Number numberA && b is Number numberB)
-                {
-                    return Sum(numberA, numberB);
-                }
-
-                return this;
+                return b;
             }
+            if (IsZero(b))
+            {
+                return a;
+            }
+
+            if (a is Number numberA && b is Number numberB)
+            {
+                return Sum(numberA, numberB);
+            }
+
+            return this;
         }
 
-        public override string ToString()
+        protected override string CreateExpressionString()
         {
             var a = Left.Simplified;
             var b = Right.Simplified;

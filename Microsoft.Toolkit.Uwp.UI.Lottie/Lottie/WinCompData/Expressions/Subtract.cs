@@ -12,35 +12,29 @@ namespace WinCompData.Expressions
         {
         }
 
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
+            var a = Left.Simplified;
+            var b = Right.Simplified;
+            if (IsZero(b))
             {
-                var a = Left.Simplified;
-                var b = Right.Simplified;
-                if (IsZero(b))
-                {
-                    return a;
-                }
-
-                var numberA = a as Number;
-                var numberB = b as Number;
-
-                // If both are numbers, simplify to the calculated value.
-                if (numberA != null && numberB != null)
-                {
-                    return new Number(numberA.Value - numberB.Value);
-                }
-
-                return this;
+                return a;
             }
+
+            var numberA = a as Number;
+            var numberB = b as Number;
+
+            // If both are numbers, simplify to the calculated value.
+            if (numberA != null && numberB != null)
+            {
+                return new Number(numberA.Value - numberB.Value);
+            }
+
+            return this;
         }
 
-        public override string ToString()
-        {
-            return $"{Parenthesize(Left.Simplified)} - {Parenthesize(Right.Simplified)}";
-        }
-
+        protected override string CreateExpressionString() 
+            =>$"{Parenthesize(Left.Simplified)} - {Parenthesize(Right.Simplified)}";
 
         public override ExpressionType InferredType =>
             ExpressionType.ConstrainToTypes(TypeConstraint.Scalar, Left.InferredType, Right.InferredType);

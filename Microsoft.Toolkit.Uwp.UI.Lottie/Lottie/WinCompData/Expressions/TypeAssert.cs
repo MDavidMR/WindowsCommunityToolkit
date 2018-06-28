@@ -20,10 +20,10 @@ namespace WinCompData.Expressions
             _constraints = constraints;
         }
 
-        public override Expression Simplified => this;
+        protected override Expression Simplify() => this;
 
         // There is no syntax for a type assert, so just return the child syntax.
-        public override string ToString() => _child.ToString();
+        protected override string CreateExpressionString() => _child.ToString();
 
         public override ExpressionType InferredType => ExpressionType.ConstrainToType(_constraints, _child.InferredType);
 

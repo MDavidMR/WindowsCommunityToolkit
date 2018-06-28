@@ -25,6 +25,6 @@ namespace WinCompData
 
         internal override CompositionAnimation Clone() => new ExpressionAnimation(this, Expression);
 
-        public override string ToString() => Expression.Simplified.ToString();
+        public override string ToString() => Expression.ToString();
     }
 }

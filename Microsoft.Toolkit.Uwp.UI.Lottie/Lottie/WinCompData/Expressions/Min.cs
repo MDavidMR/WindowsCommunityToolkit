@@ -14,31 +14,28 @@ namespace WinCompData.Expressions
         {
         }
 
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
+            var a = Left.Simplified;
+            var b = Right.Simplified;
+
+            var numberA = a as Number;
+            var numberB = b as Number;
+            if (numberA != null && numberB != null)
             {
-                var a = Left.Simplified;
-                var b = Right.Simplified;
-
-                var numberA = a as Number;
-                var numberB = b as Number;
-                if (numberA != null && numberB != null)
-                {
-                    // They're both constants. Evaluate them.
-                    return new Number(Math.Min(numberA.Value, numberB.Value));
-                }
-
-                if (a != Left || b != Right)
-                {
-                    return new Min(a, b);
-                }
-
-                return this;
+                // They're both constants. Evaluate them.
+                return new Number(Math.Min(numberA.Value, numberB.Value));
             }
+
+            if (a != Left || b != Right)
+            {
+                return new Min(a, b);
+            }
+
+            return this;
         }
 
-        public override string ToString() => $"Min({Parenthesize(Left.Simplified)}, {Parenthesize(Right.Simplified)})";
+        protected override string CreateExpressionString() => $"Min({Parenthesize(Left.Simplified)}, {Parenthesize(Right.Simplified)})";
 
         public override ExpressionType InferredType =>
             ExpressionType.AssertMatchingTypes(

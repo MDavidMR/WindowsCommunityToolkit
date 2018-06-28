@@ -8,12 +8,11 @@ namespace WinCompData.Expressions
 #endif
     abstract class Expression
     {
+        string m_expressionStringCache;
+        Expression m_simplifiedExpressionCache;
+
         protected Expression() { }
 
-        /// <summary>
-        /// A simplified form of the expression. May be the same as this.
-        /// </summary>
-        public virtual Expression Simplified => this;
 
         public virtual ExpressionType InferredType { get; } = new ExpressionType(TypeConstraint.NoType);
 
@@ -73,6 +72,37 @@ namespace WinCompData.Expressions
         /// parsed without parentheses.
         /// </summary>
         internal virtual bool IsAtomic => false;
+
+        public sealed override string ToString()
+        {
+            // Expressions are immutable, so it's always safe to return a cached string representation.
+            return m_expressionStringCache != null 
+                ? m_expressionStringCache 
+                : m_expressionStringCache = CreateExpressionString();
+        }
+
+        /// <summary>
+        /// A simplified form of the expression. May be the same as this.
+        /// </summary>
+        public Expression Simplified
+        {
+            get
+            {
+                return m_simplifiedExpressionCache != null
+                    ? m_simplifiedExpressionCache
+                    : m_simplifiedExpressionCache = Simplify();
+            }
+        }
+
+        /// <summary>
+        /// Returns an equivalent expression, simplified if possible.
+        /// </summary>
+        protected abstract Expression Simplify();
+
+        /// <summary>
+        /// Returns the expression as a string for use by WinComp animations.
+        /// </summary>
+        protected abstract string CreateExpressionString();
 
         protected static string Parenthesize(Expression expression) =>
             expression.IsAtomic ? expression.ToString() : $"({expression})";

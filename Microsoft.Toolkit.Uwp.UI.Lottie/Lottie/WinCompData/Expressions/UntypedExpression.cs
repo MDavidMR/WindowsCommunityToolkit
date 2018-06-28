@@ -14,9 +14,12 @@ namespace WinCompData.Expressions
             _value = value;
         }
 
-        public override Expression Simplified => this;
+        protected override Expression Simplify()
+        {
+            return this;
+        }
 
-        public override string ToString() => _value;
+        protected override string CreateExpressionString() => _value;
 
         public override ExpressionType InferredType => new ExpressionType(TypeConstraint.AllValidTypes);
     }

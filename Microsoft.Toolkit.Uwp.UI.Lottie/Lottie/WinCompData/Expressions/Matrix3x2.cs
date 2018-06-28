@@ -18,9 +18,12 @@ namespace WinCompData.Expressions
         public static Matrix3x2 Zero { get; } =  new Matrix3x2("Matrix3x2(0,0,0,0,0,0)");
         public static Matrix3x2 Identity { get; } = new Matrix3x2("Matrix3x2(1,0,0,1,0,0)");
 
-        public override Expression Simplified => this;
+        protected override Expression Simplify()
+        {
+            return this;
+        }
 
-        public override string ToString() => _representation;
+        protected override string CreateExpressionString() => _representation;
 
         internal override bool IsAtomic => true;
 

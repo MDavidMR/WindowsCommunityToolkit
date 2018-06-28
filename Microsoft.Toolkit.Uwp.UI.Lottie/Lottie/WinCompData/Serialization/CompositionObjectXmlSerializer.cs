@@ -635,7 +635,7 @@ namespace WinCompData.Tools
                 {
                     yield return new XAttribute("Target", obj.Target);
                 }
-                yield return new XText(obj.Expression.Simplified.ToString());
+                yield return new XText(obj.Expression.ToString());
             }
         }
 

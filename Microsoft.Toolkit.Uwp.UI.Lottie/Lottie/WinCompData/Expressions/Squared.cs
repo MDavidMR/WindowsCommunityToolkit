@@ -18,19 +18,16 @@ namespace WinCompData.Expressions
 
         public Expression Value { get; }
 
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
-            {
-                var simplifiedValue = Value.Simplified;
-                var numberValue = simplifiedValue as Number;
-                return (numberValue != null)
-                    ? new Number(numberValue.Value * numberValue.Value)
-                    : (Expression)this;
-            }
+            var simplifiedValue = Value.Simplified;
+            var numberValue = simplifiedValue as Number;
+            return (numberValue != null)
+                ? new Number(numberValue.Value * numberValue.Value)
+                : (Expression)this;
         }
 
-        public override string ToString() => $"Square({Value.Simplified})";
+        protected override string CreateExpressionString() => $"Square({Value.Simplified})";
 
         internal override bool IsAtomic => true;
 

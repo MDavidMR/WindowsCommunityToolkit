@@ -19,8 +19,9 @@ namespace WinCompData.Expressions
             Z = z;
         }
 
-        public override Expression Simplified => this;
-        public override string ToString() => $"Vector3({Parenthesize(X)},{Parenthesize(Y)},{Parenthesize(Z)})";
+        protected override Expression Simplify() => this;
+
+        protected override string CreateExpressionString() => $"Vector3({Parenthesize(X)},{Parenthesize(Y)},{Parenthesize(Z)})";
 
         internal override bool IsAtomic => true;
 

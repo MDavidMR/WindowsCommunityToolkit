@@ -19,28 +19,25 @@ namespace WinCompData.Expressions
         public Expression TrueValue;
         public Expression FalseValue;
 
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
+            var c = Condition.Simplified;
+            var t = TrueValue.Simplified;
+            var f = FalseValue.Simplified;
+
+            if (c is Boolean cBool)
             {
-                var c = Condition.Simplified;
-                var t = TrueValue.Simplified;
-                var f = FalseValue.Simplified;
-
-                if (c is Boolean cBool)
-                {
-                    return cBool.Value ? t : f;
-                }
-
-                if (t != TrueValue || f != FalseValue)
-                {
-                    return new Ternary(c, t, f);
-                }
-                return this;
+                return cBool.Value ? t : f;
             }
+
+            if (t != TrueValue || f != FalseValue)
+            {
+                return new Ternary(c, t, f);
+            }
+            return this;
         }
 
-        public override string ToString()
+        protected override string CreateExpressionString()
             => $"{Parenthesize(Condition)} ? {Parenthesize(TrueValue)} : {Parenthesize(FalseValue)}";
 
         public override ExpressionType InferredType

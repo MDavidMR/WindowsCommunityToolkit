@@ -42,6 +42,20 @@ namespace LottieToWinComp
             return result;
         }
 
+        ExpressionFactory() { }
+
+        protected override string CreateExpressionString()
+        {
+            // Not needed - the class cannot be instantiated.
+            throw new NotImplementedException();
+        }
+
+        protected override Expression Simplify()
+        {
+            // Not needed - the class cannot be instantiated.
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// A segment of a progress expression. Defines the expression that is to be
         /// evaluated between two progress values.

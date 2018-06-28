@@ -583,7 +583,7 @@ namespace WinCompData.CodeGen
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateExpressionAnimation()");
             InitializeCompositionAnimation(builder, obj, node);
-            builder.WriteLine($"result{Deref}Expression = {String(obj.Expression.Simplified.ToString())};");
+            builder.WriteLine($"result{Deref}Expression = {String(obj.Expression.ToString())};");
             StartAnimations(builder, obj, node);
             WriteObjectFactoryEnd(builder);
             return true;
@@ -615,7 +615,7 @@ namespace WinCompData.CodeGen
             if (animationNode.NodesInGroup.Count() == 1 && animator.Animation is ExpressionAnimation expressionAnimation)
             {
                 builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}ClearAllParameters();");
-                builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Expression = {String(expressionAnimation.Expression.Simplified.ToString())};");
+                builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Expression = {String(expressionAnimation.Expression.ToString())};");
                 // If there is a Target set it. Note however that the Target isn't used for anything
                 // interesting in this scenario, and there is no way to reset the Target to an
                 // empty string (the Target API disallows empty). In reality, for all our uses

@@ -17,11 +17,11 @@ namespace WinCompData.Expressions
             Value = value;
         }
 
-        public override string ToString() => Value ? "true" : "false";
+        protected override string CreateExpressionString() => Value ? "true" : "false";
 
         internal override bool IsAtomic => true;
 
-        public override Expression Simplified => this;
+        protected override Expression Simplify() => this;
 
         public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Boolean);
     }

@@ -19,13 +19,13 @@ namespace WinCompData.Expressions
             Value = value;
         }
 
-        public override string ToString() => ToString(Value);
+        protected override string CreateExpressionString() => ToString(Value);
 
         internal override bool IsAtomic => Value >= 0;
 
-        public override Expression Simplified => this;
+        protected override Expression Simplify() => this;
 
-        internal static string ToString(double value)
+        static string ToString(double value)
         {
             // Do not use "G9" here - Composition expressions do not understand
             // scientific notation (e.g. 1.2E06)

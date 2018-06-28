@@ -136,29 +136,26 @@ namespace WinCompData.Expressions
         }
 
         // (1-t)^3P0 + 3(1-t)^2tP1 + 3(1-t)t^2P2 + t^3P3
-        public override Expression Simplified
+        protected override Expression Simplify()
         {
-            get
-            {
-                var OneMinusT = Subtract(Scalar(1), _t);
+            var OneMinusT = Subtract(Scalar(1), _t);
 
-                // (1-t)^3P0
-                var p0Part = Multiply(Cubed(OneMinusT), Constant(_p0));
+            // (1-t)^3P0
+            var p0Part = Multiply(Cubed(OneMinusT), Constant(_p0));
 
-                // (1-t)^2t3P1
-                var p1Part = Multiply(Scalar(3), Squared(OneMinusT), _t, Constant(_p1));
+            // (1-t)^2t3P1
+            var p1Part = Multiply(Scalar(3), Squared(OneMinusT), _t, Constant(_p1));
 
-                // (1-t)t^23P2
-                var p2Part = Multiply(Scalar(3), OneMinusT, Squared(_t), Constant(_p2));
+            // (1-t)t^23P2
+            var p2Part = Multiply(Scalar(3), OneMinusT, Squared(_t), Constant(_p2));
 
-                // t^3P3
-                var p3Part = Multiply(Cubed(_t), Constant(_p3));
+            // t^3P3
+            var p3Part = Multiply(Cubed(_t), Constant(_p3));
 
-                return Sum(p0Part, p1Part, p2Part, p3Part).Simplified;
-            }
+            return Sum(p0Part, p1Part, p2Part, p3Part).Simplified;
         }
 
-        public override string ToString() => Simplified.ToString();
+        protected override string CreateExpressionString() => Simplified.ToString();
 
         public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
     }

@@ -2296,18 +2296,16 @@ namespace LottieToWinComp
                 _t = t;
             }
 
-            public override Expr Simplified
+            protected override Expr Simplify()
             {
-                get
-                {
-                    // Adjust t and (1-t) based on the given range. This will make T vary between
-                    // 0..1 over the duration of the keyframe.
-                    return Multiply(
-                        Scalar(1 / (_tRangeHigh - _tRangeLow)),
-                        Subtract(_t, Scalar(_tRangeLow)));
-                }
+                // Adjust t and (1-t) based on the given range. This will make T vary between
+                // 0..1 over the duration of the keyframe.
+                return Multiply(
+                    Scalar(1 / (_tRangeHigh - _tRangeLow)),
+                    Subtract(_t, Scalar(_tRangeLow)));
             }
-            public override string ToString() => Simplified.ToString();
+
+            protected override string CreateExpressionString() => Simplified.ToString();
 
             public override ExpressionType InferredType => new ExpressionType(TypeConstraint.Scalar);
 
