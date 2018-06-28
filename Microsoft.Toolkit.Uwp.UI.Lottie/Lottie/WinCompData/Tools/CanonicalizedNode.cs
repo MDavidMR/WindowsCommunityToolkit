@@ -8,6 +8,8 @@ namespace WinCompData.Tools
 {
     abstract class CanonicalizedNode<T> : Graph.Node<T> where T : CanonicalizedNode<T>, new()
     {
+        Vertex[] m_canonicalInRefs;
+
         public CanonicalizedNode()
         {
             Canonical = (T)this;
@@ -30,14 +32,18 @@ namespace WinCompData.Tools
         {
             get
             {
-                return
-                    // Get the references from all canonical nodes
-                    // that reference all versions of this node.
-                    from n in NodesInGroup
-                    from r in n.InReferences
-                    where r.Node.IsCanonical
-                    orderby r.Position
-                    select r;
+                if (m_canonicalInRefs == null)
+                {
+                    m_canonicalInRefs =
+                        // Get the references from all canonical nodes
+                        // that reference all versions of this node.
+                        (from n in NodesInGroup
+                         from r in n.InReferences
+                         where r.Node.IsCanonical
+                         orderby r.Position
+                         select r).ToArray();
+                }
+                return m_canonicalInRefs;
             }
         }
     }

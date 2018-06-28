@@ -247,6 +247,23 @@ namespace WinCompData.CodeGen
         // Returns the code to call the factory for the given node from the given node.
         string CallFactoryFromFor(ObjectData callerNode, ObjectData calleeNode)
         {
+            string result;
+            if (callerNode.CallFactoryFromForCache == null)
+            {
+                callerNode.CallFactoryFromForCache = new Dictionary<ObjectData, string>();
+            }
+            else if (callerNode.CallFactoryFromForCache.TryGetValue(calleeNode, out result))
+            {
+                return result;
+            }
+
+            result = CallFactoryFromFor_UnCached(callerNode, calleeNode);
+            callerNode.CallFactoryFromForCache.Add(calleeNode, result);
+            return result;
+        }
+
+        string CallFactoryFromFor_UnCached(ObjectData callerNode, ObjectData calleeNode)
+        {
             // Calling into the root node is handled specially. The root node is always
             // created before the first vertex to it.
             if (calleeNode == _rootNode)
@@ -292,6 +309,7 @@ namespace WinCompData.CodeGen
                 return calleeNode.FactoryCall();
             }
         }
+
 
         // Returns the code to call the factory for the given object from the given node.
         string CallFactoryFromFor(ObjectData callerNode, object obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
@@ -1573,6 +1591,7 @@ namespace WinCompData.CodeGen
         {
             string _overriddenFactoryCall;
 
+            public Dictionary<ObjectData, string> CallFactoryFromForCache { get; set; }
             public string Name { get; set; }
 
             public string FieldName => RequiresStorage ? CamelCase(Name) : null;

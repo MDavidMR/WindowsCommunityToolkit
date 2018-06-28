@@ -460,7 +460,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         auto compositor = Window::Current().Compositor();
         auto animation = compositor.CreateScalarKeyFrameAnimation();
         animation.Duration(Duration());
-        animation.InsertKeyFrame(static_cast<float>(fromProgress), static_cast<float>(toProgress), compositor.CreateLinearEasingFunction());
+        animation.InsertKeyFrame(1, static_cast<float>(toProgress), compositor.CreateLinearEasingFunction());
         if (looped)
         {
             animation.IterationBehavior(AnimationIterationBehavior::Forever);
@@ -471,7 +471,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             animation.IterationCount(1);
         }
         _progressPropertySet.StartAnimation(L"Progress", animation);
-
 
         co_return;
     }
@@ -591,21 +590,12 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
         // Tie the composition's Progress property to the player Progress with an ExpressionAnimation.
         auto compositor = _rootVisual.Compositor();
-        //auto progressAnimation = compositor.CreateExpressionAnimation(L"my.Progress");
-        //progressAnimation.SetReferenceParameter(L"my", _progressPropertySet);
-        //_compositionRoot.Properties().StartAnimation(L"Progress", progressAnimation);
+        auto progressAnimation = compositor.CreateExpressionAnimation(L"my.Progress");
+        progressAnimation.SetReferenceParameter(L"my", _progressPropertySet);
+        _compositionRoot.Properties().StartAnimation(L"Progress", progressAnimation);
 
         // TODO - HACK - start playing immediately so we can see something.
-
-
-        auto animation = compositor.CreateScalarKeyFrameAnimation();
-        animation.Duration(duration);
-        animation.InsertKeyFrame(0, 1, compositor.CreateLinearEasingFunction());
-        animation.IterationBehavior(AnimationIterationBehavior::Forever);
-        //_progressPropertySet.StartAnimation(L"Progress", animation);
-        _compositionRoot.Properties().StartAnimation(L"Progress", animation);
-
-//        Play();
+        Play();
     }
 
     void CompositionPlayer::UnloadComposition()

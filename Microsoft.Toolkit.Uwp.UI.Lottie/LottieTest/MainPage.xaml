@@ -21,15 +21,15 @@
         </NavigationView.MenuItems>
         <StackPanel>
             <Border BorderBrush="HotPink" BorderThickness="5">
-                <cp:CompositionPlayer x:Name="Player">
+                <cp:CompositionPlayer x:Name="Player" Width="300">
                     <comps:Empty_box/>
                 </cp:CompositionPlayer>
             </Border>
-            <Border BorderBrush="Green" BorderThickness="5">
+            <!--<Border BorderBrush="Green" BorderThickness="5">
                 <lottie:CompositionPlayer>
                     <comps:MyComposition/>
                 </lottie:CompositionPlayer>
-            </Border>
+            </Border>-->
             <Frame x:Name="ContentFrame">
 
             </Frame>
