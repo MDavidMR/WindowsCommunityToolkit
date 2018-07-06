@@ -64,13 +64,22 @@ namespace Compositions
             ScalarKeyFrameAnimation _scalarAnimation_0_to_0p249;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_2;
             ScalarKeyFrameAnimation _scalarAnimation_0p87_to_0_02;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_02;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_03;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_06;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_11;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_10;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_12;
             ScalarKeyFrameAnimation _scalarAnimation_1_to_0_13;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_14;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_15;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_18;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_19;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_27;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_28;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_30;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_0_31;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_1_02;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_1_06;
             ExpressionAnimation _scalarExpressionAnimation;
-            StepEasingFunction _stepEasingFunction;
+            StepEasingFunction _stepEasingFunction_0;
+            StepEasingFunction _stepEasingFunction_1;
             Vector2KeyFrameAnimation _vector2Animation_02;
             Vector2KeyFrameAnimation _vector2Animation_03;
             Vector2KeyFrameAnimation _vector2Animation_04;
@@ -78,8 +87,8 @@ namespace Compositions
             Vector2KeyFrameAnimation _vector2Animation_06;
             Vector2KeyFrameAnimation _vector2Animation_07;
 
-            // Root.S5-Y 4
-            //   Root.BG
+            // 'MASTER'.Transforms
+            //   'BG'.Transforms
             //     Group: Rectangle 1
             //       Rectangle Path 1
             CompositionColorBrush ColorBrush_AlmostDarkTurquoise_FF00D1C1()
@@ -151,8 +160,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "BG" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'BG'.Transforms
             CompositionContainerShape ContainerShape_000()
             {
                 var result = _c.CreateContainerShape();
@@ -162,8 +171,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.BG
+            // 'MASTER'.Transforms
+            //   'BG'.Transforms
             // Group: Rectangle 1
             CompositionContainerShape ContainerShape_001()
             {
@@ -173,8 +182,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "Dot-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_002()
             {
                 var result = _c.CreateContainerShape();
@@ -223,26 +232,29 @@ namespace Compositions
                 result.StartAnimation("Position", Vector2Animation_00());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
-                controller.StartAnimation("Progress", ScalarExpressionAnimation());
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            // 'Dot-Y'.Contents
+            // Animates visibility of layer: "Dot-Y".
             CompositionContainerShape ContainerShape_005()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_006());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_00());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", ScalarExpressionAnimation());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.536312878) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            //   'Dot-Y'.Contents
+            // Visibility
             // Group: Ellipse 1
             CompositionContainerShape ContainerShape_006()
             {
@@ -253,8 +265,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E3-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_007()
             {
                 var result = _c.CreateContainerShape();
@@ -286,22 +298,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            // 'E3-Y'.Contents
+            // Animates visibility of layer: "E3-Y".
             CompositionContainerShape ContainerShape_009()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_010());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_00());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.469273746) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.569832385) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-Y'.Contents
+            // Visibility
             // Group: Group 1
             CompositionContainerShape ContainerShape_010()
             {
@@ -312,8 +327,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E3-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_011()
             {
                 var result = _c.CreateContainerShape();
@@ -357,24 +372,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-B'.Transforms
-            // 'E3-B'.Contents
+            // Animates visibility of layer: "E3-B".
             CompositionContainerShape ContainerShape_014()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_015());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_01());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.513966501) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-B'.Transforms
-            //     'E3-B'.Contents
+            // Visibility
             // Group: Group 1
             CompositionContainerShape ContainerShape_015()
             {
@@ -385,8 +401,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "I-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_016()
             {
                 var result = _c.CreateContainerShape();
@@ -418,22 +434,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            // 'I-Y'.Contents
+            // Animates visibility of layer: "I-Y".
             CompositionContainerShape ContainerShape_018()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_019());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_01());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.43575418) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.519553065) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-Y'.Contents
+            // Visibility
             // Group: Group 6
             CompositionContainerShape ContainerShape_019()
             {
@@ -444,8 +463,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "I-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_020()
             {
                 var result = _c.CreateContainerShape();
@@ -488,24 +507,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-B'.Transforms
-            // 'I-B'.Contents
+            // Animates visibility of layer: "I-B".
             CompositionContainerShape ContainerShape_023()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_024());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_02());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.452513963) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-B'.Transforms
-            //     'I-B'.Contents
+            // Visibility
             // Group: Group 6
             CompositionContainerShape ContainerShape_024()
             {
@@ -516,8 +536,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E2-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_025()
             {
                 var result = _c.CreateContainerShape();
@@ -549,22 +569,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            // 'E2-Y'.Contents
+            // Animates visibility of layer: "E2-Y".
             CompositionContainerShape ContainerShape_027()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_028());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_02());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.463687152) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.536312878) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-Y'.Contents
+            // Visibility
             // Group: Group 3
             CompositionContainerShape ContainerShape_028()
             {
@@ -575,8 +598,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E2-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_029()
             {
                 var result = _c.CreateContainerShape();
@@ -619,24 +642,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-B'.Transforms
-            // 'E2-B'.Contents
+            // Animates visibility of layer: "E2-B".
             CompositionContainerShape ContainerShape_032()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_033());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_03());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.480446935) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-B'.Transforms
-            //     'E2-B'.Contents
+            // Visibility
             // Group: Group 3
             CompositionContainerShape ContainerShape_033()
             {
@@ -647,8 +671,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E1-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_034()
             {
                 var result = _c.CreateContainerShape();
@@ -680,22 +704,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            // 'E1-Y'.Contents
+            // Animates visibility of layer: "E1-Y".
             CompositionContainerShape ContainerShape_036()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_037());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_03());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.441340774) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.525139689) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-Y'.Contents
+            // Visibility
             // Group: Group 2
             CompositionContainerShape ContainerShape_037()
             {
@@ -706,8 +733,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "E1-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_038()
             {
                 var result = _c.CreateContainerShape();
@@ -750,24 +777,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-B'.Transforms
-            // 'E1-B'.Contents
+            // Animates visibility of layer: "E1-B".
             CompositionContainerShape ContainerShape_041()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_042());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_04());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.469273746) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-B'.Transforms
-            //     'E1-B'.Contents
+            // Visibility
             // Group: Group 2
             CompositionContainerShape ContainerShape_042()
             {
@@ -778,8 +806,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T1a-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_043()
             {
                 var result = _c.CreateContainerShape();
@@ -811,22 +839,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            // 'T1a-Y'.Contents
+            // Animates visibility of layer: "T1a-Y".
             CompositionContainerShape ContainerShape_045()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_046());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_04());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.329608947) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.87150836) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-Y'.Contents
+            // Visibility
             // Group: Group 9
             CompositionContainerShape ContainerShape_046()
             {
@@ -837,8 +868,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T2b-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_047()
             {
                 var result = _c.CreateContainerShape();
@@ -849,8 +880,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T2b-Y'.Transforms
             CompositionContainerShape ContainerShape_048()
             {
@@ -862,26 +893,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            // 'T2b-Y'.Contents
+            // Animates visibility of layer: "T2b-Y".
             CompositionContainerShape ContainerShape_049()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_050());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_05());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.424580991) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.513966501) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            //       'T2b-Y'.Contents
+            // Visibility
             // Group: Group 5
             CompositionContainerShape ContainerShape_050()
             {
@@ -891,8 +921,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T2a-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_051()
             {
                 var result = _c.CreateContainerShape();
@@ -903,8 +933,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T2a-Y'.Transforms
             CompositionContainerShape ContainerShape_052()
             {
@@ -916,26 +946,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            // 'T2a-Y'.Contents
+            // Animates visibility of layer: "T2a-Y".
             CompositionContainerShape ContainerShape_053()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_054());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_06());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.402234644) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.497206718) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            //       'T2a-Y'.Contents
+            // Visibility
             // Group: Group 7
             CompositionContainerShape ContainerShape_054()
             {
@@ -946,8 +975,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T2b-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_055()
             {
                 var result = _c.CreateContainerShape();
@@ -958,8 +987,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T2b-B'.Transforms
             CompositionContainerShape ContainerShape_056()
             {
@@ -971,26 +1000,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            // 'T2b-B'.Contents
+            // Animates visibility of layer: "T2b-B".
             CompositionContainerShape ContainerShape_057()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_058());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_05());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.458100557) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            //       'T2b-B'.Contents
+            // Visibility
             // Group: Group 5
             CompositionContainerShape ContainerShape_058()
             {
@@ -1000,8 +1028,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T1b-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_059()
             {
                 var result = _c.CreateContainerShape();
@@ -1012,8 +1040,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T1b-Y'.Transforms
             CompositionContainerShape ContainerShape_060()
             {
@@ -1025,26 +1053,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
-            //     'T1b-Y'.Transforms
-            // 'T1b-Y'.Contents
+            // Animates visibility of layer: "T1b-Y".
             CompositionContainerShape ContainerShape_061()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_062());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_07());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.391061455) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.899441361) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
-            //     'T1b-Y'.Transforms
-            //       'T1b-Y'.Contents
+            // Visibility
             // Group: Group 10
             CompositionContainerShape ContainerShape_062()
             {
@@ -1055,8 +1082,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T1b-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_063()
             {
                 var result = _c.CreateContainerShape();
@@ -1067,8 +1094,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T1b-B'.Transforms
             CompositionContainerShape ContainerShape_064()
             {
@@ -1080,26 +1107,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            // 'T1b-B'.Contents
+            // Animates visibility of layer: "T1b-B".
             CompositionContainerShape ContainerShape_065()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_066());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_02);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.452513963) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            //       'T1b-B'.Contents
+            // Visibility
             // Group: Group 10
             CompositionContainerShape ContainerShape_066()
             {
@@ -1110,8 +1136,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "O-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_067()
             {
                 var result = _c.CreateContainerShape();
@@ -1143,22 +1169,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-Y'.Transforms
-            // 'O-Y'.Contents
+            // Animates visibility of layer: "O-Y".
             CompositionContainerShape ContainerShape_069()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_070());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_06());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'O-Y'.Transforms
-            //   'O-Y'.Contents
+            // Visibility
             // Group: Ellipse 1
             CompositionContainerShape ContainerShape_070()
             {
@@ -1169,8 +1198,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "O-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_071()
             {
                 var result = _c.CreateContainerShape();
@@ -1202,22 +1231,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
-            // 'O-B'.Contents
+            // Animates visibility of layer: "O-B".
             CompositionContainerShape ContainerShape_073()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_074());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_06);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
+            // Visibility
             // Group: Ellipse 1
             CompositionContainerShape ContainerShape_074()
             {
@@ -1228,8 +1260,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T1a-Y 2" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_075()
             {
                 var result = _c.CreateContainerShape();
@@ -1261,22 +1293,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y 2'.Transforms
-            // 'T1a-Y 2'.Contents
+            // Animates visibility of layer: "T1a-Y 2".
             CompositionContainerShape ContainerShape_077()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_078());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_07());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.329608947) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'T1a-Y 2'.Transforms
-            //   'T1a-Y 2'.Contents
+            // Visibility
             // Group: Group 9
             CompositionContainerShape ContainerShape_078()
             {
@@ -1287,8 +1322,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T2a-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_079()
             {
                 var result = _c.CreateContainerShape();
@@ -1299,8 +1334,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'T2a-B'.Transforms
             CompositionContainerShape ContainerShape_080()
             {
@@ -1312,26 +1347,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            // 'T2a-B'.Contents
+            // Animates visibility of layer: "T2a-B".
             CompositionContainerShape ContainerShape_081()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_082());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_08());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.418994427) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            //       'T2a-B'.Contents
+            // Visibility
             // Group: Group 7
             CompositionContainerShape ContainerShape_082()
             {
@@ -1342,8 +1376,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "T1a-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_083()
             {
                 var result = _c.CreateContainerShape();
@@ -1386,24 +1420,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            // 'T1a-B'.Contents
+            // Animates visibility of layer: "T1a-B".
             CompositionContainerShape ContainerShape_086()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_087());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_09());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.391061455) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            //     'T1a-B'.Contents
+            // Visibility
             // Group: Group 9
             CompositionContainerShape ContainerShape_087()
             {
@@ -1414,8 +1449,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "Dot-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_088()
             {
                 var result = _c.CreateContainerShape();
@@ -1468,22 +1503,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            // 'Dot-Y'.Contents
+            // Animates visibility of layer: "Dot-Y".
             CompositionContainerShape ContainerShape_091()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_092());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_08());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.156424582) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.301675975) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            //   'Dot-Y'.Contents
+            // Visibility
             // Group: Ellipse 1
             CompositionContainerShape ContainerShape_092()
             {
@@ -1494,8 +1532,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "L-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_093()
             {
                 var result = _c.CreateContainerShape();
@@ -1506,8 +1544,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'L-Y'.Transforms
             CompositionContainerShape ContainerShape_094()
             {
@@ -1519,26 +1557,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-Y
-            //     'L-Y'.Transforms
-            // 'L-Y'.Contents
+            // Animates visibility of layer: "L-Y".
             CompositionContainerShape ContainerShape_095()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_096());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_10());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.0893854722) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-Y
-            //     'L-Y'.Transforms
-            //       'L-Y'.Contents
+            // Visibility
             // Group: Group 8
             CompositionContainerShape ContainerShape_096()
             {
@@ -1549,8 +1586,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "L-B" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_097()
             {
                 var result = _c.CreateContainerShape();
@@ -1561,8 +1598,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-B
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'L-B'.Transforms
             CompositionContainerShape ContainerShape_098()
             {
@@ -1574,26 +1611,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-B
-            //     'L-B'.Transforms
-            // 'L-B'.Contents
+            // Animates visibility of layer: "L-B".
             CompositionContainerShape ContainerShape_099()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_100());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_11());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.100558661) ? Matrix3x2(0,0,0,0,0,0) : Matrix3x2(1,0,0,1,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-B
-            //     'L-B'.Transforms
-            //       'L-B'.Contents
+            // Visibility
             // Group: Group 8
             CompositionContainerShape ContainerShape_100()
             {
@@ -1604,8 +1640,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "Dot1" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_101()
             {
                 var result = _c.CreateContainerShape();
@@ -1634,28 +1670,30 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress * 0.983516455) + 0.0164835174";
+                _reusableExpressionAnimation.Expression = "(_.Progress * 0.9835165) + 0.01648352";
                 _reusableExpressionAnimation.SetReferenceParameter("_", _root);
                 controller.StartAnimation("Progress", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'Dot1'.Transforms
-            // 'Dot1'.Contents
+            // Animates visibility of layer: "Dot1".
             CompositionContainerShape ContainerShape_103()
             {
                 var result = _c.CreateContainerShape();
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_104());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_0_to_0());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.0949720666) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0)";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // 'Dot1'.Transforms
-            //   'Dot1'.Contents
+            // Visibility
             // Group: Ellipse 1
             CompositionContainerShape ContainerShape_104()
             {
@@ -1666,8 +1704,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S1-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_105()
             {
                 var result = _c.CreateContainerShape();
@@ -1678,8 +1716,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S1-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S1-Y'.Transforms
             CompositionContainerShape ContainerShape_106()
             {
@@ -1690,26 +1728,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S1-Y
-            //     'S1-Y'.Transforms
-            // 'S1-Y'.Contents
+            // Animates visibility of layer: "S1-Y".
             CompositionContainerShape ContainerShape_107()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_108());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_10());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.167597771) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.206703916) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S1-Y
-            //     'S1-Y'.Transforms
-            //       'S1-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_108()
             {
@@ -1719,8 +1756,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S2-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_109()
             {
                 var result = _c.CreateContainerShape();
@@ -1731,8 +1768,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S2-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S2-Y'.Transforms
             CompositionContainerShape ContainerShape_110()
             {
@@ -1743,26 +1780,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S2-Y
-            //     'S2-Y'.Transforms
-            // 'S2-Y'.Contents
+            // Animates visibility of layer: "S2-Y".
             CompositionContainerShape ContainerShape_111()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_112());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_10);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.167597771) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.206703916) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S2-Y
-            //     'S2-Y'.Transforms
-            //       'S2-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_112()
             {
@@ -1772,8 +1808,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S7" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_113()
             {
                 var result = _c.CreateContainerShape();
@@ -1784,8 +1820,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S7
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S7'.Transforms
             CompositionContainerShape ContainerShape_114()
             {
@@ -1796,26 +1832,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S7
-            //     'S7'.Transforms
-            // 'S7'.Contents
+            // Animates visibility of layer: "S7".
             CompositionContainerShape ContainerShape_115()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_116());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_13());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.363128483) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.418994427) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S7
-            //     'S7'.Transforms
-            //       'S7'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_116()
             {
@@ -1825,8 +1860,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S8" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_117()
             {
                 var result = _c.CreateContainerShape();
@@ -1837,8 +1872,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S8
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S8'.Transforms
             CompositionContainerShape ContainerShape_118()
             {
@@ -1849,26 +1884,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S8
-            //     'S8'.Transforms
-            // 'S8'.Contents
+            // Animates visibility of layer: "S8".
             CompositionContainerShape ContainerShape_119()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_120());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_13);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.363128483) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.418994427) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S8
-            //     'S8'.Transforms
-            //       'S8'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_120()
             {
@@ -1878,8 +1912,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S3-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_121()
             {
                 var result = _c.CreateContainerShape();
@@ -1890,8 +1924,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S3-Y'.Transforms
             CompositionContainerShape ContainerShape_122()
             {
@@ -1902,26 +1936,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y
-            //     'S3-Y'.Transforms
-            // 'S3-Y'.Contents
+            // Animates visibility of layer: "S3-Y".
             CompositionContainerShape ContainerShape_123()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_124());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_15());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.357541889) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y
-            //     'S3-Y'.Transforms
-            //       'S3-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_124()
             {
@@ -1931,8 +1964,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S4-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_125()
             {
                 var result = _c.CreateContainerShape();
@@ -1943,8 +1976,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S4-Y'.Transforms
             CompositionContainerShape ContainerShape_126()
             {
@@ -1955,26 +1988,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y
-            //     'S4-Y'.Transforms
-            // 'S4-Y'.Contents
+            // Animates visibility of layer: "S4-Y".
             CompositionContainerShape ContainerShape_127()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_128());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.357541889) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y
-            //     'S4-Y'.Transforms
-            //       'S4-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_128()
             {
@@ -1984,8 +2016,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S5-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_129()
             {
                 var result = _c.CreateContainerShape();
@@ -1996,8 +2028,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S5-Y'.Transforms
             CompositionContainerShape ContainerShape_130()
             {
@@ -2008,26 +2040,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y
-            //     'S5-Y'.Transforms
-            // 'S5-Y'.Contents
+            // Animates visibility of layer: "S5-Y".
             CompositionContainerShape ContainerShape_131()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_132());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.357541889) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y
-            //     'S5-Y'.Transforms
-            //       'S5-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_132()
             {
@@ -2037,8 +2068,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S6-Y" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_133()
             {
                 var result = _c.CreateContainerShape();
@@ -2049,8 +2080,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S6-Y
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S6-Y'.Transforms
             CompositionContainerShape ContainerShape_134()
             {
@@ -2061,26 +2092,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S6-Y
-            //     'S6-Y'.Transforms
-            // 'S6-Y'.Contents
+            // Animates visibility of layer: "S6-Y".
             CompositionContainerShape ContainerShape_135()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_136());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.301675975) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.357541889) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S6-Y
-            //     'S6-Y'.Transforms
-            //       'S6-Y'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_136()
             {
@@ -2090,8 +2120,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S3-Y 2" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_137()
             {
                 var result = _c.CreateContainerShape();
@@ -2102,8 +2132,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 2
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S3-Y 2'.Transforms
             CompositionContainerShape ContainerShape_138()
             {
@@ -2114,26 +2144,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 2
-            //     'S3-Y 2'.Transforms
-            // 'S3-Y 2'.Contents
+            // Animates visibility of layer: "S3-Y 2".
             CompositionContainerShape ContainerShape_139()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_140());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_19());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.541899443) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.597765386) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 2
-            //     'S3-Y 2'.Transforms
-            //       'S3-Y 2'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_140()
             {
@@ -2143,8 +2172,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S4-Y 2" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_141()
             {
                 var result = _c.CreateContainerShape();
@@ -2155,8 +2184,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 2
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S4-Y 2'.Transforms
             CompositionContainerShape ContainerShape_142()
             {
@@ -2167,26 +2196,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 2
-            //     'S4-Y 2'.Transforms
-            // 'S4-Y 2'.Contents
+            // Animates visibility of layer: "S4-Y 2".
             CompositionContainerShape ContainerShape_143()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_144());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_19);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.541899443) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.597765386) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 2
-            //     'S4-Y 2'.Transforms
-            //       'S4-Y 2'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_144()
             {
@@ -2196,8 +2224,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S5-Y 2" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_145()
             {
                 var result = _c.CreateContainerShape();
@@ -2208,8 +2236,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 2
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S5-Y 2'.Transforms
             CompositionContainerShape ContainerShape_146()
             {
@@ -2220,26 +2248,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 2
-            //     'S5-Y 2'.Transforms
-            // 'S5-Y 2'.Contents
+            // Animates visibility of layer: "S5-Y 2".
             CompositionContainerShape ContainerShape_147()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_148());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_19);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.541899443) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.597765386) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 2
-            //     'S5-Y 2'.Transforms
-            //       'S5-Y 2'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_148()
             {
@@ -2249,8 +2276,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S11" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_149()
             {
                 var result = _c.CreateContainerShape();
@@ -2261,8 +2288,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S11
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S11'.Transforms
             CompositionContainerShape ContainerShape_150()
             {
@@ -2273,26 +2300,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S11
-            //     'S11'.Transforms
-            // 'S11'.Contents
+            // Animates visibility of layer: "S11".
             CompositionContainerShape ContainerShape_151()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_152());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_22());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.446927369) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.502793312) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S11
-            //     'S11'.Transforms
-            //       'S11'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_152()
             {
@@ -2302,8 +2328,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S12" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_153()
             {
                 var result = _c.CreateContainerShape();
@@ -2314,8 +2340,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S12
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S12'.Transforms
             CompositionContainerShape ContainerShape_154()
             {
@@ -2326,26 +2352,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S12
-            //     'S12'.Transforms
-            // 'S12'.Contents
+            // Animates visibility of layer: "S12".
             CompositionContainerShape ContainerShape_155()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_156());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_24());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.469273746) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.525139689) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S12
-            //     'S12'.Transforms
-            //       'S12'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_156()
             {
@@ -2355,8 +2380,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S13" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_157()
             {
                 var result = _c.CreateContainerShape();
@@ -2367,8 +2392,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S13
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S13'.Transforms
             CompositionContainerShape ContainerShape_158()
             {
@@ -2379,26 +2404,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S13
-            //     'S13'.Transforms
-            // 'S13'.Contents
+            // Animates visibility of layer: "S13".
             CompositionContainerShape ContainerShape_159()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_160());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_26());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.47486034) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.530726254) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S13
-            //     'S13'.Transforms
-            //       'S13'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_160()
             {
@@ -2408,8 +2432,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S3-Y 3" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_161()
             {
                 var result = _c.CreateContainerShape();
@@ -2420,8 +2444,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 3
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S3-Y 3'.Transforms
             CompositionContainerShape ContainerShape_162()
             {
@@ -2433,26 +2457,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 3
-            //     'S3-Y 3'.Transforms
-            // 'S3-Y 3'.Contents
+            // Animates visibility of layer: "S3-Y 3".
             CompositionContainerShape ContainerShape_163()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_164());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_28());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.418994427) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.463687152) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 3
-            //     'S3-Y 3'.Transforms
-            //       'S3-Y 3'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_164()
             {
@@ -2462,8 +2485,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S4-Y 3" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_165()
             {
                 var result = _c.CreateContainerShape();
@@ -2474,8 +2497,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 3
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S4-Y 3'.Transforms
             CompositionContainerShape ContainerShape_166()
             {
@@ -2487,26 +2510,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 3
-            //     'S4-Y 3'.Transforms
-            // 'S4-Y 3'.Contents
+            // Animates visibility of layer: "S4-Y 3".
             CompositionContainerShape ContainerShape_167()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_168());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_28);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.418994427) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.463687152) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 3
-            //     'S4-Y 3'.Transforms
-            //       'S4-Y 3'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_168()
             {
@@ -2516,8 +2538,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S5-Y 3" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_169()
             {
                 var result = _c.CreateContainerShape();
@@ -2528,8 +2550,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 3
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S5-Y 3'.Transforms
             CompositionContainerShape ContainerShape_170()
             {
@@ -2541,26 +2563,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 3
-            //     'S5-Y 3'.Transforms
-            // 'S5-Y 3'.Contents
+            // Animates visibility of layer: "S5-Y 3".
             CompositionContainerShape ContainerShape_171()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_172());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_28);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.418994427) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.463687152) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 3
-            //     'S5-Y 3'.Transforms
-            //       'S5-Y 3'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_172()
             {
@@ -2570,8 +2591,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S3-Y 4" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_173()
             {
                 var result = _c.CreateContainerShape();
@@ -2582,8 +2603,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 4
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S3-Y 4'.Transforms
             CompositionContainerShape ContainerShape_174()
             {
@@ -2595,26 +2616,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 4
-            //     'S3-Y 4'.Transforms
-            // 'S3-Y 4'.Contents
+            // Animates visibility of layer: "S3-Y 4".
             CompositionContainerShape ContainerShape_175()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_176());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_31());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.424580991) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.469273746) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 4
-            //     'S3-Y 4'.Transforms
-            //       'S3-Y 4'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_176()
             {
@@ -2624,8 +2644,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S4-Y 4" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_177()
             {
                 var result = _c.CreateContainerShape();
@@ -2636,8 +2656,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 4
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S4-Y 4'.Transforms
             CompositionContainerShape ContainerShape_178()
             {
@@ -2649,26 +2669,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 4
-            //     'S4-Y 4'.Transforms
-            // 'S4-Y 4'.Contents
+            // Animates visibility of layer: "S4-Y 4".
             CompositionContainerShape ContainerShape_179()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_180());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_31);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.424580991) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.469273746) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 4
-            //     'S4-Y 4'.Transforms
-            //       'S4-Y 4'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_180()
             {
@@ -2678,8 +2697,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            // Shape layer: "S5-Y 4" in asset: "Root".
+            // 'MASTER'.Transforms
+            // 'MASTER'.Transforms
             CompositionContainerShape ContainerShape_181()
             {
                 var result = _c.CreateContainerShape();
@@ -2690,8 +2709,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 4
+            // 'MASTER'.Transforms
+            //   'MASTER'.Transforms
             // 'S5-Y 4'.Transforms
             CompositionContainerShape ContainerShape_182()
             {
@@ -2703,26 +2722,25 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 4
-            //     'S5-Y 4'.Transforms
-            // 'S5-Y 4'.Contents
+            // Animates visibility of layer: "S5-Y 4".
             CompositionContainerShape ContainerShape_183()
             {
                 var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_184());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_31);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "(_.Progress < 0.424580991) ? Matrix3x2(0,0,0,0,0,0) : ((_.Progress < 0.469273746) ? Matrix3x2(1,0,0,1,0,0) : Matrix3x2(0,0,0,0,0,0))";
-                _reusableExpressionAnimation.SetReferenceParameter("_", _root);
-                result.StartAnimation("TransformMatrix", _reusableExpressionAnimation);
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 4
-            //     'S5-Y 4'.Transforms
-            //       'S5-Y 4'.Contents
+            // Visibility
             // Group: Shape 1
             CompositionContainerShape ContainerShape_184()
             {
@@ -2804,14 +2822,11 @@ namespace Compositions
                 return _cubicBezierEasingFunction_12 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.0599999987F, 1));
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            //       'T1b-B'.Contents
-            //         Group: Group 10
-            //           Path 1
-            //             Path 1.PathGeometry
-            //               TrimEnd
+            // Visibility
+            //   Group: Group 10
+            //     Path 1
+            //       Path 1.PathGeometry
+            //         TrimEnd
             CubicBezierEasingFunction CubicBezierEasingFunction_13()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.209999993F, 1));
@@ -2833,24 +2848,21 @@ namespace Compositions
                 return _cubicBezierEasingFunction_16 = _c.CreateCubicBezierEasingFunction(new Vector2(0.693000019F, 0), new Vector2(0.270000011F, 1));
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
-            //           TrimStart
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
+            //       Ellipse Path 1.EllipseGeometry
+            //         TrimStart
             CubicBezierEasingFunction CubicBezierEasingFunction_17()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 1), new Vector2(0.432000011F, 1));
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            //     'T1a-B'.Contents
-            //       Group: Group 9
-            //         Path 1
-            //           Path 1.PathGeometry
-            //             TrimEnd
+            // Visibility
+            //   Group: Group 9
+            //     Path 1
+            //       Path 1.PathGeometry
+            //         TrimEnd
             CubicBezierEasingFunction CubicBezierEasingFunction_18()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.672999978F, 1));
@@ -2916,10 +2928,9 @@ namespace Compositions
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.523000002F, 0), new Vector2(0.795000017F, 1));
             }
 
-            // 'O-Y'.Transforms
-            //   'O-Y'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_1p5_0()
             {
@@ -2933,10 +2944,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_1p5_1()
             {
@@ -2958,10 +2968,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            //   'Dot-Y'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_4p6()
             {
@@ -3376,10 +3385,9 @@ namespace Compositions
                 return _linearEasingFunction = _c.CreateLinearEasingFunction();
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-Y'.Contents
-            //     Group: Group 1
-            //       Path 1
+            // Visibility
+            //   Group: Group 1
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_00()
             {
@@ -3392,11 +3400,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-B'.Transforms
-            //     'E3-B'.Contents
-            //       Group: Group 1
-            //         Path 1
+            // Visibility
+            //   Group: Group 1
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_01()
             {
@@ -3409,10 +3415,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-Y'.Contents
-            //     Group: Group 6
-            //       Path 1
+            // Visibility
+            //   Group: Group 6
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_02()
             {
@@ -3425,11 +3430,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-B'.Transforms
-            //     'I-B'.Contents
-            //       Group: Group 6
-            //         Path 1
+            // Visibility
+            //   Group: Group 6
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_03()
             {
@@ -3442,10 +3445,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-Y'.Contents
-            //     Group: Group 3
-            //       Path 1
+            // Visibility
+            //   Group: Group 3
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_04()
             {
@@ -3458,11 +3460,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-B'.Transforms
-            //     'E2-B'.Contents
-            //       Group: Group 3
-            //         Path 1
+            // Visibility
+            //   Group: Group 3
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_05()
             {
@@ -3475,10 +3475,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-Y'.Contents
-            //     Group: Group 2
-            //       Path 1
+            // Visibility
+            //   Group: Group 2
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_06()
             {
@@ -3491,11 +3490,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-B'.Transforms
-            //     'E1-B'.Contents
-            //       Group: Group 2
-            //         Path 1
+            // Visibility
+            //   Group: Group 2
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_07()
             {
@@ -3534,12 +3531,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            //       'T2b-Y'.Contents
-            //         Group: Group 5
-            //           Path 1
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_09()
             {
@@ -3557,12 +3551,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            //       'T2a-Y'.Contents
-            //         Group: Group 7
-            //           Path 1
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_10()
             {
@@ -3580,12 +3571,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            //       'T2b-B'.Contents
-            //         Group: Group 5
-            //           Path 1
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_11()
             {
@@ -3603,12 +3591,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
-            //     'T1b-Y'.Transforms
-            //       'T1b-Y'.Contents
-            //         Group: Group 10
-            //           Path 1
+            // Visibility
+            //   Group: Group 10
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_12()
             {
@@ -3621,12 +3606,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            //       'T1b-B'.Contents
-            //         Group: Group 10
-            //           Path 1
+            // Visibility
+            //   Group: Group 10
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_13()
             {
@@ -3665,12 +3647,9 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            //       'T2a-B'.Contents
-            //         Group: Group 7
-            //           Path 1
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_15()
             {
@@ -3688,11 +3667,9 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            //     'T1a-B'.Contents
-            //       Group: Group 9
-            //         Path 1
+            // Visibility
+            //   Group: Group 9
+            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_16()
             {
@@ -3777,7 +3754,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_00());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_09());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3803,7 +3780,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_01());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_11());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3829,7 +3806,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_02());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_12());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3855,7 +3832,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_02);
+                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_12);
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3881,7 +3858,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_03());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_14());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3907,7 +3884,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_03);
+                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_14);
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3933,7 +3910,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_04());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_16());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3959,7 +3936,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_05());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_17());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3985,7 +3962,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_06());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_18());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4011,7 +3988,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_06);
+                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_18);
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4037,7 +4014,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_07());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_20());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4063,7 +4040,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_08());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_21());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4089,7 +4066,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_09());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_23());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4115,7 +4092,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_10());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_25());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4141,7 +4118,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_11());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_27());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4167,7 +4144,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_11);
+                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_27);
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4193,7 +4170,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_12());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_29());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4219,7 +4196,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_13());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_30());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4245,7 +4222,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_13);
+                result.StartAnimation("TEnd", _scalarAnimation_1_to_0_30);
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4271,7 +4248,7 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("TStart");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_14());
+                result.StartAnimation("TEnd", ScalarAnimation_1_to_0_32());
                 controller = result.TryGetAnimationController("TEnd");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4306,10 +4283,19 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("t0");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t1", _scalarAnimation_0_to_1_2);
+                result.StartAnimation("t1", ScalarAnimation_0_to_1_2());
                 controller = result.TryGetAnimationController("t1");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_0_to_0()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.0949720666F, 0, _stepEasingFunction_0);
                 return result;
             }
 
@@ -4324,11 +4310,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-Y'.Contents
-            //     Group: Group 1
-            //       Path 1
-            //         Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 1
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p316_0()
             {
@@ -4340,12 +4325,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-B'.Transforms
-            //     'E3-B'.Contents
-            //       Group: Group 1
-            //         Path 1
-            //           Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 1
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p316_1()
             {
@@ -4357,11 +4340,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-Y'.Contents
-            //     Group: Group 2
-            //       Path 1
-            //         Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 2
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p375_0()
             {
@@ -4373,12 +4355,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-B'.Transforms
-            //     'E1-B'.Contents
-            //       Group: Group 2
-            //         Path 1
-            //           Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 2
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p375_1()
             {
@@ -4390,11 +4370,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
+            //       Ellipse Path 1.EllipseGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p399()
             {
@@ -4407,11 +4386,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-Y'.Contents
-            //     Group: Group 3
-            //       Path 1
-            //         Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 3
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p43_0()
             {
@@ -4423,12 +4401,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-B'.Transforms
-            //     'E2-B'.Contents
-            //       Group: Group 3
-            //         Path 1
-            //           Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 3
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p43_1()
             {
@@ -4440,11 +4416,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-Y'.Contents
-            //     Group: Group 6
-            //       Path 1
-            //         Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 6
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p457_0()
             {
@@ -4456,12 +4431,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-B'.Transforms
-            //     'I-B'.Contents
-            //       Group: Group 6
-            //         Path 1
-            //           Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 6
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p457_1()
             {
@@ -4499,20 +4472,17 @@ namespace Compositions
             {
                 var result = _scalarAnimation_0_to_1_2 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.196966588F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.196966588F, 0, _stepEasingFunction_1);
                 result.InsertKeyFrame(0.245809957F, 1, CubicBezierEasingFunction_27());
-                result.InsertKeyFrame(0.245810062F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.245810062F, 0, _stepEasingFunction_1);
                 result.InsertKeyFrame(0.301675886F, 1, CubicBezierEasingFunction_28());
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
-            //     'T1b-Y'.Transforms
-            //       'T1b-Y'.Contents
-            //         Group: Group 10
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 10
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p117_to_1_0()
             {
@@ -4524,13 +4494,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            //       'T1b-B'.Contents
-            //         Group: Group 10
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 10
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p117_to_1_1()
             {
@@ -4542,12 +4509,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            //     'T1a-B'.Contents
-            //       Group: Group 9
-            //         Path 1
-            //           Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 9
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p249_to_0p891()
             {
@@ -4559,13 +4524,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            //       'T2b-Y'.Contents
-            //         Group: Group 5
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p29_to_0_0()
             {
@@ -4577,13 +4539,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            //       'T2b-B'.Contents
-            //         Group: Group 5
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p29_to_0_1()
             {
@@ -4595,13 +4554,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            //       'T2b-Y'.Contents
-            //         Group: Group 5
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p411_to_0p665_0()
             {
@@ -4613,13 +4569,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            //       'T2b-B'.Contents
-            //         Group: Group 5
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 5
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p411_to_0p665_1()
             {
@@ -4631,13 +4584,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            //       'T2a-Y'.Contents
-            //         Group: Group 7
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_0_0()
             {
@@ -4649,13 +4599,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            //       'T2a-B'.Contents
-            //         Group: Group 7
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_0_1()
             {
@@ -4667,13 +4614,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            //       'T2a-Y'.Contents
-            //         Group: Group 7
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_1_0()
             {
@@ -4685,13 +4629,10 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            //       'T2a-B'.Contents
-            //         Group: Group 7
-            //           Path 1
-            //             Path 1.PathGeometry
+            // Visibility
+            //   Group: Group 7
+            //     Path 1
+            //       Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_1_1()
             {
@@ -4977,8 +4918,98 @@ namespace Compositions
                 return result;
             }
 
-            // TEnd
+            // Visibility
             ScalarKeyFrameAnimation ScalarAnimation_1_to_0_00()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.469273746F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.569832385F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_01()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.43575418F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.519553065F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_02()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.463687152F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.536312878F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_03()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.441340774F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.525139689F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_04()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.329608947F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.87150836F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_05()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.424580991F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.513966501F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_06()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.402234644F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.497206718F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_07()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.391061455F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.899441361F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_08()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.156424582F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.301675975F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // TEnd
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_09()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -4989,8 +5020,17 @@ namespace Compositions
                 return result;
             }
 
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_10()
+            {
+                var result = _scalarAnimation_1_to_0_10 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.167597771F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.206703916F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_01()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_11()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5002,9 +5042,9 @@ namespace Compositions
             }
 
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_02()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_12()
             {
-                var result = _scalarAnimation_1_to_0_02 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarAnimation_1_to_0_12 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.363128483F, 1, _linearEasingFunction);
@@ -5013,10 +5053,19 @@ namespace Compositions
                 return result;
             }
 
-            // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_03()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_13()
             {
-                var result = _scalarAnimation_1_to_0_03 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarAnimation_1_to_0_13 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.363128483F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.418994427F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // TEnd
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_14()
+            {
+                var result = _scalarAnimation_1_to_0_14 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.301675975F, 1, _linearEasingFunction);
@@ -5025,8 +5074,17 @@ namespace Compositions
                 return result;
             }
 
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_15()
+            {
+                var result = _scalarAnimation_1_to_0_15 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.301675975F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.357541889F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_04()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_16()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5038,7 +5096,7 @@ namespace Compositions
             }
 
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_05()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_17()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5050,9 +5108,9 @@ namespace Compositions
             }
 
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_06()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_18()
             {
-                var result = _scalarAnimation_1_to_0_06 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarAnimation_1_to_0_18 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.541899443F, 1, _linearEasingFunction);
@@ -5061,8 +5119,17 @@ namespace Compositions
                 return result;
             }
 
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_19()
+            {
+                var result = _scalarAnimation_1_to_0_19 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.541899443F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.597765386F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_07()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_20()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5074,7 +5141,7 @@ namespace Compositions
             }
 
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_08()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_21()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5085,8 +5152,18 @@ namespace Compositions
                 return result;
             }
 
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_22()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.446927369F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.502793312F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_09()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_23()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5097,8 +5174,18 @@ namespace Compositions
                 return result;
             }
 
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_24()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.469273746F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.525139689F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_10()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_25()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5109,10 +5196,20 @@ namespace Compositions
                 return result;
             }
 
-            // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_11()
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_26()
             {
-                var result = _scalarAnimation_1_to_0_11 = _c.CreateScalarKeyFrameAnimation();
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.47486034F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.530726254F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
+            // TEnd
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_27()
+            {
+                var result = _scalarAnimation_1_to_0_27 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.418994427F, 1, _linearEasingFunction);
@@ -5121,8 +5218,17 @@ namespace Compositions
                 return result;
             }
 
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_28()
+            {
+                var result = _scalarAnimation_1_to_0_28 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.418994427F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.463687152F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_12()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_29()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5134,9 +5240,9 @@ namespace Compositions
             }
 
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_13()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_30()
             {
-                var result = _scalarAnimation_1_to_0_13 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarAnimation_1_to_0_30 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.424580991F, 1, _linearEasingFunction);
@@ -5145,8 +5251,17 @@ namespace Compositions
                 return result;
             }
 
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_31()
+            {
+                var result = _scalarAnimation_1_to_0_31 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.424580991F, 1, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.469273746F, 0, _stepEasingFunction_0);
+                return result;
+            }
+
             // TEnd
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_14()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_0_32()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
@@ -5157,11 +5272,10 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
-            //     Group: Ellipse 1
-            //       Ellipse Path 1
-            //         Ellipse Path 1.EllipseGeometry
+            // Visibility
+            //   Group: Ellipse 1
+            //     Ellipse Path 1
+            //       Ellipse Path 1.EllipseGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_1_to_0p88()
             {
@@ -5170,6 +5284,112 @@ namespace Compositions
                 result.InsertKeyFrame(0, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.301675975F, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.351955295F, 0.879999995F, _cubicBezierEasingFunction_04);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_00()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.536312878F, 1, StepEasingFunction_0());
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_01()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.513966501F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_02()
+            {
+                var result = _scalarAnimation_1_to_1_02 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.452513963F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_03()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.480446935F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_04()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.469273746F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_05()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.458100557F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_06()
+            {
+                var result = _scalarAnimation_1_to_1_06 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.301675975F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_07()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.329608947F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_08()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.418994427F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_09()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.391061455F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_10()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.0893854722F, 1, _stepEasingFunction_0);
+                return result;
+            }
+
+            // Visibility
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_11()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.100558661F, 1, _stepEasingFunction_0);
                 return result;
             }
 
@@ -5186,101 +5406,101 @@ namespace Compositions
                 var result = _c.CreateShapeVisual();
                 result.Size = new Vector2(375, 667);
                 var shapes = result.Shapes;
-                // Root.BG
+                // 'BG'.Transforms
                 shapes.Add(ContainerShape_000());
-                // Root.Dot-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_002());
-                // Root.E3-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_007());
-                // Root.E3-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_011());
-                // Root.I-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_016());
-                // Root.I-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_020());
-                // Root.E2-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_025());
-                // Root.E2-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_029());
-                // Root.E1-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_034());
-                // Root.E1-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_038());
-                // Root.T1a-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_043());
-                // Root.T2b-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_047());
-                // Root.T2a-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_051());
-                // Root.T2b-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_055());
-                // Root.T1b-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_059());
-                // Root.T1b-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_063());
-                // Root.O-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_067());
-                // Root.O-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_071());
-                // Root.T1a-Y 2
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_075());
-                // Root.T2a-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_079());
-                // Root.T1a-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_083());
-                // Root.Dot-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_088());
-                // Root.L-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_093());
-                // Root.L-B
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_097());
-                // Root.Dot1
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_101());
-                // Root.S1-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_105());
-                // Root.S2-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_109());
-                // Root.S7
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_113());
-                // Root.S8
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_117());
-                // Root.S3-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_121());
-                // Root.S4-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_125());
-                // Root.S5-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_129());
-                // Root.S6-Y
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_133());
-                // Root.S3-Y 2
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_137());
-                // Root.S4-Y 2
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_141());
-                // Root.S5-Y 2
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_145());
-                // Root.S11
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_149());
-                // Root.S12
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_153());
-                // Root.S13
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_157());
-                // Root.S3-Y 3
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_161());
-                // Root.S4-Y 3
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_165());
-                // Root.S5-Y 3
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_169());
-                // Root.S3-Y 4
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_173());
-                // Root.S4-Y 4
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_177());
-                // Root.S5-Y 4
+                // 'MASTER'.Transforms
                 shapes.Add(ContainerShape_181());
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.BG
+            // 'MASTER'.Transforms
+            //   'BG'.Transforms
             //     Group: Rectangle 1
             // Rectangle Path 1
             CompositionSpriteShape SpriteShape_00()
@@ -5291,9 +5511,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            //   'Dot-Y'.Contents
-            //     Group: Ellipse 1
+            // Visibility
+            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_01()
             {
@@ -5303,9 +5522,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-Y'.Contents
-            //     Group: Group 1
+            // Visibility
+            //   Group: Group 1
             // Path 1
             CompositionSpriteShape SpriteShape_02()
             {
@@ -5320,10 +5538,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            //   'E3-B'.Transforms
-            //     'E3-B'.Contents
-            //       Group: Group 1
+            // Visibility
+            //   Group: Group 1
             // Path 1
             CompositionSpriteShape SpriteShape_03()
             {
@@ -5338,9 +5554,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-Y'.Contents
-            //     Group: Group 6
+            // Visibility
+            //   Group: Group 6
             // Path 1
             CompositionSpriteShape SpriteShape_04()
             {
@@ -5355,10 +5570,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            //   'I-B'.Transforms
-            //     'I-B'.Contents
-            //       Group: Group 6
+            // Visibility
+            //   Group: Group 6
             // Path 1
             CompositionSpriteShape SpriteShape_05()
             {
@@ -5373,9 +5586,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-Y'.Contents
-            //     Group: Group 3
+            // Visibility
+            //   Group: Group 3
             // Path 1
             CompositionSpriteShape SpriteShape_06()
             {
@@ -5390,10 +5602,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            //   'E2-B'.Transforms
-            //     'E2-B'.Contents
-            //       Group: Group 3
+            // Visibility
+            //   Group: Group 3
             // Path 1
             CompositionSpriteShape SpriteShape_07()
             {
@@ -5408,9 +5618,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-Y'.Contents
-            //     Group: Group 2
+            // Visibility
+            //   Group: Group 2
             // Path 1
             CompositionSpriteShape SpriteShape_08()
             {
@@ -5425,10 +5634,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            //   'E1-B'.Transforms
-            //     'E1-B'.Contents
-            //       Group: Group 2
+            // Visibility
+            //   Group: Group 2
             // Path 1
             CompositionSpriteShape SpriteShape_09()
             {
@@ -5443,9 +5650,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-Y'.Contents
-            //     Group: Group 9
+            // Visibility
+            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_10()
             {
@@ -5460,11 +5666,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-Y
-            //     'T2b-Y'.Transforms
-            //       'T2b-Y'.Contents
-            //         Group: Group 5
+            // Visibility
+            //   Group: Group 5
             // Path 1
             CompositionSpriteShape SpriteShape_11()
             {
@@ -5479,11 +5682,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-Y
-            //     'T2a-Y'.Transforms
-            //       'T2a-Y'.Contents
-            //         Group: Group 7
+            // Visibility
+            //   Group: Group 7
             // Path 1
             CompositionSpriteShape SpriteShape_12()
             {
@@ -5498,11 +5698,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2b-B
-            //     'T2b-B'.Transforms
-            //       'T2b-B'.Contents
-            //         Group: Group 5
+            // Visibility
+            //   Group: Group 5
             // Path 1
             CompositionSpriteShape SpriteShape_13()
             {
@@ -5517,11 +5714,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-Y
-            //     'T1b-Y'.Transforms
-            //       'T1b-Y'.Contents
-            //         Group: Group 10
+            // Visibility
+            //   Group: Group 10
             // Path 1
             CompositionSpriteShape SpriteShape_14()
             {
@@ -5537,11 +5731,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T1b-B
-            //     'T1b-B'.Transforms
-            //       'T1b-B'.Contents
-            //         Group: Group 10
+            // Visibility
+            //   Group: Group 10
             // Path 1
             CompositionSpriteShape SpriteShape_15()
             {
@@ -5557,9 +5748,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-Y'.Transforms
-            //   'O-Y'.Contents
-            //     Group: Ellipse 1
+            // Visibility
+            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_16()
             {
@@ -5571,9 +5761,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
-            //   'O-B'.Contents
-            //     Group: Ellipse 1
+            // Visibility
+            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_17()
             {
@@ -5588,9 +5777,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y 2'.Transforms
-            //   'T1a-Y 2'.Contents
-            //     Group: Group 9
+            // Visibility
+            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_18()
             {
@@ -5605,11 +5793,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.T2a-B
-            //     'T2a-B'.Transforms
-            //       'T2a-B'.Contents
-            //         Group: Group 7
+            // Visibility
+            //   Group: Group 7
             // Path 1
             CompositionSpriteShape SpriteShape_19()
             {
@@ -5624,10 +5809,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            //   'T1a-B'.Transforms
-            //     'T1a-B'.Contents
-            //       Group: Group 9
+            // Visibility
+            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_20()
             {
@@ -5642,9 +5825,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            //   'Dot-Y'.Contents
-            //     Group: Ellipse 1
+            // Visibility
+            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_21()
             {
@@ -5654,11 +5836,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-Y
-            //     'L-Y'.Transforms
-            //       'L-Y'.Contents
-            //         Group: Group 8
+            // Visibility
+            //   Group: Group 8
             // Path 1
             CompositionSpriteShape SpriteShape_22()
             {
@@ -5673,11 +5852,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.L-B
-            //     'L-B'.Transforms
-            //       'L-B'.Contents
-            //         Group: Group 8
+            // Visibility
+            //   Group: Group 8
             // Path 1
             CompositionSpriteShape SpriteShape_23()
             {
@@ -5692,9 +5868,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot1'.Transforms
-            //   'Dot1'.Contents
-            //     Group: Ellipse 1
+            // Visibility
+            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_24()
             {
@@ -5704,11 +5879,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S1-Y
-            //     'S1-Y'.Transforms
-            //       'S1-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_25()
             {
@@ -5723,11 +5895,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S2-Y
-            //     'S2-Y'.Transforms
-            //       'S2-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_26()
             {
@@ -5742,11 +5911,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S7
-            //     'S7'.Transforms
-            //       'S7'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_27()
             {
@@ -5761,11 +5927,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S8
-            //     'S8'.Transforms
-            //       'S8'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_28()
             {
@@ -5780,11 +5943,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y
-            //     'S3-Y'.Transforms
-            //       'S3-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_29()
             {
@@ -5799,11 +5959,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y
-            //     'S4-Y'.Transforms
-            //       'S4-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_30()
             {
@@ -5818,11 +5975,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y
-            //     'S5-Y'.Transforms
-            //       'S5-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_31()
             {
@@ -5837,11 +5991,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S6-Y
-            //     'S6-Y'.Transforms
-            //       'S6-Y'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_32()
             {
@@ -5856,11 +6007,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 2
-            //     'S3-Y 2'.Transforms
-            //       'S3-Y 2'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_33()
             {
@@ -5875,11 +6023,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 2
-            //     'S4-Y 2'.Transforms
-            //       'S4-Y 2'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_34()
             {
@@ -5894,11 +6039,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 2
-            //     'S5-Y 2'.Transforms
-            //       'S5-Y 2'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_35()
             {
@@ -5913,11 +6055,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S11
-            //     'S11'.Transforms
-            //       'S11'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_36()
             {
@@ -5932,11 +6071,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S12
-            //     'S12'.Transforms
-            //       'S12'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_37()
             {
@@ -5951,11 +6087,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S13
-            //     'S13'.Transforms
-            //       'S13'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_38()
             {
@@ -5970,11 +6103,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 3
-            //     'S3-Y 3'.Transforms
-            //       'S3-Y 3'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_39()
             {
@@ -5989,11 +6119,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 3
-            //     'S4-Y 3'.Transforms
-            //       'S4-Y 3'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_40()
             {
@@ -6008,11 +6135,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 3
-            //     'S5-Y 3'.Transforms
-            //       'S5-Y 3'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_41()
             {
@@ -6027,11 +6151,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S3-Y 4
-            //     'S3-Y 4'.Transforms
-            //       'S3-Y 4'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_42()
             {
@@ -6046,11 +6167,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S4-Y 4
-            //     'S4-Y 4'.Transforms
-            //       'S4-Y 4'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_43()
             {
@@ -6065,11 +6183,8 @@ namespace Compositions
                 return result;
             }
 
-            // Root.S5-Y 4
-            //   Root.S5-Y 4
-            //     'S5-Y 4'.Transforms
-            //       'S5-Y 4'.Contents
-            //         Group: Shape 1
+            // Visibility
+            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_44()
             {
@@ -6084,9 +6199,16 @@ namespace Compositions
                 return result;
             }
 
-            StepEasingFunction StepEasingFunction()
+            StepEasingFunction StepEasingFunction_0()
             {
-                var result = _stepEasingFunction = _c.CreateStepEasingFunction();
+                var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
+                result.IsFinalStepSingleFrame = true;
+                return result;
+            }
+
+            StepEasingFunction StepEasingFunction_1()
+            {
+                var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
                 result.IsInitialStepSingleFrame = true;
                 return result;
             }
@@ -6098,7 +6220,7 @@ namespace Compositions
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(43.2630005F, 59.75F), LinearEasingFunction());
-                result.InsertKeyFrame(0.536312878F, new Vector2(43.2630005F, 59.75F), _linearEasingFunction);
+                result.InsertKeyFrame(0.536312878F, new Vector2(43.2630005F, 59.75F), LinearEasingFunction());
                 result.InsertKeyFrame(0.603351951F, new Vector2(62.5130005F, 59.75F), CubicBezierEasingFunction_00());
                 result.InsertKeyFrame(0.642458081F, new Vector2(63.7630005F, 59.75F), CubicBezierEasingFunction_01());
                 return result;
@@ -6114,8 +6236,8 @@ namespace Compositions
                 result.InsertKeyFrame(0.536312878F, new Vector2(164.781998F, 57.4729996F), _linearEasingFunction);
                 result.InsertKeyFrame(0.553072631F, new Vector2(164.781998F, 55.4729996F), CubicBezierEasingFunction_02());
                 result.InsertKeyFrame(0.569832385F, new Vector2(164.781998F, 57.4729996F), CubicBezierEasingFunction_03());
-                result.InsertKeyFrame(0.586592197F, new Vector2(164.781998F, 56.9090004F), _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.603351951F, new Vector2(164.781998F, 57.4729996F), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.586592197F, new Vector2(164.781998F, 56.9090004F), CubicBezierEasingFunction_02());
+                result.InsertKeyFrame(0.603351951F, new Vector2(164.781998F, 57.4729996F), CubicBezierEasingFunction_03());
                 return result;
             }
 
@@ -6199,9 +6321,9 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(-62.7919998F, 73.0569992F), _linearEasingFunction);
                 result.InsertKeyFrame(0.17318435F, new Vector2(-62.7919998F, 73.0569992F), _linearEasingFunction);
                 result.InsertKeyFrame(0.196966484F, new Vector2(-53.7919998F, 7.55700016F), _cubicBezierEasingFunction_04);
-                result.InsertExpressionKeyFrame(0.245809957F, "(Pow(1 - _.t0, 3) * Vector2((-53.7919998),7.55700016)) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-53.7919998),7.55700016)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-52.8232918),(-71.0796814))) + (Pow(_.t0, 3) * Vector2((-33.6669998),(-72.8180008)))", StepEasingFunction());
-                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t0, 3) * Vector2((-33.6669998),(-72.8180008))) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-17.4594727),(-74.2887344))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-14.1669998),102.181999)) + (Pow(_.t0, 3) * Vector2((-14.1669998),102.181999))", _stepEasingFunction);
-                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.245809957F, "(Pow(1 - _.t0, 3) * Vector2((-53.792),7.557)) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-53.792),7.557)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-52.82329),(-71.07968))) + (Pow(_.t0, 3) * Vector2((-33.667),(-72.818)))", StepEasingFunction_1());
+                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t0, 3) * Vector2((-33.667),(-72.818))) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-17.45947),(-74.28873))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-14.167),102.182)) + (Pow(_.t0, 3) * Vector2((-14.167),102.182))", StepEasingFunction_1());
+                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), StepEasingFunction_1());
                 result.InsertKeyFrame(0.351955295F, new Vector2(-14.1669998F, 59.1819992F), CubicBezierEasingFunction_15());
                 result.InsertKeyFrame(0.407821238F, new Vector2(-14.1669998F, 62.1819992F), CubicBezierEasingFunction_16());
                 return result;
@@ -6217,9 +6339,9 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(-62.7919998F, 73.0569992F), _linearEasingFunction);
                 result.InsertKeyFrame(0.17318435F, new Vector2(-62.7919998F, 73.0569992F), _linearEasingFunction);
                 result.InsertKeyFrame(0.196966484F, new Vector2(-53.7919998F, 7.55700016F), _cubicBezierEasingFunction_04);
-                result.InsertExpressionKeyFrame(0.245809957F, "(Pow(1 - _.t1, 3) * Vector2((-53.7919998),7.55700016)) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-53.7919998),7.55700016)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2((-52.8232918),(-71.0796814))) + (Pow(_.t1, 3) * Vector2((-33.6669998),(-72.8180008)))", _stepEasingFunction);
-                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t1, 3) * Vector2((-33.6669998),(-72.8180008))) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-17.4594727),(-74.2887344))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2((-14.1669998),102.181999)) + (Pow(_.t1, 3) * Vector2((-14.1669998),102.181999))", _stepEasingFunction);
-                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.245809957F, "(Pow(1 - _.t1, 3) * Vector2((-53.792),7.557)) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-53.792),7.557)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2((-52.82329),(-71.07968))) + (Pow(_.t1, 3) * Vector2((-33.667),(-72.818)))", _stepEasingFunction_1);
+                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t1, 3) * Vector2((-33.667),(-72.818))) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-17.45947),(-74.28873))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2((-14.167),102.182)) + (Pow(_.t1, 3) * Vector2((-14.167),102.182))", _stepEasingFunction_1);
+                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), _stepEasingFunction_1);
                 result.InsertKeyFrame(0.351955295F, new Vector2(-14.1669998F, 59.1819992F), _cubicBezierEasingFunction_15);
                 result.InsertKeyFrame(0.407821238F, new Vector2(-14.1669998F, 62.1819992F), _cubicBezierEasingFunction_16);
                 return result;

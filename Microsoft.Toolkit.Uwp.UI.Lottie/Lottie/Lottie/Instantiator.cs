@@ -87,6 +87,10 @@ namespace Lottie
             {
                 target.Scale = Vector2(source.Scale);
             }
+            if (source.TransformMatrix.HasValue)
+            {
+                target.TransformMatrix = Matrix3x2(source.TransformMatrix.Value);
+            }
             return target;
         }
 
@@ -105,6 +109,10 @@ namespace Lottie
             if (source.Offset.HasValue)
             {
                 target.Offset = Vector3(source.Offset);
+            }
+            if (source.Opacity.HasValue)
+            {
+                target.Opacity = source.Opacity.Value;
             }
             if (source.RotationAngleInDegrees.HasValue)
             {

@@ -9,6 +9,7 @@
     <Page.Resources>
         <local:VisiblityConverter x:Key="VisibilityConverter"/>
         <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
+        <local:FloatFormatter x:Key="floatFormatter"/>
         <SolidColorBrush x:Key="ArtboardBrush" Color="White"/>
     </Page.Resources>
 
@@ -31,6 +32,47 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- Paint palette -->
+                <Button Style="{StaticResource ControlsButtonStyle}"
+                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                        ToolTipService.ToolTip="Background color"
+                        >
+                    <Button.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource AcrylicFlyoutPresenter}">
+                            <ColorPicker
+                                Background="Transparent"
+                                ColorSpectrumShape="Ring"
+                                IsColorPreviewVisible="True"
+                                IsColorChannelTextInputVisible="False"
+                                IsHexInputVisible="True"
+                                Color="{Binding Source={StaticResource ArtboardBrush}, Path=Color, Mode=TwoWay}" 
+                                IsColorSpectrumVisible="True" 
+                                IsColorSliderVisible="True" 
+                                ColorSpectrumComponents="HueSaturation"  />
+                        </Flyout>
+                    </Button.Flyout>
+                    &#xe790;
+                </Button>
+                <!-- Play speed -->
+                <Button Style="{StaticResource ControlsButtonStyle}"
+                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                        ToolTipService.ToolTip="Play speed"
+                        >
+                    <Button.Flyout>
+                        <Flyout FlyoutPresenterStyle="{StaticResource AcrylicFlyoutPresenter}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock>Play speed =</TextBlock>
+                                    <TextBlock Text="{x:Bind _stage.Player.PlaybackRate, Mode=OneWay, Converter={StaticResource floatFormatter}}"/>
+                                </StackPanel>
+                                <Slider Width="300"
+                                        Minimum="-2.5" Maximum="2.5" StepFrequency="0.1" HorizontalAlignment="Stretch"
+                                        Value="{x:Bind _stage.Player.PlaybackRate, Mode=TwoWay}" TickFrequency="0.5" SmallChange="0.1" LargeChange="1" TickPlacement="BottomRight" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                    &#xEC4a;
+                </Button>
                 <!-- Issues -->
                 <Button Style="{StaticResource ControlsButtonStyle}"
                         IsEnabled="{x:Bind _stage.PlayerHasIssues, Mode=OneWay}"
@@ -57,28 +99,6 @@
                     </Button.Flyout>
                     &#xE7BA;
                 </Button>
-                <!-- Paint palette -->
-                <Button Style="{StaticResource ControlsButtonStyle}"
-                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
-                        ToolTipService.ToolTip="Background color"
-                        >
-                    <Button.Flyout>
-                        <Flyout FlyoutPresenterStyle="{StaticResource AcrylicFlyoutPresenter}">
-                            <ColorPicker
-                                Background="Transparent"
-                                ColorSpectrumShape="Ring"
-                                IsColorPreviewVisible="True"
-                                IsColorChannelTextInputVisible="False"
-                                IsHexInputVisible="True"
-                                Color="{Binding Source={StaticResource ArtboardBrush}, Path=Color, Mode=TwoWay}" 
-                                IsColorSpectrumVisible="True" 
-                                IsColorSliderVisible="True" 
-                                ColorSpectrumComponents="HueSaturation"  />
-                        </Flyout>
-                    </Button.Flyout>
-                    &#xe790;
-                </Button>
-
                 <!-- Save as: e792. Save: e74e-->
                 <Button Style="{StaticResource ControlsButtonStyle}" 
                     IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"

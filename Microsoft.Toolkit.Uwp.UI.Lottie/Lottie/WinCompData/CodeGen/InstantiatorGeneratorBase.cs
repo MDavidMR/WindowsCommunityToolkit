@@ -710,6 +710,10 @@ namespace WinCompData.CodeGen
             {
                 builder.WriteLine($"result{Deref}Offset = {Vector3(obj.Offset.Value)};");
             }
+            if (obj.Opacity.HasValue)
+            {
+                builder.WriteLine($"result{Deref}Opacity = {Float(obj.Opacity.Value)};");
+            }
             if (obj.RotationAngleInDegrees.HasValue)
             {
                 builder.WriteLine($"result{Deref}RotationAngleInDegrees = {Float(obj.RotationAngleInDegrees.Value)};");
@@ -757,6 +761,10 @@ namespace WinCompData.CodeGen
             if (obj.Scale.HasValue)
             {
                 builder.WriteLine($"result{Deref}Scale = {Vector2(obj.Scale.Value)};");
+            }
+            if (obj.TransformMatrix.HasValue)
+            {
+                builder.WriteLine($"result{Deref}TransformMatrix = {Matrix3x2(obj.TransformMatrix.Value)};");
             }
         }
 

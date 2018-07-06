@@ -23,6 +23,10 @@
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>1FC2381D85CB6B9131E884D1E13F4AE32BC4AA94</PackageCertificateThumbprint>
     <AppxPackageDir>\\scratch2\scratch\simeonc\Lottie</AppxPackageDir>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <AppInstallerUri>\\scratch2\scratch\simeonc\Lottie</AppInstallerUri>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -186,7 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.8</Version>
+      <Version>6.1.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

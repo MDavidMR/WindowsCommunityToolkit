@@ -120,7 +120,7 @@ namespace LottieViewer
 
             // Generate the .cpp and the .h text.
             diagnostics.GenerateCxCode(suggestedClassName, hFile.Name, out var cppText, out var hText);
-            
+
             // Write the .cpp file.
             await FileIO.WriteTextAsync(cppFile, cppText);
 
@@ -340,6 +340,21 @@ namespace LottieViewer
             throw new NotImplementedException();
         }
     }
+
+    public sealed class FloatFormatter : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
+        {
+            return ((double)value).ToString("0.#");
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            // Only support one way binding.
+            throw new NotImplementedException();
+        }
+    }
+
     public sealed class LottieCompositionDiagnosticsFormatter : IValueConverter
     {
         static string MSecs(TimeSpan timeSpan) => $"{timeSpan.TotalMilliseconds.ToString("#,##0.0")} mSecs";

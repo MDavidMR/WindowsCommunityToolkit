@@ -8,11 +8,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LottiePlayer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("LottieLibrary")]
+[assembly: AssemblyDescription("Loads Lottie .json files for use by CompositionPlayer and for codegen.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("LottiePlayer")]
+[assembly: AssemblyProduct("Lottie")]
 [assembly: AssemblyCopyright("Copyright © Microsoft")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

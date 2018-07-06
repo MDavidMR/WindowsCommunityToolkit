@@ -61,14 +61,12 @@ namespace WinCompData.CodeGen
             builder.WriteLine("Compositor compositor,");
             builder.WriteLine("out Visual rootVisual,");
             builder.WriteLine("out Vector2 size,");
-            builder.WriteLine("out CompositionPropertySet progressPropertySet,");
             builder.WriteLine("out TimeSpan duration,");
             builder.WriteLine("out object diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine("rootVisual = Instantiator.InstantiateComposition(compositor);");
             builder.WriteLine($"size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine("progressPropertySet = rootVisual.Properties;");
             builder.WriteLine($"duration = {_stringifier.TimeSpan(info.CompositionDuration)};");
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("return true;");

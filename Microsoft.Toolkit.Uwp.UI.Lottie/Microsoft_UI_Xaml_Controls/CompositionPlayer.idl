@@ -10,14 +10,6 @@ namespace Microsoft_UI_Xaml_Controls
             out IInspectable diagnostics);
     };
 
-    struct CompositionSegment
-    {
-        Double FromProgress;
-        Double ToProgress;
-        Boolean IsLoopingEnabled;
-        Boolean ReverseAnimation;
-    };
-
     [default_interface]
     [contentproperty("Source")]
     runtimeclass CompositionPlayer : Windows.UI.Xaml.FrameworkElement
@@ -36,7 +28,6 @@ namespace Microsoft_UI_Xaml_Controls
         Boolean IsLoopingEnabled;
         Boolean IsPlaying{ get; };
         Double PlaybackRate;
-        Boolean ReverseAnimation{ get; };
 
         Windows.UI.Composition.CompositionObject ProgressObject{ get; };
 
@@ -44,9 +35,7 @@ namespace Microsoft_UI_Xaml_Controls
         Windows.UI.Xaml.Media.Stretch Stretch;
 
         void Pause();
-        void Play();
-        Windows.Foundation.IAsyncAction PlayAsync();
-        Windows.Foundation.IAsyncAction PlayAsync(CompositionSegment segment);
+        Windows.Foundation.IAsyncAction PlayAsync(Double fromProgress, Double toProgress, Double playbackRate, Boolean looped);
         void Resume();
         void SetProgress(Double progress);
         void Stop();
@@ -61,7 +50,6 @@ namespace Microsoft_UI_Xaml_Controls
         static Windows.UI.Xaml.DependencyProperty IsLoopingEnabledProperty{ get; };
         static Windows.UI.Xaml.DependencyProperty IsPlayingProperty{ get; };
         static Windows.UI.Xaml.DependencyProperty PlaybackRateProperty{ get; };
-        static Windows.UI.Xaml.DependencyProperty ReverseAnimationProperty{ get; };
         static Windows.UI.Xaml.DependencyProperty SourceProperty{ get; };
         static Windows.UI.Xaml.DependencyProperty StretchProperty{ get; };
         static Windows.UI.Xaml.DependencyProperty ToProgressProperty{ get; };

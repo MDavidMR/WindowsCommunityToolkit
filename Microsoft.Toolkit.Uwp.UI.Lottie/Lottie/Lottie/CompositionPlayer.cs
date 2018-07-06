@@ -92,9 +92,6 @@ namespace Lottie
             RegisterDP(nameof(PlaybackRate), 1.0,
                 (owner, oldValue, newValue) => owner.HandlePlaybackRateChanged(oldValue, newValue));
 
-        public static DependencyProperty ReverseAnimationProperty { get; } =
-            RegisterDP(nameof(ReverseAnimation), false);
-
         public static DependencyProperty SourceProperty { get; } =
             RegisterDP(nameof(Source), (ICompositionSource)null,
                 (owner, oldValue, newValue) => owner.HandleSourcePropertyChanged(oldValue, newValue));
@@ -183,15 +180,6 @@ namespace Lottie
 
         public bool IsPlaying => (bool)GetValue(IsPlayingProperty);
 
-        /// <summary>
-        /// If true, the animation will play backwards, from <see cref="ToProgress"/> to <see cref="FromProgress"/>.
-        /// </summary>
-        public bool ReverseAnimation
-        {
-            get => (bool)GetValue(ReverseAnimationProperty);
-            set => SetValue(ReverseAnimationProperty, value);
-        }
-
         public double PlaybackRate
         {
             get => (double)GetValue(PlaybackRateProperty);
@@ -230,13 +218,13 @@ namespace Lottie
         /// Plays the composition.
         /// </summary>
         public IAsyncAction PlayAsync() =>
-            PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, IsLoopingEnabled, ReverseAnimation));
+            PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, PlaybackRate, IsLoopingEnabled));
 
         /// <summary>
         /// Plays the composition.
         /// </summary>
         public void Play() =>
-            _PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, IsLoopingEnabled, ReverseAnimation));
+            _PlayAsync(new CompositionSegment(null, FromProgress, ToProgress, PlaybackRate, IsLoopingEnabled));
 
         public void SetProgress(double progress)
         {
@@ -324,7 +312,7 @@ namespace Lottie
             if (_compositionRoot == null)
             {
                 // Enqueue a command.
-                var playCommand = new PlayAsyncCommand(segment.FromProgress, segment.ToProgress, segment.IsLoopingEnabled, segment.ReverseAnimation);
+                var playCommand = new PlayAsyncCommand(segment.FromProgress, segment.ToProgress, segment.PlaybackRate, segment.IsLoopingEnabled);
                 _queuedCommands.Add(playCommand);
                 return playCommand.Task;
             }
@@ -332,7 +320,7 @@ namespace Lottie
             {
                 _requestSeen = true;
                 Debug.WriteLine($"Playing segment {segment.Name}");
-                return RunAnimationAsync(segment.FromProgress, segment.ToProgress, segment.IsLoopingEnabled, segment.ReverseAnimation);
+                return RunAnimationAsync(segment.FromProgress, segment.ToProgress, segment.PlaybackRate, segment.IsLoopingEnabled);
             }
         }
 
@@ -719,7 +707,7 @@ namespace Lottie
                                     // Hook up the TaskCompletionSource to complete the 
                                     // original play request when the animation completes.
                                     var playCommand = (PlayAsyncCommand)command;
-                                    RunAnimationAsync(playCommand.FromProgress, playCommand.ToProgress, playCommand.Loop, playCommand.Reverse).
+                                    RunAnimationAsync(playCommand.FromProgress, playCommand.ToProgress, playCommand.PlaybackRate, playCommand.Loop).
                                         GetAwaiter().
                                             OnCompleted(playCommand.CompleteTask);
                                 }
@@ -753,7 +741,7 @@ namespace Lottie
 
         // Creates and starts an animation on the progress property. The task completes
         // when the animation is stopped or completes.
-        Task RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
+        Task RunAnimationAsync(double fromProgress, double toProgress, double playbackRate, bool looped)
         {
             Debug.WriteLine($"Play requested of segment from {fromProgress} to {toProgress}");
 
@@ -798,34 +786,17 @@ namespace Lottie
             playAnimation.Duration = duration;
             var linearEasing = compositor.CreateLinearEasingFunction();
 
-            if (reversed)
+            // Play forwards from fromProgress to toProgress
+            playAnimation.InsertKeyFrame(0, from);
+            if (from > to)
             {
-                // Play backwards from toProgress to fromProgress
-                playAnimation.InsertKeyFrame(0, to);
-                if (from > to)
-                {
-                    // Play to the beginning.
-                    var timeToBeginning = to / (to + (1 - from));
-                    playAnimation.InsertKeyFrame(timeToBeginning, 0, linearEasing);
-                    // Jump to the end.
-                    playAnimation.InsertKeyFrame(timeToBeginning + float.Epsilon, 1, linearEasing);
-                }
-                playAnimation.InsertKeyFrame(1, from, linearEasing);
+                // Play to the end
+                var timeToEnd = (1 - from) / ((1 - from) + to);
+                playAnimation.InsertKeyFrame(timeToEnd, 1, linearEasing);
+                // Jump to the beginning
+                playAnimation.InsertKeyFrame(timeToEnd + float.Epsilon, 0, linearEasing);
             }
-            else
-            {
-                // Play forwards from fromProgress to toProgress
-                playAnimation.InsertKeyFrame(0, from);
-                if (from > to)
-                {
-                    // Play to the end
-                    var timeToEnd = (1 - from) / ((1 - from) + to);
-                    playAnimation.InsertKeyFrame(timeToEnd, 1, linearEasing);
-                    // Jump to the beginning
-                    playAnimation.InsertKeyFrame(timeToEnd + float.Epsilon, 0, linearEasing);
-                }
-                playAnimation.InsertKeyFrame(1, to, linearEasing);
-            }
+            playAnimation.InsertKeyFrame(1, to, linearEasing);
 
             if (looped)
             {
@@ -851,7 +822,7 @@ namespace Lottie
                 new PlayAsyncState(_progressPropertySet.TryGetAnimationController(c_progressPropertyName));
 
             // Set the playback rate.
-            _currentPlay.Controller.PlaybackRate = (float)PlaybackRate;
+            _currentPlay.Controller.PlaybackRate = (float)playbackRate;
 
             if (batch != null)
             {
@@ -945,17 +916,16 @@ namespace Lottie
             readonly TaskCompletionSource<bool> _taskCompletionSource
                 = new TaskCompletionSource<bool>();
 
-            internal PlayAsyncCommand(double fromProgress, double toProgress, bool loop, bool reverse) : base(CommandType.PlayAsync)
+            internal PlayAsyncCommand(double fromProgress, double toProgress, double playbackRate, bool loop) : base(CommandType.PlayAsync)
             {
                 FromProgress = fromProgress;
                 ToProgress = toProgress;
                 Loop = loop;
-                Reverse = reverse;
             }
             internal double FromProgress { get; }
             internal double ToProgress { get; }
+            internal double PlaybackRate { get; }
             internal bool Loop { get; }
-            internal bool Reverse { get; }
 
             internal void CompleteTask() => _taskCompletionSource.SetResult(true);
 

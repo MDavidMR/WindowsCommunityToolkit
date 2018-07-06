@@ -5,6 +5,11 @@
 // for multiple trim paths, so it's possible this is actually the most correct.
 #define SimpleTrimPathCombining
 #define SpatialBeziers
+// The AnimationController.Progress value is used one frame later than expressions,
+// so to keep everything in sync if one animation is using a controller tied
+// to the uber Progress property, then no animation can be tied to the Progress
+// property without going through a controller. Enable this to prevent flashes.
+#define ControllersSynchronizationWorkaround
 //#define LinearEasingOnSpatialBeziers
 // Use Win2D to create paths from geometry combines when merging shape layers.
 //#define PreCombineGeometries
@@ -329,10 +334,34 @@ namespace LottieToWinComp
             // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
-                // Insert another node to hold the visiblity property.
+                // Insert another node to hold the visibility property.
                 contentsNode = CreateContainerShape();
                 leafTransformNode.Shapes.Add(contentsNode);
 #if !NoInvisibility
+#if ControllersSynchronizationWorkaround
+                // Animate between Matrix3x2(0,0,0,0,0,0) and Matrix3x2(1,0,0,1,0,0) (i.e. between 0 and identity).
+                var visibilityAnimation = CreateScalarKeyFrameAnimation();
+                if (inProgress > 0)
+                {
+                    // Set initial value to be non-visible (default is visible).
+                    contentsNode.TransformMatrix = Matrix3x2Zero;
+                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
+                }
+                if (outProgress < 1)
+                {
+                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
+                }
+                visibilityAnimation.Duration = _lc.Duration;
+                StartKeyframeAnimation(contentsNode, "TransformMatrix._11", visibilityAnimation);
+
+                // M11 and M22 need to have the same value. Either tie them together with an expression, or
+                // use the same keyframe animation for both. Probably cheaper to use an expression.
+                var m11expression = CreateExpressionAnimation(ExpressionFactory.TransformMatrixM11Expression);
+                m11expression.SetReferenceParameter("my", contentsNode);
+                StartExpressionAnimation(contentsNode, "TransformMatrix._22", m11expression);
+                // Alternative is to use the same key frame animation on M22.
+                //StartKeyframeAnimation(contentsNode, "TransformMatrix._22", visibilityAnimation);
+#else
                 var visibilityExpression =
                     ExpressionFactory.CreateProgressExpression(
                         ExpressionFactory.RootProgress,
@@ -343,7 +372,8 @@ namespace LottieToWinComp
 
                 var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
-                StartAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
+                StartExpressionAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
+#endif // ControllersSynchronizationWorkaround
 #endif // !NoInvisibility
                 if (_addDescriptions)
                 {
@@ -425,6 +455,22 @@ namespace LottieToWinComp
                 leafTransformNode.Children.Add(contentsNode);
 
 #if !NoInvisibility
+#if ControllersSynchronizationWorkaround
+                // Animate opacity between 0 and 1.
+                var visibilityAnimation = CreateScalarKeyFrameAnimation();
+                if (inProgress > 0)
+                {
+                    // Set initial value to be non-visible.
+                    contentsNode.Opacity = 0;
+                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
+                }
+                if (outProgress < 1)
+                {
+                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
+                }
+                visibilityAnimation.Duration = _lc.Duration;
+                StartKeyframeAnimation(contentsNode, "Opacity", visibilityAnimation);
+#else
                 var invisible = Expr.Scalar(0);
                 var visible = Expr.Scalar(1);
 
@@ -438,7 +484,8 @@ namespace LottieToWinComp
 
                 var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
-                StartAnimation(contentsNode, "Opacity", visibilityAnimation);
+                StartExpressionAnimation(contentsNode, "Opacity", visibilityAnimation);
+#endif // ControllersSynchronizationWorkaround
 #endif // !NoInvisibility
                 if (_addDescriptions)
                 {
@@ -1286,7 +1333,7 @@ namespace LottieToWinComp
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
                 var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                StartAnimation(geometry, "Offset", compositionOffsetExpression);
+                StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
 
                 ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position), "Position", null);
 
@@ -1307,7 +1354,7 @@ namespace LottieToWinComp
                 // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
                 var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                StartAnimation(geometry, "Offset", compositionOffsetExpression);
+                StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
 
                 ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position", "Position", null);
 
@@ -1510,13 +1557,13 @@ namespace LottieToWinComp
                 ApplyScaledScalarKeyFrameAnimation(context, startPercent, 1 / 100.0, geometry.Properties, "TStart", "TStart", null);
                 var trimStartExpression = CreateExpressionAnimation(ExpressionFactory.MinTStartTEnd);
                 trimStartExpression.SetReferenceParameter("my", geometry);
-                StartAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
+                StartExpressionAnimation(geometry, nameof(geometry.TrimStart), trimStartExpression);
 
                 geometry.Properties.InsertScalar("TEnd", (float)(endPercent.InitialValue / 100));
                 ApplyScaledScalarKeyFrameAnimation(context, endPercent, 1 / 100.0, geometry.Properties, "TEnd", "TEnd", null);
                 var trimEndExpression = CreateExpressionAnimation(ExpressionFactory.MaxTStartTEnd);
                 trimEndExpression.SetReferenceParameter("my", geometry);
-                StartAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
+                StartExpressionAnimation(geometry, nameof(geometry.TrimEnd), trimEndExpression);
             }
             else
             {
@@ -1727,7 +1774,7 @@ namespace LottieToWinComp
                             Expr.Scalar("my.Anchor.Y"),
                             Expr.Scalar(0)));
                 centerPointExpression.SetReferenceParameter("my", container);
-                StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
+                StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
             else
             {
@@ -1754,7 +1801,7 @@ namespace LottieToWinComp
                         Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar("my.Anchor.Y")),
                         Expr.Scalar(0)));
                 offsetExpression.SetReferenceParameter("my", container);
-                StartAnimation(container, nameof(container.Offset), offsetExpression);
+                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
             }
             else
             {
@@ -1805,7 +1852,7 @@ namespace LottieToWinComp
             {
                 var centerPointExpression = CreateExpressionAnimation(ExpressionFactory.MyAnchor2);
                 centerPointExpression.SetReferenceParameter("my", container);
-                StartAnimation(container, nameof(container.CenterPoint), centerPointExpression);
+                StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
             else
             {
@@ -1828,7 +1875,7 @@ namespace LottieToWinComp
             {
                 var offsetExpression = CreateExpressionAnimation(ExpressionFactory.PositionMinusAnchor);
                 offsetExpression.SetReferenceParameter("my", container);
-                StartAnimation(container, nameof(container.Offset), offsetExpression);
+                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
             }
             else
             {
@@ -1859,13 +1906,13 @@ namespace LottieToWinComp
             // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
         }
 
-        void StartAnimation(CompositionObject compObject, string target, ExpressionAnimation animation)
+        void StartExpressionAnimation(CompositionObject compObject, string target, ExpressionAnimation animation)
         {
             // Start the animation.
             compObject.StartAnimation(target, animation);
         }
 
-        void StartAnimation(CompositionObject compObject, string target, KeyFrameAnimation_ animation, double scale = 1, double offset = 0)
+        void StartKeyframeAnimation(CompositionObject compObject, string target, KeyFrameAnimation_ animation, double scale = 1, double offset = 0)
         {
             Debug.Assert(offset >= 0);
             Debug.Assert(scale <= 1);
@@ -2249,13 +2296,13 @@ namespace LottieToWinComp
             }
 
             // Start the animation scaled and offset.
-            StartAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
+            StartKeyframeAnimation(targetObject, targetPropertyName, compositionAnimation, scale, offset);
 
             // Start the animation that maps from the Progress property to a t value for use by the spatial beziers.
             if (progressMappingAnimation != null && progressMappingAnimation.KeyFrameCount > 0)
             {
                 _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
-                StartAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
+                StartKeyframeAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
             }
         }
 
@@ -2347,7 +2394,7 @@ namespace LottieToWinComp
 
                 var animation = CreateExpressionAnimation(Expr.Scalar($"({easing}).Y"));
                 animation.SetReferenceParameter(c_rootName, _rootVisual);
-                StartAnimation(_rootVisual, propertyName, animation);
+                StartExpressionAnimation(_rootVisual, propertyName, animation);
                 result = Expr.Scalar($"{c_rootName}.{propertyName}");
                 _remappedProgressExpressions.Add(parameters, result);
             }
@@ -2716,6 +2763,7 @@ namespace LottieToWinComp
         static float? FloatDefaultIsOne(double value) => value == 1 ? null : (float?)value;
 
         static WinCompData.Sn.Matrix3x2 Matrix3x2Identity => WinCompData.Sn.Matrix3x2.Identity;
+        static WinCompData.Sn.Matrix3x2 Matrix3x2Zero => new WinCompData.Sn.Matrix3x2();
 
         static WinCompData.Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
         static WinCompData.Sn.Vector2 Vector2(double x, double y) => new WinCompData.Sn.Vector2((float)x, (float)y);

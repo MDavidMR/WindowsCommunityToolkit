@@ -24,6 +24,7 @@ namespace LottieToWinComp
                         Divide(Scalar("my.Size.X"), Scalar(2))),
                 Subtract(Scalar("my.Position.Y"),
                         Divide(Scalar("my.Size.Y"), Scalar(2))));
+        internal static readonly Expression TransformMatrixM11Expression = Scalar("my.TransformMatrix._11");
         internal static readonly Expression MyAnchor2 = Vector2("my.Anchor");
         internal static readonly Expression PositionMinusAnchor = Subtract(Vector2("my.Position"), MyAnchor2);
         internal static Expression ScaledAndOffsetRootProgress(double scale, double offset)

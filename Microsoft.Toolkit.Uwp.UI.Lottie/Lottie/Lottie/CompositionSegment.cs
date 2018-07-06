@@ -10,17 +10,17 @@ namespace Lottie
     {
         public double FromProgress { get; }
         public double ToProgress { get; }
+        public double PlaybackRate { get; }
         public bool IsLoopingEnabled { get; }
-        public bool ReverseAnimation { get; }
 
         public string Name { get; }
-        public CompositionSegment(string name, double fromProgress, double toProgress, bool isLoopingEnabled, bool reverseAnimation)
+        public CompositionSegment(string name, double fromProgress, double toProgress, double playbackRate, bool isLoopingEnabled)
         {
             Name = name;
             FromProgress = fromProgress;
             ToProgress = toProgress;
+            PlaybackRate = playbackRate;
             IsLoopingEnabled = isLoopingEnabled;
-            ReverseAnimation = reverseAnimation;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Lottie
         /// without looping or repeating.
         /// </summary>
         public CompositionSegment(string name, double fromProgress, double toProgress)
-            : this(name, fromProgress, toProgress, isLoopingEnabled: false, reverseAnimation: false)
+            : this(name, fromProgress, toProgress, playbackRate:1, isLoopingEnabled: false)
         {
         }
     }

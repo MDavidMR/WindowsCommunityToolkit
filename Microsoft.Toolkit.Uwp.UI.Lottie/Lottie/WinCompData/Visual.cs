@@ -14,6 +14,7 @@ namespace WinCompData
         public Vector3? CenterPoint { get; set; }
         public CompositionClip Clip { get; set; }
         public Vector3? Offset { get; set; }
+        public float? Opacity { get; set; }
         public float? RotationAngleInDegrees { get; set; }
         public Vector3? Scale { get; set; }
         public Vector2? Size { get; set; }

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CompositionPlayer.h"
 #include "Hacks.h"
+#include <winrt/Windows.UI.Core.h>
+using namespace winrt::Windows::UI::Core;
 
 namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 {
@@ -13,10 +15,52 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     winrt::DependencyProperty CompositionPlayer::s_IsLoopingEnabledProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_IsPlayingProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_PlaybackRateProperty = nullptr;
-    winrt::DependencyProperty CompositionPlayer::s_ReverseAnimationProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_SourceProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_StretchProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_ToProgressProperty = nullptr;
+
+    static void __stdcall CoroutineCompletedCallback(PTP_CALLBACK_INSTANCE, void* context, PTP_WAIT, TP_WAIT_RESULT) noexcept
+    {
+        // Resumes anyone waiting on the awaitable.
+        std::experimental::coroutine_handle<>::from_address(context)();
+    }
+
+    AnimationPlay::AnimationPlay(AnimationController const& controller)
+        : _controller(controller)
+    {
+        _signal.attach(::CreateEvent(nullptr, true, false, nullptr));
+    }
+
+    void AnimationPlay::SetPlaybackRate(float value)
+    {
+        _controller.PlaybackRate(value);
+    }
+
+    void AnimationPlay::Complete()
+    {
+        ::SetEvent(_signal.get());
+    }
+
+    // Blocks until the awaitable is completed.
+    bool AnimationPlay::await_ready() const noexcept
+    {
+        return ::WaitForSingleObject(_signal.get(), 0) == 0;
+    }
+
+    void AnimationPlay::await_suspend(std::experimental::coroutine_handle<> resume)
+    {
+        _wait.attach(
+            winrt::check_pointer(
+                ::CreateThreadpoolWait(CoroutineCompletedCallback, resume.address(), nullptr)
+            )
+        );
+        ::SetThreadpoolWait(_wait.get(), _signal.get(), nullptr);
+    }
+
+    // Called to get the value of the awaitable. This awaitable has no value, 
+    // so nothing to do.
+    void AnimationPlay::await_resume() const noexcept { }
+
 
     CompositionPlayer::CompositionPlayer()
     {
@@ -179,7 +223,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         s_IsLoopingEnabledProperty = nullptr;
         s_IsPlayingProperty = nullptr;
         s_PlaybackRateProperty = nullptr;
-        s_ReverseAnimationProperty = nullptr;
         s_SourceProperty = nullptr;
         s_StretchProperty = nullptr;
         s_ToProgressProperty = nullptr;
@@ -254,7 +297,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
                 winrt::name_of<bool>(),
                 winrt::name_of<CompositionPlayer>(),
                 false,
-                box_value(false),
+                box_value(true),
                 nullptr);
 
         s_IsPlayingProperty =
@@ -273,16 +316,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
                 winrt::name_of<CompositionPlayer>(),
                 false,
                 box_value(1.0),
-                nullptr);
-
-        s_ReverseAnimationProperty =
-            InitializeDependencyProperty(
-                L"ReverseAnimation",
-                winrt::name_of<bool>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(false),
-                nullptr);
+                winrt::PropertyChangedCallback(&CompositionPlayer::OnPlaybackRatePropertyChanged));
 
         s_SourceProperty =
             InitializeDependencyProperty(
@@ -382,11 +416,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         return unbox_value<bool>(GetValue(s_IsPlayingProperty));
     }
 
-    bool CompositionPlayer::ReverseAnimation()
-    {
-        return unbox_value<bool>(GetValue(s_ReverseAnimationProperty));
-    }
-
     double CompositionPlayer::PlaybackRate()
     {
         return unbox_value<double>(GetValue(s_PlaybackRateProperty));
@@ -427,57 +456,128 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         throw hresult_not_implemented();
     }
 
-    void CompositionPlayer::Play()
-    {
-        PlayAsync();
-    }
-
-    winrt::IAsyncAction CompositionPlayer::PlayAsync()
-    {
-        // TODO - do the right thing here. Actually, not clear that we even want a PlayAsync without parameters.
-        return RunAnimationAsync(0, 1, true, false);
-    }
-
-    winrt::IAsyncAction CompositionPlayer::RunAnimationAsync(double fromProgress, double toProgress, bool looped, bool reversed)
+    winrt::IAsyncAction CompositionPlayer::PlayAsync(double fromProgress, double toProgress, double playbackRate, bool looped)
     {
         // Used to detect reentrance.
-        auto version = ++_runAnimationAsyncVersion;
+        auto version = ++_playAsyncVersion;
 
         // Cause any other tasks waiting in this method to return. This call may
         // cause reentrance.
         Stop();
 
-
-        if (version != _runAnimationAsyncVersion)
+        if (version != _playAsyncVersion)
         {
             // The call was overtaken by another call due to reentrance.
             co_return;
         }
 
-        // Create a new animation.
-        // TODO - handle to<from and looped and reversed.
+        // Sanitize the progress values.
+        auto from = std::clamp(static_cast<float>(fromProgress), 0.0F, 1.0F);
+        auto to = std::clamp(static_cast<float>(toProgress), 0.0F, 1.0F);
 
+        // Save the starting point of the animations so that when the animation is stopped
+        // we will return to that point.
+        _currentPlayFromProgress = from;
+
+        if (from == to)
+        {
+            // Nothing to play. But jump to the from position.
+            Stop();
+            co_return;
+        }
+
+        auto durationAsProgress = from < to ? (to - from) : ((1 - from) + to);
+        auto duration = std::chrono::duration_cast<TimeSpan>(Duration() * durationAsProgress);
+
+        // Sanity-check the duration: if it's really short, don't bother trying animate.
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(duration) < std::chrono::milliseconds(20))
+        {
+            // Nothing to play. But jump to the from position.
+            Stop();
+            co_return;
+        }
+
+        // Create an animation to drive the Progress property.
         auto compositor = Window::Current().Compositor();
         auto animation = compositor.CreateScalarKeyFrameAnimation();
-        animation.Duration(Duration());
-        animation.InsertKeyFrame(1, static_cast<float>(toProgress), compositor.CreateLinearEasingFunction());
+        animation.Duration(duration);
+        auto linearEasing = compositor.CreateLinearEasingFunction();
+
+        animation.InsertKeyFrame(1, static_cast<float>(toProgress), linearEasing);
+
+
+        // Play from fromProgress to toProgress.
+        animation.InsertKeyFrame(0, from);
+        if (from > to)
+        {
+            // Play to the end
+            auto timeToEnd = (1 - from) / ((1 - from) + to);
+            animation.InsertKeyFrame(timeToEnd, 1, linearEasing);
+            // Jump to the beginning
+            animation.InsertKeyFrame(timeToEnd + FLT_EPSILON, 0, linearEasing);
+        }
+        animation.InsertKeyFrame(1, to, linearEasing);
+
         if (looped)
         {
             animation.IterationBehavior(AnimationIterationBehavior::Forever);
         }
-        else 
+        else
         {
             animation.IterationBehavior(AnimationIterationBehavior::Count);
             animation.IterationCount(1);
         }
+
+        // Create a batch so that we can know when the animation finishes. This only
+        // works for non-looping animations (the batch completes immediately
+        // for looping animations).
+        CompositionScopedBatch batch = looped
+            ? nullptr
+            : compositor.CreateScopedBatch(CompositionBatchTypes::Animation);
+
         _progressPropertySet.StartAnimation(L"Progress", animation);
 
-        co_return;
-    }
+        auto nowPlaying = std::make_shared<AnimationPlay>(_progressPropertySet.TryGetAnimationController(L"Progress"));
 
-    winrt::IAsyncAction CompositionPlayer::PlayAsync(Microsoft_UI_Xaml_Controls::CompositionSegment const segment)
-    {
-        throw hresult_not_implemented();
+        // Set the playback rate.
+        nowPlaying->SetPlaybackRate(static_cast<float>(playbackRate));
+
+        event_token batchCompletedToken{};
+
+        if (batch != nullptr)
+        {
+            // Subscribe to the batch completed event.
+            batchCompletedToken = batch.Completed([nowPlaying](IInspectable const&, CompositionBatchCompletedEventArgs const&)
+            {
+                nowPlaying->Complete();
+            });
+            // Indicate that nothing else is going into the batch.
+            batch.End();
+        }
+
+        // Hold onto nowPlaying so it can be completed if Stop is called.
+        _nowPlaying = nowPlaying;
+
+        // Await the current play. The await will complete when the animation completes
+        // or Stop() is called.
+        co_await *nowPlaying;
+
+        // Ensure we get back to the dispatcher thread. We might be on a threadpool thread.
+        // This is necessary to unregister from batch.Completed, and because callers
+        // will expect to continue on the dispatcher thread.
+        co_await resume_foreground(Dispatcher());
+
+        if (batchCompletedToken)
+        {
+            // Unsubscribe
+            batch.Completed(batchCompletedToken);
+        }
+
+        // Clean up nowPlaying, unless it has been replaced already.
+        if (_nowPlaying == nowPlaying)
+        {
+            _nowPlaying = nullptr;
+        }
     }
 
     void CompositionPlayer::Resume()
@@ -487,14 +587,27 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
     void CompositionPlayer::SetProgress(double progress)
     {
-        throw hresult_not_implemented();
+        auto clampedProgress = std::clamp(static_cast<float>(progress), 0.0F, 1.0F);
+
+        // Setting the progress value will stop the current play. Ensure the current playing
+        // task is completed.
+        if (_nowPlaying != nullptr)
+        {
+            _nowPlaying->Complete();
+            _nowPlaying = nullptr;
+        }
+        _progressPropertySet.InsertScalar(L"Progress", static_cast<float>(clampedProgress));
+        _currentPlayFromProgress = clampedProgress;
     }
 
     void CompositionPlayer::Stop()
     {
-        // Stop the animation by setting the Progress value to 0.
-        // TODO - should we set it to FromProgress instead of 0?
-        _progressPropertySet.InsertScalar(L"Progress", 0);
+        if (_nowPlaying != nullptr)
+        {
+            // Stop the animation by setting the Progress value to the fromProgress of the
+            // most recent play.
+            SetProgress(_currentPlayFromProgress);
+        }
     }
 
     void CompositionPlayer::OnPropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args)
@@ -516,14 +629,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         {
 
         }
-        else if (property == s_PlaybackRateProperty)
-        {
-
-        }
-        else if (property == s_ReverseAnimationProperty)
-        {
-
-        }
         else if (property == s_ToProgressProperty)
         {
 
@@ -540,7 +645,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     {
         AsSelf(sender)->OnPropertyChanged(args);
     }
-
 
     void CompositionPlayer::OnSourcePropertyChanged(
         const winrt::DependencyObject& sender,
@@ -595,7 +699,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         _compositionRoot.Properties().StartAnimation(L"Progress", progressAnimation);
 
         // TODO - HACK - start playing immediately so we can see something.
-        Play();
+        PlayAsync(0, 1, true);
     }
 
     void CompositionPlayer::UnloadComposition()
@@ -618,7 +722,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         }
     }
 
-
     void CompositionPlayer::OnBackgroundColorPropertyChanged(
         const winrt::DependencyObject& sender,
         const winrt::DependencyPropertyChangedEventArgs& args)
@@ -632,6 +735,21 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         _backgroundBrush.Color(newColor);
     }
 
+    void CompositionPlayer::OnPlaybackRatePropertyChanged(
+        const winrt::DependencyObject& sender,
+        const winrt::DependencyPropertyChangedEventArgs& args)
+    {
+        AsSelf(sender)->OnPlaybackRatePropertyChanged(args);
+    }
+
+    void CompositionPlayer::OnPlaybackRatePropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args)
+    {
+        if (_nowPlaying != nullptr)
+        {
+            _nowPlaying->SetPlaybackRate(static_cast<float>(unbox_value<double>(args.NewValue())));
+        }
+    }
+
     void CompositionPlayer::OnStretchPropertyChanged(
         const winrt::DependencyObject& sender,
         const winrt::DependencyPropertyChangedEventArgs&)
@@ -643,6 +761,4 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     {
         return winrt::from_abi<CompositionPlayer>(sender.as<winrt::Microsoft_UI_Xaml_Controls::CompositionPlayer>());
     }
-
-
 }

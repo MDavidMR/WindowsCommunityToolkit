@@ -13,14 +13,14 @@ namespace LottieViewer
     {
         // Shrinks from the expanded JSON file back to the initial size.
         static readonly CompositionSegment ShrinkToInitial =
-            new CompositionSegment("ShrinkToInitial", 0.007, 0.1188811, isLoopingEnabled: false, reverseAnimation: true);
+            new CompositionSegment("ShrinkToInitial", 0.007, 0.1188811, playbackRate: -1, isLoopingEnabled: false);
 
         // Expands from the initial state to a large JSON file.
         static readonly CompositionSegment ExpandFromInitial = new CompositionSegment("ExpandFromInitial", 0.007, 0.1188811);
 
         // A loop where the JSON file looks excited about being dropped.
         static readonly CompositionSegment ExcitedDropLoop =
-            new CompositionSegment("ExcitedDropLoop", 0.1188811, 0.3426574, isLoopingEnabled: true, reverseAnimation: false);
+            new CompositionSegment("ExcitedDropLoop", 0.1188811, 0.3426574, playbackRate: 1, isLoopingEnabled: true);
 
         // Follows on from ExcitedDropLoop.
         static readonly CompositionSegment ExcitedResolution = new CompositionSegment("ExcitedResolution", 0.3426574, 0.489);

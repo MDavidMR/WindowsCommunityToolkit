@@ -15,5 +15,6 @@ namespace WinCompData
         public Vector2? Offset { get; set; }
         public float? RotationAngleInDegrees { get; set; }
         public Vector2? Scale { get; set; }
+        public Matrix3x2? TransformMatrix { get; set; }
     }
 }

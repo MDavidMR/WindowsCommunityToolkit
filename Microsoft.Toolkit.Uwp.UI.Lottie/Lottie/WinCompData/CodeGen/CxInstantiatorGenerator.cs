@@ -73,7 +73,6 @@ public:
         Windows::UI::Composition::Compositor^ compositor,
         Windows::UI::Composition::Visual^* rootVisual,
         Windows::Foundation::Numerics::float2* size,
-        Windows::UI::Composition::CompositionPropertySet^* progressPropertySet,
         Windows::Foundation::TimeSpan* duration,
         Platform::Object^* diagnostics);
 }};
@@ -183,19 +182,17 @@ public:
 
 
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine("bool Compositions::MyComposition::TryCreateInstance(");
+            builder.WriteLine($"bool Compositions::{info.ClassName}::TryCreateInstance(");
             builder.Indent();
             builder.WriteLine("Compositor^ compositor,");
             builder.WriteLine("Visual^* rootVisual,");
             builder.WriteLine("float2* size,");
-            builder.WriteLine("CompositionPropertySet^* progressPropertySet,");
             builder.WriteLine("TimeSpan* duration,");
             builder.WriteLine("Object^* diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine("*rootVisual = Instantiator::InstantiateComposition(compositor);");
             builder.WriteLine($"*size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine("*progressPropertySet = (*rootVisual)->Properties;");
             builder.WriteLine($"duration->Duration = {_stringifier.TimeSpan(info.CompositionDuration)};");
             builder.WriteLine("diagnostics = nullptr;");
             builder.WriteLine("return true;");
