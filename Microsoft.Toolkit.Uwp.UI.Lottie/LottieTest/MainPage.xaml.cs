@@ -68,17 +68,17 @@ namespace LottieTest
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(0, 1, false);
+            await Player.PlayAsync(0, 1, 1, false);
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(0.25, 0.75, true);
+            await Player.PlayAsync(0.25, 0.75, 1, true);
         }
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(0, 0.5, true);
+            await Player.PlayAsync(0, 0.5, 1, true);
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)

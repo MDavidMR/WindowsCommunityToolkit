@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Microsoft_UI_Xaml_CompositionPlayer</id>
+    <version>0.1.0.3</version>
+    <title>CompositionPlayer</title>
+    <authors>Microsoft</authors>
+    <owners>simeonc,sohumc</owners>
+<!--    
+    <licenseUrl>http://www.microsoft.com/TODO_LICENSE_FOR_LOTTIE</licenseUrl>
+    <projectUrl>http://www.microsoft.com/TODO_GITHUB_FOR_LOTTIE</projectUrl>
+    <iconUrl>http://www.microsoft.com/TODO_ICON_FOR_LOTTIE</iconUrl>
+-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Plays animated compositions.</description>
+    <releaseNotes>Microsoft internal test release.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Lottie UWP native</tags>
+  </metadata>
+</package>

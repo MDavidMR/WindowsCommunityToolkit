@@ -5,48 +5,6 @@
 
 namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 {
-    //
-    // An awaitable object that is completed when an animation play is completed.
-    //
-    struct AnimationPlay final
-    {
-        AnimationPlay(Windows::UI::Composition::AnimationController const& controller);
-
-        // Sets the playback rate of the animation.
-        void SetPlaybackRate(float value);
-
-        // Called to indicate that the play has been completed. Unblocks awaiters.
-        void Complete();
-
-        // Awaitable contract.
-        bool await_ready() const noexcept;
-        void await_suspend(std::experimental::coroutine_handle<> resume);
-        void await_resume() const noexcept;
-
-    private:
-        //
-        // Describes a PTP_WAIT.
-        //
-        struct PTP_WAIT_traits
-        {
-            using type = PTP_WAIT;
-
-            static void close(type value) noexcept
-            {
-                ::CloseThreadpoolWait(value);
-            }
-
-            static constexpr type invalid() noexcept
-            {
-                return nullptr;
-            }
-        };
-
-        winrt::handle _signal;
-        winrt::handle_type<PTP_WAIT_traits> _wait;
-        Windows::UI::Composition::AnimationController _controller;
-    };
-
     struct CompositionPlayer final : CompositionPlayerT<CompositionPlayer>
     {
         CompositionPlayer();
@@ -55,10 +13,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         Windows::Foundation::TimeSpan Duration();
         Microsoft_UI_Xaml_Controls::ICompositionSource Source();
         void Source(Microsoft_UI_Xaml_Controls::ICompositionSource const& value);
-        double FromProgress();
-        void FromProgress(double value);
-        double ToProgress();
-        void ToProgress(double value);
         bool AutoPlay();
         void AutoPlay(bool value);
         bool IsCompositionLoaded();
@@ -90,16 +44,60 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         static Windows::UI::Xaml::DependencyProperty BackgroundColorProperty() { return s_BackgroundColorProperty; }
         static Windows::UI::Xaml::DependencyProperty DiagnosticsProperty() { return s_DiagnosticsProperty; }
         static Windows::UI::Xaml::DependencyProperty DurationProperty() { return s_DurationProperty; }
-        static Windows::UI::Xaml::DependencyProperty FromProgressProperty() { return s_FromProgressProperty; }
         static Windows::UI::Xaml::DependencyProperty IsCompositionLoadedProperty() { return s_IsCompositionLoadedProperty; }
         static Windows::UI::Xaml::DependencyProperty IsLoopingEnabledProperty() { return s_IsLoopingEnabledProperty; }
         static Windows::UI::Xaml::DependencyProperty IsPlayingProperty() { return s_IsPlayingProperty; }
         static Windows::UI::Xaml::DependencyProperty PlaybackRateProperty() { return s_PlaybackRateProperty; }
         static Windows::UI::Xaml::DependencyProperty SourceProperty() { return s_SourceProperty; }
         static Windows::UI::Xaml::DependencyProperty StretchProperty() { return s_StretchProperty; }
-        static Windows::UI::Xaml::DependencyProperty ToProgressProperty() { return s_ToProgressProperty; }
 
     private:
+        //
+        // An awaitable object that is completed when an animation play is completed.
+        //
+        struct AnimationPlay final
+        {
+            AnimationPlay(
+                CompositionPlayer& owner,
+                Windows::UI::Composition::AnimationController const& controller);
+
+            // Sets the playback rate of the animation.
+            void SetPlaybackRate(float value);
+
+            // Called to indicate that the play has been completed. Unblocks awaiters.
+            void Complete();
+
+            // Awaitable contract.
+            bool await_ready() const noexcept;
+            void await_suspend(std::experimental::coroutine_handle<> resume);
+            void await_resume() const noexcept;
+
+        private:
+            //
+            // Describes a PTP_WAIT.
+            //
+            struct PTP_WAIT_traits
+            {
+                using type = PTP_WAIT;
+
+                static void close(type value) noexcept
+                {
+                    ::CloseThreadpoolWait(value);
+                }
+
+                static constexpr type invalid() noexcept
+                {
+                    return nullptr;
+                }
+            };
+
+            CompositionPlayer& _owner;
+            Windows::UI::Composition::AnimationController _controller;
+            winrt::handle _signal;
+            winrt::handle_type<PTP_WAIT_traits> _wait;
+        };
+
+
         static void OnPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
         void OnPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
