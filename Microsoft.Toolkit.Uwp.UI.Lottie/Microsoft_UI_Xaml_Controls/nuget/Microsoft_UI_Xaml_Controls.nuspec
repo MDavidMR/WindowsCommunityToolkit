@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Microsoft_UI_Xaml_CompositionPlayer</id>
-    <version>0.1.0.3</version>
+    <id>Microsoft_UI_Xaml_Controls_CompositionPlayer</id>
+    <version>0.1.0.6</version>
     <title>CompositionPlayer</title>
     <authors>Microsoft</authors>
     <owners>simeonc,sohumc</owners>
@@ -12,7 +12,15 @@
     <iconUrl>http://www.microsoft.com/TODO_ICON_FOR_LOTTIE</iconUrl>
 -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Plays animated compositions.</description>
+    <description>Plays animated compositions.
+
+CompositionPlayer is a XAML element that hosts an animated composition and allows it to be played.
+Animated compositions can be provided from code or, with the help of the Lottie library, from
+Lottie (.json) files.
+
+CompositionPlayer is written in C++ and has minimal dependencies.
+    </description>
+    <summary>Plays animated compositions, e.g. Lotties.</summary>
     <releaseNotes>Microsoft internal test release.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>Lottie UWP native</tags>

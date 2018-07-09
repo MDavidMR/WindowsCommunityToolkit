@@ -1,0 +1,3 @@
+# Ignore files created as part of nuget packaging.
+runtimes/**
+lib/**
