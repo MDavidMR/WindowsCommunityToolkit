@@ -118,6 +118,7 @@
     <Compile Include="LottieToWinComp\ExpressionFactory.cs" />
     <Compile Include="LottieToWinComp\CanvasGeometryCombiner.cs" />
     <Compile Include="LottieToWinComp\TranslationIssues.cs" />
+    <Compile Include="Lottie\CompositionSegment.cs" />
     <Compile Include="Lottie\Issue.cs" />
     <Compile Include="WinCompData\Expressions\BinaryExpression.cs" />
     <Compile Include="WinCompData\Expressions\Boolean.cs" />
@@ -141,7 +142,6 @@
     <Compile Include="WinCompData\Expressions\TypeConstraint.cs" />
     <Compile Include="WinCompData\Expressions\UntypedExpression.cs" />
     <Compile Include="WinCompData\Expressions\Vector2.cs" />
-    <Compile Include="Lottie\CompositionPlayer.cs" />
     <Compile Include="LottieData\Animatable.cs" />
     <Compile Include="LottieData\BlendMode.cs" />
     <Compile Include="LottieData\Repeater.cs" />
@@ -192,9 +192,6 @@
     <Compile Include="LottieData\Serialization\CheckedWindowsDataJson.cs" />
     <Compile Include="LottieData\Serialization\LottieCompositionJsonReader.cs" />
     <Compile Include="LottieData\Serialization\LottieJsonReaderException.cs" />
-    <Compile Include="Lottie\CompositionSegment.cs" />
-    <Compile Include="Lottie\ICompositionSource.cs" />
-    <Compile Include="Lottie\IDynamicCompositionSource.cs" />
     <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
     <Compile Include="Lottie\LottieCompositionOptions.cs" />
     <Compile Include="Lottie\LottieCompositionSource.cs" />
@@ -275,6 +272,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
+      <Name>Microsoft_UI_Xaml_Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

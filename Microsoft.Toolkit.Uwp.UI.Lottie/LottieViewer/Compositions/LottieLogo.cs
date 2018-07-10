@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Lottie;
+using Host = Microsoft_UI_Xaml_Controls;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;

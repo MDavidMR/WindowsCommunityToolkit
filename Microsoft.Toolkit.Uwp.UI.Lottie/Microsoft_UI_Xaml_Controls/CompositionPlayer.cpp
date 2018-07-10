@@ -17,6 +17,26 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     winrt::DependencyProperty CompositionPlayer::s_SourceProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_StretchProperty = nullptr;
 
+
+    static winrt::DependencyProperty InitializeDependencyProperty(
+        std::wstring_view const& propertyNameString,
+        std::wstring_view const& propertyTypeNameString,
+        winrt::IInspectable defaultValue,
+        winrt::PropertyChangedCallback propertyChangedCallback = nullptr)
+    {
+        auto propertyType = winrt::Interop::TypeName();
+        propertyType.Name = propertyTypeNameString;
+        propertyType.Kind = winrt::Interop::TypeKind::Metadata;
+
+        auto ownerType = winrt::Interop::TypeName();
+        ownerType.Name = winrt::name_of<CompositionPlayer>();
+        ownerType.Kind = winrt::Interop::TypeKind::Metadata;
+
+        auto propertyMetadata = winrt::PropertyMetadata(defaultValue, propertyChangedCallback);
+
+        return winrt::DependencyProperty::Register(propertyNameString, propertyType, ownerType, propertyMetadata);
+    }
+
     static void __stdcall CoroutineCompletedCallback(PTP_CALLBACK_INSTANCE, void* context, PTP_WAIT, TP_WAIT_RESULT) noexcept
     {
         // Resumes anyone waiting on the awaitable.
@@ -249,17 +269,12 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             InitializeDependencyProperty(
                 L"AutoPlay",
                 winrt::name_of<bool>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(true),
-                nullptr);
+                box_value(true));
 
         s_BackgroundColorProperty =
             InitializeDependencyProperty(
                 L"BackgroundColor",
                 winrt::name_of<Windows::UI::Color>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
                 box_value(Windows::UI::Colors::Transparent()),
                 winrt::PropertyChangedCallback(&CompositionPlayer::OnBackgroundColorPropertyChanged));
 
@@ -267,8 +282,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             InitializeDependencyProperty(
                 L"Diagnostics",
                 winrt::name_of<IInspectable>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
                 nullptr,
                 nullptr);
 
@@ -276,44 +289,30 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             InitializeDependencyProperty(
                 L"Duration",
                 winrt::name_of<TimeSpan>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(winrt::TimeSpan{ 0 }),
-                nullptr);
+                box_value(winrt::TimeSpan{ 0 }));
 
         s_IsCompositionLoadedProperty =
             InitializeDependencyProperty(
                 L"IsCompositionloaded",
                 winrt::name_of<bool>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(false),
-                nullptr);
+                box_value(false));
 
         s_IsLoopingEnabledProperty =
             InitializeDependencyProperty(
                 L"IsLoopingEnabled",
                 winrt::name_of<bool>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(true),
-                nullptr);
+                box_value(true));
 
         s_IsPlayingProperty =
             InitializeDependencyProperty(
                 L"IsPlaying",
                 winrt::name_of<bool>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
-                box_value(false),
-                nullptr);
+                box_value(false));
 
         s_PlaybackRateProperty =
             InitializeDependencyProperty(
                 L"PlaybackRate",
                 winrt::name_of<double>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
                 box_value(1.0),
                 winrt::PropertyChangedCallback(&CompositionPlayer::OnPlaybackRatePropertyChanged));
 
@@ -321,8 +320,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             InitializeDependencyProperty(
                 L"Source",
                 winrt::name_of<ICompositionSource>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,      // isAttached
                 nullptr,    // initial value
                 winrt::PropertyChangedCallback(&CompositionPlayer::OnSourcePropertyChanged));
 
@@ -330,8 +327,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             InitializeDependencyProperty(
                 L"Stretch",
                 winrt::name_of<winrt::Stretch>(),
-                winrt::name_of<CompositionPlayer>(),
-                false,
                 box_value(winrt::Stretch::Uniform),
                 winrt::PropertyChangedCallback(&CompositionPlayer::OnStretchPropertyChanged));
     }
@@ -576,55 +571,52 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         }
     }
 
-    void CompositionPlayer::OnPropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args)
-    {
-        winrt::IDependencyProperty property = args.Property();
-        if (property == s_AutoPlayProperty)
-        {
-
-        }
-        else if (property == s_IsLoopingEnabledProperty)
-        {
-
-        }
-        else if (property == s_IsPlayingProperty)
-        {
-
-        }
-        else
-        {
-            assert(false);
-        }
-    }
-
-    void CompositionPlayer::OnPropertyChanged(
-        const winrt::DependencyObject& sender,
-        const winrt::DependencyPropertyChangedEventArgs& args)
-    {
-        AsSelf(sender)->OnPropertyChanged(args);
-    }
-
     void CompositionPlayer::OnSourcePropertyChanged(
         const winrt::DependencyObject& sender,
         const winrt::DependencyPropertyChangedEventArgs& args)
     {
-        AsSelf(sender)->UpdateContent(args.NewValue().as<ICompositionSource>());
+        auto oldValue = args.OldValue();
+        auto newValue = args.NewValue();
+
+        AsSelf(sender)->OnSourcePropertyChanged(
+            (oldValue != nullptr) ? oldValue.as<ICompositionSource>() : nullptr,
+            (newValue != nullptr) ? newValue.as<ICompositionSource>() : nullptr);
     }
 
-    void CompositionPlayer::UpdateContent(ICompositionSource const& newSource)
+    void CompositionPlayer::OnSourcePropertyChanged(ICompositionSource const& oldSource, ICompositionSource const& newSource)
+    {
+        IDynamicCompositionSource oldDynamicSource;
+        if ((oldSource != nullptr)&& oldSource.try_as<IDynamicCompositionSource>(oldDynamicSource))
+        {
+            // Disconnect from the update notifications of the old source.
+            oldDynamicSource.CompositionInvalidated(_dynamicCompositionInvalidatedToken);
+        }
+
+        IDynamicCompositionSource newDynamicSource;
+        if ((newSource != nullptr) && newSource.try_as<IDynamicCompositionSource>(newDynamicSource))
+        {
+            // Connect to the update notifications of the new source.
+            _dynamicCompositionInvalidatedToken = newDynamicSource.CompositionInvalidated([this](IInspectable const&)
+            {
+                UpdateContent();
+            });
+        }
+
+        if (newSource != nullptr)
+        {
+            UpdateContent();
+        }
+    }
+
+    void CompositionPlayer::UpdateContent()
     {
         // Unload the current composition (if any).
         UnloadComposition();
 
-        if (newSource == nullptr)
-        {
-            return;
-        }
-
         TimeSpan duration{};
         IInspectable diagnostics{};
 
-        auto success = newSource.TryCreateInstance(
+        auto success = Source().TryCreateInstance(
             Window::Current().Compositor(),
             _compositionRoot,
             _compositionSize,
@@ -656,8 +648,11 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         progressAnimation.SetReferenceParameter(L"my", _progressPropertySet);
         _compositionRoot.Properties().StartAnimation(L"Progress", progressAnimation);
 
-        // TODO - HACK - start playing immediately so we can see something.
-        PlayAsync(0 /* from */, 1 /* to */, 1 /* playback rate */, true /* looped */);
+        if (AutoPlay())
+        {
+            // Start playing immediately.
+            PlayAsync(0 /* from */, 1 /* to */, 1 /* playback rate */, true /* looped */);
+        }
     }
 
     void CompositionPlayer::UnloadComposition()

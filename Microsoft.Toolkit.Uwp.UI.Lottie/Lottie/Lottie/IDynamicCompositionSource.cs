@@ -1,6 +1,8 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft_UI_Xaml_Controls;
+
 namespace Lottie
 {
     public delegate void DynamicCompositionSourceEventHandler(object sender);

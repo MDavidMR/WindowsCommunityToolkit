@@ -278,7 +278,7 @@ namespace LottieViewer
             }
         }
 
-        void _playControl_Toggled(object sender, RoutedEventArgs e)
+        async void _playControl_Toggled(object sender, RoutedEventArgs e)
         {
             // If no Lottie is loaded, do nothing.
             if (!_stage.Player.IsCompositionLoaded)
@@ -304,7 +304,7 @@ namespace LottieViewer
                     _playStopButton.IsChecked = true;
                 }
 
-                _stage.Player.Play();
+                await _stage.Player.PlayAsync(0, 1, 1, true);
             }
         }
 

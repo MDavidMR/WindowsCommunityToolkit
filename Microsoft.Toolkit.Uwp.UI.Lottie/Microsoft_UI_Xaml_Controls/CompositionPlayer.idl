@@ -10,6 +10,14 @@ namespace Microsoft_UI_Xaml_Controls
             out IInspectable diagnostics);
     };
 
+    delegate void DynamicCompositionSourceEventHandler(Object sender);
+
+    interface IDynamicCompositionSource 
+        requires ICompositionSource
+    {
+        event DynamicCompositionSourceEventHandler CompositionInvalidated;
+    };
+
     [default_interface]
     [contentproperty("Source")]
     runtimeclass CompositionPlayer : Windows.UI.Xaml.FrameworkElement

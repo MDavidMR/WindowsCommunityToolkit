@@ -107,17 +107,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Lottie\Lottie\CompositionPlayer.cs">
-      <Link>Lottie\CompositionPlayer.cs</Link>
-    </Compile>
     <Compile Include="..\Lottie\Lottie\CompositionSegment.cs">
       <Link>Lottie\CompositionSegment.cs</Link>
-    </Compile>
-    <Compile Include="..\Lottie\Lottie\ICompositionSource.cs">
-      <Link>Lottie\ICompositionSource.cs</Link>
-    </Compile>
-    <Compile Include="..\Lottie\Lottie\IDynamicCompositionSource.cs">
-      <Link>Lottie\IDynamicCompositionSource.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\Lottie\Instantiator.cs">
       <Link>Lottie\Instantiator.cs</Link>
@@ -161,6 +152,10 @@
     <ProjectReference Include="..\LottieToWinComp\LottieToWinComp.csproj">
       <Project>{1750614f-fd5d-4dec-9dfc-91572073efc0}</Project>
       <Name>LottieToWinComp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
+      <Name>Microsoft_UI_Xaml_Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\WinCompData\WinCompData.csproj">
       <Project>{b1dd2d0c-f280-4e5a-a14d-e1856cbb648a}</Project>

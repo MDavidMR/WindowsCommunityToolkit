@@ -117,7 +117,11 @@ namespace LottieViewer
 
         Task PlaySegment(CompositionSegment segment)
         {
-            return _currentPlay = _dragNDropHint.PlayAsync(segment).AsTask();
+            return _currentPlay = _dragNDropHint.PlayAsync(
+                fromProgress:segment.FromProgress, 
+                toProgress:segment.ToProgress,
+                playbackRate:segment.PlaybackRate,
+                looped:segment.IsLoopingEnabled).AsTask();
         }
 
         void EnsureVisible()

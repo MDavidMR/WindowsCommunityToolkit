@@ -21,6 +21,7 @@ using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft_UI_Xaml_Controls;
 
 namespace Lottie
 {

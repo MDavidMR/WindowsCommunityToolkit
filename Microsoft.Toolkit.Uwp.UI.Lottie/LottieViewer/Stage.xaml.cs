@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Lottie;
+using Microsoft_UI_Xaml_Controls;
 using System;
 using System.Linq;
 using Windows.Storage;
@@ -109,8 +110,7 @@ namespace LottieViewer
             await startDroppedAnimation;
 
             _player.Opacity = 1;
-            Player.Play();
-
+            await Player.PlayAsync(0, 1, Player.PlaybackRate, true);
         }
 
 

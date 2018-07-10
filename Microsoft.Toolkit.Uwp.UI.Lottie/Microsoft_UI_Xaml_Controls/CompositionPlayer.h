@@ -97,10 +97,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             winrt::handle_type<PTP_WAIT_traits> _wait;
         };
 
-
-        static void OnPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
-        void OnPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
-
         static void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
         void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
@@ -108,12 +104,13 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         void OnPlaybackRatePropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
         static void OnSourcePropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
+        void OnSourcePropertyChanged(ICompositionSource const& oldSource, ICompositionSource const& newSource);
 
         static void OnStretchPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
         static CompositionPlayer* AsSelf(const Windows::UI::Xaml::DependencyObject& sender);
 
-        void UpdateContent(ICompositionSource const& newSource);
+        void UpdateContent();
         void UnloadComposition();
 
         static Windows::UI::Xaml::DependencyProperty s_AutoPlayProperty;
@@ -142,6 +139,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         double _currentPlayFromProgress = 0;
         // The play that will be stopped when Stop() is called.
         std::shared_ptr<AnimationPlay> _nowPlaying = nullptr;
+        winrt::event_token _dynamicCompositionInvalidatedToken;
     };
 
 }

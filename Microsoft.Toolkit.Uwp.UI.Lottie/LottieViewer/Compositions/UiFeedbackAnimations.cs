@@ -1,7 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-using Host = Lottie;
+using Host = Microsoft_UI_Xaml_Controls;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;

@@ -13,37 +13,6 @@ namespace winrt
     using namespace Windows::Foundation::Numerics;
 }
 
-using std::wstring_view;
-
-inline winrt::DependencyProperty InitializeDependencyProperty(
-    wstring_view const& propertyNameString,
-    wstring_view const& propertyTypeNameString,
-    wstring_view const& ownerTypeNameString,
-    bool isAttached,
-    winrt::IInspectable defaultValue,
-    winrt::PropertyChangedCallback propertyChangedCallback = nullptr)
-{
-    auto propertyType = winrt::Interop::TypeName();
-    propertyType.Name = propertyTypeNameString;
-    propertyType.Kind = winrt::Interop::TypeKind::Metadata;
-
-    auto ownerType = winrt::Interop::TypeName();
-    ownerType.Name = ownerTypeNameString;
-    ownerType.Kind = winrt::Interop::TypeKind::Metadata;
-
-    auto propertyMetadata = winrt::PropertyMetadata(defaultValue, propertyChangedCallback);
-
-    if (isAttached)
-    {
-        return winrt::DependencyProperty::RegisterAttached(propertyNameString, propertyType, ownerType, propertyMetadata);
-    }
-    else
-    {
-        return winrt::DependencyProperty::Register(propertyNameString, propertyType, ownerType, propertyMetadata);
-    }
-}
-
-
 // Copied from CastHelpers.h
 template <typename T, typename U>
 T safe_cast(const U& value)

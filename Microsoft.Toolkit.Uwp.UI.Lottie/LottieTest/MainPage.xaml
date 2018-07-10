@@ -43,9 +43,9 @@
             <Slider Orientation="Horizontal" Minimum="-5" Maximum="5" Value="1" ValueChanged="Slider_ValueChanged" StepFrequency="0.025" HorizontalAlignment="Stretch" />
 
             <!--<Border BorderBrush="Green" BorderThickness="5">
-                <lottie:CompositionPlayer>
+                <compPlayer:CompositionPlayer>
                     <comps:MyComposition/>
-                </lottie:CompositionPlayer>
+                </compPlayer:CompositionPlayer>
             </Border>-->
             <Frame x:Name="ContentFrame">
 

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Compositions;
-using Lottie;
+using Microsoft_UI_Xaml_Controls;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -108,8 +108,6 @@ namespace LottieViewer
                 Stretch = Stretch.UniformToFill,
                 AutoPlay = false,
                 IsLoopingEnabled = false,
-                FromProgress = 0,
-                ToProgress = 0.595,
                 Source = new LottieLogo()
             };
 
@@ -117,7 +115,7 @@ namespace LottieViewer
             splashGrid.Children.Add(compositionPlayer);
 
             // Start playing.
-            await compositionPlayer.PlayAsync();
+            await compositionPlayer.PlayAsync(fromProgress:0, toProgress:0.595, playbackRate:1, looped:false);
 
             // Fade out the splash screen
             var storyboard = new Storyboard();
