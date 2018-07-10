@@ -142,12 +142,19 @@ namespace LottieTest
                 var jsonString = await FileIO.ReadTextAsync(file);
 
                 // Parse the Lottie
+#if USE_NEWTONSOFT_PARSING
+                var lottieComposition =
+                     LottieData.Serialization.Net.LottieCompositionReader.ReadLottieCompositionFromJsonString(
+                        jsonString,
+                        LottieData.Serialization.Net.LottieCompositionReader.Options.IgnoreMatchNames,
+                        out var readerIssues);
+#else
                 var lottieComposition =
                     LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(
                         jsonString,
                         LottieCompositionJsonReader.Options.IgnoreMatchNames,
                         out var readerIssues);
-
+#endif
                 lottieInfo.ReaderIssues = readerIssues;
 
                 if (lottieComposition == null)

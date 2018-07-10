@@ -5,6 +5,7 @@
 // Uncomment this to slow down async awaits for testing.
 //#define SlowAwaits
 #endif
+
 using LottieData;
 using LottieData.Serialization;
 using LottieToWinComp;
@@ -258,12 +259,19 @@ namespace Lottie
                 LottieData.LottieComposition lottieComposition = null;
                 await CheckedAwait(Task.Run(() =>
                 {
+#if USE_NEWTONSOFT_PARSING
+                    lottieComposition =
+                        LottieData.Serialization.Net.LottieCompositionReader.ReadLottieCompositionFromJsonString(
+                            jsonString,
+                            LottieData.Serialization.Net.LottieCompositionReader.Options.IgnoreMatchNames,
+                            out var readerIssues);
+#else
                     lottieComposition =
                         LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(
                             jsonString,
                             LottieCompositionJsonReader.Options.IgnoreMatchNames,
                             out var readerIssues);
-
+#endif
                     if (diagnostics != null)
                     {
                         diagnostics.JsonParsingIssues = ToIssues(readerIssues);

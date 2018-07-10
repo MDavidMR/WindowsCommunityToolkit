@@ -196,6 +196,10 @@
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>
       <Name>LottieData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LottieJsonReaderDotNet\LottieJsonReaderDotNet.csproj">
+      <Project>{57c75d8b-32bb-41bf-ba9a-eee3d55af3b3}</Project>
+      <Name>LottieJsonReaderDotNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LottieJsonReader\LottieJsonReader.csproj">
       <Project>{AE4E2F47-A73E-44AD-9E5B-4BEEC152329A}</Project>
       <Name>LottieJsonReader</Name>

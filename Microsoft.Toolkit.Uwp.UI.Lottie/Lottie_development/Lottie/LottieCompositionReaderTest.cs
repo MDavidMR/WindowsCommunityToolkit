@@ -25,7 +25,11 @@ namespace Lottie
                 if (file.Name.EndsWith("json", StringComparison.OrdinalIgnoreCase))
                 {
                     var contents = await FileIO.ReadTextAsync(file);
+#if USE_NEWTONSOFT_PARSING
+                    var composition = LottieData.Serialization.Net.LottieCompositionReader.ReadLottieCompositionFromJsonString(contents, LottieData.Serialization.Net.LottieCompositionReader.Options.None, out var readerIssues);
+#else
                     var composition = LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(contents, LottieCompositionJsonReader.Options.None, out var readerIssues);
+#endif
 
                     if (composition != null)
                     {
