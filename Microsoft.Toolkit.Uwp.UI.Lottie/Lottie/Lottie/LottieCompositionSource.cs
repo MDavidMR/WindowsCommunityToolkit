@@ -6,6 +6,9 @@
 //#define SlowAwaits
 #endif
 
+// Comment this out to use the old Windows.Data.Json parser.
+//#define USE_NEWTONSOFT_PARSING
+
 using LottieData;
 using LottieData.Serialization;
 using LottieToWinComp;
@@ -260,19 +263,18 @@ namespace Lottie
                 LottieData.LottieComposition lottieComposition = null;
                 await CheckedAwait(Task.Run(() =>
                 {
-#if USE_NEWTONSOFT_PARSING
                     lottieComposition =
+#if USE_NEWTONSOFT_PARSING
                         LottieData.Serialization.Net.LottieCompositionReader.ReadLottieCompositionFromJsonString(
                             jsonString,
                             LottieData.Serialization.Net.LottieCompositionReader.Options.IgnoreMatchNames,
-                            out var readerIssues);
 #else
-                    lottieComposition =
                         LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(
                             jsonString,
                             LottieCompositionJsonReader.Options.IgnoreMatchNames,
-                            out var readerIssues);
 #endif
+                            out var readerIssues);
+
                     if (diagnostics != null)
                     {
                         diagnostics.JsonParsingIssues = ToIssues(readerIssues);
@@ -486,7 +488,7 @@ namespace Lottie
             return $"LottieCompositionSource({identity})";
         }
 
-        #region DEBUG
+#region DEBUG
         // For testing purposes, slows down a task.
 #if SlowAwaits
         const int _checkedDelayMs = 5;
@@ -503,7 +505,7 @@ namespace Lottie
 #endif
         }
 
-        #endregion DEBUG
+#endregion DEBUG
     }
 }
 

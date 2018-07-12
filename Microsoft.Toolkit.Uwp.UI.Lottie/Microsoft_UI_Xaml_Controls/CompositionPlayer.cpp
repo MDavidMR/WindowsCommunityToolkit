@@ -7,7 +7,6 @@ using namespace winrt::Windows::UI::Core;
 namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 {
     winrt::DependencyProperty CompositionPlayer::s_AutoPlayProperty = nullptr;
-    winrt::DependencyProperty CompositionPlayer::s_BackgroundColorProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_DiagnosticsProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_DurationProperty = nullptr;
     winrt::DependencyProperty CompositionPlayer::s_IsCompositionLoadedProperty = nullptr;
@@ -107,8 +106,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
         // Ensure the content can't render outside the bounds of the element.
         _rootVisual.Clip(compositor.CreateInsetClip());
-
-        _backgroundBrush = compositor.CreateColorBrush(BackgroundColor());
     }
 
     // Overrides FrameworkElement::MeasureOverride. Returns the size that is needed to display the
@@ -245,7 +242,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     // Dependency properties
     void CompositionPlayer::ClearProperties()
     {
-        s_BackgroundColorProperty = nullptr;
         s_DiagnosticsProperty = nullptr;
         s_DurationProperty = nullptr;
         s_IsCompositionLoadedProperty = nullptr;
@@ -270,13 +266,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
                 L"AutoPlay",
                 winrt::name_of<bool>(),
                 box_value(true));
-
-        s_BackgroundColorProperty =
-            InitializeDependencyProperty(
-                L"BackgroundColor",
-                winrt::name_of<Windows::UI::Color>(),
-                box_value(Windows::UI::Colors::Transparent()),
-                winrt::PropertyChangedCallback(&CompositionPlayer::OnBackgroundColorPropertyChanged));
 
         s_DiagnosticsProperty =
             InitializeDependencyProperty(
@@ -394,16 +383,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
     Windows::UI::Composition::CompositionObject CompositionPlayer::ProgressObject()
     {
         return _progressPropertySet;
-    }
-
-    Windows::UI::Color CompositionPlayer::BackgroundColor()
-    {
-        return unbox_value<Windows::UI::Color>(GetValue(s_BackgroundColorProperty));
-    }
-
-    void CompositionPlayer::BackgroundColor(Windows::UI::Color const& value)
-    {
-        SetValue(s_BackgroundColorProperty, box_value(value));
     }
 
     winrt::Stretch CompositionPlayer::Stretch()
@@ -673,19 +652,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             // Size has changed. Tell XAML to re-measure.
             InvalidateMeasure();
         }
-    }
-
-    void CompositionPlayer::OnBackgroundColorPropertyChanged(
-        const winrt::DependencyObject& sender,
-        const winrt::DependencyPropertyChangedEventArgs& args)
-    {
-        AsSelf(sender)->OnBackgroundColorPropertyChanged(args);
-    }
-
-    void CompositionPlayer::OnBackgroundColorPropertyChanged(const winrt::DependencyPropertyChangedEventArgs& args)
-    {
-        auto newColor = unbox_value<Windows::UI::Color>(args.NewValue());
-        _backgroundBrush.Color(newColor);
     }
 
     void CompositionPlayer::OnPlaybackRatePropertyChanged(

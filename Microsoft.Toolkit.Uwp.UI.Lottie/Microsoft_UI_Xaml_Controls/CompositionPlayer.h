@@ -22,8 +22,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         double PlaybackRate();
         void PlaybackRate(double value);
         Windows::UI::Composition::CompositionObject ProgressObject();
-        Windows::UI::Color BackgroundColor();
-        void BackgroundColor(Windows::UI::Color const& value);
         Windows::UI::Xaml::Media::Stretch Stretch();
         void Stretch(Windows::UI::Xaml::Media::Stretch const& value);
         void Pause();
@@ -41,7 +39,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
 
         // Dependency properties
         static Windows::UI::Xaml::DependencyProperty AutoPlayProperty() { return s_AutoPlayProperty; }
-        static Windows::UI::Xaml::DependencyProperty BackgroundColorProperty() { return s_BackgroundColorProperty; }
         static Windows::UI::Xaml::DependencyProperty DiagnosticsProperty() { return s_DiagnosticsProperty; }
         static Windows::UI::Xaml::DependencyProperty DurationProperty() { return s_DurationProperty; }
         static Windows::UI::Xaml::DependencyProperty IsCompositionLoadedProperty() { return s_IsCompositionLoadedProperty; }
@@ -97,9 +94,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             winrt::handle_type<PTP_WAIT_traits> _wait;
         };
 
-        static void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
-        void OnBackgroundColorPropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
-
         static void OnPlaybackRatePropertyChanged(const Windows::UI::Xaml::DependencyObject& sender, const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
         void OnPlaybackRatePropertyChanged(const Windows::UI::Xaml::DependencyPropertyChangedEventArgs& args);
 
@@ -114,7 +108,6 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         void UnloadComposition();
 
         static Windows::UI::Xaml::DependencyProperty s_AutoPlayProperty;
-        static Windows::UI::Xaml::DependencyProperty s_BackgroundColorProperty;
         static Windows::UI::Xaml::DependencyProperty s_DiagnosticsProperty;
         static Windows::UI::Xaml::DependencyProperty s_DurationProperty;
         static Windows::UI::Xaml::DependencyProperty s_FromProgressProperty;
@@ -129,12 +122,11 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         // The size of the current composition. Only valid if _compositionRoot is not nullptr.
         Windows::Foundation::Numerics::float2 _compositionSize;
         Windows::UI::Composition::Visual _compositionRoot = nullptr;
-        // A Visual used for clipping, background, and for parenting of _compositionRoot.
+        // A Visual used for clipping and for parenting of _compositionRoot.
         Windows::UI::Composition::SpriteVisual _rootVisual = nullptr;
         // The property set that contains the Progress property that will be used to
         // set the progress of the composition.
         Windows::UI::Composition::CompositionPropertySet _progressPropertySet = nullptr;
-        Windows::UI::Composition::CompositionColorBrush _backgroundBrush = nullptr;
         int _playAsyncVersion = 0;
         double _currentPlayFromProgress = 0;
         // The play that will be stopped when Stop() is called.
