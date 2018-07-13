@@ -93,6 +93,11 @@ namespace LottieData.Serialization
             Report("LP0016", $"Ignored field: {field}");
         }
 
+        internal void UnexpectedField(string field)
+        {
+            Report("LP0017", $"Unexpected field: {field}");
+        }
+
         void Report(string code, string description)
         {
             _issues.Add((code, description));

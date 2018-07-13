@@ -156,7 +156,8 @@ namespace LottieData.Serialization
                         _issues.Fonts();
                         break;
                     default:
-                        throw new LottieJsonReaderException($"Unexpected field: {field.Key}");
+                        _issues.UnexpectedField(field.Key);
+                        break;
                 }
             }
 
@@ -1387,7 +1388,8 @@ namespace LottieData.Serialization
                             reader._issues.Expressions();
                             break;
                         default:
-                            throw new LottieJsonReaderException($"Unexpected field: {field.Key}");
+                            reader._issues.UnexpectedField(field.Key);
+                            break;
                     }
                 }
 

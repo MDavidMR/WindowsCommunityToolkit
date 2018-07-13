@@ -165,8 +165,8 @@ namespace Lottie
             if (oldContentFactory != null)
             {
                 // Notify all listeners that their existing content is no longer valid.
-                // They should stop showing the content. We will notify them again if the load
-                // succeeds.
+                // They should stop showing the content. We will notify them again when the
+                // content changes.
                 NotifyListenersThatCompositionChanged();
             }
 
@@ -191,14 +191,12 @@ namespace Lottie
             // We are the the most recent load. Save the result.
             _contentFactory = contentFactory;
 
-            if (contentFactory.CanInstantiate)
+            // Notify all listeners that they should try to create their instance of the content again.
+            NotifyListenersThatCompositionChanged();
+
+            if (!contentFactory.CanInstantiate)
             {
-                // Notify all listeners that they should create their instance of the content again.
-                NotifyListenersThatCompositionChanged();
-            }
-            else
-            {
-                // The load failed. Throw an exception so the caller knows.
+                // The load did not produce any content. Throw an exception so the caller knows.
                 throw new ArgumentException("Failed to load composition.");
             }
         }
@@ -447,6 +445,13 @@ namespace Lottie
 
             internal bool CanInstantiate => _wincompDataRootVisual != null;
 
+            // Clones a new diagnostics object. Will return null if the factory
+            // has no diagnostics object.
+            LottieCompositionDiagnostics GetDiagnosticsClone()
+            {
+                return _diagnostics != null ? _diagnostics.Clone() : null;
+            }
+
             public bool TryCreateInstance(
                 Compositor compositor,
                 out Visual rootVisual,
@@ -454,7 +459,7 @@ namespace Lottie
                 out TimeSpan duration,
                 out object diagnostics)
             {
-                LottieCompositionDiagnostics diags = _diagnostics != null ? _diagnostics.Clone() : null;
+                var diags = GetDiagnosticsClone();
                 diagnostics = diags;
 
                 if (!CanInstantiate)
