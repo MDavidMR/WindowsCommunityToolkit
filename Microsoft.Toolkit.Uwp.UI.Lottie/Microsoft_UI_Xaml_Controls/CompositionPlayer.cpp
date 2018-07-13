@@ -476,9 +476,16 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         }
         else
         {
-            animation.IterationBehavior(AnimationIterationBehavior::Count);
+			animation.IterationBehavior(AnimationIterationBehavior::Count);
             animation.IterationCount(1);
         }
+
+		// RS4 has a problem with negative PlaybackRate (it will loop instead of playing once). Work around
+		// it by setting the direction to Reverse and using a positive PlaybackRate.
+		if (playbackRate < 0)
+		{
+			animation.Direction(AnimationDirection::Reverse);
+		}
 
         // Create a batch so that we can know when the animation finishes. This only
         // works for non-looping animations (the batch completes immediately
@@ -494,7 +501,9 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
             _progressPropertySet.TryGetAnimationController(L"Progress"));
 
         // Set the playback rate.
-        nowPlaying->SetPlaybackRate(static_cast<float>(playbackRate));
+		// RS4 has a problem with negative PlaybackRate (it will loop instead of playing once). Work around
+		// it by setting the direction to Reverse and using a positive PlaybackRate.
+        nowPlaying->SetPlaybackRate(static_cast<float>(abs(playbackRate)));
 
         event_token batchCompletedToken{};
 
@@ -513,14 +522,17 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         // is set.
         _nowPlaying = nowPlaying;
 
+		// Capture the context so we can finish in the calling thread.
+		apartment_context calling_thread;
+
         // Await the current play. The await will complete when the animation completes
         // or Stop() is called.
         co_await *nowPlaying;
 
-        // Ensure we get back to the dispatcher thread. We might be on a threadpool thread.
+        // Get back to the calling thread.
         // This is necessary to unregister from batch.Completed, and because callers
-        // will expect to continue on the dispatcher thread.
-        co_await resume_foreground(Dispatcher());
+        // from the dispatcher thread will expect to continue on the dispatcher thread.
+		co_await calling_thread;
 
         if (batchCompletedToken)
         {
@@ -638,7 +650,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         if (AutoPlay())
         {
             // Start playing immediately.
-            PlayAsync(0 /* from */, 1 /* to */, 1 /* playback rate */, true /* looped */);
+            PlayAsync(0 /* from */, 1 /* to */, 1 /* playback rate */, IsLoopingEnabled() /* looped */);
         }
     }
 
