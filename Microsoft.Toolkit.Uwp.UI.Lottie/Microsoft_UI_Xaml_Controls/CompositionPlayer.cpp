@@ -140,9 +140,17 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
                 // Scale so there is no space around the edge.
                 auto widthScale = availableSize.Width / _compositionSize.x;
                 auto heightScale = availableSize.Height / _compositionSize.y;
-                return (heightScale < widthScale)
+                auto measuredSize = (heightScale < widthScale)
                     ? Size{ availableSize.Width, _compositionSize.y * widthScale }
-                : Size{ _compositionSize.x * heightScale, availableSize.Height };
+                    : Size{ _compositionSize.x * heightScale, availableSize.Height };
+
+                // Clip the size to the available size.
+                measuredSize = Size{ 
+                                std::min(measuredSize.Width, availableSize.Width), 
+                                std::min(measuredSize.Height, availableSize.Height) 
+                };
+
+                return measuredSize;
             }
             // One of the dimensions is infinite and we can't fill infinite dimensions, so
             // fall back to Uniform so at least the non-infinite dimension will be filled.
