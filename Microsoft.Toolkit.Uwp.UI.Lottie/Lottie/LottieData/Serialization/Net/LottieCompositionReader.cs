@@ -110,7 +110,9 @@ namespace LottieData.Serialization.Net
             string version = null;
             string name = null;
 
-            int? GetInt(JToken j) => (j.Type == JTokenType.Integer || j.Type == JTokenType.Float) ? (int?)j : null;
+            // Newtonsoft has its own casting logic so to bypass this, we first cast to a double and then round
+            // because the desired behavior is to round doubles to the nearest value.
+            int? GetInt(JToken j) => (j.Type == JTokenType.Integer || j.Type == JTokenType.Float) ? (int?)Math.Round((double)j) : null;
 
             foreach (var field in obj)
             {
@@ -1055,7 +1057,9 @@ namespace LottieData.Serialization.Net
             {
                 return null;
             }
-            var intValue = unchecked((int)value);
+            // Newtonsoft has its own casting logic so to bypass this, we first cast to a double and then round
+            // because the desired behavior is to round doubles to the nearest value.
+            var intValue = unchecked((int)Math.Round((double)value));
             if (value != intValue)
             {
                 return null;
@@ -1383,6 +1387,12 @@ namespace LottieData.Serialization.Net
                         // Property index. Used for expressions. Currently ignored because we don't support expressions.
                         case "ix":
                             // Do not report it as an issue - existence of "ix" doesn't mean that an expression is actually used.
+                            break;
+
+                        // Extremely rare fields seen in 1 Lottie file. Ignore.
+                        case "nm":  // Name
+                        case "mn":  // ??
+                        case "hd":  // IsHidden
                             break;
 
                         // Property expression. Currently ignored because we don't support expressions.

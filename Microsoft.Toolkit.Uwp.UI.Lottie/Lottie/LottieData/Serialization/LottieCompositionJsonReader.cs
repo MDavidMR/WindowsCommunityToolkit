@@ -104,7 +104,7 @@ namespace LottieData.Serialization
             string version = null;
             string name = null;
 
-            int? GetInt(IJsonValue j) => j.ValueType == JsonValueType.Number ? (int?)j.GetNumber() : null;
+            int? GetInt(IJsonValue j) => j.ValueType == JsonValueType.Number ? (int?)Math.Round(j.GetNumber()) : null;
 
             foreach (var field in obj)
             {
@@ -1048,7 +1048,7 @@ namespace LottieData.Serialization
             {
                 return null;
             }
-            var intValue = unchecked((int)value);
+            var intValue = unchecked((int)Math.Round(value));
             if (value != intValue)
             {
                 return null;

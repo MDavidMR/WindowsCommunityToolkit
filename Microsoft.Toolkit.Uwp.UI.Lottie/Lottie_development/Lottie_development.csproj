@@ -150,7 +150,7 @@
       <Name>LottieJsonReader</Name>
     </ProjectReference>
     <ProjectReference Include="..\LottieToWinComp\LottieToWinComp.csproj">
-      <Project>{1750614f-fd5d-4dec-9dfc-91572073efc0}</Project>
+      <Project>{4a4964e2-f3a6-4c89-9ecd-8de2f54adc8e}</Project>
       <Name>LottieToWinComp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
