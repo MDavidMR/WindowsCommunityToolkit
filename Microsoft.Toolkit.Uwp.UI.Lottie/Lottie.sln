@@ -25,9 +25,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieJsonReaderDotNet", "L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieCodeGenTool", "LottieCodeGenTool\LottieCodeGenTool.csproj", "{4389B06B-F11A-4CB0-83D5-4C4507640538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieToWinComp", "LottieToWinComp\LottieToWinComp.csproj", "{4A4964E2-F3A6-4C89-9ECD-8DE2F54ADC8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieToWinComp", "LottieToWinComp\LottieToWinComp.csproj", "{4A4964E2-F3A6-4C89-9ECD-8DE2F54ADC8E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LottieToWinComp_source", "LottieToWinComp_source\LottieToWinComp_source.shproj", "{0340244A-683C-405E-838B-F93872779532}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LottieData_source", "LottieData_source\LottieData_source.shproj", "{B3DB16EE-A821-4474-A188-E64926529BBD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCompData_source", "WinCompData_source\WinCompData_source.shproj", "{D02870DE-7DED-4916-85D4-3175CEEDEF74}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LottieReader_source", "LottieReader_source\LottieReader_source.shproj", "{4E7D8957-3F5F-46E1-99A8-2012B806C9B0}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		LottieToWinComp_source\LottieToWinComp_source.projitems*{0340244a-683c-405e-838b-f93872779532}*SharedItemsImports = 13
+		LottieReader_source\LottieReader_source.projitems*{4e7d8957-3f5f-46e1-99a8-2012b806c9b0}*SharedItemsImports = 13
+		LottieData_source\LottieData_source.projitems*{b3db16ee-a821-4474-a188-e64926529bbd}*SharedItemsImports = 13
+		WinCompData_source\WinCompData_source.projitems*{d02870de-7ded-4916-85d4-3175ceedef74}*SharedItemsImports = 13
+		LottieData_source\LottieData_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
+		LottieReader_source\LottieReader_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
+		LottieToWinComp_source\LottieToWinComp_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
+		WinCompData_source\WinCompData_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM

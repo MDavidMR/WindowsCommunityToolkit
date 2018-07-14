@@ -9,11 +9,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LottieData\LottieData.csproj" />
-    <ProjectReference Include="..\LottieJsonReaderDotNet\LottieJsonReaderDotNet.csproj" />
-    <ProjectReference Include="..\LottieToWinComp\LottieToWinComp.csproj" />
-    <ProjectReference Include="..\WinCompData\WinCompData.csproj" />
-  </ItemGroup>
+  <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
+
+  <Import Project="..\LottieToWinComp_source\LottieToWinComp_source.projitems" Label="Shared" />
+
+  <Import Project="..\WinCompData_source\WinCompData_source.projitems" Label="Shared" />
+
+  <Import Project="..\LottieReader_source\LottieReader_source.projitems" Label="Shared" />
 
 </Project>

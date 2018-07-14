@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Lottie\LottieData\Serialization\LottieJsonReaderException.cs" Link="LottieData\Serialization\LottieJsonReaderException.cs" />
-    <Compile Include="..\Lottie\LottieData\Serialization\Net\LottieCompositionReader.cs" Link="LottieData\Serialization\Net\LottieCompositionReader.cs" />
-    <Compile Include="..\Lottie\LottieData\Serialization\ParsingIssues.cs" Link="LottieData\Serialization\ParsingIssues.cs" />
+    <Compile Remove="LottieData\Serialization\Net\**" />
+    <EmbeddedResource Remove="LottieData\Serialization\Net\**" />
+    <None Remove="LottieData\Serialization\Net\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,11 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="LottieData\Serialization\Net\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\LottieData\LottieData.csproj" />
   </ItemGroup>
+
+  <Import Project="..\LottieReader_source\LottieReader_source.projitems" Label="Shared" />
 
 </Project>
