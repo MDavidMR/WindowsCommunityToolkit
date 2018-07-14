@@ -100,7 +100,9 @@ namespace Lottie
             return LoadAsync(sourceUri == null ? null : new Loader(sourceUri)).AsAsyncAction();
         }
 
-        event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
+        // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
+        //event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
+        public event DynamicCompositionSourceEventHandler CompositionInvalidated
         {
             add
             {
@@ -117,7 +119,9 @@ namespace Lottie
             }
         }
 
-        bool ICompositionSource.TryCreateInstance(
+        // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
+        public bool TryCreateInstance(
+        //bool ICompositionSource.TryCreateInstance(
             Compositor compositor,
             out Visual rootVisual,
             out Vector2 size,
