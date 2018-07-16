@@ -106,17 +106,17 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\LottieReader_source\LottieData\Serialization\LottieJsonReaderException.cs">
+      <Link>LottieData\Serialization\LottieJsonReaderException.cs</Link>
+    </Compile>
+    <Compile Include="..\LottieReader_source\LottieData\Serialization\ParsingIssues.cs">
+      <Link>LottieData\Serialization\ParsingIssues.cs</Link>
+    </Compile>
     <Compile Include="..\Lottie\LottieData\Serialization\CheckedWindowsDataJson.cs">
       <Link>LottieData\Serialization\CheckedWindowsDataJson.cs</Link>
     </Compile>
     <Compile Include="..\Lottie\LottieData\Serialization\LottieCompositionJsonReader.cs">
       <Link>LottieData\Serialization\LottieCompositionJsonReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Lottie\LottieData\Serialization\LottieJsonReaderException.cs">
-      <Link>LottieData\Serialization\LottieJsonReaderException.cs</Link>
-    </Compile>
-    <Compile Include="..\Lottie\LottieData\Serialization\ParsingIssues.cs">
-      <Link>LottieData\Serialization\ParsingIssues.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LottieJsonReader.rd.xml" />
