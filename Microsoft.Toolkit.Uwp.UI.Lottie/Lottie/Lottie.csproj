@@ -109,8 +109,6 @@
   <ItemGroup>
     <Compile Include="Lottie\CompositionSegment.cs" />
     <Compile Include="Lottie\Issue.cs" />
-    <Compile Include="LottieData\Serialization\CheckedWindowsDataJson.cs" />
-    <Compile Include="LottieData\Serialization\LottieCompositionJsonReader.cs" />
     <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
     <Compile Include="Lottie\LottieCompositionOptions.cs" />
     <Compile Include="Lottie\LottieCompositionSource.cs" />
@@ -140,9 +138,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Lottie.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WinCompData\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\LottieToWinComp_source\LottieToWinComp_source.projitems" Label="Shared" />
   <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
   <Import Project="..\WinCompData_source\WinCompData_source.projitems" Label="Shared" />

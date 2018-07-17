@@ -1,4 +1,4 @@
-﻿using LottieData.Serialization.Net;
+﻿using LottieData.Serialization;
 using LottieToWinComp;
 using System;
 using System.IO;

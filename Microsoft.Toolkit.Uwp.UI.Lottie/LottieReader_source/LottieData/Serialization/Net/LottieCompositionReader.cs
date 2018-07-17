@@ -19,11 +19,11 @@ using ParsingIssues = LottieData.Serialization.ParsingIssues;
 using LottieJsonReaderException = LottieData.Serialization.LottieJsonReaderException;
 
 #if CheckForUnparsedFields
-using JObject = LottieData.Serialization.Net.CheckedJsonObject;
-using JArray = LottieData.Serialization.Net.CheckedJsonArray;
+using JObject = LottieData.Serialization.CheckedJsonObject;
+using JArray = LottieData.Serialization.CheckedJsonArray;
 #endif
 
-namespace LottieData.Serialization.Net
+namespace LottieData.Serialization
 {
     // See: https://github.com/airbnb/lottie-web/tree/master/docs/json for the (sometimes out-of-date)
     // Lottie schema.

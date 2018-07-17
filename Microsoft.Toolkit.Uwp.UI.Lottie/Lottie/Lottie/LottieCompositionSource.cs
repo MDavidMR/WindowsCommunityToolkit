@@ -266,15 +266,9 @@ namespace Lottie
                 await CheckedAwait(Task.Run(() =>
                 {
                     lottieComposition =
-#if USE_NEWTONSOFT_PARSING
-                        LottieData.Serialization.Net.LottieCompositionReader.ReadLottieCompositionFromJsonString(
+                        LottieCompositionReader.ReadLottieCompositionFromJsonString(
                             jsonString,
-                            LottieData.Serialization.Net.LottieCompositionReader.Options.IgnoreMatchNames,
-#else
-                        LottieCompositionJsonReader.ReadLottieCompositionFromJsonString(
-                            jsonString,
-                            LottieCompositionJsonReader.Options.IgnoreMatchNames,
-#endif
+                            LottieCompositionReader.Options.IgnoreMatchNames,
                             out var readerIssues);
 
                     if (diagnostics != null)
