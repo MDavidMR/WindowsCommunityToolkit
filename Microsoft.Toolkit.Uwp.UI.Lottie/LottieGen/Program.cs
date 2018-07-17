@@ -12,14 +12,6 @@ static class Program
 {
     static readonly Assembly s_thisAssembly = Assembly.GetExecutingAssembly();
 
-    enum Language
-    {
-        Unknown,
-        CSharp,
-        Cx,
-        WinrtCpp,
-    }
-
     enum ReturnCode
     {
         Success,
@@ -74,38 +66,27 @@ static class Program
         }
 
         // Check for required args
-        if (options.LottieFile == null)
+        if (options.InputFile == null)
         {
             WriteError("Lottie file not specified.");
             return ReturnCode.InvalidUsage;
         }
 
-        // Parse the language string
-        var tokenizer = new CommandlineTokenizer<Language>(Language.Unknown)
-                .AddKeyword("csharp", Language.CSharp)
-                .AddKeyword("cppcx", Language.Cx)
-                .AddKeyword("cx", Language.Cx)
-                .AddKeyword("winrtcpp", Language.WinrtCpp);
-
-        Language language;
-        if (!tokenizer.TryMatchKeyword(options.Language, out language))
+        switch (options.Language)
         {
-            if (options.Language == null)
-            {
+            case Lang.Unknown:
+                WriteError("Invalid language.");
+                return ReturnCode.InvalidUsage;
+            case Lang.Unspecified:
                 WriteError("Language not specified.");
-            }
-            else
-            {
-                WriteError($"{options.Language} is not a valid language choice.");
-            }
-            return ReturnCode.InvalidUsage;
+                return ReturnCode.InvalidUsage;
         }
 
         return TryGenerateCode(
-                    options.LottieFile,
+                    options.InputFile,
                     options.OutputFolder ?? ".",    // Default to current directory
                     options.ClassName,
-                    language,
+                    options.Language,
                     options.StrictMode,
                     infoStream,
                     errorStream)
@@ -123,7 +104,7 @@ static class Program
         string lottieJsonFile,
         string outputFolder,
         string codeGenClassName,
-        Language language,
+        Lang language,
         bool strictTranslation,
         TextWriter infoStream,
         TextWriter errorStream)
@@ -195,7 +176,7 @@ static class Program
         bool codeGenSucceeded = false;
         switch (language)
         {
-            case Language.CSharp:
+            case Lang.CSharp:
                 translateSucceeded = TryGenerateCSharpCode(
                     className,
                     wincompDataRootVisual,
@@ -207,7 +188,7 @@ static class Program
                     errorStream);
                 break;
 
-            case Language.Cx:
+            case Lang.Cx:
                 translateSucceeded = TryGenerateCXCode(
                     className,
                     wincompDataRootVisual,
@@ -401,11 +382,11 @@ static class Program
     }
 
     static string Usage => string.Format(@"
-Usage: {0} -LottieFile INFILE -Language LANG [Other options]
+Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
-       INFILE is a Lottie .json file.
+       LOTTIEFILE is a Lottie .json file.
        LANG is one of cs, cppcx, or winrtcpp.
 
        [Other options]
@@ -428,10 +409,11 @@ EXAMPLES:
        Generate Foo.cpp and Foo.h winrtcpp files in the current directory from the 
        Lottie file Foo.json:
 
-         {0} -LottieFile Foo.json -Language winrtcpp
+         {0} -InputFile Foo.json -Language winrtcpp
 
 
+       Keywords can be abbreviated and are case insensitive.
        Generate Grotz.cs in the C:\temp directory from the Lottie file Bar.json:
 
-         {0} -LottieFile Bar.json -Language cs -ClassName Grotz -OutputFolder C:\temp", s_thisAssembly.ManifestModule.Name);
+         {0} -i Bar.json -L cs -ClassName Grotz -o C:\temp", s_thisAssembly.ManifestModule.Name);
 }
