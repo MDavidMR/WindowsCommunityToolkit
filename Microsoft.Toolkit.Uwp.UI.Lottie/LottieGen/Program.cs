@@ -1,6 +1,7 @@
 ﻿using LottieData.Serialization;
 using LottieToWinComp;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -82,16 +83,25 @@ static class Program
                 return ReturnCode.InvalidUsage;
         }
 
-        return TryGenerateCode(
+        var profiler = new Profiler();
+
+        var result = TryGenerateCode(
                     options.InputFile,
                     options.OutputFolder ?? ".",    // Default to current directory
                     options.ClassName,
                     options.Language,
                     options.StrictMode,
                     infoStream,
-                    errorStream)
+                    errorStream,
+                    profiler)
                 ? ReturnCode.Success
                 : ReturnCode.Failure;
+
+        infoStream.WriteLine();
+        infoStream.WriteLine(" === Timings ===");
+        profiler.WriteReport(infoStream);
+
+        return result;
 
         // Helper for writing errors to the error stream.
         void WriteError(string errorMessage)
@@ -107,7 +117,8 @@ static class Program
         Lang language,
         bool strictTranslation,
         TextWriter infoStream,
-        TextWriter errorStream)
+        TextWriter errorStream,
+        Profiler profiler)
     {
         if (!TryEnsureDirectoryExists(outputFolder))
         {
@@ -117,6 +128,8 @@ static class Program
 
         // Read the Lottie .json text.
         var jsonString = TryReadTextFile(lottieJsonFile);
+
+        profiler.OnReadFinished();
 
         if (jsonString == null)
         {
@@ -130,6 +143,8 @@ static class Program
                 jsonString,
                 LottieCompositionReader.Options.IgnoreMatchNames,
                 out var readerIssues);
+
+        profiler.OnParseFinished();
 
         foreach (var issue in readerIssues)
         {
@@ -148,6 +163,8 @@ static class Program
                     true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
                     out var wincompDataRootVisual,
                     out var translationIssues);
+
+        profiler.OnTranslateFinished();
 
         foreach (var issue in translationIssues)
         {
@@ -205,6 +222,8 @@ static class Program
                 errorStream.WriteLine($"Language {language} is not supported.");
                 return false;
         };
+
+        profiler.OnCodeGenFinished();
 
         return codeGenSucceeded;
     }
@@ -416,4 +435,46 @@ EXAMPLES:
        Generate Grotz.cs in the C:\temp directory from the Lottie file Bar.json:
 
          {0} -i Bar.json -L cs -ClassName Grotz -o C:\temp", s_thisAssembly.ManifestModule.Name);
+
+
+
+    // Measures time spent in each phase.
+    sealed class Profiler
+    {
+        readonly Stopwatch _sw = Stopwatch.StartNew();
+        TimeSpan _readTime;
+        TimeSpan _parseTime;
+        TimeSpan _translateTime;
+        TimeSpan _codegenTime;
+
+        internal void OnReadFinished() => OnPhaseFinished(ref _readTime);
+        internal void OnParseFinished() => OnPhaseFinished(ref _parseTime);
+        internal void OnTranslateFinished() => OnPhaseFinished(ref _translateTime);
+        internal void OnCodeGenFinished() => OnPhaseFinished(ref _codegenTime);
+
+        void OnPhaseFinished(ref TimeSpan counter)
+        {
+            counter = _sw.Elapsed;
+            _sw.Restart();
+        }
+
+        internal void WriteReport(TextWriter writer)
+        {
+            WriteReportForPhase(writer, "read", _readTime);
+            WriteReportForPhase(writer, "parse", _parseTime);
+            WriteReportForPhase(writer, "translate", _translateTime);
+            WriteReportForPhase(writer, "codegen", _codegenTime);
+        }
+
+        void WriteReportForPhase(TextWriter writer, string phaseName, TimeSpan value)
+        {
+            // Ignore phases that didn't occur.
+            if (value > TimeSpan.Zero)
+            {
+                writer.WriteLine($"{value} spent in {phaseName}.");
+            }
+        }
+    }
 }
+
+
