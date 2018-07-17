@@ -1866,12 +1866,12 @@ namespace LottieData.Serialization.Net
 
         internal static JArray GetNamedArray(this JObject jObject, string name, JArray defaultValue = null)
         {
-            return jObject.TryGetValue(name, out JToken value) ? JArray.Load(value.CreateReader()) : defaultValue;
+            return jObject.TryGetValue(name, out JToken value) ? value.AsArray() : defaultValue;
         }
 
         internal static JObject GetNamedObject(this JObject jObject, string name, JObject defaultValue = null)
         {
-            return jObject.TryGetValue(name, out JToken value) ? JObject.Load(value.CreateReader()) : defaultValue;
+            return jObject.TryGetValue(name, out JToken value) ? value.AsObject() : defaultValue;
         }
 
         internal static bool GetNamedBoolean(this JObject jObject, string name, bool defaultValue = false)
@@ -1884,12 +1884,36 @@ namespace LottieData.Serialization.Net
     {
         internal static JObject AsObject(this JToken token)
         {
-            return JObject.Load(token.CreateReader());
+            try
+            {
+                return (JObject)token;
+            }
+            catch (InvalidCastException ex)
+            {
+                var exceptionString = ex.Message;
+                if (!string.IsNullOrWhiteSpace(token.Path))
+                {
+                    exceptionString += $" Failed to cast to correct type for token in path: {token.Path}.";
+                }
+                throw new LottieJsonReaderException(exceptionString, ex);
+            }
         }
 
         internal static JArray AsArray(this JToken token)
         {
-            return JArray.Load(token.CreateReader());
+            try
+            {
+                return (JArray)token;
+            }
+            catch (InvalidCastException ex)
+            {
+                var exceptionString = ex.Message;
+                if (!string.IsNullOrWhiteSpace(token.Path))
+                {
+                    exceptionString += $" Failed to cast to correct type for token in path: {token.Path}.";
+                }
+                throw new LottieJsonReaderException(exceptionString, ex);
+            }
         }
     }
 #endif
