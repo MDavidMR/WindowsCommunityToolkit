@@ -23,7 +23,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft_UI_Xaml_Controls"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieJsonReaderDotNet", "LottieJsonReaderDotNet\LottieJsonReaderDotNet.csproj", "{57C75D8B-32BB-41BF-BA9A-EEE3D55AF3B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieCodeGenTool", "LottieCodeGenTool\LottieCodeGenTool.csproj", "{4389B06B-F11A-4CB0-83D5-4C4507640538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieGen", "LottieGen\LottieGen.csproj", "{4389B06B-F11A-4CB0-83D5-4C4507640538}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieToWinComp", "LottieToWinComp\LottieToWinComp.csproj", "{4A4964E2-F3A6-4C89-9ECD-8DE2F54ADC8E}"
 EndProject
