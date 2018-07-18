@@ -88,9 +88,16 @@ static class Program
 
         var profiler = new Profiler();
 
+        // Get the output folder as an absolute path, defaulting to the current directory
+        // if no output folder was specified.
+        var outputFolder = MakeAbsolutePath(options.OutputFolder ?? Directory.GetCurrentDirectory());
+
+        // Get the input file as an absolute path.
+        var inputFile = MakeAbsolutePath(options.InputFile);
+
         var result = TryGenerateCode(
-                    options.InputFile,
-                    options.OutputFolder ?? ".",    // Default to current directory
+                    inputFile,
+                    outputFolder,
                     options.ClassName,
                     options.Language,
                     options.StrictMode,
@@ -130,6 +137,7 @@ static class Program
         }
 
         // Read the Lottie .json text.
+        infoStream.WriteLine($"Reading Lottie file: {lottieJsonFile}");
         var jsonString = TryReadTextFile(lottieJsonFile);
 
         profiler.OnReadFinished();
@@ -156,7 +164,7 @@ static class Program
 
         if (lottieComposition == null)
         {
-            errorStream.WriteLine($"Failed to parse Lottie file: {lottieJsonFile}.");
+            errorStream.WriteLine($"Failed to parse Lottie file: {lottieJsonFile}");
             return false;
         }
 
@@ -266,7 +274,7 @@ static class Program
             outputFilePath,
             LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString());
 
-        infoStream.WriteLine($"Lottie XML written to {outputFilePath}.");
+        infoStream.WriteLine($"Lottie XML written to {outputFilePath}");
 
         return result;
     }
@@ -281,7 +289,7 @@ static class Program
             outputFilePath,
             CompositionObjectXmlSerializer.ToXml(rootVisual).ToString());
 
-        infoStream.WriteLine($"WinComp XML written to {outputFilePath}.");
+        infoStream.WriteLine($"WinComp XML written to {outputFilePath}");
 
         return result;
     }
@@ -312,11 +320,11 @@ static class Program
 
         if (!TryWriteTextFile(outputFilePath, code))
         {
-            errorStream.WriteLine($"Failed to write C# code to {outputFilePath}.");
+            errorStream.WriteLine($"Failed to write C# code to {outputFilePath}");
             return false;
         }
 
-        infoStream.WriteLine($"C# code written to {outputFilePath}.");
+        infoStream.WriteLine($"C# code written to {outputFilePath}");
         return true;
     }
 
@@ -355,18 +363,18 @@ static class Program
 
         if (!TryWriteTextFile(outputHeaderFilePath, hText))
         {
-            errorStream.WriteLine($"Failed to write .h code to {outputHeaderFilePath}.");
+            errorStream.WriteLine($"Failed to write .h code to {outputHeaderFilePath}");
             return false;
         }
 
         if (!TryWriteTextFile(outputCppFilePath, cppText))
         {
-            errorStream.WriteLine($"Failed to write .cpp code to {outputCppFilePath}.");
+            errorStream.WriteLine($"Failed to write .cpp code to {outputCppFilePath}");
             return false;
         }
 
-        infoStream.WriteLine($"Header code written to {outputHeaderFilePath}.");
-        infoStream.WriteLine($"Source code written to {outputCppFilePath}.");
+        infoStream.WriteLine($"Header code written to {outputHeaderFilePath}");
+        infoStream.WriteLine($"Source code written to {outputCppFilePath}");
         return true;
     }
 
@@ -437,6 +445,11 @@ static class Program
         {
             return false;
         }
+    }
+
+    static string MakeAbsolutePath(string path)
+    {
+        return Path.IsPathRooted(path) ? path : Path.Combine(Directory.GetCurrentDirectory(), path);
     }
 
     // Outputs an error or warning message describing the error with the file path, error code, and description.
