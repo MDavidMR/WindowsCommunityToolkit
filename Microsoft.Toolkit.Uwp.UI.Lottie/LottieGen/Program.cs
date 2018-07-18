@@ -1,4 +1,6 @@
-﻿using LottieData.Serialization;
+﻿using LottieData;
+using LottieData.Serialization;
+using LottieData.Tools;
 using LottieToWinComp;
 using System;
 using System.Diagnostics;
@@ -8,12 +10,13 @@ using System.Reflection;
 using System.Text;
 using WinCompData;
 using WinCompData.CodeGen;
+using WinCompData.Tools;
 
 static class Program
 {
     static readonly Assembly s_thisAssembly = Assembly.GetExecutingAssembly();
 
-    enum ReturnCode
+    enum RunResult
     {
         Success,
         InvalidUsage,
@@ -27,13 +30,13 @@ static class Program
 
         switch (Run(CommandLineOptions.ParseCommandLine(args), infoStream: infoStream, errorStream: errorStream))
         {
-            case ReturnCode.Success:
+            case RunResult.Success:
                 return 0;
 
-            case ReturnCode.Failure:
+            case RunResult.Failure:
                 return 1;
 
-            case ReturnCode.InvalidUsage:
+            case RunResult.InvalidUsage:
                 errorStream.WriteLine();
                 ShowUsage(errorStream);
                 return 1;
@@ -44,7 +47,7 @@ static class Program
         }
     }
 
-    static ReturnCode Run(CommandLineOptions options, TextWriter infoStream, TextWriter errorStream)
+    static RunResult Run(CommandLineOptions options, TextWriter infoStream, TextWriter errorStream)
     {
         // Sign on
         var assemblyVersion = s_thisAssembly.GetName().Version;
@@ -58,29 +61,29 @@ static class Program
             // Failed to parse the command line.
             WriteError("Invalid arguments.");
             errorStream.WriteLine(options.ErrorDescription);
-            return ReturnCode.InvalidUsage;
+            return RunResult.InvalidUsage;
         }
         else if (options.HelpRequested)
         {
             ShowHelp(infoStream);
-            return ReturnCode.Success;
+            return RunResult.Success;
         }
 
         // Check for required args
         if (options.InputFile == null)
         {
             WriteError("Lottie file not specified.");
-            return ReturnCode.InvalidUsage;
+            return RunResult.InvalidUsage;
         }
 
         switch (options.Language)
         {
             case Lang.Unknown:
                 WriteError("Invalid language.");
-                return ReturnCode.InvalidUsage;
+                return RunResult.InvalidUsage;
             case Lang.Unspecified:
                 WriteError("Language not specified.");
-                return ReturnCode.InvalidUsage;
+                return RunResult.InvalidUsage;
         }
 
         var profiler = new Profiler();
@@ -94,8 +97,8 @@ static class Program
                     infoStream,
                     errorStream,
                     profiler)
-                ? ReturnCode.Success
-                : ReturnCode.Failure;
+                ? RunResult.Success
+                : RunResult.Failure;
 
         infoStream.WriteLine();
         infoStream.WriteLine(" === Timings ===");
@@ -157,24 +160,31 @@ static class Program
             return false;
         }
 
-        var translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
-                    lottieComposition,
-                    strictTranslation, // strictTranslation
-                    true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
-                    out var wincompDataRootVisual,
-                    out var translationIssues);
+        bool translateSucceeded = false;
+        Visual wincompDataRootVisual = null;
 
-        profiler.OnTranslateFinished();
-
-        foreach (var issue in translationIssues)
+        // LottieXml doesn't need the Lottie to be translated. Everyone else does.
+        if (language != Lang.LottieXml)
         {
-            infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
-        }
+            translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
+                        lottieComposition,
+                        strictTranslation, // strictTranslation
+                        true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
+                        out wincompDataRootVisual,
+                        out var translationIssues);
 
-        if (!translateSucceeded)
-        {
-            errorStream.WriteLine("Failed to read translate Lottie file.");
-            return false;
+            profiler.OnTranslateFinished();
+
+            foreach (var issue in translationIssues)
+            {
+                infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
+            }
+
+            if (!translateSucceeded)
+            {
+                errorStream.WriteLine("Failed to translate Lottie file.");
+                return false;
+            }
         }
 
         // Get an appropriate name for the class.
@@ -201,8 +211,9 @@ static class Program
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{className}.cs"),
-                    infoStream, 
+                    infoStream,
                     errorStream);
+                profiler.OnCodeGenFinished();
                 break;
 
             case Lang.Cx:
@@ -216,16 +227,63 @@ static class Program
                     Path.Combine(outputFolder, $"{className}.cpp"),
                     infoStream,
                     errorStream);
+                profiler.OnCodeGenFinished();
                 break;
 
+            case Lang.LottieXml:
+                translateSucceeded = TryGenerateLottieXml(
+                    lottieComposition,
+                    Path.Combine(outputFolder, $"{className}.xml"),
+                    infoStream,
+                    errorStream);
+                profiler.OnSerializationFinished();
+                break;
+
+            case Lang.WinCompXml:
+                translateSucceeded = TryGenerateWincompXml(
+                    wincompDataRootVisual,
+                    Path.Combine(outputFolder, $"{className}.xml"),
+                    infoStream,
+                    errorStream);
+                profiler.OnSerializationFinished();
+                break;
             default:
                 errorStream.WriteLine($"Language {language} is not supported.");
                 return false;
         };
 
-        profiler.OnCodeGenFinished();
 
         return codeGenSucceeded;
+    }
+
+    static bool TryGenerateLottieXml(
+        LottieComposition lottieComposition,
+        string outputFilePath,
+        TextWriter infoStream,
+        TextWriter errorStream)
+    {
+        var result = TryWriteTextFile(
+            outputFilePath,
+            LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString());
+
+        infoStream.WriteLine($"Lottie XML written to {outputFilePath}.");
+
+        return result;
+    }
+
+    static bool TryGenerateWincompXml(
+        Visual rootVisual,
+        string outputFilePath,
+        TextWriter infoStream,
+        TextWriter errorStream)
+    {
+        var result = TryWriteTextFile(
+            outputFilePath,
+            CompositionObjectXmlSerializer.ToXml(rootVisual).ToString());
+
+        infoStream.WriteLine($"WinComp XML written to {outputFilePath}.");
+
+        return result;
     }
 
     static bool TryGenerateCSharpCode(
@@ -406,7 +464,7 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
        LOTTIEFILE is a Lottie .json file.
-       LANG is one of cs, cppcx, or winrtcpp.
+       LANG is one of cs, cppcx, winrtcpp, wincompxml, or lottiexml.
 
        [Other options]
 
@@ -446,11 +504,13 @@ EXAMPLES:
         TimeSpan _parseTime;
         TimeSpan _translateTime;
         TimeSpan _codegenTime;
+        TimeSpan _serializationTime;
 
         internal void OnReadFinished() => OnPhaseFinished(ref _readTime);
         internal void OnParseFinished() => OnPhaseFinished(ref _parseTime);
         internal void OnTranslateFinished() => OnPhaseFinished(ref _translateTime);
         internal void OnCodeGenFinished() => OnPhaseFinished(ref _codegenTime);
+        internal void OnSerializationFinished() => OnPhaseFinished(ref _serializationTime);
 
         void OnPhaseFinished(ref TimeSpan counter)
         {
@@ -464,6 +524,7 @@ EXAMPLES:
             WriteReportForPhase(writer, "parse", _parseTime);
             WriteReportForPhase(writer, "translate", _translateTime);
             WriteReportForPhase(writer, "codegen", _codegenTime);
+            WriteReportForPhase(writer, "serialization", _serializationTime);
         }
 
         void WriteReportForPhase(TextWriter writer, string phaseName, TimeSpan value)

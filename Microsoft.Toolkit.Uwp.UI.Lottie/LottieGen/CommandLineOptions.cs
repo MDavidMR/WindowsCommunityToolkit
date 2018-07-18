@@ -12,6 +12,8 @@ internal enum Lang
     CSharp,
     Cx,
     WinrtCpp,
+    LottieXml,
+    WinCompXml,
 }
 
 sealed class CommandLineOptions
@@ -56,8 +58,9 @@ sealed class CommandLineOptions
                     .AddKeyword("csharp", Lang.CSharp)
                     .AddKeyword("cppcx", Lang.Cx)
                     .AddKeyword("cx", Lang.Cx)
-                    .AddKeyword("winrtcpp", Lang.WinrtCpp);
-
+                    .AddKeyword("winrtcpp", Lang.WinrtCpp)
+                    .AddKeyword("lottiexml", Lang.LottieXml)
+                    .AddKeyword("wincompxml", Lang.WinCompXml);
 
             languageTokenizer.TryMatchKeyword(result._language, out var language);
             result.Language = language;
