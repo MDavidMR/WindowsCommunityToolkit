@@ -29,13 +29,28 @@ namespace Lottie
     /// A <see cref="CompositionSource"/> for a Lottie composition. This allows
     /// a Lottie to be specified as the source of a <see cref="Composition"/>.
     /// </summary>
-    public sealed class LottieCompositionSource : IDynamicCompositionSource
+    public sealed class LottieCompositionSource : DependencyObject, IDynamicCompositionSource
     {
         readonly StorageFile _storageFile;
         EventRegistrationTokenTable<DynamicCompositionSourceEventHandler> _compositionInvalidatedEventTokenTable;
         int _loadVersion;
         Uri _uriSource;
         ContentFactory _contentFactory;
+
+        public static DependencyProperty UriSourceProperty { get; } =
+            RegisterDP<Uri>(nameof(UriSource), null,
+            (owner, oldValue, newValue) => owner.HandleUriSourcePropertyChanged(oldValue, newValue));
+
+        #region DependencyProperty helpers
+
+        static DependencyProperty RegisterDP<T>(string propertyName, T defaultValue) =>
+            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieCompositionSource), new PropertyMetadata(defaultValue));
+
+        static DependencyProperty RegisterDP<T>(string propertyName, T defaultValue, Action<LottieCompositionSource, T, T> callback) =>
+            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieCompositionSource),
+                new PropertyMetadata(defaultValue, (d, e) => callback(((LottieCompositionSource)d), (T)e.OldValue, (T)e.NewValue)));
+
+        #endregion DependencyProperty helpers
 
         /// <summary>
         /// Constructor to allow a <see cref="LottieCompositionSource"/> to be used in markup.
@@ -55,16 +70,8 @@ namespace Lottie
         /// </summary>
         public Uri UriSource
         {
-            get => _uriSource;
-            set
-            {
-                if (_uriSource == value)
-                {
-                    return;
-                }
-                _uriSource = value;
-                StartLoading();
-            }
+            get => (Uri)GetValue(UriSourceProperty);
+            set => SetValue(UriSourceProperty, value);
         }
 
         public LottieCompositionOptions Options { get; set; }
@@ -94,6 +101,10 @@ namespace Lottie
         public IAsyncAction SetSourceAsync(Uri sourceUri)
         {
             _uriSource = sourceUri;
+            // Update the dependency property to keep it in sync with _uriSource.
+            // This will not trigger loading because it will be seen as no change
+            // from the current (just set) _uriSource value.
+            UriSource = sourceUri;
             return LoadAsync(sourceUri == null ? null : new Loader(sourceUri)).AsAsyncAction();
         }
 
@@ -150,6 +161,22 @@ namespace Lottie
                 .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                 .InvocationList?.Invoke(this);
         }
+
+        // Called when the UriSource property is updated.
+        void HandleUriSourcePropertyChanged(Uri oldValue, Uri newValue)
+        {
+            if (newValue == _uriSource)
+            {
+                // Ignore if setting to the current value. This can't happen if the value
+                // is being set via the DependencyProperty, but it will happen if the value
+                // is set via SetSourceAsync, as _uriSource will have been set before this
+                // is called.
+                return;
+            }
+            _uriSource = newValue;
+            StartLoading();
+        }
+
 
         // Starts a LoadAsync and returns immediately.
         async void StartLoading() => await LoadAsync(new Loader(UriSource));
