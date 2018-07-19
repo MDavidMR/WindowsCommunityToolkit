@@ -26,7 +26,8 @@ namespace LottieData
             double outFrame,
             BlendMode blendMode,
             bool is3d,
-            bool autoOrient)
+            bool autoOrient,
+            IEnumerable<Mask> masks)
          : base(
              name,
              index,
@@ -39,7 +40,8 @@ namespace LottieData
              outFrame,
              blendMode,
              is3d,
-             autoOrient)
+             autoOrient,
+             masks)
         {
             _shapes = shapes;
         }

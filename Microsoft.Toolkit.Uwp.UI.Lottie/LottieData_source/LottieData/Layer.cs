@@ -1,6 +1,9 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace LottieData
 {
     /// <summary>
@@ -15,6 +18,8 @@ namespace LottieData
 #endif
     abstract class Layer : LottieObject
     {
+        readonly Mask[] _masks;
+
         protected Layer(
             string name,
             int index,
@@ -27,7 +32,8 @@ namespace LottieData
             double outFrame,
             BlendMode blendMode,
             bool is3d,
-            bool autoOrient) : base(name)
+            bool autoOrient,
+            IEnumerable<Mask> masks) : base(name)
         {
             Index = index;
             Parent = parent;
@@ -40,6 +46,7 @@ namespace LottieData
             BlendMode = blendMode;
             Is3d = is3d;
             AutoOrient = autoOrient;
+            _masks = masks != null ? masks.ToArray() : null;
         }
 
         public bool AutoOrient { get; }
@@ -82,6 +89,11 @@ namespace LottieData
         /// or null if no transforms are inherited.
         /// </summary>
         public int? Parent { get; }
+
+        /// <summary>
+        /// List of masks appplied to the layer
+        /// </summary>
+        public IEnumerable<Mask> Masks => _masks;
 
         public enum LayerType
         {

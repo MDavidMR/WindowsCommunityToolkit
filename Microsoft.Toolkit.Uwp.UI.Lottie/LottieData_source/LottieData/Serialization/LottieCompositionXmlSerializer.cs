@@ -203,7 +203,13 @@ namespace LottieData.Tools
                 yield return new XAttribute(nameof(layer.Parent), layer.Parent.Value);
             }
             yield return FromTransform(layer.Transform);
-
+            if (layer.Masks != null)
+            {
+                foreach (var mask in layer.Masks)
+                {
+                    yield return FromMask(mask);
+                }
+            }
         }
 
         XElement FromPreCompLayer(PreCompLayer layer)
@@ -335,6 +341,19 @@ namespace LottieData.Tools
                     return FromRoundedCorner((RoundedCorner)content);
                 default:
                     throw new InvalidOperationException();
+            }
+        }
+
+        XElement FromMask(Mask mask)
+        {
+            return new XElement("Mask", GetContents());
+            IEnumerable<XObject> GetContents()
+            {
+                yield return new XAttribute(nameof(mask.Inverted), mask.Inverted);
+                yield return new XAttribute(nameof(mask.Name), mask.Name);
+                yield return FromAnimatable(nameof(mask.Points), mask.Points);
+                yield return FromAnimatable(nameof(mask.Opacity), mask.Opacity);
+                yield return new XAttribute(nameof(mask.Mode), mask.Mode);
             }
         }
 

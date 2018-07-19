@@ -13,12 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="LottieData\Serialization\Net\**" />
-    <EmbeddedResource Remove="LottieData\Serialization\Net\**" />
-    <None Remove="LottieData\Serialization\Net\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 

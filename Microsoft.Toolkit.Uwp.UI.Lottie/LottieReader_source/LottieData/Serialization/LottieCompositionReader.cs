@@ -271,7 +271,6 @@ namespace LottieData.Serialization
         {
             // Not clear whether we need to read these fields.
             IgnoreFieldThatIsNotYetSupported(obj, "bounds");
-            IgnoreFieldThatIsNotYetSupported(obj, "masksProperties");
             IgnoreFieldThatIsNotYetSupported(obj, "sy");
             IgnoreFieldThatIsNotYetSupported(obj, "t");
             IgnoreFieldThatIsNotYetSupported(obj, "td");
@@ -307,11 +306,6 @@ namespace LottieData.Serialization
                 _issues.Mattes();
             }
 
-            if (obj.ContainsKey("maskProperties") || obj.ContainsKey("hasMask"))
-            {
-                _issues.Masks();
-            }
-
             // ----------------------
             // Layer Transform
             // ----------------------
@@ -329,6 +323,13 @@ namespace LottieData.Serialization
             var inFrame = obj.GetNamedNumber("ip");
             var outFrame = obj.GetNamedNumber("op");
 
+            // Field 'hasMask' is deprecated and thus we are intentionally ignoring it
+            IgnoreFieldIntentionally(obj, "hasMask");
+
+            // NOTE: The spec specifies this as 'maskProperties' but the BodyMovin tool exports
+            // 'masksProperties' with the plural 'masks'.
+            var maskProperties = obj.GetNamedArray("masksProperties", null);
+            var masks = maskProperties != null ? ReadMaskProperties(maskProperties) : null;
 
             switch (TyToLayerType(obj.GetNamedNumber("ty", double.NaN)))
             {
@@ -359,7 +360,8 @@ namespace LottieData.Serialization
                             autoOrient,
                             refId,
                             width,
-                            height);
+                            height,
+                            masks);
                     }
                 case Layer.LayerType.Solid:
                     {
@@ -382,7 +384,8 @@ namespace LottieData.Serialization
                             outFrame,
                             blendMode,
                             is3d,
-                            autoOrient);
+                            autoOrient,
+                            masks);
                     }
                 case Layer.LayerType.Image:
                     {
@@ -402,7 +405,8 @@ namespace LottieData.Serialization
                             blendMode,
                             is3d,
                             autoOrient,
-                            refId);
+                            refId,
+                            masks);
                     }
                 case Layer.LayerType.Null:
                     {
@@ -420,7 +424,8 @@ namespace LottieData.Serialization
                             outFrame,
                             blendMode,
                             is3d,
-                            autoOrient);
+                            autoOrient,
+                            masks);
                     }
                 case Layer.LayerType.Shape:
                     {
@@ -454,7 +459,8 @@ namespace LottieData.Serialization
                             outFrame,
                             blendMode,
                             is3d,
-                            autoOrient);
+                            autoOrient,
+                            masks);
                     }
                 case Layer.LayerType.Text:
                     {
@@ -474,10 +480,61 @@ namespace LottieData.Serialization
                             blendMode,
                             is3d,
                             autoOrient,
-                            refId);
+                            refId,
+                            masks);
                     }
                 default:
                     throw new InvalidOperationException();
+            }
+        }
+
+        IEnumerable<Mask> ReadMaskProperties(JArray array)
+        {
+            foreach (var elem in array)
+            {
+                var obj = elem.AsObject();
+
+                // Ignoring field 'x' because it is not in the official spec
+                IgnoreFieldThatIsNotYetSupported(obj, "x");
+
+                var inverted = obj.GetNamedBoolean("inv");
+                var name = obj.GetNamedString("nm");
+                var animatedGeometry = ReadAnimatableGeometry(obj.GetNamedObject("pt"));
+                var opacity = ReadAnimatableFloat(obj.GetNamedObject("o"));
+                Mask.MaskMode mode = Mask.MaskMode.None;
+                var maskMode = obj.GetNamedString("mode");
+                switch (maskMode)
+                {
+                    case "a":
+                        mode = Mask.MaskMode.Additive;
+                        break;
+                    case "s":
+                        mode = Mask.MaskMode.Subtract;
+                        break;
+                    case "i":
+                        mode = Mask.MaskMode.Intersect;
+                        break;
+                    case "l":
+                        mode = Mask.MaskMode.Lighten;
+                        break;
+                    case "d":
+                        mode = Mask.MaskMode.Darken;
+                        break;
+                    case "f":
+                        mode = Mask.MaskMode.Difference;
+                        break;
+                    default:
+                        throw new LottieJsonReaderException($"Unexpected mask mode: {maskMode}");
+                }
+
+                AssertAllFieldsRead(obj);
+                yield return new Mask(
+                    inverted,
+                    name,
+                    animatedGeometry,
+                    opacity,
+                    mode
+                );
             }
         }
 

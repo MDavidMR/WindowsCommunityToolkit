@@ -1,6 +1,8 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace LottieData
 {
 #if !WINDOWS_UWP
@@ -23,7 +25,8 @@ namespace LottieData
             bool autoOrient,
             string refId,
             double width,
-            double height)
+            double height,
+            IEnumerable<Mask> masks)
             : base(
                  name,
                  index,
@@ -36,7 +39,8 @@ namespace LottieData
                  outFrame,
                  blendMode,
                  is3d,
-                 autoOrient)
+                 autoOrient,
+                 masks)
         {
             RefId = refId;
             Width = width;

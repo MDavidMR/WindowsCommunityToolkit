@@ -9,8 +9,8 @@
     <Import_RootNamespace>LottieReader_source</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieCompositionReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieJsonReaderException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\Net\LottieCompositionReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\ParsingIssues.cs" />
   </ItemGroup>
 </Project>

@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\LottieObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\LottieObjectType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Marker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Mask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\MergePaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\NullLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Optimization\Optimizer.cs" />

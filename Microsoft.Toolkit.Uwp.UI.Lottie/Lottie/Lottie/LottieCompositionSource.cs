@@ -6,9 +6,6 @@
 //#define SlowAwaits
 #endif
 
-// Comment this out to use the old Windows.Data.Json parser.
-//#define USE_NEWTONSOFT_PARSING
-
 using LottieData;
 using LottieData.Serialization;
 using LottieToWinComp;
