@@ -62,7 +62,7 @@ namespace Lottie
         T CacheAndInitializeCompositionObject<T>(Wd.CompositionObject key, T obj)
             where T : Wc.CompositionObject
         {
-            _cache.Add(key, obj);
+            Cache(key, obj);
             InitializeCompositionObject(key, obj);
             return obj;
         }

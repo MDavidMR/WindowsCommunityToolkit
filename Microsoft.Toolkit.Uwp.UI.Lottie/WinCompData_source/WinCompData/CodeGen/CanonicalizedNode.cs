@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using WinCompData.Tools;
 
-namespace WinCompData.Tools
+namespace WinCompData.CodeGen
 {
     abstract class CanonicalizedNode<T> : Graph.Node<T> where T : CanonicalizedNode<T>, new()
     {

@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CSharpInstantiatorGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CxInstantiatorGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\InstantiatorGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Optimizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\ColorKeyFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionBrush.cs" />
@@ -76,14 +77,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Mgc\CanvasDevice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\PathKeyFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\ScalarKeyFrameAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Serialization\CompositionObjectDgmlSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Serialization\CompositionObjectXmlSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\ShapeVisual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Matrix3x2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Vector2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Vector3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\StepEasingFunction.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\CanonicalizedNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\Canonicalizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CanonicalizedNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Canonicalizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\ListOfNeverNull.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\ObjectGraph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Vector2KeyFrameAnimation.cs" />

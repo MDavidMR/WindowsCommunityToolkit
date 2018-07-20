@@ -14,6 +14,7 @@ internal enum Lang
     WinrtCpp,
     LottieXml,
     WinCompXml,
+    WinCompDgml,
 }
 
 sealed class CommandLineOptions
@@ -60,7 +61,9 @@ sealed class CommandLineOptions
                     .AddKeyword("cx", Lang.Cx)
                     .AddKeyword("winrtcpp", Lang.WinrtCpp)
                     .AddKeyword("lottiexml", Lang.LottieXml)
-                    .AddKeyword("wincompxml", Lang.WinCompXml);
+                    .AddKeyword("wincompxml", Lang.WinCompXml)
+                    .AddKeyword("wincompdgml", Lang.WinCompDgml);
+
 
             languageTokenizer.TryMatchKeyword(result._language, out var language);
             result.Language = language;

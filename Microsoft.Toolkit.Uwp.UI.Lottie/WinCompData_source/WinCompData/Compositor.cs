@@ -30,10 +30,13 @@ namespace WinCompData
         public CompositionPathGeometry CreatePathGeometry() => new CompositionPathGeometry();
         public CompositionPathGeometry CreatePathGeometry(CompositionPath path) => new CompositionPathGeometry(path);
 
+        public CompositionPropertySet CreatePropertySet() => new CompositionPropertySet(null);
+
         public CompositionEllipseGeometry CreateEllipseGeometry() => new CompositionEllipseGeometry();
 
         public CubicBezierEasingFunction CreateCubicBezierEasingFunction(Vector2 controlPoint1, Vector2 controlPoint2) => new CubicBezierEasingFunction(controlPoint1, controlPoint2);
         public StepEasingFunction CreateStepEasingFunction(int steps) => new StepEasingFunction(steps);
+        public StepEasingFunction CreateStepEasingFunction() => new StepEasingFunction(1);
 
         public ScalarKeyFrameAnimation CreateScalarKeyFrameAnimation() => new ScalarKeyFrameAnimation();
 

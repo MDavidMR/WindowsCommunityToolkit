@@ -212,7 +212,7 @@ static class Program
         switch (language)
         {
             case Lang.CSharp:
-                translateSucceeded = TryGenerateCSharpCode(
+                codeGenSucceeded = TryGenerateCSharpCode(
                     className,
                     wincompDataRootVisual,
                     (float)lottieComposition.Width,
@@ -225,7 +225,7 @@ static class Program
                 break;
 
             case Lang.Cx:
-                translateSucceeded = TryGenerateCXCode(
+                codeGenSucceeded = TryGenerateCXCode(
                     className,
                     wincompDataRootVisual,
                     (float)lottieComposition.Width,
@@ -239,7 +239,7 @@ static class Program
                 break;
 
             case Lang.LottieXml:
-                translateSucceeded = TryGenerateLottieXml(
+                codeGenSucceeded = TryGenerateLottieXml(
                     lottieComposition,
                     Path.Combine(outputFolder, $"{className}.xml"),
                     infoStream,
@@ -248,13 +248,23 @@ static class Program
                 break;
 
             case Lang.WinCompXml:
-                translateSucceeded = TryGenerateWincompXml(
+                codeGenSucceeded = TryGenerateWincompXml(
                     wincompDataRootVisual,
                     Path.Combine(outputFolder, $"{className}.xml"),
                     infoStream,
                     errorStream);
                 profiler.OnSerializationFinished();
                 break;
+
+            case Lang.WinCompDgml:
+                codeGenSucceeded = TryGenerateWincompDgml(
+                    wincompDataRootVisual,
+                    Path.Combine(outputFolder, $"{className}.dgml"),
+                    infoStream,
+                    errorStream);
+                profiler.OnSerializationFinished();
+                break;
+
             default:
                 errorStream.WriteLine($"Language {language} is not supported.");
                 return false;
@@ -290,6 +300,21 @@ static class Program
             CompositionObjectXmlSerializer.ToXml(rootVisual).ToString());
 
         infoStream.WriteLine($"WinComp XML written to {outputFilePath}");
+
+        return result;
+    }
+
+    static bool TryGenerateWincompDgml(
+        Visual rootVisual,
+        string outputFilePath,
+        TextWriter infoStream,
+        TextWriter errorStream)
+    {
+        var result = TryWriteTextFile(
+            outputFilePath,
+            CompositionObjectDgmlSerializer.ToXml(rootVisual).ToString());
+
+        infoStream.WriteLine($"WinComp DGML written to {outputFilePath}");
 
         return result;
     }
@@ -477,7 +502,7 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
        LOTTIEFILE is a Lottie .json file.
-       LANG is one of cs, cppcx, winrtcpp, wincompxml, or lottiexml.
+       LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, or wincompdgml.
 
        [Other options]
 

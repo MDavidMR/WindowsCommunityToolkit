@@ -9,8 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lottie", "Lottie\Lottie.csp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft_UI_Xaml_Controls", "Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCompData_source", "WinCompData_source\WinCompData_source.shproj", "{D02870DE-7DED-4916-85D4-3175CEEDEF74}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WinCompData_source\WinCompData_source.projitems*{d02870de-7ded-4916-85d4-3175ceedef74}*SharedItemsImports = 13
 		LottieData_source\LottieData_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
 		LottieReader_source\LottieReader_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
 		LottieToWinComp_source\LottieToWinComp_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4

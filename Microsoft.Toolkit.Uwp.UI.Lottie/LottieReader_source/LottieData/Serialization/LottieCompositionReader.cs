@@ -65,7 +65,12 @@ namespace LottieData.Serialization
             JObject obj;
             try
             {
-                obj = JObject.Parse(json);
+                obj = JObject.Parse(json, new JsonLoadSettings
+                {
+                    // Ignore commands and line info. Not needed and makes the parser a bit faster.
+                    CommentHandling = CommentHandling.Ignore,
+                    LineInfoHandling = LineInfoHandling.Ignore
+                });
             }
             catch (Exception e)
             {
@@ -1804,7 +1809,7 @@ namespace LottieData.Serialization
             _wrapped = wrapped;
         }
 
-        internal static CheckedJsonObject Parse(string input) => new CheckedJsonObject(Newtonsoft.Json.Linq.JObject.Parse(input));
+        internal static CheckedJsonObject Parse(string input, JsonLoadSettings loadSettings) => new CheckedJsonObject(Newtonsoft.Json.Linq.JObject.Parse(input, loadSettings));
 
         internal bool ContainsKey(string key)
         {

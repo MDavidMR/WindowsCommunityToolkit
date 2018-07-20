@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using WinCompData.Mgcg;
 using WinCompData.Sn;
+using WinCompData.Tools;
 using WinCompData.Wui;
 
-namespace WinCompData.Tools
+namespace WinCompData.CodeGen
 {
     static class Canonicalizer
     {
