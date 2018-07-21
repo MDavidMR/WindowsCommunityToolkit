@@ -58,7 +58,9 @@ namespace WinCompData
         public void StartAnimation(string target, CompositionAnimation animation)
         {
             // Clone the animation so that the existing animation object can be reconfigured.
-            var clone = animation.Clone();
+            // If the animation is frozen, it is safe to not do the clone.
+            var clone = animation.IsFrozen ? animation : animation.Clone();
+
             var animator = new Animator
             {
                 Animation = clone,
@@ -86,6 +88,21 @@ namespace WinCompData
         {
         }
 
+        // True iff this object's state is expected to never change.
+        public bool IsFrozen { get; private set; }
+
+        // Marks the object to indicate that its state should never change again.
+        // Note that this is a weak guarantee as there are not checks on all mutators
+        // to ensure that changes aren't made after freezing. However correct code
+        // must never mutate a frozen object.
+        public void Freeze()
+        {
+            IsFrozen = true;
+        }
+
+        /// <summary>
+        /// An animation bound to a property on this object.
+        /// </summary>
         public sealed class Animator
         {
             /// <summary>

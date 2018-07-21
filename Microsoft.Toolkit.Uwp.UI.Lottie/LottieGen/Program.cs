@@ -96,14 +96,16 @@ static class Program
         var inputFile = MakeAbsolutePath(options.InputFile);
 
         var result = TryGenerateCode(
-                    inputFile,
-                    outputFolder,
-                    options.ClassName,
-                    options.Language,
-                    options.StrictMode,
-                    infoStream,
-                    errorStream,
-                    profiler)
+                    lottieJsonFile: inputFile,
+                    outputFolder: outputFolder,
+                    codeGenClassName: options.ClassName,
+                    language: options.Language,
+                    strictTranslation: options.StrictMode,
+                    disableFieldOptimization: options._DisableFieldOptimization,
+                    disableOptimizer: options._DisableOptimizer,
+                    infoStream: infoStream,
+                    errorStream: errorStream,
+                    profiler: profiler)
                 ? RunResult.Success
                 : RunResult.Failure;
 
@@ -126,6 +128,8 @@ static class Program
         string codeGenClassName,
         Lang language,
         bool strictTranslation,
+        bool disableOptimizer,
+        bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream,
         Profiler profiler)
@@ -219,8 +223,10 @@ static class Program
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{className}.cs"),
-                    infoStream,
-                    errorStream);
+                    disableFieldOptimization: disableFieldOptimization,
+                    disableOptimizer: disableOptimizer,
+                    infoStream: infoStream,
+                    errorStream: errorStream);
                 profiler.OnCodeGenFinished();
                 break;
 
@@ -233,8 +239,10 @@ static class Program
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{className}.h"),
                     Path.Combine(outputFolder, $"{className}.cpp"),
-                    infoStream,
-                    errorStream);
+                    disableFieldOptimization: disableFieldOptimization,
+                    disableOptimizer: disableOptimizer,
+                    infoStream: infoStream,
+                    errorStream: errorStream);
                 profiler.OnCodeGenFinished();
                 break;
 
@@ -260,8 +268,9 @@ static class Program
                 codeGenSucceeded = TryGenerateWincompDgml(
                     wincompDataRootVisual,
                     Path.Combine(outputFolder, $"{className}.dgml"),
-                    infoStream,
-                    errorStream);
+                    disableOptimizer: disableOptimizer,
+                    infoStream: infoStream,
+                    errorStream: errorStream);
                 profiler.OnSerializationFinished();
                 break;
 
@@ -307,6 +316,7 @@ static class Program
     static bool TryGenerateWincompDgml(
         Visual rootVisual,
         string outputFilePath,
+        bool disableOptimizer,
         TextWriter infoStream,
         TextWriter errorStream)
     {
@@ -326,6 +336,8 @@ static class Program
         float compositionHeight,
         TimeSpan duration,
         string outputFilePath,
+        bool disableOptimizer,
+        bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream)
     {
@@ -361,6 +373,8 @@ static class Program
         TimeSpan duration,
         string outputHeaderFilePath,
         string outputCppFilePath,
+        bool disableOptimizer,
+        bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream)
     {

@@ -18,10 +18,17 @@ namespace WinCompData.CodeGen
         CxInstantiatorGenerator(
             CompositionObject graphRoot, 
             TimeSpan duration, 
-            bool setCommentProperties, 
+            bool setCommentProperties,
+            bool disableOptimizer,
+            bool disableFieldOptimization,
             CppStringifier stringifier,
             string headerFileName)
-            : base(graphRoot, duration, setCommentProperties, stringifier)
+            : base(graphRoot: graphRoot,
+                  duration: duration,
+                  setCommentProperties: setCommentProperties,
+                  disableOptimizer: false,
+                  disableFieldOptimization: false,
+                  stringifier: stringifier)
         {
             _stringifier = stringifier;
             _headerFileName = headerFileName;
@@ -39,11 +46,21 @@ namespace WinCompData.CodeGen
             TimeSpan duration,
             string headerFileName,
             out string cppText,
-            out string hText)
+            out string hText,
+            // Rarely set options used mostly for testing.
+            bool disableOptimizer = false,
+            bool disableFieldOptimization = false)
         {
-            var generator = new CxInstantiatorGenerator(rootVisual, duration, false, new CppStringifier(), headerFileName);
+            var generator = new CxInstantiatorGenerator(
+                graphRoot: rootVisual, 
+                duration: duration, 
+                disableOptimizer: disableOptimizer,
+                disableFieldOptimization: disableFieldOptimization,
+                setCommentProperties: false, 
+                stringifier: new CppStringifier(), 
+                headerFileName: headerFileName);
 
-            cppText = generator.GenerateCode(className, rootVisual, width, height);
+            cppText = generator.GenerateCode(className, width, height);
 
             hText = GenerateHeaderText(className);
         }

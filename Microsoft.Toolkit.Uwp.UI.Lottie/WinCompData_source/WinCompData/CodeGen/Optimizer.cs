@@ -15,14 +15,14 @@ namespace WinCompData.CodeGen
         readonly Compositor _c = new Compositor();
         readonly ObjectGraph<ObjectData> _graph;
 
-        internal static CompositionObject Optimize(CompositionObject root)
+        internal static CompositionObject Optimize(CompositionObject root, bool ignoreCommentProperties)
         {
 
             // Build the object graph.
             var graph = ObjectGraph<ObjectData>.FromCompositionObject(root, includeVertices: true);
 
             // Canonicalize the nodes.
-            Canonicalizer.Canonicalize(graph, ignoreCommentProperties: true);
+            Canonicalizer.Canonicalize(graph, ignoreCommentProperties: ignoreCommentProperties);
 
             // Create WinCompData objects from the canonical objects.
             var result = new Optimizer(graph).GetCompositionObject(root);
@@ -122,7 +122,7 @@ namespace WinCompData.CodeGen
             return target;
         }
 
-        T CacheAndInitializeAnimation<T>(CompositionAnimation source, T target)
+        T CacheAndInitializeAnimation<T>(T source, T target)
             where T : CompositionAnimation
         {
             CacheAndInitializeCompositionObject(source, target);
@@ -194,7 +194,7 @@ namespace WinCompData.CodeGen
             }
 
             InitializeContainerVisual(obj, result);
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -207,7 +207,7 @@ namespace WinCompData.CodeGen
 
             result = CacheAndInitializeVisual(obj, _c.CreateContainerVisual());
             InitializeContainerVisual(obj, result);
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -243,7 +243,7 @@ namespace WinCompData.CodeGen
             InitializeIDescribable(source, target);
         }
 
-        void StartAnimations(CompositionObject source, CompositionObject target)
+        void StartAnimationsAndFreeze(CompositionObject source, CompositionObject target)
         {
             foreach (var animator in source.Animators)
             {
@@ -259,6 +259,9 @@ namespace WinCompData.CodeGen
                     }
                 }
             }
+
+            // Freeze the target object to indicate that it will not be mutated further
+            target.Freeze();
         }
 
 
@@ -272,7 +275,7 @@ namespace WinCompData.CodeGen
             var targetObject = GetCompositionObject(obj.TargetObject);
 
             result = CacheAndInitializeCompositionObject(obj, targetObject.TryGetAnimationController(obj.TargetProperty));
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -359,7 +362,7 @@ namespace WinCompData.CodeGen
                 result.InsertVector2(prop.Key, prop.Value);
             }
 
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -399,19 +402,19 @@ namespace WinCompData.CodeGen
 
         ExpressionAnimation GetExpressionAnimation(ExpressionAnimation obj)
         {
-            if (GetExisting(obj, out ExpressionAnimation result))
+            if (GetExisting(obj, out var result))
             {
                 return result;
             }
             result = CacheAndInitializeAnimation(obj, _c.CreateExpressionAnimation(obj.Expression));
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
 
         }
 
         ColorKeyFrameAnimation GetColorKeyFrameAnimation(ColorKeyFrameAnimation obj)
         {
-            if (GetExisting(obj, out ColorKeyFrameAnimation result))
+            if (GetExisting(obj, out var result))
             {
                 return result;
             }
@@ -433,7 +436,7 @@ namespace WinCompData.CodeGen
                         throw new InvalidOperationException();
                 }
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -461,7 +464,7 @@ namespace WinCompData.CodeGen
                         throw new InvalidOperationException();
                 }
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -489,7 +492,7 @@ namespace WinCompData.CodeGen
                         throw new InvalidOperationException();
                 }
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -517,7 +520,7 @@ namespace WinCompData.CodeGen
                         throw new InvalidCastException();
                 }
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -533,7 +536,7 @@ namespace WinCompData.CodeGen
             {
                 result.InsertKeyFrame(kf.Progress, GetCompositionPath(((PathKeyFrameAnimation.ValueKeyFrame)kf).Value), GetCompositionEasingFunction(kf.Easing));
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -591,7 +594,7 @@ namespace WinCompData.CodeGen
             {
                 result.BottomInset = obj.BottomInset;
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
 
         }
@@ -604,7 +607,7 @@ namespace WinCompData.CodeGen
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateLinearEasingFunction());
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -636,7 +639,7 @@ namespace WinCompData.CodeGen
             {
                 result.StepCount = obj.StepCount;
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -648,7 +651,7 @@ namespace WinCompData.CodeGen
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateCubicBezierEasingFunction(obj.ControlPoint1, obj.ControlPoint2));
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
         CompositionViewBox GetCompositionViewBox(CompositionViewBox obj)
@@ -660,7 +663,7 @@ namespace WinCompData.CodeGen
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateViewBox());
             result.Size = obj.Size;
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -709,7 +712,7 @@ namespace WinCompData.CodeGen
             {
                 shapeCollection.Add(GetCompositionShape(child));
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -768,7 +771,7 @@ namespace WinCompData.CodeGen
             {
                 result.FillBrush = GetCompositionBrush(obj.FillBrush);
             }
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -805,7 +808,7 @@ namespace WinCompData.CodeGen
                 result.Center = obj.Center;
             }
             result.Radius = obj.Radius;
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -817,7 +820,7 @@ namespace WinCompData.CodeGen
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRectangleGeometry());
             result.Size = obj.Size;
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -830,7 +833,7 @@ namespace WinCompData.CodeGen
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRoundedRectangleGeometry());
             result.Size = obj.Size;
             result.CornerRadius = obj.CornerRadius;
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -841,7 +844,7 @@ namespace WinCompData.CodeGen
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreatePathGeometry(GetCompositionPath(obj.Path)));
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
 
@@ -950,7 +953,7 @@ namespace WinCompData.CodeGen
                 return result;
             }
             result = CacheAndInitializeCompositionObject(obj, _c.CreateColorBrush(obj.Color));
-            StartAnimations(obj, result);
+            StartAnimationsAndFreeze(obj, result);
             return result;
         }
     }

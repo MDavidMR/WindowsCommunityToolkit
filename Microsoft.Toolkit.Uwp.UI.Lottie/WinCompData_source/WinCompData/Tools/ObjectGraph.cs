@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using WinCompData.Mgcg;
 
 namespace WinCompData.Tools
@@ -159,9 +160,10 @@ namespace WinCompData.Tools
                 return;
             }
 
-            // Object has been seen before. Just add the reference.
+
             if (_references.TryGetValue(obj, out var node))
             {
+                // Object has been seen before. Just add the reference.
                 if (_includeVertices && from != null)
                 {
                     AddVertex(from, node);

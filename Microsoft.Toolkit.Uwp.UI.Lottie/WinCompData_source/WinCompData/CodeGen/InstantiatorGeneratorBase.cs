@@ -32,57 +32,71 @@ namespace WinCompData.CodeGen
             "//------------------------------------------------------------------------------"
         };
         readonly bool _setCommentProperties;
+        readonly bool _disableOptimizer;
+        readonly bool _disableFieldOptimization;
         readonly ObjectGraph<ObjectData> _objectGraph;
         // The subset of the object graph for which nodes will be generated.
-        readonly ObjectData[] _canonicalNodes;
+        readonly ObjectData[] _nodes;
         readonly IStringifier _stringifier;
         readonly HashSet<(ObjectData, ObjectData)> _factoriesAlreadyCalled = new HashSet<(ObjectData, ObjectData)>();
         readonly ObjectData _rootNode;
         TimeSpan _compositionDuration;
 
-        protected InstantiatorGeneratorBase(CompositionObject graphRoot, TimeSpan duration, bool setCommentProperties, IStringifier stringifier)
+        protected InstantiatorGeneratorBase(
+            CompositionObject graphRoot,
+            TimeSpan duration,
+            bool setCommentProperties,
+            bool disableOptimizer,
+            bool disableFieldOptimization,
+            IStringifier stringifier)
         {
             _compositionDuration = duration;
             _setCommentProperties = setCommentProperties;
+            _disableFieldOptimization = disableFieldOptimization;
+            _disableOptimizer = disableOptimizer;
             _stringifier = stringifier;
+
+            if (!disableOptimizer)
+            {
+                // Optimize the graph.
+                graphRoot = Optimizer.Optimize(graphRoot, !setCommentProperties);
+            }
 
             // Build the object graph.
             _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(graphRoot, includeVertices: true);
 
-            // Canonicalize the nodes.
-            Canonicalizer.Canonicalize(_objectGraph, !setCommentProperties);
-
             // Filter out ExpressionAnimations that are unique. They will use a single instance that is reset on each use.
-            var canonicals =
+            var nodes =
                 from node in _objectGraph
                 where !(node.Object is ExpressionAnimation) ||
-                        node.NodesInGroup.Count() > 1
-                select node.Canonical;
+                // TODO - should look at the distinct inrefs - i.e. how many objects are referencing, to deal with objects that reference multiple times.
+                        node.InReferences.Length > 1
+                select node;
 
             // Filter out types for which we won't create objects:
             //  AnimationController is created implicitly.
             //  CompositionPropertySet is created implicitly.
-            canonicals =
-                (from node in canonicals
+            nodes =
+                (from node in nodes
                  where node.Type != Graph.NodeType.CompositionObject ||
                      !(((CompositionObject)node.Object).Type == CompositionObjectType.AnimationController ||
                       ((CompositionObject)node.Object).Type == CompositionObjectType.CompositionPropertySet)
-                 select node.Canonical).Distinct().ToArray();
+                 select node).Distinct().ToArray();
 
-            // Give names to each canonical node.
-            SetCanonicalMethodNames(canonicals);
+            // Give names to each node.
+            SetMethodNames(nodes);
 
             // Give the root node a special name.
             _rootNode = NodeFor(graphRoot);
             _rootNode.Name = "Root";
 
-            // Save the canonical nodes, ordered by the name that was just set.
-            _canonicalNodes = canonicals.OrderBy(node => node.Name).ToArray();
+            // Save the nodes, ordered by the name that was just set.
+            _nodes = nodes.OrderBy(node => node.Name).ToArray();
 
             // Force storage to be allocated for nodes that have multiple references to them.
-            foreach (var node in _canonicalNodes)
+            foreach (var node in _nodes)
             {
-                if (FilteredCanonicalInRefs(node).Count() > 1)
+                if (FilteredInRefs(node).Count() > 1)
                 {
                     // Node is referenced more than once, so it requires storage.
                     node.RequiresStorage = true;
@@ -102,8 +116,8 @@ namespace WinCompData.CodeGen
 
             // Ensure the root object has storage if it is referenced by anything else in the graph.
             // This is necessary because the root node is referenced from the instantiator entrypoint
-            // but that isn't counted in the CanonicalInRefs.
-            if (_rootNode.CanonicalInRefs.Any())
+            // but that isn't counted in the InReference.
+            if (_rootNode.InReferences.Any())
             {
                 _rootNode.RequiresStorage = true;
             }
@@ -177,7 +191,6 @@ namespace WinCompData.CodeGen
         /// </summary>
         protected string GenerateCode(
             string className,
-            Visual rootVisual,
             float width,
             float height)
         {
@@ -189,8 +202,8 @@ namespace WinCompData.CodeGen
                 compositionDeclaredSize: new Sn.Vector2(width, height),
                 compositionDuration: _compositionDuration,
                 // Determine whether to add #includes and usings for namespaces.
-                requiresWin2d: _canonicalNodes.Where(n => n.RequiresWin2D).Any(),
-                rootVisual: rootVisual
+                requiresWin2d: _nodes.Where(n => n.RequiresWin2D).Any(),
+                rootVisual: (Visual)_rootNode.Object
                 );
 
 
@@ -213,7 +226,7 @@ namespace WinCompData.CodeGen
             // referenced more than once).
             WriteField(codeBuilder, Readonly(_stringifier.ReferenceTypeName("Compositor")), "_c");
             WriteField(codeBuilder, Readonly(_stringifier.ReferenceTypeName("ExpressionAnimation")), c_singletonExpressionAnimationName);
-            foreach (var node in _canonicalNodes)
+            foreach (var node in _nodes)
             {
                 if (node.RequiresStorage)
                 {
@@ -224,7 +237,7 @@ namespace WinCompData.CodeGen
             codeBuilder.WriteLine();
 
             // Write methods for each node.
-            foreach (var node in _canonicalNodes)
+            foreach (var node in _nodes)
             {
                 WriteCodeForNode(codeBuilder, node);
             }
@@ -248,39 +261,49 @@ namespace WinCompData.CodeGen
         string CallFactoryFromFor(ObjectData callerNode, ObjectData calleeNode)
         {
             string result;
-            if (callerNode.CallFactoryFromForCache == null)
+            if (callerNode.CallFactoryFromForCache.TryGetValue(calleeNode, out result))
             {
-                callerNode.CallFactoryFromForCache = new Dictionary<ObjectData, string>();
-            }
-            else if (callerNode.CallFactoryFromForCache.TryGetValue(calleeNode, out result))
-            {
+                // The caller had called this factory before. Return what they got last time.
                 return result;
             }
 
+            // Get the factory call code.
             result = CallFactoryFromFor_UnCached(callerNode, calleeNode);
+
+            // Save the factory call code in the cache on the caller for next time.
             callerNode.CallFactoryFromForCache.Add(calleeNode, result);
             return result;
         }
 
+        // Returns the code to call the factory for the given node from the given node.
         string CallFactoryFromFor_UnCached(ObjectData callerNode, ObjectData calleeNode)
         {
             // Calling into the root node is handled specially. The root node is always
-            // created before the first vertex to it.
+            // created before the first vertex to it, so it is sufficient to just get
+            // it from its field.
             if (calleeNode == _rootNode)
             {
                 Debug.Assert(calleeNode.RequiresStorage);
                 return calleeNode.FieldName;
             }
 
+            if (_disableFieldOptimization)
+            {
+                // When field optimization is disabled, always return a call to the factory.
+                // If the factory has been called already, it will return the value from
+                // its storage.
+                return calleeNode.FactoryCall();
+            }
+
             // Find the vertex from caller to callee.
             var firstVertexFromCallerToCallee =
-                    (from inref in calleeNode.CanonicalInRefs
+                    (from inref in calleeNode.InReferences
                      where inref.Node == callerNode
                      orderby inref.Position
                      select inref).First();
 
             // Find the first vertex to the callee from any caller.
-            var firstVertexToCallee = calleeNode.CanonicalInRefs.First();
+            var firstVertexToCallee = calleeNode.InReferences.First();
 
             // If the object has a vertex with a lower position then the object
             // will have already been created by the time the caller needs the object.
@@ -314,15 +337,15 @@ namespace WinCompData.CodeGen
         // Returns the code to call the factory for the given object from the given node.
         string CallFactoryFromFor(ObjectData callerNode, object obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
 
-        // Returns the canonical node for the given object.
-        ObjectData NodeFor(object obj) => _objectGraph[obj].Canonical;
+        // Returns the node for the given object.
+        ObjectData NodeFor(object obj) => _objectGraph[obj];
 
-        // Gets the CanonicalInRefs for node, ignoring those from ExpressionAnimations
+        // Gets the InReferences for node, ignoring those from ExpressionAnimations
         // that have a single instance because they are treated specially (they are initialized inline).
-        IEnumerable<ObjectData> FilteredCanonicalInRefs(ObjectData node)
+        IEnumerable<ObjectData> FilteredInRefs(ObjectData node)
         {
             // Examine all of the inrefs to the node.
-            foreach (var vertex in node.CanonicalInRefs)
+            foreach (var vertex in node.InReferences)
             {
                 var item = vertex.Node;
 
@@ -330,7 +353,7 @@ namespace WinCompData.CodeGen
                 if (item.Object is ExpressionAnimation exprAnim)
                 {
                     // ... is the animation shared?
-                    if (item.NodesInGroup.Count() > 1)
+                    if (item.InReferences.Length > 1)
                     {
                         yield return item;
                         continue;
@@ -612,7 +635,7 @@ namespace WinCompData.CodeGen
             // ExpressionAnimation is reset before each use, unless the animation
             // is shared.
             var animationNode = NodeFor(animator.Animation);
-            if (animationNode.NodesInGroup.Count() == 1 && animator.Animation is ExpressionAnimation expressionAnimation)
+            if (!animationNode.RequiresStorage && animator.Animation is ExpressionAnimation expressionAnimation)
             {
                 builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}ClearAllParameters();");
                 builder.WriteLine($"{c_singletonExpressionAnimationName}{Deref}Expression = {String(expressionAnimation.Expression.ToString())};");
@@ -1145,6 +1168,12 @@ namespace WinCompData.CodeGen
         {
             if (node.RequiresStorage)
             {
+                if (_disableFieldOptimization)
+                {
+                    // If the field has already been assigned, return its value.
+                    builder.WriteLine($"if ({node.FieldName} != {Null}) {{ return {node.FieldName}; }}");
+                }
+
                 builder.WriteLine($"{Var} result = {node.FieldName} = {createCallText};");
             }
             else
@@ -1244,7 +1273,7 @@ namespace WinCompData.CodeGen
                     break;
                 case CompositionObjectType.CompositionColorBrush:
                     // Color brushes that are not animated get names describing their color.
-                    // Canonicalization ensures there will only be one brush for any one non-animated color.
+                    // Optimization ensures there will only be one brush for any one non-animated color.
                     var brush = (CompositionColorBrush)obj;
                     if (brush.Animators.Any())
                     {
@@ -1304,10 +1333,10 @@ namespace WinCompData.CodeGen
             return result;
         }
 
-        void SetCanonicalMethodNames(IEnumerable<ObjectData> canonicals)
+        void SetMethodNames(IEnumerable<ObjectData> nodes)
         {
             var nodesByTypeName = new Dictionary<string, List<ObjectData>>();
-            foreach (var node in canonicals)
+            foreach (var node in nodes)
             {
                 string baseName;
 
@@ -1338,23 +1367,23 @@ namespace WinCompData.CodeGen
             foreach (var entry in nodesByTypeName)
             {
                 var baseName = entry.Key;
-                var nodes = entry.Value;
-                if (nodes.Count == 1)
+                var n = entry.Value;
+                if (n.Count == 1)
                 {
                     // There's only 1 of this type of node. No suffix needed.
-                    nodes[0].Name = baseName;
+                    n[0].Name = baseName;
                 }
                 else
                 {
                     // Multiple nodes of this type. Append a counter suffix.
 
                     // Use only as many digits as necessary to express the largest count.
-                    var digitsRequired = (int)Math.Ceiling(Math.Log10(nodes.Count + 1));
+                    var digitsRequired = (int)Math.Ceiling(Math.Log10(n.Count + 1));
                     var counterFormat = new string('0', digitsRequired);
 
-                    for (var i = 0; i < nodes.Count; i++)
+                    for (var i = 0; i < n.Count; i++)
                     {
-                        nodes[i].Name = $"{baseName}_{i.ToString(counterFormat)}";
+                        n[i].Name = $"{baseName}_{i.ToString(counterFormat)}";
                     }
                 }
             }
@@ -1595,11 +1624,24 @@ namespace WinCompData.CodeGen
 
 
         // A node in the object graph, annotated with extra stuff to assist in code generation.
-        sealed class ObjectData : CanonicalizedNode<ObjectData>
+        sealed class ObjectData : Graph.Node<ObjectData>
         {
             string _overriddenFactoryCall;
+            Dictionary<ObjectData, string> _callFactoryFromForCache;
 
-            public Dictionary<ObjectData, string> CallFactoryFromForCache { get; set; }
+            public Dictionary<ObjectData, string> CallFactoryFromForCache
+            {
+                get
+                {
+                    // Lazy initialization because not all nodes need the cache.
+                    if (_callFactoryFromForCache == null)
+                    {
+                        _callFactoryFromForCache = new Dictionary<ObjectData, string>();
+                    }
+                    return _callFactoryFromForCache;
+                }
+            }
+
             public string Name { get; set; }
 
             public string FieldName => RequiresStorage ? CamelCase(Name) : null;
@@ -1622,7 +1664,7 @@ namespace WinCompData.CodeGen
             IEnumerable<string> GetAncestorShortComments()
             {
                 // Get the nodes that reference this node.
-                var parents = CanonicalInRefs.Select(v => v.Node).ToArray();
+                var parents = InReferences.Select(v => v.Node).ToArray();
                 if (parents.Length == 1)
                 {
                     // There is exactly one parent.
@@ -1696,7 +1738,7 @@ namespace WinCompData.CodeGen
             }
 
             // For debugging purposes only.
-            public override string ToString() => Name == null ? $"{TypeName} {IsCanonical}" : $"{Name} {IsCanonical}";
+            public override string ToString() => Name == null ? $"{TypeName} {InReferences.Length}" : $"{Name} {InReferences.Length}";
 
             // Sets the first character to lower case.
             static string CamelCase(string value) => $"_{char.ToLowerInvariant(value[0])}{value.Substring(1)}";

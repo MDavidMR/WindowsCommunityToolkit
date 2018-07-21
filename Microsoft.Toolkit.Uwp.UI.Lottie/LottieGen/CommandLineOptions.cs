@@ -32,6 +32,8 @@ sealed class CommandLineOptions
     internal string OutputFolder => _outputFolder;
     internal bool StrictMode { get; private set; }
     internal bool HelpRequested { get; private set; }
+    internal bool _DisableOptimizer { get; private set; }
+    internal bool _DisableFieldOptimization { get; private set; }
 
     enum Keyword
     {
@@ -43,6 +45,10 @@ sealed class CommandLineOptions
         ClassName,
         OutputFolder,
         Strict,
+        // Anything with an underscore is an undocumented keyword used
+        // for internal testing.
+        _DisableOptimizer,
+        _DisableFieldOptimization,
     }
 
     // Returns the parsed command line. If ErrorDescription is non-null, then the parse failed.
@@ -91,7 +97,10 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("language", Keyword.Language)
             .AddPrefixedKeyword("classname", Keyword.ClassName)
             .AddPrefixedKeyword("outputfolder", Keyword.OutputFolder)
-            .AddPrefixedKeyword("strict", Keyword.Strict);
+            .AddPrefixedKeyword("strict", Keyword.Strict)
+            // Undocumented keywords used for internal testing
+            .AddPrefixedKeyword("_disableofieldoptimization", Keyword._DisableFieldOptimization)
+            .AddPrefixedKeyword("_disableoptimizer", Keyword._DisableOptimizer);
 
         // Sentinel to indicate that there is no parameter expected for the current argument.
         string noParameterSentinel = "noParameterSentinel";
@@ -141,6 +150,14 @@ sealed class CommandLineOptions
                     break;
                 case Keyword.Strict:
                     StrictMode = true;
+                    break;
+
+                // Undocumented switches used for internal testing.
+                case Keyword._DisableFieldOptimization:
+                    _DisableFieldOptimization = true;
+                    break;
+                case Keyword._DisableOptimizer:
+                    _DisableOptimizer = true;
                     break;
                 default:
                     // Should never get here.

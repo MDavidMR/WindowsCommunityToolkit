@@ -15,8 +15,19 @@ namespace WinCompData.CodeGen
     {
         readonly CSharpStringifier _stringifier;
 
-        CSharpInstantiatorGenerator(CompositionObject graphRoot, TimeSpan duration, bool setCommentProperties, CSharpStringifier stringifier)
-            : base(graphRoot, duration, setCommentProperties, stringifier)
+        CSharpInstantiatorGenerator(
+            CompositionObject graphRoot,
+            TimeSpan duration,
+            bool setCommentProperties,
+            bool disableOptimizer,
+            bool disableFieldOptimization,
+            CSharpStringifier stringifier)
+            : base(graphRoot: graphRoot,
+                  duration: duration,
+                  setCommentProperties: setCommentProperties,
+                  disableOptimizer: disableOptimizer,
+                  disableFieldOptimization: disableFieldOptimization,
+                  stringifier: stringifier)
         {
             _stringifier = stringifier;
         }
@@ -30,10 +41,20 @@ namespace WinCompData.CodeGen
             Visual rootVisual,
             float width,
             float height,
-            TimeSpan duration)
+            TimeSpan duration,
+            // Rarely set options used mostly for testing.
+            bool disableOptimizer = false,
+            bool disableFieldOptimization = false)
         {
-            var generator = new CSharpInstantiatorGenerator(rootVisual, duration, setCommentProperties: false, stringifier: new CSharpStringifier());
-            return generator.GenerateCode(className, rootVisual, width, height);
+            var generator = new CSharpInstantiatorGenerator(
+                                graphRoot: rootVisual,
+                                duration: duration,
+                                setCommentProperties: false,
+                                disableOptimizer: disableOptimizer,
+                                disableFieldOptimization: disableFieldOptimization,
+                                stringifier: new CSharpStringifier());
+
+            return generator.GenerateCode(className, width, height);
         }
 
         // Called by the base class to write the start of the file (i.e. everything up to the body of the Instantiator class).
@@ -80,7 +101,7 @@ namespace WinCompData.CodeGen
 
         // Called by the base class to write the end of the file (i.e. everything after the body of the Instantiator class).
         protected override void WriteFileEnd(
-            CodeBuilder builder, 
+            CodeBuilder builder,
             CodeGenInfo info)
         {
             // Write the constructor for the instantiator.
@@ -270,7 +291,7 @@ namespace WinCompData.CodeGen
             public override string Vector2(Vector2 value) => $"new Vector2({ Float(value.X) }, { Float(value.Y)})";
 
             public override string Vector3(Vector3 value) => $"new Vector3({ Float(value.X) }, { Float(value.Y)}, {Float(value.Z)})";
-               
+
         }
     }
 
