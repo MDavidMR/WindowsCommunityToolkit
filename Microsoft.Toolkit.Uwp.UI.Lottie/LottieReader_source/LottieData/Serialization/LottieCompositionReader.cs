@@ -1469,7 +1469,7 @@ namespace LottieData.Serialization
 
                 if (isAnimated && keyFrames == s_emptyKeyFrames)
                 {
-                    throw new LottieJsonReaderException($"Expected keyframes.");
+                    throw new LottieJsonReaderException("Expected keyframes.");
                 }
             }
 
