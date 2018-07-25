@@ -4,6 +4,7 @@
 using LottieData.Serialization;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -24,8 +25,8 @@ namespace Lottie
             {
                 if (file.Name.EndsWith("json", StringComparison.OrdinalIgnoreCase))
                 {
-                    var contents = await FileIO.ReadTextAsync(file);
-                    var composition = LottieCompositionReader.ReadLottieCompositionFromJsonString(contents, LottieCompositionReader.Options.None, out var readerIssues);
+                    var contents = await file.OpenReadAsync();
+                    var composition = LottieCompositionReader.ReadLottieCompositionFromJsonStream(contents.AsStreamForRead(), LottieCompositionReader.Options.None, out var readerIssues);
 
                     if (composition != null)
                     {

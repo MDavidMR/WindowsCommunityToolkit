@@ -22,6 +22,7 @@ using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft_UI_Xaml_Controls;
+using System.IO;
 
 namespace Lottie
 {
@@ -268,7 +269,7 @@ namespace Lottie
                 var result = new ContentFactory(diagnostics);
 
                 // Get the file name and contents.
-                (var fileName, var jsonString) = await ReadFileAsync();
+                (var fileName, var jsonStream) = await GetFileStreamAsync();
 
                 if (diagnostics != null)
                 {
@@ -277,7 +278,7 @@ namespace Lottie
                     sw.Restart();
                 }
 
-                if (string.IsNullOrWhiteSpace(jsonString))
+                if (jsonStream == null)
                 {
                     // Failed to load ...
                     return result;
@@ -290,8 +291,8 @@ namespace Lottie
                 await CheckedAwait(Task.Run(() =>
                 {
                     lottieComposition =
-                        LottieCompositionReader.ReadLottieCompositionFromJsonString(
-                            jsonString,
+                        LottieCompositionReader.ReadLottieCompositionFromJsonStream(
+                            jsonStream,
                             LottieCompositionReader.Options.IgnoreMatchNames,
                             out var readerIssues);
 
@@ -378,6 +379,12 @@ namespace Lottie
                 }
             }
 
+            Task<(string, Stream)> GetFileStreamAsync()
+                => _storageFile != null
+                    ? GetStorageFileStreamAsync(_storageFile)
+                    : GetUriStreamAsync(_uri);
+
+
             Task<(string, string)> ReadFileAsync()
                     => _storageFile != null
                         ? ReadStorageFileAsync(_storageFile)
@@ -403,12 +410,40 @@ namespace Lottie
                 return (null, null);
             }
 
+            async Task<(string, Stream)> GetUriStreamAsync(Uri uri)
+            {
+                var absoluteUri = GetAbsoluteUri(uri);
+                if (absoluteUri != null)
+                {
+                    if (absoluteUri.Scheme.StartsWith("ms-"))
+                    {
+                        return await GetStorageFileStreamAsync(await StorageFile.GetFileFromApplicationUriAsync(absoluteUri));
+                    }
+                    else
+                    {
+                        var winrtClient = new Windows.Web.Http.HttpClient();
+                        var response = await winrtClient.GetAsync(absoluteUri);
+
+                        var result = await response.Content.ReadAsInputStreamAsync();
+                        return (absoluteUri.LocalPath, result.AsStreamForRead());
+                    }
+                }
+                return (null, null);
+            }
+
             async Task<(string, string)> ReadStorageFileAsync(StorageFile storageFile)
             {
                 Debug.Assert(storageFile != null);
                 var result = await FileIO.ReadTextAsync(storageFile);
                 return (storageFile.Name, result);
             }
+
+            async Task<(string, Stream)> GetStorageFileStreamAsync(StorageFile storageFile)
+            {
+                var randomAccessStream = await storageFile.OpenReadAsync();
+                return (storageFile.Name, randomAccessStream.AsStreamForRead());
+            }
+
         }
 
         // Parses a string into an absolute URI, or null if the string is malformed.

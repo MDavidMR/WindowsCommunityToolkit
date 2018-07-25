@@ -7,6 +7,7 @@ using LottieData.Serialization;
 using LottieToWinComp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
@@ -139,12 +140,12 @@ namespace LottieTest
 
                 lottieInfos.Add(lottieInfo);
 
-                var jsonString = await FileIO.ReadTextAsync(file);
+                var jsonStream = await file.OpenReadAsync();
 
                 // Parse the Lottie
                 var lottieComposition =
-                     LottieCompositionReader.ReadLottieCompositionFromJsonString(
-                        jsonString,
+                     LottieCompositionReader.ReadLottieCompositionFromJsonStream(
+                        jsonStream.AsStreamForRead(),
                         LottieCompositionReader.Options.IgnoreMatchNames,
                         out var readerIssues);
                 lottieInfo.ReaderIssues = readerIssues;

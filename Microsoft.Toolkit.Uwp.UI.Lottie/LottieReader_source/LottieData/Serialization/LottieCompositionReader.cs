@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 
 using ParsingIssues = LottieData.Serialization.ParsingIssues;
 using LottieJsonReaderException = LottieData.Serialization.LottieJsonReaderException;
+using System.IO;
 
 #if CheckForUnparsedFields
 using JObject = LottieData.Serialization.CheckedJsonObject;
@@ -58,9 +59,19 @@ namespace LottieData.Serialization
         }
 
         /// <summary>
+        /// Parses a Lottie file to create a <see cref="LottieData.LottieComposition"/>.
+        /// </summary>
+        public static LottieComposition ReadLottieCompositionFromJsonStream(Stream stream, Options options, out (string Code, string Description)[] issues)
+        {
+            var streamReader = new StreamReader(stream);
+            var jsonString = streamReader.ReadToEnd();
+            return ReadLottieCompositionFromJsonString(jsonString, options, out issues);
+        }
+
+        /// <summary>
         /// Parses a Json string to create a <see cref="LottieData.LottieComposition"/>.
         /// </summary>
-        public static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out (string Code, string Description)[] issues)
+        static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out (string Code, string Description)[] issues)
         {
             JObject obj;
             try

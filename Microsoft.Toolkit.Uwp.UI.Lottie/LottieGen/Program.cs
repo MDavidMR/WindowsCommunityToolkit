@@ -142,11 +142,9 @@ static class Program
 
         // Read the Lottie .json text.
         infoStream.WriteLine($"Reading Lottie file: {lottieJsonFile}");
-        var jsonString = TryReadTextFile(lottieJsonFile);
+        var jsonStream = TryReadTextFile(lottieJsonFile);
 
-        profiler.OnReadFinished();
-
-        if (jsonString == null)
+        if (jsonStream == null)
         {
             errorStream.WriteLine($"Failed to read Lottie file: {lottieJsonFile}");
             return false;
@@ -154,8 +152,8 @@ static class Program
 
         // Parse the Lottie.
         var lottieComposition =
-            LottieCompositionReader.ReadLottieCompositionFromJsonString(
-                jsonString,
+            LottieCompositionReader.ReadLottieCompositionFromJsonStream(
+                jsonStream,
                 LottieCompositionReader.Options.IgnoreMatchNames,
                 out var readerIssues);
 
@@ -461,11 +459,11 @@ static class Program
         return true;
     }
 
-    static string TryReadTextFile(string filePath)
+    static Stream TryReadTextFile(string filePath)
     {
         try
         {
-            return File.ReadAllText(filePath);
+            return File.OpenRead(filePath);
         }
         catch (Exception)
         {
@@ -552,13 +550,11 @@ EXAMPLES:
     sealed class Profiler
     {
         readonly Stopwatch _sw = Stopwatch.StartNew();
-        TimeSpan _readTime;
         TimeSpan _parseTime;
         TimeSpan _translateTime;
         TimeSpan _codegenTime;
         TimeSpan _serializationTime;
 
-        internal void OnReadFinished() => OnPhaseFinished(ref _readTime);
         internal void OnParseFinished() => OnPhaseFinished(ref _parseTime);
         internal void OnTranslateFinished() => OnPhaseFinished(ref _translateTime);
         internal void OnCodeGenFinished() => OnPhaseFinished(ref _codegenTime);
@@ -572,7 +568,6 @@ EXAMPLES:
 
         internal void WriteReport(TextWriter writer)
         {
-            WriteReportForPhase(writer, "read", _readTime);
             WriteReportForPhase(writer, "parse", _parseTime);
             WriteReportForPhase(writer, "translate", _translateTime);
             WriteReportForPhase(writer, "codegen", _codegenTime);
