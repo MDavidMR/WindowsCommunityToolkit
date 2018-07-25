@@ -69,12 +69,11 @@ namespace LottieData.Serialization
         /// </summary>
         public static LottieComposition ReadLottieCompositionFromJsonStream(Stream stream, Options options, out (string Code, string Description)[] issues)
         {
-            JObject obj;
+            JsonReader jsonReader;
             try
             {
                 var streamReader = new StreamReader(stream);
-                var jsonReader = new JsonTextReader(streamReader);
-                obj = JObject.Load(jsonReader, s_jsonLoadSettings);
+                jsonReader = new JsonTextReader(streamReader);
             }
             catch (Exception e)
             {
@@ -84,19 +83,19 @@ namespace LottieData.Serialization
                 return null;
             }
 
-            return ReadLottieCompositionFromJson(obj, options, out issues);
+            return ReadLottieCompositionFromJson(jsonReader, options, out issues);
         }
 
 
         LottieCompositionReader(Options options) { _options = options; }
 
-        static LottieComposition ReadLottieCompositionFromJson(JObject obj, Options options, out (string Code, string Description)[] issues)
+        static LottieComposition ReadLottieCompositionFromJson(JsonReader jsonReader, Options options, out (string Code, string Description)[] issues)
         {
             var reader = new LottieCompositionReader(options);
             LottieComposition result = null;
             try
             {
-                result = reader.ReadLottieComposition(obj);
+                result = reader.ParseLottieComposition(jsonReader);
             }
             catch (LottieJsonReaderException e)
             {
@@ -106,174 +105,299 @@ namespace LottieData.Serialization
             return result;
         }
 
-        LottieComposition ReadLottieComposition(JObject obj)
+        LottieComposition ParseLottieComposition(JsonReader reader)
         {
-            int? width = null;
-            int? height = null;
-            int? inPoint = null;
-            int? outPoint = null;
-            double? frameRate = null;
-            bool is3d = false;
-            AssetCollection assets = null;
-            LayerCollection layers = null;
-            IEnumerable<Marker> markers = null;
             string version = null;
+            double? framesPerSecond = null;
+            double? inPoint = null;
+            double? outPoint = null;
+            double? width = null;
+            double? height = null;
             string name = null;
+            bool? is3d = null;
+            var assets = new Asset[0];
+            var layers = new Layer[0];
+            var markers = new Marker[0];
 
-            // Newtonsoft has its own casting logic so to bypass this, we first cast to a double and then round
-            // because the desired behavior is to round doubles to the nearest value.
-            int? GetInt(JToken j) => (j.Type == JTokenType.Integer || j.Type == JTokenType.Float) ? (int?)Math.Round((double)j) : null;
+            ConsumeToken(reader);
 
-            foreach (var field in obj)
+            while (reader.Read())
             {
-                switch (field.Key)
+                switch (reader.TokenType)
                 {
-                    case "ddd":
-                        is3d = (double)field.Value == 1;
+                    case JsonToken.StartObject:
+                    case JsonToken.StartArray:
+                    case JsonToken.StartConstructor:
+                    case JsonToken.Raw:
+                    case JsonToken.Integer:
+                    case JsonToken.Float:
+                    case JsonToken.String:
+                    case JsonToken.Boolean:
+                    case JsonToken.Null:
+                    case JsonToken.Undefined:
+                    case JsonToken.EndArray:
+                    case JsonToken.EndConstructor:
+                    case JsonToken.Date:
+                    case JsonToken.Bytes:
+                        // Here means the JSON was invalid or our parser got confused.
+                        throw UnexpectedTokenException(reader);
+
+                    case JsonToken.Comment:
+                        // Ignore comments.
+                        ConsumeToken(reader);
                         break;
-                    case "ip":
-                        inPoint = GetInt(field.Value);
+
+                    case JsonToken.PropertyName:
+                        var currentProperty = (string)reader.Value;
+
+                        ConsumeToken(reader);
+
+                        switch (currentProperty)
+                        {
+                            case "assets":
+                                assets = ParseArrayOf(reader, ParseAsset).ToArray();
+                                break;
+                            case "chars":
+                                _issues.Chars();
+                                ConsumeArray(reader);
+                                break;
+                            case "comps":
+                                _issues.IgnoredField("comps");
+                                ConsumeArray(reader);
+                                break;
+                            case "ddd":
+                                is3d = ParseBool(reader);
+                                break;
+                            case "fr":
+                                framesPerSecond = ParseDouble(reader);
+                                break;
+                            case "fonts":
+                                _issues.Fonts();
+                                ConsumeObject(reader);
+                                break;
+                            case "layers":
+                                layers = ParseLayers(reader);
+                                break;
+                            case "h":
+                                height = ParseDouble(reader);
+                                break;
+                            case "ip":
+                                inPoint = ParseDouble(reader);
+                                break;
+                            case "op":
+                                outPoint = ParseDouble(reader);
+                                break;
+                            case "markers":
+                                markers = ParseArrayOf(reader, ParseMarker).ToArray();
+                                break;
+                            case "nm":
+                                name = (string)reader.Value;
+                                break;
+                            case "v":
+                                version = (string)reader.Value;
+                                break;
+                            case "w":
+                                width = ParseDouble(reader);
+                                break;
+
+                            default:
+                                throw UnexpectedTokenException(reader);
+                        }
                         break;
-                    case "op":
-                        outPoint = GetInt(field.Value);
-                        break;
-                    case "h":
-                        height = GetInt(field.Value);
-                        break;
-                    case "w":
-                        width = GetInt(field.Value);
-                        break;
-                    case "fr":
-                        frameRate = (field.Value.Type == JTokenType.Float || field.Value.Type == JTokenType.Integer) ? (double?)field.Value : null;
-                        break;
-                    case "v":
-                        version = field.Value.Type == JTokenType.String ? (string)field.Value : null;
-                        break;
-                    case "assets":
-                        assets = field.Value.Type == JTokenType.Array
-                            ? new AssetCollection((field.Value.AsArray()).Select(a => ReadAsset(a.AsObject())).Where(a => a != null))
-                            : null;
-                        break;
-                    case "markers":
-                        markers = field.Value.Type == JTokenType.Array
-                            ? field.Value.AsArray().Select(a => ReadMarker(a.AsObject())).ToArray()
-                            : null;
-                        break;
-                    case "layers":
-                        layers = field.Value.Type == JTokenType.Array
-                            ? new LayerCollection(field.Value.AsArray().Select(a => ReadLayer(a.AsObject())).Where(a => a != null))
-                            : null;
-                        break;
-                    case "nm":
-                        name = (string)field.Value;
-                        break;
-                    case "chars":
-                        _issues.Chars();
-                        break;
-                    case "fonts":
-                        _issues.Fonts();
-                        break;
+
+                    case JsonToken.EndObject:
+                        {
+                            if (version == null)
+                            {
+                                throw new LottieJsonReaderException("Version parameter not found.");
+                            }
+
+                            if (!width.HasValue)
+                            {
+                                throw new LottieJsonReaderException("Width parameter not found.");
+                            }
+
+                            if (!height.HasValue)
+                            {
+                                throw new LottieJsonReaderException("Height parameter not found.");
+                            }
+
+                            if (!inPoint.HasValue)
+                            {
+                                throw new LottieJsonReaderException("Start frame parameter not found.");
+                            }
+
+                            if (!outPoint.HasValue)
+                            {
+                                throw new LottieJsonReaderException("End frame parameter not found.");
+                            }
+
+                            var versions = version.Split('.');
+
+                            if (layers == null)
+                            {
+                                throw new LottieJsonReaderException("No layers found.");
+                            }
+
+                            var result = new LottieComposition(
+                                                name: name ?? "",
+                                                width: width ?? 0.0,
+                                                height: height ?? 0.0,
+                                                inPoint: inPoint ?? 0.0,
+                                                outPoint: outPoint ?? 0.0,
+                                                framesPerSecond: framesPerSecond ?? 0.0,
+                                                is3d: false,
+                                                version: new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
+                                                assets: new AssetCollection(assets),
+                                                layers: new LayerCollection(layers),
+                                                markers: markers);
+                            return result;
+                        }
+
                     default:
-                        _issues.UnexpectedField(field.Key);
-                        break;
+                        throw new InvalidOperationException();
                 }
             }
-
-            if (version == null)
-            {
-                throw new LottieJsonReaderException("Version parameter not found.");
-            }
-
-            if (!width.HasValue)
-            {
-                throw new LottieJsonReaderException("Width parameter not found.");
-            }
-
-            if (!height.HasValue)
-            {
-                throw new LottieJsonReaderException("Height parameter not found.");
-            }
-
-            if (!inPoint.HasValue)
-            {
-                throw new LottieJsonReaderException("Start frame parameter not found.");
-            }
-
-            if (!outPoint.HasValue)
-            {
-                throw new LottieJsonReaderException("End frame parameter not found.");
-            }
-
-            var versions = version.Split('.');
-
-            if (layers == null)
-            {
-                throw new LottieJsonReaderException("No layers found.");
-            }
-
-            var lottieComposition = new LottieComposition(
-                name,
-                width.Value,
-                height.Value,
-                inPoint.Value,
-                outPoint.Value,
-                frameRate.Value,
-                is3d,
-                new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
-                assets ?? new AssetCollection(new Asset[0]),
-                layers,
-                markers ?? new Marker[0]);
-
-            return lottieComposition;
+            throw EofException;
         }
 
-        Marker ReadMarker(JObject obj)
+        Marker ParseMarker(JsonReader reader)
         {
-            var tm = obj.GetNamedNumber("tm");
-            var cm = obj.GetNamedString("cm");
-            var dr = obj.GetNamedNumber("dr");
-            AssertAllFieldsRead(obj);
-            return new Marker(tm, cm, dr);
-        }
+            ExpectToken(reader, JsonToken.StartObject);
 
-        Asset ReadAsset(JObject obj)
-        {
-            // Older Lottie's use a string for the id. Newer Lotties use a number.
-            // Convert either to a string.
-            var idObj = obj.GetNamedValue("id");
-            var id = (idObj.Type == JTokenType.Float || idObj.Type == JTokenType.Integer)
-                ? ((double)idObj).ToString()
-                : (string)idObj;
+            string name = null;
+            double durationSeconds = 0;
+            double progress = 0;
 
-            // Try to parse as a layers asset.
-            var layersArray = obj.GetNamedArray("layers", null);
-            if (layersArray != null)
+            while (reader.Read())
             {
-                var layers = from val in layersArray
-                             let layer = ReadLayer(val.AsObject())
-                             where layer != null
-                             select layer;
-
-                AssertAllFieldsRead(obj);
-                return new LayerCollectionAsset(id, new LayerCollection(layers));
-            }
-            else
-            {
-                // Try to parse as an image asset.
-                var w = obj.GetNamedNumber("w", double.NaN);
-                var h = obj.GetNamedNumber("h", double.NaN);
-                var u = obj.GetNamedString("u");
-                var p = obj.GetNamedString("p");
-
-                if (double.IsNaN(w) || double.IsNaN(h) || u == null || p == null)
+                switch (reader.TokenType)
                 {
-                    _issues.AssetType("NaN");
-                    AssertAllFieldsRead(obj);
-                    return null;
-                }
+                    case JsonToken.PropertyName:
+                        var currentProperty = (string)reader.Value;
 
-                return new ImageAsset(id, w, h, u, p);
+                        ConsumeToken(reader);
+
+                        switch (currentProperty)
+                        {
+                            case "cm":
+                                name = (string)reader.Value;
+                                break;
+                            case "dr":
+                                durationSeconds = ParseDouble(reader);
+                                break;
+                            case "tm":
+                                progress = ParseDouble(reader);
+                                break;
+                            default:
+                                throw UnexpectedFieldException(reader, currentProperty);
+                        }
+                        break;
+                    case JsonToken.EndObject:
+                        return new Marker(progress, name, durationSeconds);
+                    default:
+                        throw UnexpectedTokenException(reader);
+                }
             }
+            throw EofException;
+        }
+
+        Asset ParseAsset(JsonReader reader)
+        {
+            ExpectToken(reader, JsonToken.StartObject);
+
+            string id = null;
+            double width = 0.0;
+            double height = 0.0;
+            string imagePath = null;
+            string fileName = null;
+            string name = null;
+            Layer[] layers = null;
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.PropertyName:
+                        {
+                            var currentProperty = (string)reader.Value;
+                            ConsumeToken(reader);
+
+                            switch (currentProperty)
+                            {
+                                case "h":
+                                    height = ParseDouble(reader);
+                                    break;
+                                case "id":
+                                    // Older lotties use a string. New lotties use an int. Handle either as strings.
+                                    switch (reader.TokenType)
+                                    {
+                                        case JsonToken.String:
+                                            id = (string)reader.Value;
+                                            break;
+                                        case JsonToken.Integer:
+                                            id = ParseInt(reader).ToString();
+                                            break;
+                                        default:
+                                            throw UnexpectedTokenException(reader);
+                                    }
+                                    break;
+                                case "layers":
+                                    layers = ParseLayers(reader);
+                                    break;
+                                case "nm":
+                                    // TODO - not sure why, but shows up in one Layers asset in the corpus.
+                                    name = (string)reader.Value;
+                                    break;
+                                case "p":
+                                    fileName = (string)reader.Value;
+                                    break;
+                                case "u":
+                                    imagePath = (string)reader.Value;
+                                    break;
+                                case "w":
+                                    width = ParseDouble(reader);
+                                    break;
+                                case "xt":
+                                    // TODO - unknown - seen once in Layers asset in the corpus.
+                                    var xt = ParseInt(reader);
+                                    break;
+                                default:
+                                    throw UnexpectedFieldException(reader, currentProperty);
+                            }
+                        }
+                        break;
+                    case JsonToken.EndObject:
+                        {
+                            if (id == null)
+                            {
+                                throw Exception("Asset with no id", reader);
+                            }
+
+                            if (layers != null)
+                            {
+                                return new LayerCollectionAsset(id, new LayerCollection(layers));
+                            }
+                            else if (imagePath != null && fileName != null)
+                            {
+                                return new ImageAsset(id, width, height, imagePath, fileName);
+                            }
+                            else
+                            {
+                                _issues.AssetType("NaN");
+                                return null;
+                            }
+                        }
+                    default: throw UnexpectedTokenException(reader);
+                }
+            }
+
+            throw EofException;
+        }
+
+        Layer[] ParseLayers(JsonReader reader)
+        {
+            return LoadArrayOfJObjects(reader).Select(a => ReadLayer(a)).Where(a => a != null).ToArray();
         }
 
         // May return null if there was a problem reading the layer.
@@ -1801,6 +1925,175 @@ namespace LottieData.Serialization
             }
 #endif
         }
+
+        static void ExpectToken(JsonReader reader, JsonToken token)
+        {
+            if (reader.TokenType != token)
+            {
+                throw UnexpectedTokenException(reader);
+            }
+        }
+
+        static bool ParseBool(JsonReader reader)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonToken.Integer:
+                    return (long)reader.Value != 0;
+                case JsonToken.Float:
+                    return (double)reader.Value != 0;
+                case JsonToken.Boolean:
+                    return (bool)reader.Value;
+                default:
+                    throw Exception($"Expected a bool, but got {reader.TokenType}", reader);
+            }
+        }
+
+        static double ParseDouble(JsonReader reader)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonToken.Integer:
+                    return (double)(long)reader.Value;
+                case JsonToken.Float:
+                    return (double)reader.Value;
+                default:
+                    throw Exception($"Expected a number, but got {reader.TokenType}", reader);
+            }
+        }
+
+        static int ParseInt(JsonReader reader, bool strict = false)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonToken.Integer:
+                    return checked((int)(long)reader.Value);
+                case JsonToken.Float:
+                    if (strict)
+                    {
+                        throw Exception("Expected an integer, but got a float", reader);
+                    }
+                    return checked((int)(long)Math.Round((double)reader.Value));
+                default:
+                    throw Exception($"Expected a number, but got {reader.TokenType}", reader);
+            }
+        }
+
+        // Loads the JObjects in an array.
+        static IEnumerable<JObject> LoadArrayOfJObjects(JsonReader reader)
+        {
+            ExpectToken(reader, JsonToken.StartArray);
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.StartObject:
+                        yield return JObject.Load(reader, s_jsonLoadSettings);
+                        break;
+                    case JsonToken.EndArray:
+                        yield break;
+                    default:
+                        throw UnexpectedTokenException(reader);
+                }
+            }
+            throw EofException;
+        }
+
+        IEnumerable<T> ParseArrayOf<T>(JsonReader reader, Func<JsonReader, T> parser)
+        {
+            ExpectToken(reader, JsonToken.StartArray);
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.StartObject:
+                        var result = parser(reader);
+                        if (result != null)
+                        {
+                            yield return result;
+                        }
+                        break;
+
+                    case JsonToken.EndArray:
+                        yield break;
+
+                    default:
+                        throw UnexpectedTokenException(reader);
+                }
+            }
+        }
+
+        // Consumes a token from the stream.
+        static void ConsumeToken(JsonReader reader)
+        {
+            if (!reader.Read())
+            {
+                throw EofException;
+            }
+        }
+
+        // Consumes an array from the stream.
+        void ConsumeArray(JsonReader reader)
+        {
+            ExpectToken(reader, JsonToken.StartArray);
+
+            var startArrayCount = 1;
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.StartArray:
+                        startArrayCount++;
+                        break;
+                    case JsonToken.EndArray:
+                        startArrayCount--;
+                        if (startArrayCount == 0)
+                        {
+                            return;
+                        }
+                        break;
+                }
+            }
+            throw EofException;
+        }
+
+        // Consumes an object from the stream.
+        void ConsumeObject(JsonReader reader)
+        {
+            ExpectToken(reader, JsonToken.StartObject);
+
+            var objectStartCount = 1;
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.StartObject:
+                        objectStartCount++;
+                        break;
+                    case JsonToken.EndObject:
+                        objectStartCount--;
+                        if (objectStartCount == 0)
+                        {
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            throw EofException;
+        }
+
+        static LottieJsonReaderException EofException => new LottieJsonReaderException("EOF");
+
+        static LottieJsonReaderException UnexpectedFieldException(JsonReader reader, string field) => Exception($"Unexpected field: {field}", reader);
+
+        static LottieJsonReaderException UnexpectedTokenException(JsonReader reader) => Exception($"Unexpected token: {reader.TokenType}", reader);
+
+        static LottieJsonReaderException Exception(string message, JsonReader reader) => new LottieJsonReaderException($"{message} @ {reader.Path}");
     }
 
 #if CheckForUnparsedFields
@@ -1859,9 +2152,9 @@ namespace LottieData.Serialization
             _wrapped = wrapped;
         }
 
-        internal static CheckedJsonArray Load(JsonReader reader)
+        internal static CheckedJsonArray Load(JsonReader reader, JsonLoadSettings settings)
         {
-            return new CheckedJsonArray(Newtonsoft.Json.Linq.JArray.Load(reader));
+            return new CheckedJsonArray(Newtonsoft.Json.Linq.JArray.Load(reader, settings));
         }
 
         public JToken this[int index] { get => _wrapped[index]; set => throw new NotImplementedException(); }

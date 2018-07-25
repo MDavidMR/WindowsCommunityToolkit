@@ -418,7 +418,7 @@ static class Program
     // Makes the given name suitable for use as a class name in C# or C++.
     static string SanitizeTypeName(string name)
     {
-        if (name == null)
+        if (string.IsNullOrWhiteSpace(name))
         {
             return null;
         }
