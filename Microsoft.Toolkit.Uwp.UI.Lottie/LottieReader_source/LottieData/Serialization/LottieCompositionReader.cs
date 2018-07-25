@@ -37,6 +37,12 @@ namespace LottieData.Serialization
         static readonly AnimatableVector3Parser s_animatableVector3Parser = new AnimatableVector3Parser();
         static readonly AnimatableColorParser s_animatableColorParser = new AnimatableColorParser();
         static readonly AnimatableGeometryParser s_animatableGeometryParser = new AnimatableGeometryParser();
+        static readonly JsonLoadSettings s_jsonLoadSettings = new JsonLoadSettings
+        {
+            // Ignore commands and line info. Not needed and makes the parser a bit faster.
+            CommentHandling = CommentHandling.Ignore,
+            LineInfoHandling = LineInfoHandling.Ignore
+        };
 
         readonly ParsingIssues _issues = new ParsingIssues();
 
@@ -63,25 +69,12 @@ namespace LottieData.Serialization
         /// </summary>
         public static LottieComposition ReadLottieCompositionFromJsonStream(Stream stream, Options options, out (string Code, string Description)[] issues)
         {
-            var streamReader = new StreamReader(stream);
-            var jsonString = streamReader.ReadToEnd();
-            return ReadLottieCompositionFromJsonString(jsonString, options, out issues);
-        }
-
-        /// <summary>
-        /// Parses a Json string to create a <see cref="LottieData.LottieComposition"/>.
-        /// </summary>
-        static LottieComposition ReadLottieCompositionFromJsonString(string json, Options options, out (string Code, string Description)[] issues)
-        {
             JObject obj;
             try
             {
-                obj = JObject.Parse(json, new JsonLoadSettings
-                {
-                    // Ignore commands and line info. Not needed and makes the parser a bit faster.
-                    CommentHandling = CommentHandling.Ignore,
-                    LineInfoHandling = LineInfoHandling.Ignore
-                });
+                var streamReader = new StreamReader(stream);
+                var jsonReader = new JsonTextReader(streamReader);
+                obj = JObject.Load(jsonReader, s_jsonLoadSettings);
             }
             catch (Exception e)
             {
@@ -93,6 +86,7 @@ namespace LottieData.Serialization
 
             return ReadLottieCompositionFromJson(obj, options, out issues);
         }
+
 
         LottieCompositionReader(Options options) { _options = options; }
 
@@ -1836,9 +1830,9 @@ namespace LottieData.Serialization
             return result;
         }
 
-        internal static CheckedJsonObject Load(JsonReader reader)
+        internal static CheckedJsonObject Load(JsonReader reader, JsonLoadSettings settings)
         {
-            return new CheckedJsonObject(Newtonsoft.Json.Linq.JObject.Load(reader));
+            return new CheckedJsonObject(Newtonsoft.Json.Linq.JObject.Load(reader, settings));
         }
 
         public IEnumerator<KeyValuePair<string, JToken>> GetEnumerator()
