@@ -228,6 +228,70 @@ namespace LottieToWinComp
             }
         }
 
+        void TranslateAndApplyMask(TranslationContext context, PreCompLayer layer, Visual visualForMask)
+        {
+#if !NoClipping
+            if (layer.Masks != null &&
+                layer.Masks.Any())
+            {
+#if RS5_SUPPORT
+                Mask mask = layer.Masks.First();
+
+                if (mask.Inverted)
+                {
+                    _unsupported.MaskWithInvert();
+                }
+
+                if (mask.Opacity.IsAnimated ||
+                    mask.Opacity.InitialValue != 100)
+                {
+                    _unsupported.MaskWithAlpha();
+                }
+
+                if (mask.Mode != Mask.MaskMode.Additive)
+                {
+                    _unsupported.MaskWithUnsupportedMode(mask.Mode);
+                }
+
+                // Translation currently does not support having multiple paths for masks.
+                // If possible users should combine masks when exporting to json.
+                if (layer.Masks.Skip(1).Any())
+                {
+                    _unsupported.MultipleShapeMasks();
+                }
+
+                // Add a mask as a clip path if it can support the mask properties
+                if (!mask.Inverted &&
+                    mask.Opacity.InitialValue == 100 &&
+                    !mask.Opacity.IsAnimated &&
+                    mask.Mode == Mask.MaskMode.Additive &&
+                    layer.Masks.Count() == 1)
+                {
+                    var geometry = mask.Points;
+
+                    var compositionPathGeometry = CreatePathGeometry();
+                    compositionPathGeometry.Path = CompositionPathFromPathGeometry(geometry.InitialValue, SolidColorFill.PathFillType.EvenOdd);
+
+                    var compositionGeometricClip = CreateCompositionGeometricClip();
+                    compositionGeometricClip.Geometry = compositionPathGeometry;
+
+                    if (_addDescriptions)
+                    {
+                        Describe(compositionGeometricClip, mask.Name);
+                        Describe(compositionPathGeometry, $"{mask.Name}.PathGeometry");
+                    }
+
+                    ApplyPathKeyFrameAnimation(context, geometry, SolidColorFill.PathFillType.EvenOdd, compositionPathGeometry, "Path", "Path", null);
+
+                    visualForMask.Clip = compositionGeometricClip;
+                }
+#else
+                _unsupported.MaskSDKSupport();
+#endif
+            }
+#endif
+        }
+
         // Translates a Lottie layer into null a Visual or a Shape. 
         // Note that ShapeVisual clips to its size.
         CompositionObject TranslateLayer(TranslationContext context, Layer layer)
@@ -518,7 +582,11 @@ namespace LottieToWinComp
             var result = CreateContainerVisual();
 
             result.Children.Add(rootNode);
+
 #if !NoClipping
+            // Apply the mask to the content node
+            TranslateAndApplyMask(context, layer, contentsNode);
+
             // PreComps must clip to their size.
             result.Clip = CreateInsetClip();
 
@@ -797,6 +865,15 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 contentsNode.Shapes.AddRange(contents);
+
+                if (layer.Masks != null &&
+                    layer.Masks.Any())
+                {
+                    // We currently do not support masks on shape layers. To add this support we
+                    // need to add a ShapeVisual above the rootNode and add a clip to the ShapeVisual.
+                    _unsupported.InvalidLayerTypeWithMask(layer.Type);
+                }
+
                 return rootNode;
             }
             else
@@ -1672,6 +1749,15 @@ namespace LottieToWinComp
                 Describe(rectangle, "SolidLayerRectangle");
                 Describe(rectangleGeometry, "SolidLayerRectangle.RectangleGeometry");
             }
+
+            if (layer.Masks != null &&
+                layer.Masks.Any())
+            {
+                // We currently do not support masks on solid layers. To add this support we
+                // need to add a ShapeVisual above the rootNode and add a clip to the ShapeVisual.
+                _unsupported.InvalidLayerTypeWithMask(layer.Type);
+            }
+
             return rootNode;
         }
 
@@ -2664,6 +2750,11 @@ namespace LottieToWinComp
         InsetClip CreateInsetClip()
         {
             return _c.CreateInsetClip();
+        }
+
+        CompositionGeometricClip CreateCompositionGeometricClip()
+        {
+            return _c.CreateCompositionGeometricClip();
         }
 
         CompositionContainerShape CreateContainerShape()

@@ -94,6 +94,9 @@ namespace WinCompData.Tools
                 case CompositionObjectType.InsetClip:
                     yield return FromInsetClip((InsetClip)obj);
                     break;
+                case CompositionObjectType.CompositionGeometricClip:
+                    yield return FromCompositionGeometricClip((CompositionGeometricClip)obj);
+                    break;
                 case CompositionObjectType.LinearEasingFunction:
                     yield return FromLinearEasingFunction((LinearEasingFunction)obj);
                     break;
@@ -318,6 +321,18 @@ namespace WinCompData.Tools
                 if (obj.BottomInset != 0)
                 {
                     yield return new XAttribute("BottomInset", obj.BottomInset);
+                }
+            }
+        }
+
+        XElement FromCompositionGeometricClip(CompositionGeometricClip obj)
+        {
+            return new XElement(GetCompositionObjectName(obj), GetContents());
+            IEnumerable<XObject> GetContents()
+            {
+                if (obj.Geometry != null)
+                {
+                    yield return new XElement("Geometry", FromCompositionObject(obj.Geometry));
                 }
             }
         }

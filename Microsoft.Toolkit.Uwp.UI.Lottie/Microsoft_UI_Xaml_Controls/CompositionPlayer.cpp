@@ -28,7 +28,7 @@ namespace winrt::Microsoft_UI_Xaml_Controls::implementation
         propertyType.Kind = winrt::Interop::TypeKind::Metadata;
 
         auto ownerType = winrt::Interop::TypeName();
-        ownerType.Name = winrt::name_of<CompositionPlayer>();
+        ownerType.Name = winrt::name_of<winrt::Microsoft_UI_Xaml_Controls::CompositionPlayer>();
         ownerType.Kind = winrt::Interop::TypeKind::Metadata;
 
         auto propertyMetadata = winrt::PropertyMetadata(defaultValue, propertyChangedCallback);

@@ -231,6 +231,9 @@ namespace WinCompData.Tools
                 case CompositionObjectType.InsetClip:
                     VisitInsetClip((InsetClip)obj, node);
                     break;
+                case CompositionObjectType.CompositionGeometricClip:
+                    VisitCompositionGeometricClip((CompositionGeometricClip)obj, node);
+                    break;
                 case CompositionObjectType.LinearEasingFunction:
                     VisitLinearEasingFunction((LinearEasingFunction)obj, node);
                     break;
@@ -392,6 +395,13 @@ namespace WinCompData.Tools
         bool VisitInsetClip(InsetClip obj, T node)
         {
             return VisitCompositionClip(obj, node);
+        }
+
+        bool VisitCompositionGeometricClip(CompositionGeometricClip obj, T node)
+        {
+            VisitCompositionClip(obj, node);
+            Reference(node, obj.Geometry);
+            return true;
         }
 
         bool VisitCompositionEasingFunction(CompositionEasingFunction obj, T node)

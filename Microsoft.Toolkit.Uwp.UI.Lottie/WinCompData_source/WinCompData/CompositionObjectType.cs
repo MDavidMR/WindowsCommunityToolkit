@@ -13,6 +13,7 @@ namespace WinCompData
         CompositionColorBrush,
         CompositionContainerShape,
         CompositionEllipseGeometry,
+        CompositionGeometricClip,
         CompositionPathGeometry,
         CompositionPropertySet,
         CompositionRectangleGeometry,

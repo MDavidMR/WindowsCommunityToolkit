@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionContainerShape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionEasingFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionEllipseGeometry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionGeometricClip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionGeometry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionObjectType.cs" />

@@ -506,6 +506,8 @@ namespace WinCompData.CodeGen
                     return GenerateExpressionAnimationFactory(builder, (ExpressionAnimation)obj, node);
                 case CompositionObjectType.InsetClip:
                     return GenerateInsetClipFactory(builder, (InsetClip)obj, node);
+                case CompositionObjectType.CompositionGeometricClip:
+                    return GenerateCompositionGeometricClip(builder, (CompositionGeometricClip)obj, node);
                 case CompositionObjectType.LinearEasingFunction:
                     return GenerateLinearEasingFunctionFactory(builder, (LinearEasingFunction)obj, node);
                 case CompositionObjectType.PathKeyFrameAnimation:
@@ -546,6 +548,22 @@ namespace WinCompData.CodeGen
             {
                 builder.WriteLine($"result{Deref}BottomInset = {Float(obj.BottomInset)}");
             }
+            StartAnimations(builder, obj, node);
+            WriteObjectFactoryEnd(builder);
+            return true;
+        }
+
+        bool GenerateCompositionGeometricClip(CodeBuilder builder, CompositionGeometricClip obj, ObjectData node)
+        {
+            WriteObjectFactoryStart(builder, node);
+            WriteCreateAssignment(builder, node, $"_c{Deref}CreateGeometricClip()");
+            InitializeCompositionClip(builder, obj, node);
+
+            if (obj.Geometry != null)
+            {
+                builder.WriteLine($"result{Deref}Geometry = {CallFactoryFromFor(node, obj.Geometry)};");
+            }
+
             StartAnimations(builder, obj, node);
             WriteObjectFactoryEnd(builder);
             return true;

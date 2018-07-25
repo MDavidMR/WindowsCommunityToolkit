@@ -113,6 +113,36 @@ namespace LottieToWinComp
             Report("LT0022", "Time stretch");
         }
 
+        internal void MaskWithInvert()
+        {
+            Report("LT0023", "Mask with invert");
+        }
+
+        internal void MaskWithUnsupportedMode(Mask.MaskMode mode)
+        {
+            Report("LT0024", $"Mask mode: {mode}");
+        }
+
+        internal void MaskWithAlpha()
+        {
+            Report("LT0025", "Mask with alpha value other than 1");
+        }
+
+        internal void MultipleShapeMasks()
+        {
+            Report("LT0026", "Mask with multiple shapes");
+        }
+
+        internal void InvalidLayerTypeWithMask(Layer.LayerType layerType)
+        {
+            Report("LT0027", $"Mask specified on unsupported layer type {layerType}");
+        }
+
+        internal void MaskSDKSupport()
+        {
+            Report("LT0028", "Mask support requires targeting RS5 or later");
+        }
+
         void Report(string code, string description)
         {
             _issues.Add((code, description));

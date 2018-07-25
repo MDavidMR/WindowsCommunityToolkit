@@ -58,10 +58,7 @@ namespace LottieData.Serialization
             Report("LP0009", "Mattes");
         }
 
-        internal void Masks()
-        {
-            Report("LP0010", "Masks");
-        }
+        // LP0010: Masks has been removed. We now support masks.
 
         internal void TimeRemappingOfPreComps()
         {

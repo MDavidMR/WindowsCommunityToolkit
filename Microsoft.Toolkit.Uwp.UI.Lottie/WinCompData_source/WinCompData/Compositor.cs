@@ -10,6 +10,7 @@ namespace WinCompData
 #endif
     sealed class Compositor
     {
+        public CompositionGeometricClip CreateCompositionGeometricClip() => new CompositionGeometricClip();
 
         public ContainerVisual CreateContainerVisual() => new ContainerVisual();
 
