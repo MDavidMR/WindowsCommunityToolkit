@@ -232,7 +232,19 @@ namespace LottieData.Serialization
                                 throw new LottieJsonReaderException("End frame parameter not found.");
                             }
 
-                            var versions = version.Split('.');
+                            int[] versions = new[] { 0, 0, 0 };
+                            try
+                            {
+                                versions = version.Split('.').Select(int.Parse).ToArray();
+                            }
+                            catch (FormatException)
+                            {
+                                // Ignore
+                            }
+                            catch (OverflowException)
+                            {
+                                // Ignore
+                            }
 
                             if (layers == null)
                             {
@@ -247,7 +259,7 @@ namespace LottieData.Serialization
                                                 outPoint: outPoint ?? 0.0,
                                                 framesPerSecond: framesPerSecond ?? 0.0,
                                                 is3d: false,
-                                                version: new Version(int.Parse(versions[0]), int.Parse(versions[1]), int.Parse(versions[2])),
+                                                version: new Version(versions[0], versions[1], versions[2]),
                                                 assets: new AssetCollection(assets),
                                                 layers: new LayerCollection(layers),
                                                 markers: markers);
