@@ -73,10 +73,11 @@ namespace Lottie
         public string GenerateCSharpCode(string suggestedClassName)
         {
             if (LottieComposition == null) { return null; }
+            var optimizedRoot = WinCompData.CodeGen.Optimizer.Optimize(RootVisual, ignoreCommentProperties: true);
             return
                 WinCompData.CodeGen.CSharpInstantiatorGenerator.CreateFactoryCode(
                     MakeNameSuitableForTypeName(suggestedClassName),
-                    RootVisual,
+                    optimizedRoot,
                     (float)LottieComposition.Width,
                     (float)LottieComposition.Height,
                     LottieComposition.Duration);
@@ -91,9 +92,10 @@ namespace Lottie
                 return;
             }
 
+            var optimizedRoot = WinCompData.CodeGen.Optimizer.Optimize(RootVisual, ignoreCommentProperties: true);
             WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
                 MakeNameSuitableForTypeName(suggestedClassName),
-                RootVisual,
+                optimizedRoot,
                 (float)LottieComposition.Width,
                 (float)LottieComposition.Height,
                 LottieComposition.Duration,

@@ -19,13 +19,11 @@ namespace WinCompData.CodeGen
             CompositionObject graphRoot,
             TimeSpan duration,
             bool setCommentProperties,
-            bool disableOptimizer,
             bool disableFieldOptimization,
             CSharpStringifier stringifier)
             : base(graphRoot: graphRoot,
                   duration: duration,
                   setCommentProperties: setCommentProperties,
-                  disableOptimizer: disableOptimizer,
                   disableFieldOptimization: disableFieldOptimization,
                   stringifier: stringifier)
         {
@@ -43,14 +41,12 @@ namespace WinCompData.CodeGen
             float height,
             TimeSpan duration,
             // Rarely set options used mostly for testing.
-            bool disableOptimizer = false,
             bool disableFieldOptimization = false)
         {
             var generator = new CSharpInstantiatorGenerator(
                                 graphRoot: rootVisual,
                                 duration: duration,
                                 setCommentProperties: false,
-                                disableOptimizer: disableOptimizer,
                                 disableFieldOptimization: disableFieldOptimization,
                                 stringifier: new CSharpStringifier());
 

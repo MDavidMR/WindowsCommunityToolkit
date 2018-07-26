@@ -180,6 +180,8 @@ namespace LottieTest
                 lottieInfo.TranslationIssues = translationIssues;
 
                 // Codegen the Lottie
+                var optimizedRoot = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
+
                 var code = CSharpInstantiatorGenerator.CreateFactoryCode(
                     "AuditedComposition", 
                     wincompDataRootVisual, 

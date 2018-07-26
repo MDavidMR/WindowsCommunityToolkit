@@ -32,7 +32,6 @@ namespace WinCompData.CodeGen
             "//------------------------------------------------------------------------------"
         };
         readonly bool _setCommentProperties;
-        readonly bool _disableOptimizer;
         readonly bool _disableFieldOptimization;
         readonly ObjectGraph<ObjectData> _objectGraph;
         // The subset of the object graph for which nodes will be generated.
@@ -46,21 +45,13 @@ namespace WinCompData.CodeGen
             CompositionObject graphRoot,
             TimeSpan duration,
             bool setCommentProperties,
-            bool disableOptimizer,
             bool disableFieldOptimization,
             IStringifier stringifier)
         {
             _compositionDuration = duration;
             _setCommentProperties = setCommentProperties;
             _disableFieldOptimization = disableFieldOptimization;
-            _disableOptimizer = disableOptimizer;
             _stringifier = stringifier;
-
-            if (!disableOptimizer)
-            {
-                // Optimize the graph.
-                graphRoot = Optimizer.Optimize(graphRoot, !setCommentProperties);
-            }
 
             // Build the object graph.
             _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(graphRoot, includeVertices: true);

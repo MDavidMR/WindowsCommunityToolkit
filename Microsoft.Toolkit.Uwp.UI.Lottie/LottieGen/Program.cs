@@ -210,19 +210,25 @@ static class Program
             }
         }
 
+        // Optimize the code unless told not.
+        Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
+        if (!disableOptimizer)
+        {
+            optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
+        }
+
         bool codeGenSucceeded = false;
         switch (language)
         {
             case Lang.CSharp:
                 codeGenSucceeded = TryGenerateCSharpCode(
                     className,
-                    wincompDataRootVisual,
+                    optimizedWincompDataRootVisual,
                     (float)lottieComposition.Width,
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{className}.cs"),
                     disableFieldOptimization: disableFieldOptimization,
-                    disableOptimizer: disableOptimizer,
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnCodeGenFinished();
@@ -231,14 +237,13 @@ static class Program
             case Lang.Cx:
                 codeGenSucceeded = TryGenerateCXCode(
                     className,
-                    wincompDataRootVisual,
+                    optimizedWincompDataRootVisual,
                     (float)lottieComposition.Width,
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{className}.h"),
                     Path.Combine(outputFolder, $"{className}.cpp"),
                     disableFieldOptimization: disableFieldOptimization,
-                    disableOptimizer: disableOptimizer,
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnCodeGenFinished();
@@ -255,7 +260,7 @@ static class Program
 
             case Lang.WinCompXml:
                 codeGenSucceeded = TryGenerateWincompXml(
-                    wincompDataRootVisual,
+                    optimizedWincompDataRootVisual,
                     Path.Combine(outputFolder, $"{className}.xml"),
                     infoStream,
                     errorStream);
@@ -264,9 +269,8 @@ static class Program
 
             case Lang.WinCompDgml:
                 codeGenSucceeded = TryGenerateWincompDgml(
-                    wincompDataRootVisual,
+                    optimizedWincompDataRootVisual,
                     Path.Combine(outputFolder, $"{className}.dgml"),
-                    disableOptimizer: disableOptimizer,
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnSerializationFinished();
@@ -314,7 +318,6 @@ static class Program
     static bool TryGenerateWincompDgml(
         Visual rootVisual,
         string outputFilePath,
-        bool disableOptimizer,
         TextWriter infoStream,
         TextWriter errorStream)
     {
@@ -334,7 +337,6 @@ static class Program
         float compositionHeight,
         TimeSpan duration,
         string outputFilePath,
-        bool disableOptimizer,
         bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream)
@@ -371,7 +373,6 @@ static class Program
         TimeSpan duration,
         string outputHeaderFilePath,
         string outputCppFilePath,
-        bool disableOptimizer,
         bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream)

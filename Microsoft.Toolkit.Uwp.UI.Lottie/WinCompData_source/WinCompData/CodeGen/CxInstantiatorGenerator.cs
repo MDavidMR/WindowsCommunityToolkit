@@ -19,14 +19,12 @@ namespace WinCompData.CodeGen
             CompositionObject graphRoot, 
             TimeSpan duration, 
             bool setCommentProperties,
-            bool disableOptimizer,
             bool disableFieldOptimization,
             CppStringifier stringifier,
             string headerFileName)
             : base(graphRoot: graphRoot,
                   duration: duration,
                   setCommentProperties: setCommentProperties,
-                  disableOptimizer: false,
                   disableFieldOptimization: false,
                   stringifier: stringifier)
         {
@@ -54,7 +52,6 @@ namespace WinCompData.CodeGen
             var generator = new CxInstantiatorGenerator(
                 graphRoot: rootVisual, 
                 duration: duration, 
-                disableOptimizer: disableOptimizer,
                 disableFieldOptimization: disableFieldOptimization,
                 setCommentProperties: false, 
                 stringifier: new CppStringifier(), 

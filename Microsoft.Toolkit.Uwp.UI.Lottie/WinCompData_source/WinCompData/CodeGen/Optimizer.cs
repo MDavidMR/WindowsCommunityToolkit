@@ -10,12 +10,15 @@ namespace WinCompData.CodeGen
     /// Transforms a WinCompData tree to an equivalent tree, optimizing the tree
     /// where possible.
     /// </summary>
+#if !WINDOWS_UWP
+    public
+#endif
     sealed class Optimizer
     {
         readonly Compositor _c = new Compositor();
         readonly ObjectGraph<ObjectData> _graph;
 
-        internal static CompositionObject Optimize(CompositionObject root, bool ignoreCommentProperties)
+        public static Visual Optimize(Visual root, bool ignoreCommentProperties)
         {
 
             // Build the object graph.
@@ -25,7 +28,7 @@ namespace WinCompData.CodeGen
             Canonicalizer.Canonicalize(graph, ignoreCommentProperties: ignoreCommentProperties);
 
             // Create WinCompData objects from the canonical objects.
-            var result = new Optimizer(graph).GetCompositionObject(root);
+            var result = (Visual)new Optimizer(graph).GetCompositionObject(root);
 
             return result;
         }
