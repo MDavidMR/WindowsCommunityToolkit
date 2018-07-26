@@ -111,7 +111,9 @@ namespace WinCompData.Expressions
         {
             if (expression is Number numberExpression)
             {
-                return numberExpression.Value == 0;
+                // Cast to a float for purposes of determining if it is equal to 1 because
+                // Composition will do this internally.
+                return (float)(numberExpression.Value) == 0;
             }
             else if (expression is Vector2 vector2Expression)
             {
@@ -127,7 +129,9 @@ namespace WinCompData.Expressions
         {
             if (expression is Number numberExpression)
             {
-                return numberExpression.Value == 1;
+                // Cast to a float for purposes of determining if it is equal to 1 because
+                // Composition will do this internally.
+                return (float)(numberExpression.Value) == 1;
             }
             else if (expression is Vector2 vector2Expression)
             {
