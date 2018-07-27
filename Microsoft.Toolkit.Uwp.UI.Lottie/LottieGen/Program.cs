@@ -215,6 +215,7 @@ static class Program
         if (!disableOptimizer)
         {
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
+            profiler.OnOptimizationFinished();
         }
 
         bool codeGenSucceeded = false;
@@ -553,11 +554,13 @@ EXAMPLES:
         readonly Stopwatch _sw = Stopwatch.StartNew();
         TimeSpan _parseTime;
         TimeSpan _translateTime;
+        TimeSpan _optimizationTime;
         TimeSpan _codegenTime;
         TimeSpan _serializationTime;
 
         internal void OnParseFinished() => OnPhaseFinished(ref _parseTime);
         internal void OnTranslateFinished() => OnPhaseFinished(ref _translateTime);
+        internal void OnOptimizationFinished() => OnPhaseFinished(ref _optimizationTime);
         internal void OnCodeGenFinished() => OnPhaseFinished(ref _codegenTime);
         internal void OnSerializationFinished() => OnPhaseFinished(ref _serializationTime);
 
@@ -571,6 +574,7 @@ EXAMPLES:
         {
             WriteReportForPhase(writer, "parse", _parseTime);
             WriteReportForPhase(writer, "translate", _translateTime);
+            WriteReportForPhase(writer, "optimization", _optimizationTime);
             WriteReportForPhase(writer, "codegen", _codegenTime);
             WriteReportForPhase(writer, "serialization", _serializationTime);
         }

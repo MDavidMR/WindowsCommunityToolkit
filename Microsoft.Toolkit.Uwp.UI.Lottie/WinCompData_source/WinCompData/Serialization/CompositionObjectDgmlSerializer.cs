@@ -16,10 +16,10 @@ namespace WinCompData.Tools
     sealed class CompositionObjectDgmlSerializer
     {
         static readonly XNamespace ns = "http://schemas.microsoft.com/vs/2009/dgml";
-        readonly Dictionary<object, string> _visited = new Dictionary<object, string>();
-        readonly List<XElement> _nodes = new List<XElement>();
-        readonly List<XElement> _links = new List<XElement>();
+        ObjectGraph<ObjectData> _objectGraph;
         int _idGenerator;
+        int _groupIdGenerator;
+
 
         CompositionObjectDgmlSerializer() { }
 
@@ -30,778 +30,318 @@ namespace WinCompData.Tools
 
         XDocument ToXDocument(CompositionObject compositionObject)
         {
-            VisitCompositionObject(compositionObject);
+            // Build the graph of objects.
+            _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(compositionObject, includeVertices: true);
+
+            // Initialize each node. 
+            foreach (var n in _objectGraph)
+            {
+                n.Initialize(this);
+            }
+
+            // Second stage initialization - relies on all nodes having had the first stage of initialization.
+            foreach (var n in _objectGraph)
+            {
+                n.Initialize2();
+            }
+
+            var rootNode = _objectGraph[compositionObject];
+
+            // Give the root object a special name and color
+            rootNode.Name = "Root (ContainerVisual)";
+            rootNode.Category = "Root";
+
+            // Get the groups.
+            var groups = GroupTree(rootNode, null).ToArray();
+
+
+            // Create the DGML nodes.
+            var nodes =
+                from n in _objectGraph
+                where n.IsDgmlNode
+                select CreateNodeXml(id: n.Id, label: n.Name, category: n.Category);
+
+            // Create the DGML nodes for the groups.
+            nodes = nodes.Concat(
+                from gn in groups
+                select CreateNodeXml(id: gn.Id, label: gn.Name, @group: "Expanded"));
+
+            // Create the links between the nodes.
+            var links =
+                from n in _objectGraph
+                where n.IsDgmlNode
+                from otherNode in n.Links
+                select new XElement(ns + "Link", new XAttribute("Source", n.Id), new XAttribute("Target", otherNode.Id));
+
+            // Create the "contains" links for the nodes contained in groups.
+            var containsLinks =
+                (from g in groups
+                 from member in g.ItemsInGroup
+                 select new XElement(ns + "Link", new XAttribute("Source", g.Id), new XAttribute("Target", member.Id), new XAttribute("Category", "Contains"))).ToArray();
+
+            // Create the "contains" links for the groups contained in groups
+            var groupContainsGroupsLinks =
+                (from g in groups
+                 from member in g.GroupsInGroup
+                 select new XElement(ns + "Link", new XAttribute("Source", g.Id), new XAttribute("Target", member.Id), new XAttribute("Category", "Contains"))).ToArray();
+
+            containsLinks = containsLinks.Concat(groupContainsGroupsLinks).ToArray();
+
+            // Create the XML
             return new XDocument(new XElement(ns + "DirectedGraph",
-                new XElement(ns + "Nodes", _nodes),
-                new XElement(ns + "Links", _links),
-                new XElement(ns + "Properties")
-                ));
+                new XElement(ns + "Nodes", nodes),
+                new XElement(ns + "Links", links.Concat(containsLinks)),
+                new XElement(ns + "Categories",
+                    new XElement(ns + "Category",
+                                new XAttribute("Id", "Contains"),
+                                new XAttribute("Label", "Contains"),
+                                new XAttribute("Description", "Whether the source of the link contains the target object"),
+                                new XAttribute("CanBeDataDriven", "False"),
+                                new XAttribute("CanLinkedNodesBeDataDriven", "True"),
+                                new XAttribute("IncomingActionLabel", "Contained By"),
+                                new XAttribute("IsContainment", "True"),
+                                new XAttribute("OutgoingActionLabel", "Contains")),
+                    new XElement(ns + "Category",
+                        new XAttribute("Id", "ShapeVisual"),
+                        new XAttribute("Label", "ShapeVisual"),
+                        new XAttribute("Background", "#FF44CCCC"),
+                        new XAttribute("IsTag", "True")),
+                    new XElement(ns + "Category",
+                        new XAttribute("Id", "Root"),
+                        new XAttribute("Label", "Root"),
+                        new XAttribute("Background", "#FFDF0174"),
+                        new XAttribute("IsTag", "True")),
+                    new XElement(ns + "Category",
+                        new XAttribute("Id", "ContainerShape"),
+                        new XAttribute("Label", "ContainerShape"),
+                        new XAttribute("Background", "#FF44CCCC"),
+                        new XAttribute("IsTag", "True")),
+                    new XElement(ns + "Category",
+                        new XAttribute("Id", "Shape"),
+                        new XAttribute("Label", "Shape"),
+                        new XAttribute("Background", "#FFF7FE2E"),
+                        new XAttribute("IsTag", "True"))
+                        ),
+                new XElement(ns + "Properties",
+                    CreatePropertyXml(id: "Bounds", dataType: "System.Windows.Rect"),
+                    CreatePropertyXml(id: "CanBeDataDriven", label: "CanBeDataDriven", description: "CanBeDataDriven", dataType: "System.Boolean"),
+                    CreatePropertyXml(id: "CanLinkedNodesBeDataDriven", label: "CanLinkedNodesBeDataDriven", description: "CanLinkedNodesBeDataDriven", dataType: "System.Boolean"),
+                    CreatePropertyXml(id: "Group", label: "Group", description: "Display the node as a group", dataType: "Microsoft.VisualStudio.GraphModel.GraphGroupStyle"),
+                    CreatePropertyXml(id: "IncomingActionLabel", label: "IncomingActionLabel", description: "IncomingActionLabel", dataType: "System.String"),
+                    CreatePropertyXml(id: "IsContainment", dataType: "System.Boolean"),
+                    CreatePropertyXml(id: "Label", label: "Label", description: "Displayable label of an Annotatable object", dataType: "System.String"),
+                    CreatePropertyXml(id: "Layout", dataType: "System.String"),
+                    CreatePropertyXml(id: "OutgoingActionLabel", label: "OutgoingActionLabel", description: "OutgoingActionLabel", dataType: "System.String"),
+                    CreatePropertyXml(id: "UseManualLocation", dataType: "System.Boolean"),
+                    CreatePropertyXml(id: "ZoomLevel", dataType: "System.String"))));
+        }
+
+        static XElement CreatePropertyXml(string id, string label = null, string description = null, string dataType = null)
+        {
+            return new XElement(ns + "Property", CreateAttributes(new[] { ("Id", id), ("Label", label), ("Description", description), ("DataType", dataType) }));
         }
 
 
-        // TODO - we need to keep a dictionary from object to ID.
-        string GenerateId() => $"id{_idGenerator++}";
-        
-
-        // Visits the given object and returns its id.
-        string VisitCompositionObject(CompositionObject obj)
+        static XElement CreateNodeXml(string id, string label = null, string name = null, string category = null, string @group = null)
         {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            if (_visited.TryGetValue(obj, out var id))
-            {
-                // Already been visited, just return the id.
-                return id;
-            }
-
-            // Generate a new id for this object.
-            id = GenerateId();
-
-            // Save the object in the list of visited objects, along with its id.
-            _visited.Add(obj, id);
-
-            switch (obj.Type)
-            {
-                case CompositionObjectType.AnimationController:
-                    //yield return FromAnimationController((AnimationController)obj);
-                    break;
-                case CompositionObjectType.ColorKeyFrameAnimation:
-                    //yield return FromColorKeyFrameAnimation((ColorKeyFrameAnimation)obj);
-                    break;
-                case CompositionObjectType.CompositionColorBrush:
-                    //yield return FromCompositionColorBrush((CompositionColorBrush)obj);
-                    break;
-                case CompositionObjectType.CompositionContainerShape:
-                    VisitCompositionContainerShape((CompositionContainerShape)obj, id);
-                    break;
-                case CompositionObjectType.CompositionEllipseGeometry:
-                    //yield return FromCompositionEllipseGeometry((CompositionEllipseGeometry)obj);
-                    break;
-                case CompositionObjectType.CompositionPathGeometry:
-                    //yield return FromCompositionPathGeometry((CompositionPathGeometry)obj);
-                    break;
-                case CompositionObjectType.CompositionPropertySet:
-                    //yield return FromCompositionPropertySet((CompositionPropertySet)obj);
-                    break;
-                case CompositionObjectType.CompositionRectangleGeometry:
-                    //yield return FromCompositionRectangleGeometry((CompositionRectangleGeometry)obj);
-                    break;
-                case CompositionObjectType.CompositionRoundedRectangleGeometry:
-                    //yield return FromCompositionRoundedRectangleGeometry((CompositionRoundedRectangleGeometry)obj);
-                    break;
-                case CompositionObjectType.CompositionSpriteShape:
-                    //yield return FromCompositionSpriteShape((CompositionSpriteShape)obj);
-                    break;
-                case CompositionObjectType.CompositionViewBox:
-                    //yield return FromCompositionViewBox((CompositionViewBox)obj);
-                    break;
-                case CompositionObjectType.ContainerVisual:
-                    VisitContainerVisual((ContainerVisual)obj, id);
-                    break;
-                case CompositionObjectType.CubicBezierEasingFunction:
-                    //yield return FromCubicBezierEasingFunction((CubicBezierEasingFunction)obj);
-                    break;
-                case CompositionObjectType.ExpressionAnimation:
-                    //yield return FromExpressionAnimation((ExpressionAnimation)obj);
-                    break;
-                case CompositionObjectType.InsetClip:
-                    //yield return FromInsetClip((InsetClip)obj);
-                    break;
-                case CompositionObjectType.LinearEasingFunction:
-                    //yield return FromLinearEasingFunction((LinearEasingFunction)obj);
-                    break;
-                case CompositionObjectType.PathKeyFrameAnimation:
-                    //yield return FromPathKeyFrameAnimation((PathKeyFrameAnimation)obj);
-                    break;
-                case CompositionObjectType.ScalarKeyFrameAnimation:
-                    //yield return FromScalarKeyFrameAnimation((ScalarKeyFrameAnimation)obj);
-                    break;
-                case CompositionObjectType.ShapeVisual:
-                    FromShapeVisual((ShapeVisual)obj, id);
-                    break;
-                case CompositionObjectType.StepEasingFunction:
-                    //yield return FromStepEasingFunction((StepEasingFunction)obj);
-                    break;
-                case CompositionObjectType.Vector2KeyFrameAnimation:
-                    //yield return FromVector2KeyFrameAnimation((Vector2KeyFrameAnimation)obj);
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
-
-            return id;
+            return new XElement(ns + "Node", CreateAttributes(new[] { ("Id", id), ("Label", label), ("Category", category), ("Group", @group) }));
         }
 
-
-        XElement FromColorKeyFrameAnimation(ColorKeyFrameAnimation obj)
+        static IEnumerable<XAttribute> CreateAttributes(IEnumerable<(string Name, string Value)> attrs)
         {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
+            foreach (var (Name, Value) in attrs)
             {
-                foreach (var item in GetCompositionObjectContents(obj))
+                if (Value != null)
                 {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromCompositionColorBrush(CompositionColorBrush obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-                var color = obj.Color;
-                yield return new XAttribute("Color", $"#{ToHex(color.A)}{ToHex(color.R)}{ToHex(color.G)}{ToHex(color.B)}");
-                string ToHex(byte value) => value.ToString("X2");
-            }
-        }
-
-        void VisitCompositionContainerShape(CompositionContainerShape obj, string id)
-        {
-
-            _nodes.Add(new XElement(ns + "Node", new XAttribute("Id", id), new XAttribute("Label", "ContainerShape")));
-
-            foreach (var child in obj.Shapes)
-            {
-                var childId = VisitCompositionObject(child);
-                _links.Add(new XElement(ns + "Link", new XAttribute("Source", id), new XAttribute("Target", childId)));
-
-            }
-
-            //VisitContainerShapeContents(obj, id);
-
-
-            //return new XElement(GetCompositionObjectName(obj), GetContents());
-            //IEnumerable<XObject> GetContents()
-            //{
-            //    foreach (var item in GetCompositionShapeContents(obj))
-            //    {
-            //        yield return item;
-            //    }
-
-            foreach (var child in obj.Shapes)
-            {
-
-            }
-            //    // TODO
-            //    //foreach (var item in obj.Shapes.SelectMany(VisitCompositionObject))
-            //    //{
-            //    //    yield return item;
-            //    //}
-            //}
-        }
-
-        XElement FromCompositionEllipseGeometry(CompositionEllipseGeometry obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionGeometryContents(obj))
-                {
-                    yield return item;
-                }
-                yield return FromVector2(nameof(obj.Center), obj.Center);
-                yield return FromVector2(nameof(obj.Radius), obj.Radius);
-            }
-        }
-
-
-        XElement FromCompositionPropertySet(CompositionPropertySet obj)
-        {
-            return new XElement("CompositionProperytSet", GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromCompositionPath(CompositionPath obj)
-        {
-            return new XElement("CompositionPath", GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                yield return FromIGeometrySource2D(obj.Source);
-            }
-        }
-
-        XElement FromCompositionPathGeometry(CompositionPathGeometry obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionGeometryContents(obj))
-                {
-                    yield return item;
-                }
-                yield return FromCompositionPath(obj.Path);
-            }
-        }
-
-        XElement FromCompositionRectangleGeometry(CompositionRectangleGeometry obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionGeometryContents(obj))
-                {
-                    yield return item;
-                }
-                yield return FromVector2(nameof(obj.Size), obj.Size);
-            }
-        }
-
-        XElement FromCompositionRoundedRectangleGeometry(CompositionRoundedRectangleGeometry obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionGeometryContents(obj))
-                {
-                    yield return item;
-                }
-
-                yield return FromVector2(nameof(obj.Size), obj.Size);
-                yield return FromVector2(nameof(obj.CornerRadius), obj.CornerRadius);
-            }
-        }
-
-        XElement FromCompositionSpriteShape(CompositionSpriteShape obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionShapeContents(obj))
-                {
-                    yield return item;
-                }
-
-                yield return FromVector2DefaultZero(nameof(obj.CenterPoint), obj.CenterPoint);
-
-                // TODO
-                //if (obj.FillBrush != null)
-                //{
-                //    yield return new XElement(nameof(obj.FillBrush), VisitCompositionObject(obj.FillBrush));
-                //}
-
-                //if (obj.Geometry != null)
-                //{
-                //    yield return new XElement(nameof(obj.Geometry), VisitCompositionObject(obj.Geometry));
-                //}
-
-                //if (obj.StrokeBrush != null)
-                //{
-                //    yield return new XElement(nameof(obj.StrokeBrush), VisitCompositionObject(obj.StrokeBrush));
-                //}
-            }
-        }
-
-        XElement FromCompositionViewBox(CompositionViewBox obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-                yield return FromVector2(nameof(obj.Size), obj.Size);
-            }
-        }
-
-        XElement FromCubicBezierEasingFunction(CubicBezierEasingFunction obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromInsetClip(InsetClip obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionClipContents(obj))
-                {
-                    yield return item;
-                }
-
-                if (obj.LeftInset != 0)
-                {
-                    yield return new XAttribute("LeftInset", obj.LeftInset);
-                }
-                if (obj.TopInset != 0)
-                {
-                    yield return new XAttribute("TopInset", obj.TopInset);
-                }
-                if (obj.RightInset != 0)
-                {
-                    yield return new XAttribute("RightInset", obj.RightInset);
-                }
-                if (obj.BottomInset != 0)
-                {
-                    yield return new XAttribute("BottomInset", obj.BottomInset);
-                }
-            }
-        }
-
-        IEnumerable<XObject> GetCompositionClipContents(CompositionClip obj)
-        {
-            foreach (var item in GetCompositionObjectContents(obj))
-            {
-                yield return item;
-            }
-
-            yield return FromVector2DefaultZero(nameof(obj.CenterPoint), obj.CenterPoint);
-            yield return FromVector2DefaultOne(nameof(obj.Scale), obj.Scale);
-        }
-
-        XElement FromLinearEasingFunction(LinearEasingFunction obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromPathKeyFrameAnimation(PathKeyFrameAnimation obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromScalarKeyFrameAnimation(ScalarKeyFrameAnimation obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
+                    yield return new XAttribute(Name, Value);
                 }
             }
         }
 
 
-        void VisitContainerVisual(ContainerVisual obj, string id)
+        IEnumerable<GroupNode> GroupTree(ObjectData node, GroupNode group)
         {
-            _nodes.Add(new XElement(ns + "Node", 
-                new XAttribute("Id", id), 
-                new XAttribute("Label", "ContainerVisual")));
-
-            VisitContainerVisualContents(obj, id);
-
-            // TODO - this stuff
-            //return new XElement(GetCompositionObjectName(obj), GetContainerVisualContents(obj));
-        }
-
-        void FromShapeVisual(ShapeVisual obj, string id)
-        {
-            _nodes.Add(new XElement(ns + "Node",
-                new XAttribute("Id", id),
-                new XAttribute("Label", "ContainerVisual")));
-
-            //return new XElement(GetCompositionObjectName(obj), GetContents());
-            //IEnumerable<XObject> GetContents()
-            //{
-            //    // TODO
-            //    //foreach (var item in GetContainerVisualContents(obj))
-            //    //{
-            //    //    yield return item;
-            //    //}
-
-            //    // TODO
-            //    //foreach (var item in VisitCompositionObject(obj.ViewBox))
-            //    //{
-            //    //    yield return item;
-            //    //}
-
-            foreach (var child in obj.Shapes)
+            if (group != null)
             {
-                var childId = VisitCompositionObject(child);
-                _links.Add(new XElement(ns + "Link", new XAttribute("Source", id), new XAttribute("Target", childId)));
-
+                group.ItemsInGroup.Add(node);
             }
-        }
 
-        XElement FromStepEasingFunction(StepEasingFunction obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
+            // If the group has multiple children, start a new group for each of them.
+            bool createNewGroupForEachChild = node.Links.Count() > 1;
+
+            foreach (var child in node.Links)
             {
-                foreach (var item in GetCompositionObjectContents(obj))
+                GroupNode childGroup;
+
+                if (createNewGroupForEachChild)
                 {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromVector2KeyFrameAnimation(Vector2KeyFrameAnimation obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        XElement FromAnimationController(AnimationController obj)
-        {
-            return new XElement(GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-
-        IEnumerable<XObject> GetCompositionObjectContents(CompositionObject obj)
-        {
-
-            // Find the animations that are targetting properties in the property set.
-            var propertySetAnimators =
-                from pn in obj.Properties.PropertyNames
-                from an in obj.Animators
-                where an.AnimatedProperty == pn
-                select an;
-
-            if (!obj.Properties.IsEmpty)
-            {
-                yield return FromCompositionPropertySet(obj.Properties, propertySetAnimators);
-            }
-        }
-
-        IEnumerable<XObject> GetCompositionGeometryContents(CompositionGeometry obj)
-        {
-            foreach (var item in GetCompositionObjectContents(obj))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableScalar(nameof(obj.TrimStart), obj.Animators, obj.TrimStart))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableScalar(nameof(obj.TrimEnd), obj.Animators, obj.TrimEnd))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableScalar(nameof(obj.TrimOffset), obj.Animators, obj.TrimOffset))
-            {
-                yield return item;
-            }
-        }
-
-        IEnumerable<XObject> GetVisualContents(Visual obj)
-        {
-            foreach (var item in GetCompositionObjectContents(obj))
-            {
-                yield return item;
-            }
-
-
-            yield return FromVector2DefaultZero(nameof(obj.Size), obj.Size);
-
-            foreach (var item in FromAnimatableVector3("Offset", obj.Animators, obj.Offset))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableVector3("CenterPoint", obj.Animators, obj.CenterPoint))
-            {
-                yield return item;
-            }
-
-            if (obj.RotationAngleInDegrees.HasValue)
-            {
-                yield return new XAttribute("RotationAngleInDegrees", obj.RotationAngleInDegrees.Value);
-            }
-
-            foreach (var item in FromAnimatableVector3("Scale", obj.Animators, obj.Scale))
-            {
-                yield return item;
-            }
-
-            // TODO
-            //if (obj.Clip != null)
-            //{
-            //    yield return new XElement("Clip", VisitCompositionObject(obj.Clip));
-            //}
-
-        }
-
-        void VisitContainerVisualContents(ContainerVisual obj, string id)
-        {
-            // TODO
-            //foreach (var item in GetVisualContents(obj))
-            //{
-            //    yield return item;
-            //}
-
-            foreach (var child in obj.Children)
-            {
-                var childId = VisitCompositionObject(child);
-                _links.Add(new XElement(ns + "Link", new XAttribute("Source", id), new XAttribute("Target", childId)));
-
-            }
-        }
-
-        IEnumerable<XObject> GetCompositionShapeContents(CompositionShape obj)
-        {
-            foreach (var item in GetCompositionObjectContents(obj))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableVector2(nameof(obj.CenterPoint), obj.Animators, obj.CenterPoint))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableVector2(nameof(obj.Offset), obj.Animators, obj.Offset))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableScalar(nameof(obj.RotationAngleInDegrees), obj.Animators, obj.RotationAngleInDegrees))
-            {
-                yield return item;
-            }
-
-            foreach (var item in FromAnimatableVector2(nameof(obj.Scale), obj.Animators, obj.Scale))
-            {
-                yield return item;
-            }
-
-        }
-
-        XElement FromIGeometrySource2D(Wg.IGeometrySource2D obj)
-        {
-            if (obj is Mgcg.CanvasGeometry)
-            {
-                var canvasGeometry = (Mgcg.CanvasGeometry)obj;
-                return new XElement("CanvasGeometry");
-            }
-            else
-            {
-                // No other types are currently supported.
-                throw new InvalidOperationException();
-            }
-        }
-
-        XElement FromCompositionPropertySet(CompositionPropertySet obj, IEnumerable<CompositionObject.Animator> animators = null)
-        {
-            return new XElement("PropertySet", GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var prop in obj.ScalarProperties)
-                {
-                    foreach (var item in FromAnimatableScalar(prop.Key, animators, prop.Value))
+                    var childObject = child.Object as CompositionObject;
+                    var name = (childObject != null && childObject.ShortDescription != null)
+                        ? childObject.ShortDescription
+                        : "Group";
+                    childGroup = new GroupNode(this)
                     {
-                        yield return item;
-                    }
-                }
+                        Id = GenerateGroupId(),
+                        Name = name,
+                    };
 
-                foreach (var prop in obj.Vector2Properties)
-                {
-                    foreach (var item in FromAnimatableVector2(prop.Key, animators, prop.Value))
+                    if (group != null)
                     {
-                        yield return item;
+                        group.GroupsInGroup.Add(childGroup);
                     }
-                }
-            }
-        }
-
-        string GetCompositionObjectName(CompositionObject obj)
-        {
-            var name = obj.Type.ToString();
-            if (name.StartsWith("CompositionPlayer"))
-            {
-                name = name.Substring("CompositionPlayer".Length);
-            }
-            return name;
-        }
-
-        XElement FromAnimation<T>(string name, CompositionAnimation animation, T? initialValue) where T : struct
-        {
-            switch (animation.Type)
-            {
-                case CompositionObjectType.ExpressionAnimation:
-                    return FromExpressionAnimation((ExpressionAnimation)animation, name);
-                case CompositionObjectType.ColorKeyFrameAnimation:
-                case CompositionObjectType.PathKeyFrameAnimation:
-                case CompositionObjectType.ScalarKeyFrameAnimation:
-                case CompositionObjectType.Vector2KeyFrameAnimation:
-                case CompositionObjectType.Vector3KeyFrameAnimation:
-                    return FromKeyFrameAnimation(name, (KeyFrameAnimation<T>)animation, initialValue);
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
-
-        XElement FromExpressionAnimation(ExpressionAnimation obj, string name = null)
-        {
-            return new XElement(name ?? GetCompositionObjectName(obj), GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                foreach (var item in GetCompositionObjectContents(obj))
-                {
-                    yield return item;
-                }
-                if (obj.Target != null && obj.Target != name)
-                {
-                    yield return new XAttribute("Target", obj.Target);
-                }
-                yield return new XText(obj.Expression.ToString());
-            }
-        }
-
-        XElement FromKeyFrameAnimation<T>(string name, KeyFrameAnimation<T> obj, T? initialValue) where T : struct
-        {
-            return new XElement(name, GetContents());
-            IEnumerable<XObject> GetContents()
-            {
-                if (obj.Target != null && obj.Target != name)
-                {
-                    yield return new XAttribute("Target", obj.Target);
-                }
-
-                var keyFramesString = string.Join(", ", obj.KeyFrames.Select(kf => $"({GetKeyFrameValue(kf)}@{kf.Progress})"));
-
-                if (initialValue.HasValue)
-                {
-                    yield return new XText($"{initialValue}, {keyFramesString}");
+                    yield return childGroup;
                 }
                 else
                 {
-                    yield return new XText(keyFramesString);
+                    childGroup = group;
                 }
-            }
-        }
 
-        static string GetKeyFrameValue<T>(KeyFrameAnimation<T>.KeyFrame kf)
-        {
-            switch (kf.Type)
-            {
-                case KeyFrameAnimation<T>.KeyFrameType.Expression:
-                    var expressionKeyFrame = (KeyFrameAnimation<T>.ExpressionKeyFrame)kf;
-                    return $"\"{expressionKeyFrame.Expression}\"";
-                case KeyFrameAnimation<T>.KeyFrameType.Value:
-                    var valueKeyFrame = (KeyFrameAnimation<T>.ValueKeyFrame)kf;
-                    return valueKeyFrame.Value.ToString();
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
-        IEnumerable<XObject> FromAnimatableScalar(string name, IEnumerable<CompositionObject.Animator> animators, float? initialValue)
-        {
-            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
-
-            if (animation != null)
-            {
-                yield return FromAnimation(name, animation, initialValue);
-            }
-            else
-            {
-                if (initialValue.HasValue)
+                foreach (var groupNode in GroupTree(child, childGroup))
                 {
-                    yield return FromScalar(name, initialValue.Value);
-                    yield break;
+                    yield return groupNode;
                 }
             }
         }
 
-        IEnumerable<XObject> FromAnimatableVector2(string name, IEnumerable<CompositionObject.Animator> animators, Vector2? initialValue)
-        {
-            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
+        string GenerateId() => $"id{_idGenerator++}";
+        string GenerateGroupId() => $"gid{_groupIdGenerator++}";
 
-            if (animation != null)
+
+        sealed class ObjectData : Graph.Node<ObjectData>
+        {
+            CompositionObjectDgmlSerializer _owner;
+            List<ObjectData> _links;
+            GroupNode _group;
+            ObjectData _parent;
+            readonly List<ObjectData> _children = new List<ObjectData>();
+
+            internal string Name { get; set; }
+            internal string Category { get; set; }
+            internal bool IsDgmlNode { get; private set; }
+            internal string Id { get; private set; }
+
+            // The links from this node to its children.
+            internal IEnumerable<ObjectData> Links => _children;
+
+            // Called after the graph has been created. Do things here that depend on other nodes
+            // in the graph.
+            internal void Initialize(CompositionObjectDgmlSerializer owner)
             {
-                yield return FromAnimation(name, animation, initialValue);
-            }
-            else
-            {
-                if (initialValue.HasValue)
+                _owner = owner;
+                var obj = Object as CompositionObject;
+                if (obj != null)
                 {
-                    yield return FromVector2(name, initialValue.Value);
+                    switch (obj.Type)
+                    {
+                        case CompositionObjectType.AnimationController:
+                        case CompositionObjectType.ColorKeyFrameAnimation:
+                        case CompositionObjectType.CompositionColorBrush:
+                        case CompositionObjectType.CompositionEllipseGeometry:
+                        case CompositionObjectType.CompositionGeometricClip:
+                        case CompositionObjectType.CompositionPathGeometry:
+                        case CompositionObjectType.CompositionPropertySet:
+                        case CompositionObjectType.CompositionRectangleGeometry:
+                        case CompositionObjectType.CompositionRoundedRectangleGeometry:
+                        case CompositionObjectType.CompositionViewBox:
+                        case CompositionObjectType.CubicBezierEasingFunction:
+                        case CompositionObjectType.ExpressionAnimation:
+                        case CompositionObjectType.InsetClip:
+                        case CompositionObjectType.LinearEasingFunction:
+                        case CompositionObjectType.PathKeyFrameAnimation:
+                        case CompositionObjectType.ScalarKeyFrameAnimation:
+                        case CompositionObjectType.StepEasingFunction:
+                        case CompositionObjectType.Vector2KeyFrameAnimation:
+                        case CompositionObjectType.Vector3KeyFrameAnimation:
+                            return;
+                        case CompositionObjectType.CompositionContainerShape:
+                            Name = "ContainerShape";
+                            Category = "ContainerShape";
+                            break;
+                        case CompositionObjectType.CompositionSpriteShape:
+                            {
+                                Category = "Shape";
+                                Name = GetNameForSpriteShape((CompositionSpriteShape)Object);
+                            }
+                            break;
+                        case CompositionObjectType.ContainerVisual:
+                            Name = "ContainerVisual";
+                            break;
+                        case CompositionObjectType.ShapeVisual:
+                            Name = "ShapeVisual";
+                            Category = "ShapeVisual";
+                            break;
+
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                    IsDgmlNode = true;
+                    Id = _owner.GenerateId();
+
                 }
             }
-        }
 
-        IEnumerable<XObject> FromAnimatableVector3(string name, IEnumerable<CompositionObject.Animator> animators, Vector3? initialValue)
-        {
-            var animation = animators.Where(a => a.AnimatedProperty == name).FirstOrDefault()?.Animation;
+            internal void Initialize2()
+            {
 
-            if (animation != null)
-            {
-                yield return FromAnimation(name, animation, initialValue);
-            }
-            else
-            {
-                if (initialValue.HasValue)
+                // Create a link to the parent and from the parent to the child.
+                if (IsDgmlNode)
                 {
-                    yield return FromVector3(name, initialValue.Value);
-                    yield break;
+                    _parent = InReferences.Select(v => v.Node).Where(n => n.IsDgmlNode).FirstOrDefault();
+
+                    if (_parent != null)
+                    {
+                        _parent._children.Add(this);
+                    }
+
                 }
             }
+
+            static string GetNameForSpriteShape(CompositionSpriteShape shape)
+            {
+                var geometry = shape.Geometry;
+                if (geometry != null)
+                {
+                    switch (geometry.Type)
+                    {
+                        case CompositionObjectType.CompositionEllipseGeometry:
+                            {
+                                var ellipse = (CompositionEllipseGeometry)geometry;
+                                return $"Ellipse {ellipse.Radius.X}x{ellipse.Radius.Y}.";
+                            }
+                        case CompositionObjectType.CompositionPathGeometry:
+                            return "Path";
+                        case CompositionObjectType.CompositionRectangleGeometry:
+                            {
+                                var rectangle = (CompositionRectangleGeometry)geometry;
+                                return $"Rectangle {rectangle.Size.X}x{rectangle.Size.Y}";
+                            }
+                        case CompositionObjectType.CompositionRoundedRectangleGeometry:
+                            {
+                                var roundedRectangle = (CompositionRoundedRectangleGeometry)geometry;
+                                return $"RoundedRectangle {roundedRectangle.Size.X}x{roundedRectangle.Size.Y}";
+                            }
+                    }
+                }
+                return "Shape";
+            }
+
+
+            public override string ToString() => Id;
         }
 
-        XElement FromScalar(string name, float value)
+        sealed class GroupNode
         {
-            return new XElement(name, new XAttribute("ScalarValue", value));
+            readonly CompositionObjectDgmlSerializer _owner;
+            internal GroupNode(CompositionObjectDgmlSerializer owner)
+            {
+                _owner = owner;
+            }
+
+            internal HashSet<ObjectData> ItemsInGroup = new HashSet<ObjectData>();
+            internal List<GroupNode> GroupsInGroup = new List<GroupNode>();
+            internal string Id;
+            internal string Name;
+            public override string ToString() => Id;
         }
-
-        XElement FromVector2DefaultZero(string name, Vector2? obj) => FromVector2(name, obj, new Vector2(0, 0));
-
-        XElement FromVector2DefaultOne(string name, Vector2? obj) => FromVector2(name, obj, new Vector2(1, 1));
-
-        XElement FromVector2(string name, Vector2? obj, Vector2 defaultIfNull)
-            => FromVector2(name, obj.HasValue ? obj.Value : defaultIfNull);
-
-        XElement FromVector2(string name, Vector2 obj)
-        {
-            return new XElement(name, new XAttribute(nameof(obj.X), obj.X), new XAttribute(nameof(obj.Y), obj.Y));
-        }
-
-        XElement FromVector3(string name, Vector3 obj)
-        {
-            return new XElement(name, new XAttribute(nameof(obj.X), obj.X), new XAttribute(nameof(obj.Y), obj.Y), new XAttribute(nameof(obj.Z), obj.Z));
-        }
-
     }
 }
-
