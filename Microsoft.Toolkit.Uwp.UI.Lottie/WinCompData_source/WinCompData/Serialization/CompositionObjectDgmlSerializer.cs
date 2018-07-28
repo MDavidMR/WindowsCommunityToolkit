@@ -64,13 +64,13 @@ namespace WinCompData.Tools
             // Create the DGML nodes for the groups.
             nodes = nodes.Concat(
                 from gn in groups
-                select CreateNodeXml(id: gn.Id, label: gn.Name, @group: "Expanded"));
+                select CreateNodeXml(id: gn.Id, label: gn.GroupName, @group: "Expanded"));
 
             // Create the links between the nodes.
             var links =
                 from n in _objectGraph
                 where n.IsDgmlNode
-                from otherNode in n.Links
+                from otherNode in n.Children
                 select new XElement(ns + "Link", new XAttribute("Source", n.Id), new XAttribute("Target", otherNode.Id));
 
             // Create the "contains" links for the nodes contained in groups.
@@ -166,23 +166,26 @@ namespace WinCompData.Tools
                 group.ItemsInGroup.Add(node);
             }
 
-            // If the group has multiple children, start a new group for each of them.
-            bool createNewGroupForEachChild = node.Links.Count() > 1;
+            var childLinks = node.Children.ToArray();
 
-            foreach (var child in node.Links)
+            foreach (var child in childLinks)
             {
                 GroupNode childGroup;
+                var childObject = child.Object as CompositionObject;
+                var childDescription = (childObject != null && !string.IsNullOrWhiteSpace(childObject.ShortDescription))
+                    ? childObject.ShortDescription
+                    : "";
 
-                if (createNewGroupForEachChild)
+                // Start a new group for the child if:
+                //   a) There is more than one child and the child is not a leaf
+                //  or
+                //   b) The child has a ShortDescription starting with "Layer: "
+                if ((childLinks.Length > 1 && child.Children.Any()) || childDescription.StartsWith("Layer "))
                 {
-                    var childObject = child.Object as CompositionObject;
-                    var name = (childObject != null && childObject.ShortDescription != null)
-                        ? childObject.ShortDescription
-                        : "Group";
                     childGroup = new GroupNode(this)
                     {
                         Id = GenerateGroupId(),
-                        Name = name,
+                        GroupName = childDescription,
                     };
 
                     if (group != null)
@@ -196,6 +199,7 @@ namespace WinCompData.Tools
                     childGroup = group;
                 }
 
+                // Recurse to group the subtree.
                 foreach (var groupNode in GroupTree(child, childGroup))
                 {
                     yield return groupNode;
@@ -210,8 +214,6 @@ namespace WinCompData.Tools
         sealed class ObjectData : Graph.Node<ObjectData>
         {
             CompositionObjectDgmlSerializer _owner;
-            List<ObjectData> _links;
-            GroupNode _group;
             ObjectData _parent;
             readonly List<ObjectData> _children = new List<ObjectData>();
 
@@ -221,7 +223,7 @@ namespace WinCompData.Tools
             internal string Id { get; private set; }
 
             // The links from this node to its children.
-            internal IEnumerable<ObjectData> Links => _children;
+            internal IEnumerable<ObjectData> Children => _children;
 
             // Called after the graph has been created. Do things here that depend on other nodes
             // in the graph.
@@ -306,7 +308,7 @@ namespace WinCompData.Tools
                         case CompositionObjectType.CompositionEllipseGeometry:
                             {
                                 var ellipse = (CompositionEllipseGeometry)geometry;
-                                return $"Ellipse {ellipse.Radius.X}x{ellipse.Radius.Y}.";
+                                return $"Ellipse {ellipse.Radius.X}x{ellipse.Radius.Y}";
                             }
                         case CompositionObjectType.CompositionPathGeometry:
                             return "Path";
@@ -340,7 +342,7 @@ namespace WinCompData.Tools
             internal HashSet<ObjectData> ItemsInGroup = new HashSet<ObjectData>();
             internal List<GroupNode> GroupsInGroup = new List<GroupNode>();
             internal string Id;
-            internal string Name;
+            internal string GroupName;
             public override string ToString() => Id;
         }
     }

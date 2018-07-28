@@ -88,18 +88,6 @@ namespace WinCompData
         {
         }
 
-        // True iff this object's state is expected to never change.
-        public bool IsFrozen { get; private set; }
-
-        // Marks the object to indicate that its state should never change again.
-        // Note that this is a weak guarantee as there are not checks on all mutators
-        // to ensure that changes aren't made after freezing. However correct code
-        // must never mutate a frozen object.
-        public void Freeze()
-        {
-            IsFrozen = true;
-        }
-
         /// <summary>
         /// An animation bound to a property on this object.
         /// </summary>

@@ -1,6 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Collections.Generic;
 
 namespace WinCompData
@@ -30,8 +31,26 @@ namespace WinCompData
 
         public string Target { get; set; }
 
+        // True iff this object's state is expected to never change.
+        public bool IsFrozen { get; private set; }
+
+        /// <summary>
+        /// Marks the <see cref="CompositionAnimation"/> to indicate that its state 
+        /// should never change again. Note that this is a weak guarantee as there 
+        /// are not checks on all mutators to ensure that changes aren't made after 
+        /// freezing. However correct code must never mutate a frozen object.
+        ///</summary>
+        public void Freeze()
+        {
+            IsFrozen = true;
+        }
+
         public void SetReferenceParameter(string key, CompositionObject compositionObject)
         {
+            if (IsFrozen)
+            {
+                throw new InvalidOperationException();
+            }
             _referencedParameters.Add(key, compositionObject);
         }
 

@@ -251,6 +251,9 @@ namespace WinCompData.CodeGen
             foreach (var animator in source.Animators)
             {
                 var animation = GetCompositionAnimation(animator.Animation);
+                // Freeze the animation to indicate that it will not be mutated further. This
+                // will ensure that it does not need to be copied when target.StartAnimation is called.
+                animation.Freeze();
                 target.StartAnimation(animator.AnimatedProperty, animation);
                 var controller = animator.Controller;
                 if (controller != null)
@@ -262,9 +265,6 @@ namespace WinCompData.CodeGen
                     }
                 }
             }
-
-            // Freeze the target object to indicate that it will not be mutated further
-            target.Freeze();
         }
 
 

@@ -3,6 +3,7 @@ using LottieData.Serialization;
 using LottieData.Tools;
 using LottieToWinComp;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -47,6 +48,17 @@ static class Program
         }
     }
 
+
+    static IEnumerable<string> ExpandWildcards(string path)
+    {
+        var directoryPath = Path.GetDirectoryName(path);
+        if (string.IsNullOrWhiteSpace(directoryPath))
+        {
+            directoryPath = ".";
+        }
+        return Directory.EnumerateFiles(directoryPath, Path.GetFileName(path));
+    }
+
     static RunResult Run(CommandLineOptions options, TextWriter infoStream, TextWriter errorStream)
     {
         // Sign on
@@ -86,33 +98,52 @@ static class Program
                 return RunResult.InvalidUsage;
         }
 
+        // Check that at least one file matches InputFile.
+        var matchingInputFiles = ExpandWildcards(options.InputFile).ToArray();
+        if (matchingInputFiles.Length == 0)
+        {
+            WriteError($"File not found: {options.InputFile}");
+            return RunResult.Failure;
+        }
+
         var profiler = new Profiler();
 
         // Get the output folder as an absolute path, defaulting to the current directory
         // if no output folder was specified.
         var outputFolder = MakeAbsolutePath(options.OutputFolder ?? Directory.GetCurrentDirectory());
 
-        // Get the input file as an absolute path.
-        var inputFile = MakeAbsolutePath(options.InputFile);
 
-        var result = TryGenerateCode(
-                    lottieJsonFile: inputFile,
-                    outputFolder: outputFolder,
-                    codeGenClassName: options.ClassName,
-                    language: options.Language,
-                    strictTranslation: options.StrictMode,
-                    disableFieldOptimization: options._DisableFieldOptimization,
-                    disableOptimizer: options._DisableOptimizer,
-                    infoStream: infoStream,
-                    errorStream: errorStream,
-                    profiler: profiler)
-                ? RunResult.Success
-                : RunResult.Failure;
+        // Assume success.
+        var result = RunResult.Success;
 
-        infoStream.WriteLine();
-        infoStream.WriteLine(" === Timings ===");
-        profiler.WriteReport(infoStream);
+        foreach (var file in matchingInputFiles)
+        {
+            // Get the input file as an absolute path.
+            var inputFile = MakeAbsolutePath(file);
 
+            var codeGenResult = TryGenerateCode(
+                        lottieJsonFile: inputFile,
+                        outputFolder: outputFolder,
+                        codeGenClassName: options.ClassName,
+                        language: options.Language,
+                        strictTranslation: options.StrictMode,
+                        disableFieldOptimization: options.DisableFieldOptimization,
+                        disableOptimizer: options.DisableOptimizer,
+                        infoStream: infoStream,
+                        errorStream: errorStream,
+                        profiler: profiler)
+                    ? RunResult.Success
+                    : RunResult.Failure;
+
+            infoStream.WriteLine();
+            infoStream.WriteLine(" === Timings ===");
+            profiler.WriteReport(infoStream);
+
+            if (result == RunResult.Success && codeGenResult != RunResult.Success)
+            {
+                result = codeGenResult;
+            }
+        }
         return result;
 
         // Helper for writing errors to the error stream.
@@ -210,13 +241,15 @@ static class Program
             }
         }
 
-        // Optimize the code unless told not.
+        // Optimize the code unless told not to.
         Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
         if (!disableOptimizer)
         {
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
             profiler.OnOptimizationFinished();
         }
+
+        var lottieFileNameBase = Path.GetFileNameWithoutExtension(lottieJsonFile);
 
         bool codeGenSucceeded = false;
         switch (language)
@@ -228,7 +261,7 @@ static class Program
                     (float)lottieComposition.Width,
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
-                    Path.Combine(outputFolder, $"{className}.cs"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"),
                     disableFieldOptimization: disableFieldOptimization,
                     infoStream: infoStream,
                     errorStream: errorStream);
@@ -242,8 +275,8 @@ static class Program
                     (float)lottieComposition.Width,
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
-                    Path.Combine(outputFolder, $"{className}.h"),
-                    Path.Combine(outputFolder, $"{className}.cpp"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.h"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"),
                     disableFieldOptimization: disableFieldOptimization,
                     infoStream: infoStream,
                     errorStream: errorStream);
@@ -253,7 +286,7 @@ static class Program
             case Lang.LottieXml:
                 codeGenSucceeded = TryGenerateLottieXml(
                     lottieComposition,
-                    Path.Combine(outputFolder, $"{className}.xml"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"),
                     infoStream,
                     errorStream);
                 profiler.OnSerializationFinished();
@@ -262,7 +295,7 @@ static class Program
             case Lang.WinCompXml:
                 codeGenSucceeded = TryGenerateWincompXml(
                     optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{className}.xml"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"),
                     infoStream,
                     errorStream);
                 profiler.OnSerializationFinished();
@@ -271,7 +304,7 @@ static class Program
             case Lang.WinCompDgml:
                 codeGenSucceeded = TryGenerateWincompDgml(
                     optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{className}.dgml"),
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.dgml"),
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnSerializationFinished();
@@ -515,7 +548,7 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
-       LOTTIEFILE is a Lottie .json file.
+       LOTTIEFILE is a Lottie .json file. LOTTIEFILE may contain wildcards.
        LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, or wincompdgml.
 
        [Other options]
@@ -525,8 +558,15 @@ OVERVIEW:
                        specified the name is synthesized from the name in the Lottie 
                        if such a name exists or else the name of the Lottie file.
                        The class name will be sanitized as necessary to be valid for
-                       the language and will also be used as the base name of the output 
+                       the language and will also be used as the base name of 
+                       the output 
                        file(s).
+         -DisableFieldOptimization
+                       Disables the optimization of fields in the generated code.
+                       This is useful when the generated code is going to be
+                       hacked on.
+         -DisableOptimizer  
+                       Disables optimization of the generated code.
          -OutputFolder Specifies the output folder for the generated files. If not
                        specified the files will be written to the current directory.
          -Strict       Fails on any parsing or translation issue. If not specified, 

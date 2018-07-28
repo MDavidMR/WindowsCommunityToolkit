@@ -174,7 +174,16 @@ namespace LottieToWinComp
                 (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select (translatedLayer: translatedLayer, layer)).ToArray();
+                 select (translatedLayer, layer)).ToArray();
+
+            // Set descriptions on each translate layer so that it's clear where the layer starts.
+            if (_addDescriptions)
+            {
+                foreach (var pair in translatedLayers)
+                {
+                    Describe(pair.translatedLayer, $"Layer ({pair.layer.Type}): {pair.layer.Name}");
+                }
+            }
 
             // Layers are translated into either a Visual tree or a Shape tree. Convert the list of Visual and
             // Shape roots to a list of Visual roots by wrapping the Shape trees in ShapeVisuals.
@@ -205,8 +214,6 @@ namespace LottieToWinComp
 #endif 
                         }
                         shapeVisual.Shapes.Add((CompositionShape)item);
-                        // TODO - combine the descriptions beter.
-                        shapeVisual.ShortDescription = item.ShortDescription;
                         break;
                     case CompositionObjectType.ContainerVisual:
                     case CompositionObjectType.ShapeVisual:
@@ -612,10 +619,6 @@ namespace LottieToWinComp
                     throw new InvalidOperationException();
             }
 
-            if (_addDescriptions)
-            {
-                Describe(result, $"PreComp layer: {layer.Name}", layer.Name);
-            }
             return result;
         }
 
@@ -893,7 +896,7 @@ namespace LottieToWinComp
             {
                 if (_addDescriptions)
                 {
-                    Describe(compositionNode, $"Group: {group.Name}");
+                    Describe(compositionNode, $"ShapeGroup: {group.Name}");
                 }
                 compositionNode.Shapes.AddRange(contents);
                 return compositionNode;
@@ -1784,7 +1787,7 @@ namespace LottieToWinComp
             TranslateAndApplyTransformToContainerVisual(context, layer.Transform, leafTransformNode);
             if (_addDescriptions)
             {
-                Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
+                Describe(leafTransformNode, $"Transforms for {layer.Name}");
             }
 
 #if NoTransformInheritance
@@ -1820,8 +1823,9 @@ namespace LottieToWinComp
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
             if (_addDescriptions)
             {
-                Describe(leafTransformNode, $"'{layer.Name}'.Transforms");
+                Describe(leafTransformNode, $"Transforms for {layer.Name}", $"Transforms: {layer.Name}");
             }
+
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
 #else
