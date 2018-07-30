@@ -107,7 +107,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Lottie\CompositionSegment.cs" />
     <Compile Include="Lottie\Issue.cs" />
     <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
     <Compile Include="Lottie\LottieCompositionOptions.cs" />

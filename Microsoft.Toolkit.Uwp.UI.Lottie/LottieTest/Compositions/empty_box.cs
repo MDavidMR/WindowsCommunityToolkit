@@ -36,7 +36,6 @@ namespace Compositions
             const long c_durationTicks = 20000000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_1;
             CubicBezierEasingFunction _cubicBezierEasingFunction_3;
             LinearEasingFunction _linearEasingFunction;
             ContainerVisual _root;

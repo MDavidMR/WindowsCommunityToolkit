@@ -174,7 +174,7 @@ namespace LottieToWinComp
                 (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select (translatedLayer, layer)).ToArray();
+                 select (translatedLayer:translatedLayer, layer:layer)).ToArray();
 
             // Set descriptions on each translate layer so that it's clear where the layer starts.
             if (_addDescriptions)
