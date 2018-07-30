@@ -20,7 +20,6 @@ namespace WinCompData.Tools
         int _idGenerator;
         int _groupIdGenerator;
 
-
         CompositionObjectDgmlSerializer() { }
 
         public static XDocument ToXml(CompositionObject compositionObject)
@@ -32,6 +31,12 @@ namespace WinCompData.Tools
         {
             // Build the graph of objects.
             _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(compositionObject, includeVertices: true);
+
+            // Give names to each object.
+            foreach ((var node, var name) in CodeGen.NodeNamer<ObjectData>.GenerateNodeNames(_objectGraph))
+            {
+                node.Name = name;
+            }
 
             // Initialize each node. 
             foreach (var n in _objectGraph)
@@ -47,13 +52,12 @@ namespace WinCompData.Tools
 
             var rootNode = _objectGraph[compositionObject];
 
-            // Give the root object a special name and color
-            rootNode.Name = "Root (ContainerVisual)";
+            // Give the root object a special name and color.
+            rootNode.Name = $"{rootNode.Name} (Root)";
             rootNode.Category = "Root";
 
             // Get the groups.
             var groups = GroupTree(rootNode, null).ToArray();
-
 
             // Create the DGML nodes.
             var nodes =
@@ -256,20 +260,16 @@ namespace WinCompData.Tools
                         case CompositionObjectType.Vector3KeyFrameAnimation:
                             return;
                         case CompositionObjectType.CompositionContainerShape:
-                            Name = "ContainerShape";
                             Category = "ContainerShape";
                             break;
                         case CompositionObjectType.CompositionSpriteShape:
                             {
                                 Category = "Shape";
-                                Name = GetNameForSpriteShape((CompositionSpriteShape)Object);
                             }
                             break;
                         case CompositionObjectType.ContainerVisual:
-                            Name = "ContainerVisual";
                             break;
                         case CompositionObjectType.ShapeVisual:
-                            Name = "ShapeVisual";
                             Category = "ShapeVisual";
                             break;
 
@@ -278,7 +278,6 @@ namespace WinCompData.Tools
                     }
                     IsDgmlNode = true;
                     Id = _owner.GenerateId();
-
                 }
             }
 
@@ -296,35 +295,6 @@ namespace WinCompData.Tools
                     }
 
                 }
-            }
-
-            static string GetNameForSpriteShape(CompositionSpriteShape shape)
-            {
-                var geometry = shape.Geometry;
-                if (geometry != null)
-                {
-                    switch (geometry.Type)
-                    {
-                        case CompositionObjectType.CompositionEllipseGeometry:
-                            {
-                                var ellipse = (CompositionEllipseGeometry)geometry;
-                                return $"Ellipse {ellipse.Radius.X}x{ellipse.Radius.Y}";
-                            }
-                        case CompositionObjectType.CompositionPathGeometry:
-                            return "Path";
-                        case CompositionObjectType.CompositionRectangleGeometry:
-                            {
-                                var rectangle = (CompositionRectangleGeometry)geometry;
-                                return $"Rectangle {rectangle.Size.X}x{rectangle.Size.Y}";
-                            }
-                        case CompositionObjectType.CompositionRoundedRectangleGeometry:
-                            {
-                                var roundedRectangle = (CompositionRoundedRectangleGeometry)geometry;
-                                return $"RoundedRectangle {roundedRectangle.Size.X}x{roundedRectangle.Size.Y}";
-                            }
-                    }
-                }
-                return "Shape";
             }
 
 

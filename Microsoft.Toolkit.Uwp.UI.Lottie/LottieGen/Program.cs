@@ -121,6 +121,9 @@ static class Program
             // Get the input file as an absolute path.
             var inputFile = MakeAbsolutePath(file);
 
+            Stats beforeOptimizationStats;
+            Stats afterOptimizationStats;
+
             var codeGenResult = TryGenerateCode(
                         lottieJsonFile: inputFile,
                         outputFolder: outputFolder,
@@ -131,13 +134,18 @@ static class Program
                         disableOptimizer: options.DisableOptimizer,
                         infoStream: infoStream,
                         errorStream: errorStream,
-                        profiler: profiler)
+                        profiler: profiler,
+                        beforeOptimizationStats: out beforeOptimizationStats,
+                        afterOptimizationStats: out afterOptimizationStats)
                     ? RunResult.Success
                     : RunResult.Failure;
 
             infoStream.WriteLine();
             infoStream.WriteLine(" === Timings ===");
             profiler.WriteReport(infoStream);
+
+            infoStream.WriteLine();
+            WriteStatsReport(infoStream, beforeOptimizationStats, afterOptimizationStats);
 
             if (result == RunResult.Success && codeGenResult != RunResult.Success)
             {
@@ -153,6 +161,68 @@ static class Program
         }
     }
 
+    static void WriteStatsReport(TextWriter writer, Stats beforeOptimization, Stats afterOptimization)
+    {
+        if (beforeOptimization == null)
+        {
+            return;
+        }
+
+        writer.WriteLine(" === Stats ===");
+        writer.WriteLine("                      Type   Count  Optimized away");
+
+        if (afterOptimization == null)
+        {
+            // No optimization was performed. Just report on the before stats.
+            afterOptimization = beforeOptimization;
+        }
+
+        // Report on the after stats and indicate how much optimization
+        // improved things (where it did).
+        WriteStatsLine("CanvasGeometry", beforeOptimization.CanvasGeometryCount, afterOptimization.CanvasGeometryCount);
+        WriteStatsLine("ColorBrush", beforeOptimization.ColorBrushCount, afterOptimization.ColorBrushCount);
+        WriteStatsLine("ColorKeyFrameAnimation", beforeOptimization.ColorKeyFrameAnimationCount, afterOptimization.ColorKeyFrameAnimationCount);
+        WriteStatsLine("CompositionPath", beforeOptimization.CompositionPathCount, afterOptimization.CompositionPathCount);
+        WriteStatsLine("ContainerShape", beforeOptimization.ContainerShapeCount, afterOptimization.ContainerShapeCount);
+        WriteStatsLine("ContainerVisual", beforeOptimization.ContainerVisualCount, afterOptimization.ContainerVisualCount);
+        WriteStatsLine("CubicBezierEasingFunction", beforeOptimization.CubicBezierEasingFunctionCount, afterOptimization.CubicBezierEasingFunctionCount);
+        WriteStatsLine("EllipseGeometry", beforeOptimization.EllipseGeometryCount, afterOptimization.EllipseGeometryCount);
+        WriteStatsLine("ExpressionAnimation", beforeOptimization.ExpressionAnimationCount, afterOptimization.ExpressionAnimationCount);
+        WriteStatsLine("GeometricClip", beforeOptimization.GeometricClipCount, afterOptimization.GeometricClipCount);
+        WriteStatsLine("InsetClip", beforeOptimization.InsetClipCount, afterOptimization.InsetClipCount);
+        WriteStatsLine("LinearEasingFunction", beforeOptimization.LinearEasingFunctionCount, afterOptimization.LinearEasingFunctionCount);
+        WriteStatsLine("PathGeometry", beforeOptimization.PathGeometryCount, afterOptimization.PathGeometryCount);
+        WriteStatsLine("PathKeyFrameAnimation", beforeOptimization.PathKeyFrameAnimationCount, afterOptimization.PathKeyFrameAnimationCount);
+        WriteStatsLine("PropertySet", beforeOptimization.PropertySetCount, afterOptimization.PropertySetCount);
+        WriteStatsLine("RectangleGeometry", beforeOptimization.RectangleGeometryCount, afterOptimization.RectangleGeometryCount);
+        WriteStatsLine("RoundedRectangleGeometry", beforeOptimization.RoundedRectangleGeometryCount, afterOptimization.RoundedRectangleGeometryCount);
+        WriteStatsLine("ScalarKeyFrameAnimation", beforeOptimization.ScalarKeyFrameAnimationCount, afterOptimization.ScalarKeyFrameAnimationCount);
+        WriteStatsLine("ShapeVisual", beforeOptimization.ShapeVisualCount, afterOptimization.ShapeVisualCount);
+        WriteStatsLine("SpriteShape", beforeOptimization.SpriteShapeCount, afterOptimization.SpriteShapeCount);
+        WriteStatsLine("StepEasingFunction", beforeOptimization.StepEasingFunctionCount, afterOptimization.StepEasingFunctionCount);
+        WriteStatsLine("Vector2KeyFrameAnimation", beforeOptimization.Vector2KeyFrameAnimationCount, afterOptimization.Vector2KeyFrameAnimationCount);
+        WriteStatsLine("Vector3KeyFrameAnimation", beforeOptimization.Vector3KeyFrameAnimationCount, afterOptimization.Vector3KeyFrameAnimationCount);
+        WriteStatsLine("ViewBox", beforeOptimization.ViewBoxCount, afterOptimization.ViewBoxCount);
+
+        void WriteStatsLine(string name, int before, int after)
+        {
+            if (after > 0 || before > 0)
+            {
+                const int nameWidth = 26;
+                if (before != after)
+                {
+                    writer.WriteLine($"{name,nameWidth}  {after,6:n0} {before - after,6:n0}");
+
+                }
+                else
+                {
+                    writer.WriteLine($"{name,nameWidth}  {after,6:n0}");
+                }
+            }
+        }
+    }
+
+
     static bool TryGenerateCode(
         string lottieJsonFile,
         string outputFolder,
@@ -163,8 +233,13 @@ static class Program
         bool disableFieldOptimization,
         TextWriter infoStream,
         TextWriter errorStream,
-        Profiler profiler)
+        Profiler profiler,
+        out Stats beforeOptimizationStats,
+        out Stats afterOptimizationStats)
     {
+        beforeOptimizationStats = null;
+        afterOptimizationStats = null;
+
         if (!TryEnsureDirectoryExists(outputFolder))
         {
             errorStream.WriteLine($"Failed to create the output directory: {outputFolder}");
@@ -228,6 +303,9 @@ static class Program
             }
         }
 
+        beforeOptimizationStats = new Stats(wincompDataRootVisual);
+        profiler.OnUnmeasuredFinished();
+
         // Get an appropriate name for the class.
         string className = SanitizeTypeName(codeGenClassName);
         if (string.IsNullOrWhiteSpace(className))
@@ -247,6 +325,9 @@ static class Program
         {
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
             profiler.OnOptimizationFinished();
+
+            afterOptimizationStats = new Stats(optimizedWincompDataRootVisual);
+            profiler.OnUnmeasuredFinished();
         }
 
         var lottieFileNameBase = Path.GetFileNameWithoutExtension(lottieJsonFile);
@@ -592,12 +673,15 @@ EXAMPLES:
     sealed class Profiler
     {
         readonly Stopwatch _sw = Stopwatch.StartNew();
+        // Bucket of time to dump time we don't want to measure. Never reported.
+        TimeSpan _unmeasuredTime;
         TimeSpan _parseTime;
         TimeSpan _translateTime;
         TimeSpan _optimizationTime;
         TimeSpan _codegenTime;
         TimeSpan _serializationTime;
 
+        internal void OnUnmeasuredFinished() => OnPhaseFinished(ref _unmeasuredTime);
         internal void OnParseFinished() => OnPhaseFinished(ref _parseTime);
         internal void OnTranslateFinished() => OnPhaseFinished(ref _translateTime);
         internal void OnOptimizationFinished() => OnPhaseFinished(ref _optimizationTime);

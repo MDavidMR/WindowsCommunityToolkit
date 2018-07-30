@@ -1821,10 +1821,6 @@ namespace LottieToWinComp
 
             // Apply the transform from the layer.
             TranslateAndApplyTransformToContainerShape(context, layer.Transform, leafTransformNode);
-            if (_addDescriptions)
-            {
-                Describe(leafTransformNode, $"Transforms for {layer.Name}", $"Transforms: {layer.Name}");
-            }
 
 #if NoTransformInheritance
             rootTransformNode = leafTransformNode;
@@ -1835,6 +1831,11 @@ namespace LottieToWinComp
                 var parentLayer = context.Layers.GetLayerById(layer.Parent.Value);
                 TranslateTransformOnContainerShapeForLayer(context, parentLayer, out rootTransformNode, out var parentLeafTransform);
                 parentLeafTransform.Shapes.Add(leafTransformNode);
+
+                if (_addDescriptions)
+                {
+                    Describe(leafTransformNode, $"Transforms for {layer.Name}", $"Transforms: {layer.Name}");
+                }
             }
             else
             {

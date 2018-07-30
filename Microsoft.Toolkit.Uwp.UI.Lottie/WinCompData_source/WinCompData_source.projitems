@@ -15,7 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CSharpInstantiatorGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CxInstantiatorGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\InstantiatorGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\NodeNamer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Optimizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Stats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\ColorKeyFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CompositionBrush.cs" />
