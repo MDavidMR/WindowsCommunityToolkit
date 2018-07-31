@@ -47,6 +47,9 @@ namespace WinCompData.CodeGen
                 // CompositionPath must be canonicalized after CanvasGeometry paths.
                 CanonicalizeCompositionPaths();
 
+                // CompositionPathGeometry must be canonicalized after CompositionPath.
+                CanonicalizeCompositionPathGeometries();
+
                 // Easing functions must be canonicalized before keyframes are canonicalized.
                 CanonicalizeLinearEasingFunctions();
                 CanonicalizeCubicBezierEasingFunctions();
@@ -307,6 +310,27 @@ namespace WinCompData.CodeGen
                 CanonicalizeGrouping(grouping);
             }
 
+
+            void CanonicalizeCompositionPathGeometries()
+            {
+                var items = GetCanonicalizableCompositionObjects<CompositionPathGeometry>(CompositionObjectType.CompositionPathGeometry);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Obj
+                    let path = CanonicalObject<CompositionPathGeometry>(obj.Path)
+                    group item.Node by new
+                    {
+                        path,
+                        obj.TrimStart,
+                        obj.TrimEnd,
+                        obj.TrimOffset
+                    } into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
             void CanonicalizeCanvasGeometryPaths()
             {
                 var items = GetCanonicalizableCanvasGeometries<CanvasGeometry.Path>(CanvasGeometry.GeometryType.Path);
@@ -438,7 +462,7 @@ namespace WinCompData.CodeGen
                     var groupArray = orderedGroup.ToArray();
                     var canonical = groupArray[0];
 
-                    // Point every node to the canonical node..
+                    // Point every node to the canonical node.
                     foreach (var node in group)
                     {
                         node.Canonical = canonical;
