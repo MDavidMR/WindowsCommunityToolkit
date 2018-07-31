@@ -34,6 +34,7 @@ using Expr = WinCompData.Expressions.Expression;
 using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
 using TypeConstraint = WinCompData.Expressions.TypeConstraint;
 using ExpressionType = WinCompData.Expressions.ExpressionType;
+using ShapeOrVisual = WinCompData.CompositionObject;
 using WinCompData.Mgcg;
 
 namespace LottieToWinComp
@@ -235,7 +236,7 @@ namespace LottieToWinComp
             }
         }
 
-        void TranslateAndApplyMask(TranslationContext context, PreCompLayer layer, Visual visualForMask)
+        void TranslateAndApplyMask(TranslationContext context, Layer layer, Visual visualForMask)
         {
 #if !NoClipping
             if (layer.Masks != null &&
@@ -297,6 +298,21 @@ namespace LottieToWinComp
 #endif
             }
 #endif
+        }
+
+        // Add a mask to a shape tree by inserting a ShapeVisual as the CompositionContainerShape parent and then
+        // adding the Windows Composition equivalent of the mask to the ShapeVisual.
+        ShapeVisual ApplyMaskToShapeTree(TranslationContext context, Layer layer, CompositionContainerShape shapeContainer)
+        {
+            var shapeVisual = CreateShapeVisual();
+            shapeVisual.Shapes.Add(shapeContainer);
+
+            shapeVisual.Size = Vector2(context.Width, context.Height);
+
+            // Apply the mask to the content node
+            TranslateAndApplyMask(context, layer, shapeVisual);
+
+            return shapeVisual;
         }
 
         // Translates a Lottie layer into null a Visual or a Shape. 
@@ -853,7 +869,7 @@ namespace LottieToWinComp
         }
 
         // May return null if the layer does not produce any renderable content.
-        CompositionShape TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
+        ShapeOrVisual TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
         {
             if (!TryCreateContainerShapeTransformChain(context, layer, out var rootNode, out var contentsNode))
             {
@@ -868,15 +884,9 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 contentsNode.Shapes.AddRange(contents);
-
-                if (layer.Masks != null &&
-                    layer.Masks.Any())
-                {
-                    // We currently do not support masks on shape layers. To add this support we
-                    // need to add a ShapeVisual above the rootNode and add a clip to the ShapeVisual.
-                    _unsupported.InvalidLayerTypeWithMask(layer.Type);
-                }
-
+#if !NoClipping
+                return layer.Masks.Any() ? ApplyMaskToShapeTree(context, layer, rootNode) : (ShapeOrVisual)rootNode;
+#endif
                 return rootNode;
             }
             else
@@ -1722,7 +1732,7 @@ namespace LottieToWinComp
             return CreateAnimatedColorBrush(context, MultiplyAnimatableColorByAnimatableOpacityPercent(shapeFill.Color, shapeFill.OpacityPercent), opacityPercent);
         }
 
-        CompositionShape TranslateSolidLayer(TranslationContext context, SolidLayer layer)
+        ShapeOrVisual TranslateSolidLayer(TranslationContext context, SolidLayer layer)
         {
             if (layer.IsHidden || layer.Transform.OpacityPercent.AlwaysEquals(0))
             {
@@ -1753,13 +1763,9 @@ namespace LottieToWinComp
                 Describe(rectangleGeometry, "SolidLayerRectangle.RectangleGeometry");
             }
 
-            if (layer.Masks != null &&
-                layer.Masks.Any())
-            {
-                // We currently do not support masks on solid layers. To add this support we
-                // need to add a ShapeVisual above the rootNode and add a clip to the ShapeVisual.
-                _unsupported.InvalidLayerTypeWithMask(layer.Type);
-            }
+#if !NoClipping
+            return layer.Masks.Any() ? ApplyMaskToShapeTree(context, layer, rootNode) : (ShapeOrVisual)rootNode;
+#endif
 
             return rootNode;
         }

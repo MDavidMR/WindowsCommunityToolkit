@@ -641,6 +641,8 @@ namespace LottieData.Serialization
                 var obj = elem.AsObject();
 
                 // Ignoring field 'x' because it is not in the official spec
+                // The x property refers to the mask expansion. In AE you can 
+                // expand or shrink a mask getting a reduced or expanded version of the same shape.
                 IgnoreFieldThatIsNotYetSupported(obj, "x");
 
                 var inverted = obj.GetNamedBoolean("inv");

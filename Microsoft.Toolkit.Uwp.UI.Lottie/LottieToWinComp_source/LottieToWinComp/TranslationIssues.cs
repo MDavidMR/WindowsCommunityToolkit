@@ -133,14 +133,9 @@ namespace LottieToWinComp
             Report("LT0026", "Mask with multiple shapes");
         }
 
-        internal void InvalidLayerTypeWithMask(Layer.LayerType layerType)
-        {
-            Report("LT0027", $"Mask specified on unsupported layer type {layerType}");
-        }
-
         internal void MaskSDKSupport()
         {
-            Report("LT0028", "Mask support requires targeting RS5 or later");
+            Report("LT0027", "Mask support requires targeting RS5 or later");
         }
 
         void Report(string code, string description)

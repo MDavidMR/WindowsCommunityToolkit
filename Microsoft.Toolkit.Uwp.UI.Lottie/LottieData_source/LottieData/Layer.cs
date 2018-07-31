@@ -18,6 +18,7 @@ namespace LottieData
 #endif
     abstract class Layer : LottieObject
     {
+        static Mask[] _emptyMasks = new Mask[0];
         readonly Mask[] _masks;
 
         protected Layer(
@@ -93,7 +94,7 @@ namespace LottieData
         /// <summary>
         /// List of masks appplied to the layer
         /// </summary>
-        public IEnumerable<Mask> Masks => _masks;
+        public IEnumerable<Mask> Masks => _masks == null ? _emptyMasks : _masks;
 
         public enum LayerType
         {
