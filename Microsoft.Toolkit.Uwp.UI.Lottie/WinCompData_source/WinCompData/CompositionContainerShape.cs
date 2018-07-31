@@ -8,12 +8,25 @@ namespace WinCompData
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class CompositionContainerShape : CompositionShape, IContainShapes
+    sealed class CompositionContainerShape : CompositionShape, IContainShapes, ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner
     {
-        internal CompositionContainerShape() { }
+        internal CompositionContainerShape()
+        {
+            Shapes = new ListOfNeverNull<CompositionShape>(this);
+        }
 
-        public ListOfNeverNull<CompositionShape> Shapes { get; } = new ListOfNeverNull<CompositionShape>();
+        public ListOfNeverNull<CompositionShape> Shapes { get; }
 
         public override CompositionObjectType Type => CompositionObjectType.CompositionContainerShape;
+
+        void ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner.ItemAdded(CompositionShape item)
+        {
+            ((IContainedBy<IContainShapes>)item).SetParent(this);
+        }
+
+        void ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner.ItemRemoved(CompositionShape item)
+        {
+            ((IContainedBy<IContainShapes>)item).SetParent(null);
+        }
     }
 }

@@ -13,6 +13,12 @@ namespace WinCompData.Tools
     sealed class ListOfNeverNull<T> : IList<T>
     {
         readonly List<T> _wrapped = new List<T>();
+        readonly IListOfNeverNullOwner _owner;
+
+        internal ListOfNeverNull(IListOfNeverNullOwner owner)
+        {
+            _owner = owner;
+        }
 
         public T this[int index]
         {
@@ -23,11 +29,15 @@ namespace WinCompData.Tools
 
         public int Count => _wrapped.Count;
 
-        public bool IsReadOnly => ((IList<T>)_wrapped).IsReadOnly;
+        bool ICollection<T>.IsReadOnly => ((IList<T>)_wrapped).IsReadOnly;
 
         public void Add(T item)
         {
             _wrapped.Add(AssertNotNull(item));
+            if (_owner != null)
+            {
+                _owner.ItemAdded(item);
+            }
         }
 
         public void AddRange(IEnumerable<T> items)
@@ -40,15 +50,23 @@ namespace WinCompData.Tools
 
         public void Clear()
         {
+            var oldContents = _wrapped.ToArray();
             _wrapped.Clear();
+            if (_owner != null)
+            {
+                foreach (var item in oldContents)
+                {
+                    _owner.ItemRemoved(item);
+                }
+            }
         }
 
-        public bool Contains(T item)
+        bool ICollection<T>.Contains(T item)
         {
             return _wrapped.Contains(item);
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
         {
             _wrapped.CopyTo(array, arrayIndex);
         }
@@ -66,15 +84,28 @@ namespace WinCompData.Tools
         public void Insert(int index, T item)
         {
             _wrapped.Insert(index, AssertNotNull(item));
+            if (_owner != null)
+            {
+                _owner.ItemAdded(item);
+            }
         }
 
         public bool Remove(T item)
         {
-            return _wrapped.Remove(item);
+            var result = _wrapped.Remove(item);
+            if (result && _owner != null)
+            {
+                _owner.ItemRemoved(item);
+            }
+            return result;
         }
 
         public void RemoveAt(int index)
         {
+            if (_owner != null)
+            {
+                _owner.ItemRemoved(_wrapped[index]);
+            }
             _wrapped.RemoveAt(index);
         }
 
@@ -104,6 +135,12 @@ namespace WinCompData.Tools
                 default:
                     return $"List<{tName}> with {Count} items";
             }
+        }
+
+        internal interface IListOfNeverNullOwner
+        {
+            void ItemAdded(T item);
+            void ItemRemoved(T item);
         }
     }
 }

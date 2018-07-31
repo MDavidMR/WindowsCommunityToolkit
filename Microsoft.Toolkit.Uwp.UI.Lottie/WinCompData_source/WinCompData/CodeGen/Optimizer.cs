@@ -78,16 +78,12 @@ namespace WinCompData.CodeGen
                 return true;
             }).ToArray();
 
-            // Keep a dictionary from elidable container to its parent. This dictionary will be updated
-            // as we remove the containers.
-            var parentOf = elidableContainers.ToDictionary(n => n.Object, n => (IContainShapes)n.InReferences.Single().Node.Object);
-
             // Push the offset and centerpoint from the container down to the child and remove the container.
             foreach (var node in elidableContainers)
             {
                 var container = (CompositionContainerShape)node.Object;
                 var child = container.Shapes.Single();
-                var parent = parentOf[container];
+                var parent = container.Parent;
 
                 if (container.Offset != null)
                 {
@@ -115,8 +111,6 @@ namespace WinCompData.CodeGen
                 // Remove the container. The child must be placed in the slot where the container was.
                 var index = parent.Shapes.IndexOf(container);
                 parent.Shapes[index] = child;
-                parentOf[child] = parent;
-                parentOf.Remove(container);
                 container.Shapes.Clear();
             }
         }
@@ -139,27 +133,19 @@ namespace WinCompData.CodeGen
                     container.Children.Count == 1;
             }).ToArray();
 
-            // Keep a dictionary from elidable container to its parent. This dictionary will be updated
-            // as we remove the containers.
-            var parentOf = elidableContainers.ToDictionary(n => n.Object, n => (ContainerVisual)n.InReferences.Single().Node.Object);
-
             // Remove the unnecessary containers.
             foreach (var node in elidableContainers)
             {
                 var container = (ContainerVisual)node.Object;
-                var parent = parentOf[container];
+                var parent = container.Parent;
                 var child = container.Children.Single();
 
                 // Remove the container. The child must be placed in the slot where the container was.
                 var index = parent.Children.IndexOf(container);
                 parent.Children[index] = child;
-                parentOf[child] = parent;
-                parentOf.Remove(container);
                 container.Children.Clear();
             }
         }
-
-
 
         sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
