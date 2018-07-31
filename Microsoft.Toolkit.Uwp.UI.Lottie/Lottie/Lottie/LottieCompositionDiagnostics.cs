@@ -36,6 +36,8 @@ namespace Lottie
 
         public TimeSpan ValidationTime { get; internal set; }
 
+        public TimeSpan OptimizationTime { get; internal set; }
+
         public TimeSpan TranslationTime { get; internal set; }
 
         public TimeSpan InstantiationTime { get; internal set; }

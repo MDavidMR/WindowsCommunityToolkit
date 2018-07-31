@@ -884,10 +884,11 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 contentsNode.Shapes.AddRange(contents);
-#if !NoClipping
+#if NoClipping
+                return rootNode;
+#else
                 return layer.Masks.Any() ? ApplyMaskToShapeTree(context, layer, rootNode) : (ShapeOrVisual)rootNode;
 #endif
-                return rootNode;
             }
             else
             {
@@ -1763,11 +1764,11 @@ namespace LottieToWinComp
                 Describe(rectangleGeometry, "SolidLayerRectangle.RectangleGeometry");
             }
 
-#if !NoClipping
+#if NoClipping
+            return rootNode;
+#else
             return layer.Masks.Any() ? ApplyMaskToShapeTree(context, layer, rootNode) : (ShapeOrVisual)rootNode;
 #endif
-
-            return rootNode;
         }
 
         Visual TranslateTextLayer(TranslationContext context, TextLayer layer)

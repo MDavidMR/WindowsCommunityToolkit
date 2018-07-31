@@ -13,8 +13,18 @@ namespace Lottie
     {
         None = 0,
 
-        IncludeDiagnostics = 1,
+        /// <summary>
+        /// Optimizes the translation of the Lottie so as to reduce resource
+        /// usage during rendering. Note that this may slow down loading.
+        /// </summary>
+        Optimize = 1,
 
-        All = IncludeDiagnostics,
+        /// <summary>
+        /// Sets the <see cref="CompositionPlayer.Diagnostics"/> property with information
+        /// about the Lottie.
+        /// </summary>
+        IncludeDiagnostics = 2,
+
+        All = IncludeDiagnostics | Optimize,
     }
 }

@@ -24,7 +24,21 @@ namespace WinCompData.Tools
         {
             get => _wrapped[index];
 
-            set => _wrapped[index] = AssertNotNull(value);
+            set
+            {
+                AssertNotNull(value);
+                if (_owner != null)
+                {
+                    var oldValue = _wrapped[index];
+                    _wrapped[index] = AssertNotNull(value);
+                    _owner.ItemRemoved(oldValue);
+                    _owner.ItemAdded(value);
+                }
+                else
+                {
+                    _wrapped[index] = AssertNotNull(value);
+                }
+            }
         }
 
         public int Count => _wrapped.Count;

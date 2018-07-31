@@ -38,6 +38,9 @@ namespace Lottie
         Uri _uriSource;
         ContentFactory _contentFactory;
 
+        public static DependencyProperty OptionsProperty { get; } =
+            RegisterDP(nameof(Options), LottieCompositionOptions.None);
+
         public static DependencyProperty UriSourceProperty { get; } =
             RegisterDP<Uri>(nameof(UriSource), null,
             (owner, oldValue, newValue) => owner.HandleUriSourcePropertyChanged(oldValue, newValue));
@@ -67,6 +70,15 @@ namespace Lottie
         }
 
         /// <summary>
+        /// Sets options for how the Lottie is loaded.
+        /// </summary>
+        public LottieCompositionOptions Options
+        {
+            get => (LottieCompositionOptions)GetValue(OptionsProperty);
+            set => SetValue(OptionsProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the Uniform Resource Identifier (URI) of the JSON source file for this <see cref="LottieCompositionSource"/>.
         /// </summary>
         public Uri UriSource
@@ -74,8 +86,6 @@ namespace Lottie
             get => (Uri)GetValue(UriSourceProperty);
             set => SetValue(UriSourceProperty, value);
         }
-
-        public LottieCompositionOptions Options { get; set; }
 
         /// <summary>
         /// Called by XAML to convert a string to an <see cref="ICompositionSource"/>.
@@ -96,7 +106,7 @@ namespace Lottie
         public IAsyncAction SetSourceAsync(StorageFile file)
         {
             _uriSource = null;
-            return LoadAsync(file == null ? null : new Loader(file)).AsAsyncAction();
+            return LoadAsync(file == null ? null : new Loader(this, file)).AsAsyncAction();
         }
 
         public IAsyncAction SetSourceAsync(Uri sourceUri)
@@ -106,7 +116,7 @@ namespace Lottie
             // This will not trigger loading because it will be seen as no change
             // from the current (just set) _uriSource value.
             UriSource = sourceUri;
-            return LoadAsync(sourceUri == null ? null : new Loader(sourceUri)).AsAsyncAction();
+            return LoadAsync(sourceUri == null ? null : new Loader(this, sourceUri)).AsAsyncAction();
         }
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
@@ -163,6 +173,7 @@ namespace Lottie
                 .InvocationList?.Invoke(this);
         }
 
+
         // Called when the UriSource property is updated.
         void HandleUriSourcePropertyChanged(Uri oldValue, Uri newValue)
         {
@@ -180,7 +191,7 @@ namespace Lottie
 
 
         // Starts a LoadAsync and returns immediately.
-        async void StartLoading() => await LoadAsync(new Loader(UriSource));
+        async void StartLoading() => await LoadAsync(new Loader(this, UriSource));
 
         // Starts loading. Completes the returned task when the load completes or is replaced by another
         // load.
@@ -236,12 +247,19 @@ namespace Lottie
         // Handles loading a composition from a Lottie file.
         sealed class Loader
         {
+            readonly LottieCompositionSource _owner;
             readonly Uri _uri;
             readonly StorageFile _storageFile;
 
-            internal Loader(Uri uri) { _uri = uri; }
+            internal Loader(LottieCompositionSource owner, Uri uri) {
+                _owner = owner;
+                _uri = uri;
+            }
 
-            internal Loader(StorageFile storageFile) { _storageFile = storageFile; }
+            internal Loader(LottieCompositionSource owner, StorageFile storageFile) {
+                _owner = owner;
+                _storageFile = storageFile;
+            }
 
             // Null loader.
             internal Loader() { }
@@ -341,6 +359,8 @@ namespace Lottie
                 // Translating large Lotties can take significant time. Do it on another thread.
                 bool translateSucceeded = false;
                 WinCompData.Visual wincompDataRootVisual = null;
+                var optimizationEnabled = _owner.Options.HasFlag(LottieCompositionOptions.Optimize);
+
                 await CheckedAwait(Task.Run(() =>
                 {
                     translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
@@ -353,14 +373,26 @@ namespace Lottie
                     if (diagnostics != null)
                     {
                         diagnostics.TranslationIssues = ToIssues(translationIssues);
+                        diagnostics.TranslationTime = sw.Elapsed;
+                        sw.Restart();
                     }
+
+                    // Optimize the resulting translation. This will usually significantly reduce the size of
+                    // the Composition code, however iit might slow down loading too much on complex Lotties.
+                    if (translateSucceeded && optimizationEnabled)
+                    {
+                        // Optimize.
+                        wincompDataRootVisual = WinCompData.CodeGen.Optimizer.Optimize(wincompDataRootVisual, true);
+
+                        if (diagnostics != null)
+                        {
+                            diagnostics.OptimizationTime = sw.Elapsed;
+                            sw.Restart();
+                        }
+                    }
+
                 }));
 
-                if (diagnostics != null)
-                {
-                    diagnostics.TranslationTime = sw.Elapsed;
-                    sw.Restart();
-                }
 
                 if (!translateSucceeded)
                 {

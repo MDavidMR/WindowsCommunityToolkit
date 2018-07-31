@@ -50,7 +50,7 @@ namespace WinCompData.CodeGen
             var containerShapes = graph.Where(n => n.Object is CompositionContainerShape).ToArray();
 
             // If a container sets just the translate properties (offset and centerpoint) and the child
-            // also sets only the translate properties, the parent's properties can be pushed down to
+            // also sets only the translate properties, the container's properties can be pushed down to
             // the child.
             var elidableContainers = containerShapes.Where(n =>
             {
@@ -110,8 +110,9 @@ namespace WinCompData.CodeGen
                 }
                 // Remove the container. The child must be placed in the slot where the container was.
                 var index = parent.Shapes.IndexOf(container);
-                parent.Shapes[index] = child;
+                // Clear the container to unparent the child. This must be done before reparenting.
                 container.Shapes.Clear();
+                parent.Shapes[index] = child;
             }
         }
 
@@ -142,8 +143,9 @@ namespace WinCompData.CodeGen
 
                 // Remove the container. The child must be placed in the slot where the container was.
                 var index = parent.Children.IndexOf(container);
-                parent.Children[index] = child;
+                // Clear the container to unparent the child. This must be done before reparenting.
                 container.Children.Clear();
+                parent.Children[index] = child;
             }
         }
 
