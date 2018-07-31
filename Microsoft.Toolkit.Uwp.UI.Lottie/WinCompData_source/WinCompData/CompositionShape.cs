@@ -1,7 +1,6 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using WinCompData.Sn;
 
 namespace WinCompData
@@ -22,11 +21,6 @@ namespace WinCompData
 
         void IContainedBy<IContainShapes>.SetParent(IContainShapes parent)
         {
-            if (parent != null && Parent != null)
-            {
-                // Object already has a parent.
-                throw new InvalidOperationException();
-            }
             Parent = parent;
         }
     }

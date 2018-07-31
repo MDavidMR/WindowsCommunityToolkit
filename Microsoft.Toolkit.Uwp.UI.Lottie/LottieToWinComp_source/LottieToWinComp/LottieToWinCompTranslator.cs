@@ -175,7 +175,7 @@ namespace LottieToWinComp
                 (from layer in layers.GetLayersBottomToTop()
                  let translatedLayer = TranslateLayer(context, layer)
                  where translatedLayer != null
-                 select (translatedLayer:translatedLayer, layer:layer)).ToArray();
+                 select (translatedLayer: translatedLayer, layer: layer)).ToArray();
 
             // Set descriptions on each translate layer so that it's clear where the layer starts.
             if (_addDescriptions)
@@ -360,7 +360,7 @@ namespace LottieToWinComp
         }
 
         // Returns a chain of ContainerShape that define the transforms for a layer.
-        // The top of the chain is the rootTransform, the bottom is the leafTransform.
+        // The top of the chain is the rootTransform, the bottom is the contentsNode.
         bool TryCreateContainerShapeTransformChain(
             TranslationContext context,
             Layer layer,
@@ -369,15 +369,19 @@ namespace LottieToWinComp
         {
 
             // Create containers for the contents in the layer.
-            // The rootTransformNode is the root for the layer. It may be the same object
-            // as the leafTransformNode if there are no inherited transforms.
-            // The contentsNode only exists to be the target of the visbility matrix.
+            // The rootNode is the root for the layer. It may be the same object
+            // as the contentsNode if there are no inherited transforms and no visibility animation.
             //
             //     +---------------+
             //     |      ...      |
             //     +---------------+
             //            ^
             //            |            
+            //     +-----------------+
+            //     |  visiblityNode  |-- Optional visiblity node (only used if the visiblity is animated)
+            //     +-----------------+
+            //            ^
+            //            |
             //     +-------------------+
             //     | rootTransformNode |--Transform (values are inherited from root ancestor of the transform tree)
             //     +-------------------+
@@ -391,11 +395,6 @@ namespace LottieToWinComp
             //     +-------------------+
             //     | leafTransformNode |--Transform defined on the layer
             //     +-------------------+
-            //            ^
-            //            |
-            //     +---------------+
-            //     | contentsNode  |--Visibility
-            //     +---------------+
             //        ^        ^
             //        |        |
             // +---------+ +---------+
@@ -414,16 +413,18 @@ namespace LottieToWinComp
                 return false;
             }
 
-            TranslateTransformOnContainerShapeForLayer(context, layer, out rootNode, out var leafTransformNode);
-            contentsNode = leafTransformNode;
+            // Create the transforms chain.
+            TranslateTransformOnContainerShapeForLayer(context, layer, out var transformsRoot, out contentsNode);
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
             // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
-                // Insert another node to hold the visibility property.
-                contentsNode = CreateContainerShape();
-                leafTransformNode.Shapes.Add(contentsNode);
+                // Create a node to control visibility.
+                var visibilityNode = CreateContainerShape();
+                visibilityNode.Shapes.Add(transformsRoot);
+                rootNode = visibilityNode;
+
 #if !NoInvisibility
 #if ControllersSynchronizationWorkaround
                 // Animate between Matrix3x2(0,0,0,0,0,0) and Matrix3x2(1,0,0,1,0,0) (i.e. between 0 and identity).
@@ -431,7 +432,7 @@ namespace LottieToWinComp
                 if (inProgress > 0)
                 {
                     // Set initial value to be non-visible (default is visible).
-                    contentsNode.TransformMatrix = Matrix3x2Zero;
+                    visibilityNode.TransformMatrix = Matrix3x2Zero;
                     visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
                 }
                 if (outProgress < 1)
@@ -439,15 +440,15 @@ namespace LottieToWinComp
                     visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
                 }
                 visibilityAnimation.Duration = _lc.Duration;
-                StartKeyframeAnimation(contentsNode, "TransformMatrix._11", visibilityAnimation);
+                StartKeyframeAnimation(visibilityNode, "TransformMatrix._11", visibilityAnimation);
 
                 // M11 and M22 need to have the same value. Either tie them together with an expression, or
                 // use the same keyframe animation for both. Probably cheaper to use an expression.
                 var m11expression = CreateExpressionAnimation(ExpressionFactory.TransformMatrixM11Expression);
-                m11expression.SetReferenceParameter("my", contentsNode);
-                StartExpressionAnimation(contentsNode, "TransformMatrix._22", m11expression);
+                m11expression.SetReferenceParameter("my", visibilityNode);
+                StartExpressionAnimation(visibilityNode, "TransformMatrix._22", m11expression);
                 // Alternative is to use the same key frame animation on M22.
-                //StartKeyframeAnimation(contentsNode, "TransformMatrix._22", visibilityAnimation);
+                //StartKeyframeAnimation(visibilityNode, "TransformMatrix._22", visibilityAnimation);
 #else
                 var visibilityExpression =
                     ExpressionFactory.CreateProgressExpression(
@@ -459,15 +460,13 @@ namespace LottieToWinComp
 
                 var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
-                StartExpressionAnimation(contentsNode, "TransformMatrix", visibilityAnimation);
+                StartExpressionAnimation(visibilityNode, "TransformMatrix", visibilityAnimation);
 #endif // ControllersSynchronizationWorkaround
 #endif // !NoInvisibility
-                if (_addDescriptions)
-                {
-                    Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
-                        ? "Animates visibility of the layer."
-                        : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
-                }
+            }
+            else
+            {
+                rootNode = transformsRoot;
             }
 
             return true;
@@ -485,14 +484,18 @@ namespace LottieToWinComp
         {
             // Create containers for the contents in the layer.
             // The rootTransformNode is the root for the layer. It may be the same object
-            // as the leafTransformNode if there are no inherited transforms.
-            // The contentsNode only exists to be the target of the visbility matrix.
+            // as the contentsNode if there are no inherited transforms.
             //
             //     +---------------+
             //     |      ...      |
             //     +---------------+
             //            ^
             //            |            
+            //     +-----------------+
+            //     |  visiblityNode  |-- Optional visiblity node (only used if the visiblity is animated)
+            //     +-----------------+
+            //            ^
+            //            |
             //     +-------------------+
             //     | rootTransformNode |--Transform (values are inherited from root ancestor of the transform tree)
             //     +-------------------+
@@ -503,13 +506,8 @@ namespace LottieToWinComp
             //     + - - - - - - - - - - - - +
             //            ^
             //            |
-            //     +-------------------+
-            //     | leafTransformNode |--Transform defined on the layer
-            //     +-------------------+
-            //            ^
-            //            |
             //     +---------------+
-            //     | contentsNode  |--Visibility
+            //     | contentsNode  |--Transform defined on the layer
             //     +---------------+
             //        ^        ^
             //        |        |
@@ -529,17 +527,17 @@ namespace LottieToWinComp
                 return false;
             }
 
-            TranslateTransformOnContainerVisualForLayer(context, layer, out rootNode, out var leafTransformNode);
-            contentsNode = leafTransformNode;
-
+            // Create the transforms chain.
+            TranslateTransformOnContainerVisualForLayer(context, layer, out var transformsRoot, out contentsNode);
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
             // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
             if (inProgress > 0 || outProgress < 1)
             {
-                // Insert another node to hold the visiblity property.
-                contentsNode = CreateContainerVisual();
-                leafTransformNode.Children.Add(contentsNode);
+                // Create a node to control visibility.
+                var visibilityNode = CreateContainerVisual();
+                visibilityNode.Children.Add(transformsRoot);
+                rootNode = visibilityNode;
 
 #if !NoInvisibility
 #if ControllersSynchronizationWorkaround
@@ -548,7 +546,7 @@ namespace LottieToWinComp
                 if (inProgress > 0)
                 {
                     // Set initial value to be non-visible.
-                    contentsNode.Opacity = 0;
+                    visibilityNode.Opacity = 0;
                     visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
                 }
                 if (outProgress < 1)
@@ -556,7 +554,7 @@ namespace LottieToWinComp
                     visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
                 }
                 visibilityAnimation.Duration = _lc.Duration;
-                StartKeyframeAnimation(contentsNode, "Opacity", visibilityAnimation);
+                StartKeyframeAnimation(visibilityNode, "Opacity", visibilityAnimation);
 #else
                 var invisible = Expr.Scalar(0);
                 var visible = Expr.Scalar(1);
@@ -571,15 +569,13 @@ namespace LottieToWinComp
 
                 var visibilityAnimation = CreateExpressionAnimation(visibilityExpression);
                 visibilityAnimation.SetReferenceParameter(c_rootName, _rootVisual);
-                StartExpressionAnimation(contentsNode, "Opacity", visibilityAnimation);
+                StartExpressionAnimation(visibilityNode, "Opacity", visibilityAnimation);
 #endif // ControllersSynchronizationWorkaround
 #endif // !NoInvisibility
-                if (_addDescriptions)
-                {
-                    Describe(contentsNode, string.IsNullOrWhiteSpace(layer.Name)
-                        ? "Animates visibility of the layer."
-                        : $"Animates visibility of layer: \"{layer.Name}\".", "Visibility");
-                }
+            }
+            else
+            {
+                rootNode = transformsRoot;
             }
 
             return true;

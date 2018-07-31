@@ -318,7 +318,7 @@ namespace WinCompData.CodeGen
                 var grouping =
                     from item in items
                     let obj = item.Obj
-                    let path = CanonicalObject<CompositionPathGeometry>(obj.Path)
+                    let path = CanonicalObject<CompositionPath>(obj.Path)
                     group item.Node by new
                     {
                         path,
