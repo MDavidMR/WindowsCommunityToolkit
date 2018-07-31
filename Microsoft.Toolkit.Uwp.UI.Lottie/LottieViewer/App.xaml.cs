@@ -115,7 +115,7 @@ namespace LottieViewer
             splashGrid.Children.Add(compositionPlayer);
 
             // Start playing.
-            await compositionPlayer.PlayAsync(fromProgress:0, toProgress:0.595, playbackRate:1, looped:false);
+            await compositionPlayer.PlayAsync(fromProgress:0, toProgress:0.599, playbackRate:1, looped:false);
 
             // Fade out the splash screen
             var storyboard = new Storyboard();

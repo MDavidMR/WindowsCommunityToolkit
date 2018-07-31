@@ -40,9 +40,53 @@ namespace WinCompData.CodeGen
         static Visual OptimizeContainers(Visual root)
         {
             var graph = ObjectGraph<ObjectData2>.FromCompositionObject(root, includeVertices: true);
+            RemoveRedundantCenterPoints(graph);
             OptimizeContainerShapes(graph);
             OptimizeContainerVisuals(graph);
             return root;
+        }
+
+        // Set the CenterPoint property to null on objects that have no Scale or Rotation set.
+        static void RemoveRedundantCenterPoints(ObjectGraph<ObjectData2> graph)
+        {
+            foreach (var obj in graph.Where(node => node.Type == Graph.NodeType.CompositionObject).Select(node => (CompositionObject)node.Object))
+            {
+                switch (obj.Type)
+                {
+                    case CompositionObjectType.ContainerVisual:
+                    case CompositionObjectType.ShapeVisual:
+                        RemoveRedundantCenterPoint((Visual)obj);
+                        break;
+                    case CompositionObjectType.CompositionContainerShape:
+                    case CompositionObjectType.CompositionSpriteShape:
+                        RemoveRedundantCenterPoint((CompositionShape)obj);
+                        break;
+                }
+            }
+        }
+
+        // Set the CenterPoint property to null if the object has no Scale or Rotation set.
+        static void RemoveRedundantCenterPoint(Visual obj)
+        {
+            if (obj.CenterPoint.HasValue &&
+                !obj.Scale.HasValue &&
+                !obj.RotationAngleInDegrees.HasValue &&
+                !obj.Animators.Where(a => a.AnimatedProperty == nameof(obj.Scale) || a.AnimatedProperty == nameof(obj.RotationAngleInDegrees)).Any())
+            {
+                obj.CenterPoint = null;
+            }
+        }
+
+        // Set the CenterPoint property to null if the object has no Scale or Rotation set.
+        static void RemoveRedundantCenterPoint(CompositionShape obj)
+        {
+            if (obj.CenterPoint.HasValue &&
+                !obj.Scale.HasValue &&
+                !obj.RotationAngleInDegrees.HasValue &&
+                !obj.Animators.Where(a => a.AnimatedProperty == nameof(obj.Scale) || a.AnimatedProperty == nameof(obj.RotationAngleInDegrees)).Any())
+            {
+                obj.CenterPoint = null;
+            }
         }
 
         static void OptimizeContainerShapes(ObjectGraph<ObjectData2> graph)
@@ -120,7 +164,7 @@ namespace WinCompData.CodeGen
         {
             var elidableContainers = graph.Where(n =>
             {
-                return 
+                return
                     n.Object is ContainerVisual container &&
                     !container.Properties.PropertyNames.Any() &&
                     !container.Animators.Any() &&
