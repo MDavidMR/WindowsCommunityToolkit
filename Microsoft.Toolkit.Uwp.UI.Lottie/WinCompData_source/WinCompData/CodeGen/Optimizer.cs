@@ -30,13 +30,144 @@ namespace WinCompData.CodeGen
             // Create WinCompData objects from the canonical objects.
             var result = (Visual)new Optimizer(graph).GetCompositionObject(root);
 
+            // Try to optimize away redundant containers.
+            result = OptimizeContainers(result);
+
+
             return result;
         }
+
+        static Visual OptimizeContainers(Visual root)
+        {
+            var graph = ObjectGraph<ObjectData2>.FromCompositionObject(root, includeVertices: true);
+            OptimizeContainerShapes(graph);
+            OptimizeContainerVisuals(graph);
+            return root;
+        }
+
+        static void OptimizeContainerShapes(ObjectGraph<ObjectData2> graph)
+        {
+            var containerShapes = graph.Where(n => n.Object is CompositionContainerShape).ToArray();
+
+            // If a container sets just the translate properties (offset and centerpoint) and the child
+            // also sets only the translate properties, the parent's properties can be pushed down to
+            // the child.
+            var elidableContainers = containerShapes.Where(n =>
+            {
+                var container = (CompositionContainerShape)n.Object;
+                if (container.Properties.PropertyNames.Any() ||
+                    container.Animators.Any() ||
+                    container.RotationAngleInDegrees != null ||
+                    container.Scale != null ||
+                    container.TransformMatrix != null ||
+                    container.Shapes.Count != 1)
+                {
+                    return false;
+                }
+                // Container has only translate properties.
+                var child = container.Shapes.Single();
+                if (child.Properties.PropertyNames.Any() ||
+                    child.Animators.Any() ||
+                    child.RotationAngleInDegrees != null ||
+                    child.Scale != null ||
+                    child.TransformMatrix != null)
+                {
+                    return false;
+                }
+                // Child also has only translate properties.
+                return true;
+            }).ToArray();
+
+            // Keep a dictionary from elidable container to its parent. This dictionary will be updated
+            // as we remove the containers.
+            var parentOf = elidableContainers.ToDictionary(n => n.Object, n => (IContainShapes)n.InReferences.Single().Node.Object);
+
+            // Push the offset and centerpoint from the container down to the child and remove the container.
+            foreach (var node in elidableContainers)
+            {
+                var container = (CompositionContainerShape)node.Object;
+                var child = container.Shapes.Single();
+                var parent = parentOf[container];
+
+                if (container.Offset != null)
+                {
+                    if (child.Offset != null)
+                    {
+                        child.Offset = child.Offset.Value + container.Offset.Value;
+                    }
+                    else
+                    {
+                        child.Offset = container.Offset;
+                    }
+                }
+
+                if (container.CenterPoint != null)
+                {
+                    if (child.CenterPoint != null)
+                    {
+                        child.CenterPoint = child.CenterPoint.Value + container.CenterPoint.Value;
+                    }
+                    else
+                    {
+                        child.CenterPoint = container.CenterPoint;
+                    }
+                }
+                // Remove the container. The child must be placed in the slot where the container was.
+                var index = parent.Shapes.IndexOf(container);
+                parent.Shapes[index] = child;
+                parentOf[child] = parent;
+                parentOf.Remove(container);
+                container.Shapes.Clear();
+            }
+        }
+
+        static void OptimizeContainerVisuals(ObjectGraph<ObjectData2> graph)
+        {
+            var elidableContainers = graph.Where(n =>
+            {
+                return 
+                    n.Object is ContainerVisual container &&
+                    !container.Properties.PropertyNames.Any() &&
+                    !container.Animators.Any() &&
+                    container.CenterPoint == null &&
+                    container.Clip == null &&
+                    container.Offset == null &&
+                    container.Opacity == null &&
+                    container.RotationAngleInDegrees == null &&
+                    container.Scale == null &&
+                    container.Size == null &&
+                    container.Children.Count == 1;
+            }).ToArray();
+
+            // Keep a dictionary from elidable container to its parent. This dictionary will be updated
+            // as we remove the containers.
+            var parentOf = elidableContainers.ToDictionary(n => n.Object, n => (ContainerVisual)n.InReferences.Single().Node.Object);
+
+            // Remove the unnecessary containers.
+            foreach (var node in elidableContainers)
+            {
+                var container = (ContainerVisual)node.Object;
+                var parent = parentOf[container];
+                var child = container.Children.Single();
+
+                // Remove the container. The child must be placed in the slot where the container was.
+                var index = parent.Children.IndexOf(container);
+                parent.Children[index] = child;
+                parentOf[child] = parent;
+                parentOf.Remove(container);
+                container.Children.Clear();
+            }
+        }
+
+
 
         sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
             // The copied object.
             internal Object Copied { get; set; }
+        }
+        sealed class ObjectData2 : Graph.Node<ObjectData2>
+        {
         }
 
         Optimizer(ObjectGraph<ObjectData> graph)

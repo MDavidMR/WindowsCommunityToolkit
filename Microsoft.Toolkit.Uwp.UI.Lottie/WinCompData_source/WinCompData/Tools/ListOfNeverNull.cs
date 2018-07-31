@@ -92,5 +92,18 @@ namespace WinCompData.Tools
             return item;
         }
 
+        public override string ToString()
+        {
+            var tName = typeof(T).Name;
+            switch(Count)
+            {
+                case 0:
+                    return $"Empty List<{tName}>";
+                case 1:
+                    return $"List<{tName}> with 1 item";
+                default:
+                    return $"List<{tName}> with {Count} items";
+            }
+        }
     }
 }

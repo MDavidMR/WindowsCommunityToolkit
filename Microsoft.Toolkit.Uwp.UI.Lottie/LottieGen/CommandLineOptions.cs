@@ -66,7 +66,7 @@ sealed class CommandLineOptions
                     .AddKeyword("winrtcpp", Lang.WinrtCpp)
                     .AddKeyword("lottiexml", Lang.LottieXml)
                     .AddKeyword("wincompxml", Lang.WinCompXml)
-                    .AddKeyword("wincompdgml", Lang.WinCompDgml);
+                    .AddKeyword("dgml", Lang.WinCompDgml);
 
 
             languageTokenizer.TryMatchKeyword(result._language, out var language);

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Linq;
 using WinCompData.Tools;
 
 namespace WinCompData.CodeGen
@@ -78,7 +79,10 @@ namespace WinCompData.CodeGen
                                     _pathGeometryCount++;
                                     break;
                                 case CompositionObjectType.CompositionPropertySet:
-                                    _propertySetCount++;
+                                    if (((CompositionPropertySet)co).PropertyNames.Any())
+                                    {
+                                        _propertySetCount++;
+                                    }
                                     break;
                                 case CompositionObjectType.CompositionRectangleGeometry:
                                     _rectangleGeometryCount++;

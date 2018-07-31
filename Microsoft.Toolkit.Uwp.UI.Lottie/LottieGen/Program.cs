@@ -630,7 +630,7 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
        LOTTIEFILE is a Lottie .json file. LOTTIEFILE may contain wildcards.
-       LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, or wincompdgml.
+       LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, or dgml.
 
        [Other options]
 

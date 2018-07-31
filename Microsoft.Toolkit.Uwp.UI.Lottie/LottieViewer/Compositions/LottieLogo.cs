@@ -87,10 +87,7 @@ namespace Compositions
             Vector2KeyFrameAnimation _vector2Animation_06;
             Vector2KeyFrameAnimation _vector2Animation_07;
 
-            // 'MASTER'.Transforms
-            //   'BG'.Transforms
-            //     Group: Rectangle 1
-            //       Rectangle Path 1
+            // Rectangle Path 1
             CompositionColorBrush ColorBrush_AlmostDarkTurquoise_FF00D1C1()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1));
@@ -160,42 +157,19 @@ namespace Compositions
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            // 'BG'.Transforms
+            // Layer (Shape): Dot-Y
             CompositionContainerShape ContainerShape_000()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(187.5F, 333.5F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_001());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'BG'.Transforms
-            // Group: Rectangle 1
-            CompositionContainerShape ContainerShape_001()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_00());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_002()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_003());
+                shapes.Add(ContainerShape_001());
                 return result;
             }
 
-            // 'Bncr'.Transforms
-            CompositionContainerShape ContainerShape_003()
+            // Transforms for Bncr
+            CompositionContainerShape ContainerShape_001()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -203,7 +177,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(164.781998F, 57.4729996F));
                 result.CenterPoint = new Vector2(60, 60);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_004());
+                shapes.Add(ContainerShape_002());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -215,8 +189,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            CompositionContainerShape ContainerShape_004()
+            // Transforms for Dot-Y
+            CompositionContainerShape ContainerShape_002()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -224,7 +198,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(43.2630005F, 59.75F));
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_005());
+                shapes.Add(ContainerShape_003());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -237,12 +211,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "Dot-Y".
-            CompositionContainerShape ContainerShape_005()
+            CompositionContainerShape ContainerShape_003()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_006());
+                shapes.Add(SpriteShape_01());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_00());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -254,19 +228,57 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Ellipse 1
-            CompositionContainerShape ContainerShape_006()
+            // Layer (Shape): E3-Y
+            CompositionContainerShape ContainerShape_004()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(196, 267);
+                result.CenterPoint = new Vector2(60, 60);
+                result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_01());
+                shapes.Add(ContainerShape_005());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
+            // Transforms for E3-Y
+            CompositionContainerShape ContainerShape_005()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
+                propertySet.InsertVector2("Position", new Vector2(119.167F, 57.4790001F));
+                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_006());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_02());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Animates visibility of layer: "E3-Y".
+            CompositionContainerShape ContainerShape_006()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_02());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_00());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): E3-B
             CompositionContainerShape ContainerShape_007()
             {
                 var result = _c.CreateContainerShape();
@@ -277,7 +289,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
+            // Transforms for E3-Y
             CompositionContainerShape ContainerShape_008()
             {
                 var result = _c.CreateContainerShape();
@@ -291,68 +303,6 @@ namespace Compositions
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_02());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Animates visibility of layer: "E3-Y".
-            CompositionContainerShape ContainerShape_009()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_010());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_00());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Visibility
-            // Group: Group 1
-            CompositionContainerShape ContainerShape_010()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(344.674011F, 261.877014F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_02());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_011()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_012());
-                return result;
-            }
-
-            // 'E3-Y'.Transforms
-            CompositionContainerShape ContainerShape_012()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
-                propertySet.InsertVector2("Position", new Vector2(119.167F, 57.4790001F));
-                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_013());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_02);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
@@ -360,25 +310,25 @@ namespace Compositions
                 return result;
             }
 
-            // 'E3-Y'.Transforms
-            // 'E3-B'.Transforms
-            CompositionContainerShape ContainerShape_013()
+            // Transforms: E3-Y
+            // Transforms for E3-B
+            CompositionContainerShape ContainerShape_009()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(345.123993F, 261.800995F);
                 result.Offset = new Vector2(0.0650024414F, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_014());
+                shapes.Add(ContainerShape_010());
                 return result;
             }
 
             // Animates visibility of layer: "E3-B".
-            CompositionContainerShape ContainerShape_014()
+            CompositionContainerShape ContainerShape_010()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_015());
+                shapes.Add(SpriteShape_03());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_01());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -390,31 +340,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 1
-            CompositionContainerShape ContainerShape_015()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(344.674011F, 261.877014F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_03());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_016()
+            // Layer (Shape): I-Y
+            CompositionContainerShape ContainerShape_011()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_017());
+                shapes.Add(ContainerShape_012());
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            CompositionContainerShape ContainerShape_017()
+            // Transforms for I-Y
+            CompositionContainerShape ContainerShape_012()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -422,7 +360,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(93.5940018F, 62.8610001F));
                 result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_018());
+                shapes.Add(ContainerShape_013());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -435,12 +373,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "I-Y".
-            CompositionContainerShape ContainerShape_018()
+            CompositionContainerShape ContainerShape_013()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_019());
+                shapes.Add(SpriteShape_04());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_01());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -452,31 +390,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 6
-            CompositionContainerShape ContainerShape_019()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(304.13501F, 282.408997F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_04());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_020()
+            // Layer (Shape): I-B
+            CompositionContainerShape ContainerShape_014()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_021());
+                shapes.Add(ContainerShape_015());
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            CompositionContainerShape ContainerShape_021()
+            // Transforms for I-Y
+            CompositionContainerShape ContainerShape_015()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -484,7 +410,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(93.5940018F, 62.8610001F));
                 result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_022());
+                shapes.Add(ContainerShape_016());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -496,24 +422,24 @@ namespace Compositions
                 return result;
             }
 
-            // 'I-Y'.Transforms
-            // 'I-B'.Transforms
-            CompositionContainerShape ContainerShape_022()
+            // Transforms: I-Y
+            // Transforms for I-B
+            CompositionContainerShape ContainerShape_016()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_023());
+                shapes.Add(ContainerShape_017());
                 return result;
             }
 
             // Animates visibility of layer: "I-B".
-            CompositionContainerShape ContainerShape_023()
+            CompositionContainerShape ContainerShape_017()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_024());
+                shapes.Add(SpriteShape_05());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_02());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -525,31 +451,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 6
-            CompositionContainerShape ContainerShape_024()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(304.13501F, 282.408997F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_05());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_025()
+            // Layer (Shape): E2-Y
+            CompositionContainerShape ContainerShape_018()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_026());
+                shapes.Add(ContainerShape_019());
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            CompositionContainerShape ContainerShape_026()
+            // Transforms for E2-Y
+            CompositionContainerShape ContainerShape_019()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -557,7 +471,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(109.092003F, 33.6100006F));
                 result.CenterPoint = new Vector2(332.049988F, 237.932007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_027());
+                shapes.Add(ContainerShape_020());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -570,12 +484,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "E2-Y".
-            CompositionContainerShape ContainerShape_027()
+            CompositionContainerShape ContainerShape_020()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_028());
+                shapes.Add(SpriteShape_06());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_02());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -587,31 +501,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 3
-            CompositionContainerShape ContainerShape_028()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_06());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_029()
+            // Layer (Shape): E2-B
+            CompositionContainerShape ContainerShape_021()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_030());
+                shapes.Add(ContainerShape_022());
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            CompositionContainerShape ContainerShape_030()
+            // Transforms for E2-Y
+            CompositionContainerShape ContainerShape_022()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -619,7 +521,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(109.092003F, 33.6100006F));
                 result.CenterPoint = new Vector2(332.049988F, 237.932007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_031());
+                shapes.Add(ContainerShape_023());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -631,24 +533,24 @@ namespace Compositions
                 return result;
             }
 
-            // 'E2-Y'.Transforms
-            // 'E2-B'.Transforms
-            CompositionContainerShape ContainerShape_031()
+            // Transforms: E2-Y
+            // Transforms for E2-B
+            CompositionContainerShape ContainerShape_023()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(332.049988F, 237.932007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_032());
+                shapes.Add(ContainerShape_024());
                 return result;
             }
 
             // Animates visibility of layer: "E2-B".
-            CompositionContainerShape ContainerShape_032()
+            CompositionContainerShape ContainerShape_024()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_033());
+                shapes.Add(SpriteShape_07());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_03());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -660,31 +562,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 3
-            CompositionContainerShape ContainerShape_033()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_07());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_034()
+            // Layer (Shape): E1-Y
+            CompositionContainerShape ContainerShape_025()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_035());
+                shapes.Add(ContainerShape_026());
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            CompositionContainerShape ContainerShape_035()
+            // Transforms for E1-Y
+            CompositionContainerShape ContainerShape_026()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -692,7 +582,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(113.714996F, 9.14599991F));
                 result.CenterPoint = new Vector2(344.671997F, 214.841995F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_036());
+                shapes.Add(ContainerShape_027());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -705,12 +595,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "E1-Y".
-            CompositionContainerShape ContainerShape_036()
+            CompositionContainerShape ContainerShape_027()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_037());
+                shapes.Add(SpriteShape_08());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_03());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -722,31 +612,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 2
-            CompositionContainerShape ContainerShape_037()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_08());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_038()
+            // Layer (Shape): E1-B
+            CompositionContainerShape ContainerShape_028()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_039());
+                shapes.Add(ContainerShape_029());
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            CompositionContainerShape ContainerShape_039()
+            // Transforms for E1-Y
+            CompositionContainerShape ContainerShape_029()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -754,7 +632,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(113.714996F, 9.14599991F));
                 result.CenterPoint = new Vector2(344.671997F, 214.841995F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_040());
+                shapes.Add(ContainerShape_030());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -766,24 +644,24 @@ namespace Compositions
                 return result;
             }
 
-            // 'E1-Y'.Transforms
-            // 'E1-B'.Transforms
-            CompositionContainerShape ContainerShape_040()
+            // Transforms: E1-Y
+            // Transforms for E1-B
+            CompositionContainerShape ContainerShape_030()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(344.671997F, 214.841995F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_041());
+                shapes.Add(ContainerShape_031());
                 return result;
             }
 
             // Animates visibility of layer: "E1-B".
-            CompositionContainerShape ContainerShape_041()
+            CompositionContainerShape ContainerShape_031()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_042());
+                shapes.Add(SpriteShape_09());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_04());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -795,31 +673,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 2
-            CompositionContainerShape ContainerShape_042()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_09());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_043()
+            // Layer (Shape): T1a-Y
+            CompositionContainerShape ContainerShape_032()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_044());
+                shapes.Add(ContainerShape_033());
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            CompositionContainerShape ContainerShape_044()
+            // Transforms for T1a-Y
+            CompositionContainerShape ContainerShape_033()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -827,7 +693,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 result.CenterPoint = new Vector2(250, 250);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_045());
+                shapes.Add(ContainerShape_034());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -840,12 +706,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "T1a-Y".
-            CompositionContainerShape ContainerShape_045()
+            CompositionContainerShape ContainerShape_034()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_046());
+                shapes.Add(SpriteShape_10());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_04());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -857,49 +723,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 9
-            CompositionContainerShape ContainerShape_046()
+            // Transforms for T2b-Y
+            CompositionContainerShape ContainerShape_035()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_10());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_047()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_048());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T2b-Y'.Transforms
-            CompositionContainerShape ContainerShape_048()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_049());
+                shapes.Add(ContainerShape_036());
                 return result;
             }
 
             // Animates visibility of layer: "T2b-Y".
-            CompositionContainerShape ContainerShape_049()
+            CompositionContainerShape ContainerShape_036()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_050());
+                shapes.Add(SpriteShape_11());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_05());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -911,48 +752,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 5
-            CompositionContainerShape ContainerShape_050()
+            // Transforms for T2a-Y
+            CompositionContainerShape ContainerShape_037()
             {
                 var result = _c.CreateContainerShape();
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_11());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_051()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_052());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T2a-Y'.Transforms
-            CompositionContainerShape ContainerShape_052()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_053());
+                shapes.Add(ContainerShape_038());
                 return result;
             }
 
             // Animates visibility of layer: "T2a-Y".
-            CompositionContainerShape ContainerShape_053()
+            CompositionContainerShape ContainerShape_038()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_054());
+                shapes.Add(SpriteShape_12());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_06());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -964,49 +781,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 7
-            CompositionContainerShape ContainerShape_054()
+            // Transforms for T2b-B
+            CompositionContainerShape ContainerShape_039()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_12());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_055()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_056());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T2b-B'.Transforms
-            CompositionContainerShape ContainerShape_056()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_057());
+                shapes.Add(ContainerShape_040());
                 return result;
             }
 
             // Animates visibility of layer: "T2b-B".
-            CompositionContainerShape ContainerShape_057()
+            CompositionContainerShape ContainerShape_040()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_058());
+                shapes.Add(SpriteShape_13());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_05());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1018,48 +810,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 5
-            CompositionContainerShape ContainerShape_058()
+            // Transforms for T1b-Y
+            CompositionContainerShape ContainerShape_041()
             {
                 var result = _c.CreateContainerShape();
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_13());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_059()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_060());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T1b-Y'.Transforms
-            CompositionContainerShape ContainerShape_060()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_061());
+                shapes.Add(ContainerShape_042());
                 return result;
             }
 
             // Animates visibility of layer: "T1b-Y".
-            CompositionContainerShape ContainerShape_061()
+            CompositionContainerShape ContainerShape_042()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_062());
+                shapes.Add(SpriteShape_14());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_07());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1071,49 +839,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 10
-            CompositionContainerShape ContainerShape_062()
+            // Transforms for T1b-B
+            CompositionContainerShape ContainerShape_043()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(242.755997F, 265.580994F);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_14());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_063()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_064());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T1b-B'.Transforms
-            CompositionContainerShape ContainerShape_064()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_065());
+                shapes.Add(ContainerShape_044());
                 return result;
             }
 
             // Animates visibility of layer: "T1b-B".
-            CompositionContainerShape ContainerShape_065()
+            CompositionContainerShape ContainerShape_044()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_066());
+                shapes.Add(SpriteShape_15());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_02);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1125,31 +868,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 10
-            CompositionContainerShape ContainerShape_066()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(242.755997F, 265.580994F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_15());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_067()
+            // Layer (Shape): O-Y
+            CompositionContainerShape ContainerShape_045()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_068());
+                shapes.Add(ContainerShape_046());
                 return result;
             }
 
-            // 'O-Y'.Transforms
-            CompositionContainerShape ContainerShape_068()
+            // Transforms for O-Y
+            CompositionContainerShape ContainerShape_046()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1157,7 +888,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(-62.7919998F, 73.0569992F));
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_069());
+                shapes.Add(ContainerShape_047());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1170,12 +901,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "O-Y".
-            CompositionContainerShape ContainerShape_069()
+            CompositionContainerShape ContainerShape_047()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_070());
+                shapes.Add(SpriteShape_16());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_06());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1187,31 +918,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Ellipse 1
-            CompositionContainerShape ContainerShape_070()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(196, 267);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_16());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_071()
+            // Layer (Shape): O-B
+            CompositionContainerShape ContainerShape_048()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_072());
+                shapes.Add(ContainerShape_049());
                 return result;
             }
 
-            // 'O-B'.Transforms
-            CompositionContainerShape ContainerShape_072()
+            // Transforms for O-B
+            CompositionContainerShape ContainerShape_049()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1219,7 +938,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(-62.7919998F, 73.0569992F));
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_073());
+                shapes.Add(ContainerShape_050());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1232,12 +951,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "O-B".
-            CompositionContainerShape ContainerShape_073()
+            CompositionContainerShape ContainerShape_050()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_074());
+                shapes.Add(SpriteShape_17());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_06);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1249,31 +968,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Ellipse 1
-            CompositionContainerShape ContainerShape_074()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(196, 267);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_17());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_075()
+            // Layer (Shape): T1a-Y 2
+            CompositionContainerShape ContainerShape_051()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_076());
+                shapes.Add(ContainerShape_052());
                 return result;
             }
 
-            // 'T1a-Y 2'.Transforms
-            CompositionContainerShape ContainerShape_076()
+            // Transforms for T1a-Y 2
+            CompositionContainerShape ContainerShape_052()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1281,7 +988,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 result.CenterPoint = new Vector2(250, 250);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_077());
+                shapes.Add(ContainerShape_053());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1294,12 +1001,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "T1a-Y 2".
-            CompositionContainerShape ContainerShape_077()
+            CompositionContainerShape ContainerShape_053()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_078());
+                shapes.Add(SpriteShape_18());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_07());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1311,49 +1018,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 9
-            CompositionContainerShape ContainerShape_078()
+            // Transforms for T2a-B
+            CompositionContainerShape ContainerShape_054()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_18());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_079()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_080());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'T2a-B'.Transforms
-            CompositionContainerShape ContainerShape_080()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_081());
+                shapes.Add(ContainerShape_055());
                 return result;
             }
 
             // Animates visibility of layer: "T2a-B".
-            CompositionContainerShape ContainerShape_081()
+            CompositionContainerShape ContainerShape_055()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_082());
+                shapes.Add(SpriteShape_19());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_08());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1365,31 +1047,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 7
-            CompositionContainerShape ContainerShape_082()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_19());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_083()
+            // Layer (Shape): T1a-B
+            CompositionContainerShape ContainerShape_056()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_084());
+                shapes.Add(ContainerShape_057());
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            CompositionContainerShape ContainerShape_084()
+            // Transforms for T1a-Y
+            CompositionContainerShape ContainerShape_057()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1397,7 +1067,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 result.CenterPoint = new Vector2(250, 250);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_085());
+                shapes.Add(ContainerShape_058());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1409,24 +1079,24 @@ namespace Compositions
                 return result;
             }
 
-            // 'T1a-Y'.Transforms
-            // 'T1a-B'.Transforms
-            CompositionContainerShape ContainerShape_085()
+            // Transforms: T1a-Y
+            // Transforms for T1a-B
+            CompositionContainerShape ContainerShape_058()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(250, 250);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_086());
+                shapes.Add(ContainerShape_059());
                 return result;
             }
 
             // Animates visibility of layer: "T1a-B".
-            CompositionContainerShape ContainerShape_086()
+            CompositionContainerShape ContainerShape_059()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_087());
+                shapes.Add(SpriteShape_20());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_09());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1438,31 +1108,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 9
-            CompositionContainerShape ContainerShape_087()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_20());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_088()
+            // Layer (Shape): Dot-Y
+            CompositionContainerShape ContainerShape_060()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_089());
+                shapes.Add(ContainerShape_061());
                 return result;
             }
 
-            // 'N'.Transforms
-            CompositionContainerShape ContainerShape_089()
+            // Transforms for N
+            CompositionContainerShape ContainerShape_061()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1470,7 +1128,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(-33.6669998F, 8.18200016F));
                 result.CenterPoint = new Vector2(60, 60);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_090());
+                shapes.Add(ContainerShape_062());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1482,8 +1140,8 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
-            CompositionContainerShape ContainerShape_090()
+            // Transforms for Dot-Y
+            CompositionContainerShape ContainerShape_062()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1491,7 +1149,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(39.875F, 60));
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_091());
+                shapes.Add(ContainerShape_063());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1504,12 +1162,12 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "Dot-Y".
-            CompositionContainerShape ContainerShape_091()
+            CompositionContainerShape ContainerShape_063()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_092());
+                shapes.Add(SpriteShape_21());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_08());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1521,49 +1179,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Ellipse 1
-            CompositionContainerShape ContainerShape_092()
+            // Transforms for L-Y
+            CompositionContainerShape ContainerShape_064()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(196, 267);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_21());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_093()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_094());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'L-Y'.Transforms
-            CompositionContainerShape ContainerShape_094()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_095());
+                shapes.Add(ContainerShape_065());
                 return result;
             }
 
             // Animates visibility of layer: "L-Y".
-            CompositionContainerShape ContainerShape_095()
+            CompositionContainerShape ContainerShape_065()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_096());
+                shapes.Add(SpriteShape_22());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_10());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1575,49 +1208,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 8
-            CompositionContainerShape ContainerShape_096()
+            // Transforms for L-B
+            CompositionContainerShape ContainerShape_066()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.CenterPoint = new Vector2(310, 310);
+                result.Offset = new Vector2(-56.5F, 83.5F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_22());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_097()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_098());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'L-B'.Transforms
-            CompositionContainerShape ContainerShape_098()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-210.957001F, -204.321991F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_099());
+                shapes.Add(ContainerShape_067());
                 return result;
             }
 
             // Animates visibility of layer: "L-B".
-            CompositionContainerShape ContainerShape_099()
+            CompositionContainerShape ContainerShape_067()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_100());
+                shapes.Add(SpriteShape_23());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_11());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1629,31 +1237,19 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Group 8
-            CompositionContainerShape ContainerShape_100()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_23());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_101()
+            // Layer (Shape): Dot1
+            CompositionContainerShape ContainerShape_068()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_102());
+                shapes.Add(ContainerShape_069());
                 return result;
             }
 
-            // 'Dot1'.Transforms
-            CompositionContainerShape ContainerShape_102()
+            // Transforms for Dot1
+            CompositionContainerShape ContainerShape_069()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1661,7 +1257,7 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(295.770996F, 108.994003F));
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_103());
+                shapes.Add(ContainerShape_070());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1677,11 +1273,11 @@ namespace Compositions
             }
 
             // Animates visibility of layer: "Dot1".
-            CompositionContainerShape ContainerShape_103()
+            CompositionContainerShape ContainerShape_070()
             {
                 var result = _c.CreateContainerShape();
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_104());
+                shapes.Add(SpriteShape_24());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_0_to_0());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1693,48 +1289,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Ellipse 1
-            CompositionContainerShape ContainerShape_104()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(196, 267);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_24());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_105()
+            // Transforms for S1-Y
+            CompositionContainerShape ContainerShape_071()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_106());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S1-Y'.Transforms
-            CompositionContainerShape ContainerShape_106()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_107());
+                shapes.Add(ContainerShape_072());
                 return result;
             }
 
             // Animates visibility of layer: "S1-Y".
-            CompositionContainerShape ContainerShape_107()
+            CompositionContainerShape ContainerShape_072()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_108());
+                shapes.Add(SpriteShape_25());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_10());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1746,47 +1318,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_108()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_25());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_109()
+            // Transforms for S2-Y
+            CompositionContainerShape ContainerShape_073()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_110());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S2-Y'.Transforms
-            CompositionContainerShape ContainerShape_110()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_111());
+                shapes.Add(ContainerShape_074());
                 return result;
             }
 
             // Animates visibility of layer: "S2-Y".
-            CompositionContainerShape ContainerShape_111()
+            CompositionContainerShape ContainerShape_074()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_112());
+                shapes.Add(SpriteShape_26());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_10);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1798,47 +1347,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_112()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_26());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_113()
+            // Transforms for S7
+            CompositionContainerShape ContainerShape_075()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_114());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S7'.Transforms
-            CompositionContainerShape ContainerShape_114()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_115());
+                shapes.Add(ContainerShape_076());
                 return result;
             }
 
             // Animates visibility of layer: "S7".
-            CompositionContainerShape ContainerShape_115()
+            CompositionContainerShape ContainerShape_076()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_116());
+                shapes.Add(SpriteShape_27());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_13());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1850,47 +1376,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_116()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_27());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_117()
+            // Transforms for S8
+            CompositionContainerShape ContainerShape_077()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_118());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S8'.Transforms
-            CompositionContainerShape ContainerShape_118()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_119());
+                shapes.Add(ContainerShape_078());
                 return result;
             }
 
             // Animates visibility of layer: "S8".
-            CompositionContainerShape ContainerShape_119()
+            CompositionContainerShape ContainerShape_078()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_120());
+                shapes.Add(SpriteShape_28());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_13);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1902,47 +1405,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_120()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_28());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_121()
+            // Transforms for S3-Y
+            CompositionContainerShape ContainerShape_079()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_122());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S3-Y'.Transforms
-            CompositionContainerShape ContainerShape_122()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_123());
+                shapes.Add(ContainerShape_080());
                 return result;
             }
 
             // Animates visibility of layer: "S3-Y".
-            CompositionContainerShape ContainerShape_123()
+            CompositionContainerShape ContainerShape_080()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_124());
+                shapes.Add(SpriteShape_29());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_15());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1954,47 +1434,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_124()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_29());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_125()
+            // Transforms for S4-Y
+            CompositionContainerShape ContainerShape_081()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_126());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S4-Y'.Transforms
-            CompositionContainerShape ContainerShape_126()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_127());
+                shapes.Add(ContainerShape_082());
                 return result;
             }
 
             // Animates visibility of layer: "S4-Y".
-            CompositionContainerShape ContainerShape_127()
+            CompositionContainerShape ContainerShape_082()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_128());
+                shapes.Add(SpriteShape_30());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2006,47 +1463,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_128()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_30());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_129()
+            // Transforms for S5-Y
+            CompositionContainerShape ContainerShape_083()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_130());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S5-Y'.Transforms
-            CompositionContainerShape ContainerShape_130()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_131());
+                shapes.Add(ContainerShape_084());
                 return result;
             }
 
             // Animates visibility of layer: "S5-Y".
-            CompositionContainerShape ContainerShape_131()
+            CompositionContainerShape ContainerShape_084()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_132());
+                shapes.Add(SpriteShape_31());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2058,47 +1492,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_132()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_31());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_133()
+            // Transforms for S6-Y
+            CompositionContainerShape ContainerShape_085()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_134());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S6-Y'.Transforms
-            CompositionContainerShape ContainerShape_134()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_135());
+                shapes.Add(ContainerShape_086());
                 return result;
             }
 
             // Animates visibility of layer: "S6-Y".
-            CompositionContainerShape ContainerShape_135()
+            CompositionContainerShape ContainerShape_086()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_136());
+                shapes.Add(SpriteShape_32());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_15);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2110,47 +1521,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_136()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_32());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_137()
+            // Transforms for S3-Y 2
+            CompositionContainerShape ContainerShape_087()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_138());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S3-Y 2'.Transforms
-            CompositionContainerShape ContainerShape_138()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_139());
+                shapes.Add(ContainerShape_088());
                 return result;
             }
 
             // Animates visibility of layer: "S3-Y 2".
-            CompositionContainerShape ContainerShape_139()
+            CompositionContainerShape ContainerShape_088()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_140());
+                shapes.Add(SpriteShape_33());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_19());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2162,47 +1550,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_140()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_33());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_141()
+            // Transforms for S4-Y 2
+            CompositionContainerShape ContainerShape_089()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_142());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S4-Y 2'.Transforms
-            CompositionContainerShape ContainerShape_142()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_143());
+                shapes.Add(ContainerShape_090());
                 return result;
             }
 
             // Animates visibility of layer: "S4-Y 2".
-            CompositionContainerShape ContainerShape_143()
+            CompositionContainerShape ContainerShape_090()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_144());
+                shapes.Add(SpriteShape_34());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_19);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2214,47 +1579,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_144()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_34());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_145()
+            // Transforms for S5-Y 2
+            CompositionContainerShape ContainerShape_091()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_146());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S5-Y 2'.Transforms
-            CompositionContainerShape ContainerShape_146()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_147());
+                shapes.Add(ContainerShape_092());
                 return result;
             }
 
             // Animates visibility of layer: "S5-Y 2".
-            CompositionContainerShape ContainerShape_147()
+            CompositionContainerShape ContainerShape_092()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_148());
+                shapes.Add(SpriteShape_35());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_19);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2266,47 +1608,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_148()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_35());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_149()
+            // Transforms for S11
+            CompositionContainerShape ContainerShape_093()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_150());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S11'.Transforms
-            CompositionContainerShape ContainerShape_150()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_151());
+                shapes.Add(ContainerShape_094());
                 return result;
             }
 
             // Animates visibility of layer: "S11".
-            CompositionContainerShape ContainerShape_151()
+            CompositionContainerShape ContainerShape_094()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_152());
+                shapes.Add(SpriteShape_36());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_22());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2318,47 +1637,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_152()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_36());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_153()
+            // Transforms for S12
+            CompositionContainerShape ContainerShape_095()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_154());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S12'.Transforms
-            CompositionContainerShape ContainerShape_154()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_155());
+                shapes.Add(ContainerShape_096());
                 return result;
             }
 
             // Animates visibility of layer: "S12".
-            CompositionContainerShape ContainerShape_155()
+            CompositionContainerShape ContainerShape_096()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_156());
+                shapes.Add(SpriteShape_37());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_24());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2370,47 +1666,24 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_156()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_37());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_157()
+            // Transforms for S13
+            CompositionContainerShape ContainerShape_097()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(154.457001F, 287.821991F);
+                result.Offset = new Vector2(179.5F, 333.5F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_158());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S13'.Transforms
-            CompositionContainerShape ContainerShape_158()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(25.0429993F, 45.6780014F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_159());
+                shapes.Add(ContainerShape_098());
                 return result;
             }
 
             // Animates visibility of layer: "S13".
-            CompositionContainerShape ContainerShape_159()
+            CompositionContainerShape ContainerShape_098()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_160());
+                shapes.Add(SpriteShape_38());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_26());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2422,48 +1695,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_160()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_38());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_161()
+            // Layer (Shape): S3-Y 3
+            CompositionContainerShape ContainerShape_099()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_162());
+                shapes.Add(ContainerShape_100());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S3-Y 3'.Transforms
-            CompositionContainerShape ContainerShape_162()
+            // Layer (Shape): S3-Y 3
+            // Transforms for S3-Y 3
+            CompositionContainerShape ContainerShape_100()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(58.2050018F, -39.394001F);
                 result.RotationAngleInDegrees = 97.9000015F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_163());
+                shapes.Add(ContainerShape_101());
                 return result;
             }
 
             // Animates visibility of layer: "S3-Y 3".
-            CompositionContainerShape ContainerShape_163()
+            CompositionContainerShape ContainerShape_101()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_164());
+                shapes.Add(SpriteShape_39());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_28());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2475,48 +1736,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_164()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_39());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_165()
+            // Layer (Shape): S4-Y 3
+            CompositionContainerShape ContainerShape_102()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_166());
+                shapes.Add(ContainerShape_103());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S4-Y 3'.Transforms
-            CompositionContainerShape ContainerShape_166()
+            // Layer (Shape): S4-Y 3
+            // Transforms for S4-Y 3
+            CompositionContainerShape ContainerShape_103()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(58.2050018F, -39.394001F);
                 result.RotationAngleInDegrees = 97.9000015F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_167());
+                shapes.Add(ContainerShape_104());
                 return result;
             }
 
             // Animates visibility of layer: "S4-Y 3".
-            CompositionContainerShape ContainerShape_167()
+            CompositionContainerShape ContainerShape_104()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_168());
+                shapes.Add(SpriteShape_40());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_28);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2528,48 +1777,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_168()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_40());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_169()
+            // Layer (Shape): S5-Y 3
+            CompositionContainerShape ContainerShape_105()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_170());
+                shapes.Add(ContainerShape_106());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S5-Y 3'.Transforms
-            CompositionContainerShape ContainerShape_170()
+            // Layer (Shape): S5-Y 3
+            // Transforms for S5-Y 3
+            CompositionContainerShape ContainerShape_106()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(58.2050018F, -39.394001F);
                 result.RotationAngleInDegrees = 97.9000015F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_171());
+                shapes.Add(ContainerShape_107());
                 return result;
             }
 
             // Animates visibility of layer: "S5-Y 3".
-            CompositionContainerShape ContainerShape_171()
+            CompositionContainerShape ContainerShape_107()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_172());
+                shapes.Add(SpriteShape_41());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_28);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2581,48 +1818,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_172()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_41());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_173()
+            // Layer (Shape): S3-Y 4
+            CompositionContainerShape ContainerShape_108()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_174());
+                shapes.Add(ContainerShape_109());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S3-Y 4'.Transforms
-            CompositionContainerShape ContainerShape_174()
+            // Layer (Shape): S3-Y 4
+            // Transforms for S3-Y 4
+            CompositionContainerShape ContainerShape_109()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(53.2050018F, 131.606003F);
                 result.RotationAngleInDegrees = -89.0999985F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_175());
+                shapes.Add(ContainerShape_110());
                 return result;
             }
 
             // Animates visibility of layer: "S3-Y 4".
-            CompositionContainerShape ContainerShape_175()
+            CompositionContainerShape ContainerShape_110()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_176());
+                shapes.Add(SpriteShape_42());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_31());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2634,48 +1859,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_176()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_42());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_177()
+            // Layer (Shape): S4-Y 4
+            CompositionContainerShape ContainerShape_111()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_178());
+                shapes.Add(ContainerShape_112());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S4-Y 4'.Transforms
-            CompositionContainerShape ContainerShape_178()
+            // Layer (Shape): S4-Y 4
+            // Transforms for S4-Y 4
+            CompositionContainerShape ContainerShape_112()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(53.2050018F, 131.606003F);
                 result.RotationAngleInDegrees = -89.0999985F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_179());
+                shapes.Add(ContainerShape_113());
                 return result;
             }
 
             // Animates visibility of layer: "S4-Y 4".
-            CompositionContainerShape ContainerShape_179()
+            CompositionContainerShape ContainerShape_113()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_180());
+                shapes.Add(SpriteShape_43());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_31);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2687,48 +1900,36 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_180()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_43());
-                return result;
-            }
-
-            // 'MASTER'.Transforms
-            // 'MASTER'.Transforms
-            CompositionContainerShape ContainerShape_181()
+            // Layer (Shape): S5-Y 4
+            CompositionContainerShape ContainerShape_114()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(60, 60);
                 result.Offset = new Vector2(154.457001F, 287.821991F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_182());
+                shapes.Add(ContainerShape_115());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'MASTER'.Transforms
-            // 'S5-Y 4'.Transforms
-            CompositionContainerShape ContainerShape_182()
+            // Layer (Shape): S5-Y 4
+            // Transforms for S5-Y 4
+            CompositionContainerShape ContainerShape_115()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(53.2050018F, 131.606003F);
                 result.RotationAngleInDegrees = -89.0999985F;
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_183());
+                shapes.Add(ContainerShape_116());
                 return result;
             }
 
             // Animates visibility of layer: "S5-Y 4".
-            CompositionContainerShape ContainerShape_183()
+            CompositionContainerShape ContainerShape_116()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_184());
+                shapes.Add(SpriteShape_44());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_31);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2740,24 +1941,14 @@ namespace Compositions
                 return result;
             }
 
-            // Visibility
-            // Group: Shape 1
-            CompositionContainerShape ContainerShape_184()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_44());
-                return result;
-            }
-
-            // 'Dot-Y'.Transforms
+            // Transforms: Dot-Y
             //   Position
             CubicBezierEasingFunction CubicBezierEasingFunction_00()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(0, 0.811999977F));
             }
 
-            // 'Dot-Y'.Transforms
+            // Transforms: Dot-Y
             //   Position
             CubicBezierEasingFunction CubicBezierEasingFunction_01()
             {
@@ -2823,10 +2014,9 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
-            //     Path 1
-            //       Path 1.PathGeometry
-            //         TrimEnd
+            //   Path 1
+            //     Path 1.PathGeometry
+            //       TrimEnd
             CubicBezierEasingFunction CubicBezierEasingFunction_13()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.209999993F, 1));
@@ -2849,33 +2039,31 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
-            //         TrimStart
+            //   Ellipse Path 1
+            //     Ellipse Path 1.EllipseGeometry
+            //       TrimStart
             CubicBezierEasingFunction CubicBezierEasingFunction_17()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 1), new Vector2(0.432000011F, 1));
             }
 
             // Visibility
-            //   Group: Group 9
-            //     Path 1
-            //       Path 1.PathGeometry
-            //         TrimEnd
+            //   Path 1
+            //     Path 1.PathGeometry
+            //       TrimEnd
             CubicBezierEasingFunction CubicBezierEasingFunction_18()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.672999978F, 1));
             }
 
-            // 'N'.Transforms
+            // Transforms: N
             //   Position
             CubicBezierEasingFunction CubicBezierEasingFunction_19()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.25999999F, 1));
             }
 
-            // 'N'.Transforms
+            // Transforms: N
             //   Position
             CubicBezierEasingFunction CubicBezierEasingFunction_20()
             {
@@ -2911,7 +2099,7 @@ namespace Compositions
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.0370000005F, 0.167999998F), new Vector2(0.263000011F, 1));
             }
 
-            // 'Dot1'.Transforms
+            // Transforms: Dot1
             //   Position
             CubicBezierEasingFunction CubicBezierEasingFunction_26()
             {
@@ -2929,8 +2117,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
+            //   Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_1p5_0()
             {
@@ -2945,8 +2132,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
+            //   Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_1p5_1()
             {
@@ -2969,8 +2155,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
+            //   Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_4p6()
             {
@@ -3386,8 +2571,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 1
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_00()
             {
@@ -3401,8 +2585,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 1
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_01()
             {
@@ -3416,8 +2599,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_02()
             {
@@ -3431,8 +2613,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_03()
             {
@@ -3446,8 +2627,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_04()
             {
@@ -3461,8 +2641,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_05()
             {
@@ -3476,8 +2655,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_06()
             {
@@ -3491,8 +2669,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_07()
             {
@@ -3532,8 +2709,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_09()
             {
@@ -3552,8 +2728,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_10()
             {
@@ -3572,8 +2747,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_11()
             {
@@ -3592,8 +2766,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_12()
             {
@@ -3607,8 +2780,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_13()
             {
@@ -3648,8 +2820,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_15()
             {
@@ -3668,8 +2839,7 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 9
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_16()
             {
@@ -4311,9 +3481,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 1
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p316_0()
             {
@@ -4326,9 +3495,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 1
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p316_1()
             {
@@ -4341,9 +3509,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p375_0()
             {
@@ -4356,9 +3523,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p375_1()
             {
@@ -4371,9 +3537,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
+            //   Ellipse Path 1
+            //     Ellipse Path 1.EllipseGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p399()
             {
@@ -4387,9 +3552,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p43_0()
             {
@@ -4402,9 +3566,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p43_1()
             {
@@ -4417,9 +3580,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p457_0()
             {
@@ -4432,9 +3594,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_0p457_1()
             {
@@ -4480,9 +3641,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p117_to_1_0()
             {
@@ -4495,9 +3655,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p117_to_1_1()
             {
@@ -4510,9 +3669,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 9
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p249_to_0p891()
             {
@@ -4525,9 +3683,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p29_to_0_0()
             {
@@ -4540,9 +3697,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p29_to_0_1()
             {
@@ -4555,9 +3711,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p411_to_0p665_0()
             {
@@ -4570,9 +3725,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p411_to_0p665_1()
             {
@@ -4585,9 +3739,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_0_0()
             {
@@ -4600,9 +3753,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_0_1()
             {
@@ -4615,9 +3767,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_1_0()
             {
@@ -4630,9 +3781,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p5_to_1_1()
             {
@@ -5273,9 +4423,8 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
+            //   Ellipse Path 1
+            //     Ellipse Path 1.EllipseGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_1_to_0p88()
             {
@@ -5406,128 +4555,126 @@ namespace Compositions
                 var result = _c.CreateShapeVisual();
                 result.Size = new Vector2(375, 667);
                 var shapes = result.Shapes;
-                // 'BG'.Transforms
+                // Rectangle Path 1
+                shapes.Add(SpriteShape_00());
+                // Layer (Shape): Dot-Y
                 shapes.Add(ContainerShape_000());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_002());
-                // 'MASTER'.Transforms
+                // Layer (Shape): E3-Y
+                shapes.Add(ContainerShape_004());
+                // Layer (Shape): E3-B
                 shapes.Add(ContainerShape_007());
-                // 'MASTER'.Transforms
+                // Layer (Shape): I-Y
                 shapes.Add(ContainerShape_011());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_016());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_020());
-                // 'MASTER'.Transforms
+                // Layer (Shape): I-B
+                shapes.Add(ContainerShape_014());
+                // Layer (Shape): E2-Y
+                shapes.Add(ContainerShape_018());
+                // Layer (Shape): E2-B
+                shapes.Add(ContainerShape_021());
+                // Layer (Shape): E1-Y
                 shapes.Add(ContainerShape_025());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_029());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_034());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_038());
-                // 'MASTER'.Transforms
+                // Layer (Shape): E1-B
+                shapes.Add(ContainerShape_028());
+                // Layer (Shape): T1a-Y
+                shapes.Add(ContainerShape_032());
+                // Transforms: T2b-Y
+                shapes.Add(ContainerShape_035());
+                // Transforms: T2a-Y
+                shapes.Add(ContainerShape_037());
+                // Transforms: T2b-B
+                shapes.Add(ContainerShape_039());
+                // Transforms: T1b-Y
+                shapes.Add(ContainerShape_041());
+                // Transforms: T1b-B
                 shapes.Add(ContainerShape_043());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_047());
-                // 'MASTER'.Transforms
+                // Layer (Shape): O-Y
+                shapes.Add(ContainerShape_045());
+                // Layer (Shape): O-B
+                shapes.Add(ContainerShape_048());
+                // Layer (Shape): T1a-Y 2
                 shapes.Add(ContainerShape_051());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_055());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_059());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_063());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_067());
-                // 'MASTER'.Transforms
+                // Transforms: T2a-B
+                shapes.Add(ContainerShape_054());
+                // Layer (Shape): T1a-B
+                shapes.Add(ContainerShape_056());
+                // Layer (Shape): Dot-Y
+                shapes.Add(ContainerShape_060());
+                // Transforms: L-Y
+                shapes.Add(ContainerShape_064());
+                // Transforms: L-B
+                shapes.Add(ContainerShape_066());
+                // Layer (Shape): Dot1
+                shapes.Add(ContainerShape_068());
+                // Transforms: S1-Y
                 shapes.Add(ContainerShape_071());
-                // 'MASTER'.Transforms
+                // Transforms: S2-Y
+                shapes.Add(ContainerShape_073());
+                // Transforms: S7
                 shapes.Add(ContainerShape_075());
-                // 'MASTER'.Transforms
+                // Transforms: S8
+                shapes.Add(ContainerShape_077());
+                // Transforms: S3-Y
                 shapes.Add(ContainerShape_079());
-                // 'MASTER'.Transforms
+                // Transforms: S4-Y
+                shapes.Add(ContainerShape_081());
+                // Transforms: S5-Y
                 shapes.Add(ContainerShape_083());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_088());
-                // 'MASTER'.Transforms
+                // Transforms: S6-Y
+                shapes.Add(ContainerShape_085());
+                // Transforms: S3-Y 2
+                shapes.Add(ContainerShape_087());
+                // Transforms: S4-Y 2
+                shapes.Add(ContainerShape_089());
+                // Transforms: S5-Y 2
+                shapes.Add(ContainerShape_091());
+                // Transforms: S11
                 shapes.Add(ContainerShape_093());
-                // 'MASTER'.Transforms
+                // Transforms: S12
+                shapes.Add(ContainerShape_095());
+                // Transforms: S13
                 shapes.Add(ContainerShape_097());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_101());
-                // 'MASTER'.Transforms
+                // Layer (Shape): S3-Y 3
+                shapes.Add(ContainerShape_099());
+                // Layer (Shape): S4-Y 3
+                shapes.Add(ContainerShape_102());
+                // Layer (Shape): S5-Y 3
                 shapes.Add(ContainerShape_105());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_109());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_113());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_117());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_121());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_125());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_129());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_133());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_137());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_141());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_145());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_149());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_153());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_157());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_161());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_165());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_169());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_173());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_177());
-                // 'MASTER'.Transforms
-                shapes.Add(ContainerShape_181());
+                // Layer (Shape): S3-Y 4
+                shapes.Add(ContainerShape_108());
+                // Layer (Shape): S4-Y 4
+                shapes.Add(ContainerShape_111());
+                // Layer (Shape): S5-Y 4
+                shapes.Add(ContainerShape_114());
                 return result;
             }
 
-            // 'MASTER'.Transforms
-            //   'BG'.Transforms
-            //     Group: Rectangle 1
             // Rectangle Path 1
             CompositionSpriteShape SpriteShape_00()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(187.5F, 333.5F);
                 result.FillBrush = ColorBrush_AlmostDarkTurquoise_FF00D1C1();
                 result.Geometry = Rectangle_375x667();
                 return result;
             }
 
             // Visibility
-            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_01()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(196, 267);
                 result.FillBrush = ColorBrush_White();
                 result.Geometry = Ellipse_4p6();
                 return result;
             }
 
             // Visibility
-            //   Group: Group 1
             // Path 1
             CompositionSpriteShape SpriteShape_02()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(344.674011F, 261.877014F);
                 result.Geometry = PathGeometry_00();
                 result.StrokeBrush = ColorBrush_AlmostTeal_FF007A87();
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5539,11 +4686,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 1
             // Path 1
             CompositionSpriteShape SpriteShape_03()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(344.674011F, 261.877014F);
                 result.Geometry = PathGeometry_01();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5555,11 +4702,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
             // Path 1
             CompositionSpriteShape SpriteShape_04()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(304.13501F, 282.408997F);
                 result.Geometry = PathGeometry_02();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -5571,11 +4718,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 6
             // Path 1
             CompositionSpriteShape SpriteShape_05()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(304.13501F, 282.408997F);
                 result.Geometry = PathGeometry_03();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -5587,11 +4734,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
             // Path 1
             CompositionSpriteShape SpriteShape_06()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(331.664001F, 238.139999F);
                 result.Geometry = PathGeometry_04();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5603,11 +4750,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 3
             // Path 1
             CompositionSpriteShape SpriteShape_07()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(331.664001F, 238.139999F);
                 result.Geometry = PathGeometry_05();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5619,11 +4766,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
             // Path 1
             CompositionSpriteShape SpriteShape_08()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(344.671997F, 214.841995F);
                 result.Geometry = PathGeometry_06();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5635,11 +4782,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 2
             // Path 1
             CompositionSpriteShape SpriteShape_09()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(344.671997F, 214.841995F);
                 result.Geometry = PathGeometry_07();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5651,11 +4798,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_10()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(227.677002F, 234.375F);
                 result.Geometry = PathGeometry_08();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5667,7 +4814,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
             // Path 1
             CompositionSpriteShape SpriteShape_11()
             {
@@ -5683,11 +4829,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
             // Path 1
             CompositionSpriteShape SpriteShape_12()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(277.697998F, 247.257996F);
                 result.Geometry = PathGeometry_10();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -5699,7 +4845,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 5
             // Path 1
             CompositionSpriteShape SpriteShape_13()
             {
@@ -5715,11 +4860,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
             // Path 1
             CompositionSpriteShape SpriteShape_14()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(242.755997F, 265.580994F);
                 result.Geometry = PathGeometry_12();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5732,11 +4877,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 10
             // Path 1
             CompositionSpriteShape SpriteShape_15()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(242.755997F, 265.580994F);
                 result.Geometry = PathGeometry_13();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5749,11 +4894,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_16()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(196, 267);
                 result.Geometry = Ellipse_1p5_0();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeMiterLimit = 4;
@@ -5762,11 +4907,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_17()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(196, 267);
                 result.Geometry = Ellipse_1p5_1();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5778,11 +4923,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_18()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(227.677002F, 234.375F);
                 result.Geometry = PathGeometry_14();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5794,11 +4939,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 7
             // Path 1
             CompositionSpriteShape SpriteShape_19()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(277.697998F, 247.257996F);
                 result.Geometry = PathGeometry_15();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -5810,11 +4955,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 9
             // Path 1
             CompositionSpriteShape SpriteShape_20()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(227.677002F, 234.375F);
                 result.Geometry = PathGeometry_16();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5826,22 +4971,22 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_21()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(196, 267);
                 result.FillBrush = _colorBrush_White;
                 result.Geometry = Ellipse_4p7();
                 return result;
             }
 
             // Visibility
-            //   Group: Group 8
             // Path 1
             CompositionSpriteShape SpriteShape_22()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(166.029007F, 270.643005F);
                 result.Geometry = PathGeometry_17();
                 result.StrokeBrush = _colorBrush_White;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5853,11 +4998,11 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Group 8
             // Path 1
             CompositionSpriteShape SpriteShape_23()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(166.029007F, 270.643005F);
                 result.Geometry = PathGeometry_18();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -5869,18 +5014,17 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Ellipse 1
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_24()
             {
                 var result = _c.CreateSpriteShape();
+                result.Offset = new Vector2(196, 267);
                 result.FillBrush = _colorBrush_White;
                 result.Geometry = _ellipse_4p7;
                 return result;
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_25()
             {
@@ -5896,7 +5040,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_26()
             {
@@ -5912,7 +5055,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_27()
             {
@@ -5928,7 +5070,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_28()
             {
@@ -5944,7 +5085,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_29()
             {
@@ -5960,7 +5100,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_30()
             {
@@ -5976,7 +5115,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_31()
             {
@@ -5992,7 +5130,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_32()
             {
@@ -6008,7 +5145,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_33()
             {
@@ -6024,7 +5160,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_34()
             {
@@ -6040,7 +5175,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_35()
             {
@@ -6056,7 +5190,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_36()
             {
@@ -6072,7 +5205,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_37()
             {
@@ -6088,7 +5220,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_38()
             {
@@ -6104,7 +5235,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_39()
             {
@@ -6120,7 +5250,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_40()
             {
@@ -6136,7 +5265,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_41()
             {
@@ -6152,7 +5280,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_42()
             {
@@ -6168,7 +5295,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_43()
             {
@@ -6184,7 +5310,6 @@ namespace Compositions
             }
 
             // Visibility
-            //   Group: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_44()
             {
@@ -6213,7 +5338,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
+            // Transforms: Dot-Y
             // Position
             Vector2KeyFrameAnimation Vector2Animation_00()
             {
@@ -6226,7 +5351,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'Bncr'.Transforms
+            // Transforms: Bncr
             // Position
             Vector2KeyFrameAnimation Vector2Animation_01()
             {
@@ -6311,7 +5436,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-Y'.Transforms
+            // Transforms: O-Y
             // Position
             Vector2KeyFrameAnimation Vector2Animation_08()
             {
@@ -6329,7 +5454,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'O-B'.Transforms
+            // Transforms: O-B
             // Position
             Vector2KeyFrameAnimation Vector2Animation_09()
             {
@@ -6347,7 +5472,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot-Y'.Transforms
+            // Transforms: Dot-Y
             // Position
             Vector2KeyFrameAnimation Vector2Animation_10()
             {
@@ -6359,7 +5484,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'N'.Transforms
+            // Transforms: N
             // Position
             Vector2KeyFrameAnimation Vector2Animation_11()
             {
@@ -6372,7 +5497,7 @@ namespace Compositions
                 return result;
             }
 
-            // 'Dot1'.Transforms
+            // Transforms: Dot1
             // Position
             Vector2KeyFrameAnimation Vector2Animation_12()
             {
