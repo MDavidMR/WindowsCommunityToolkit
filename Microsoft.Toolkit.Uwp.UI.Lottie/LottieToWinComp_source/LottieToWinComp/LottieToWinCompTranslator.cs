@@ -61,6 +61,8 @@ namespace LottieToWinComp
         readonly Dictionary<CubicBezierEasing, CubicBezierEasingFunction> _cubicBezierEasingFunctions = new Dictionary<CubicBezierEasing, CubicBezierEasingFunction>();
         // Holds ColorBrushes that are not animated and can therefore be reused.
         readonly Dictionary<Color, CompositionColorBrush> _nonAnimatedColorBrushes = new Dictionary<Color, CompositionColorBrush>();
+        // Paths are shareable.
+        readonly Dictionary<(PathGeometry, SolidColorFill.PathFillType), CompositionPath> _compositionPaths = new Dictionary<(PathGeometry, SolidColorFill.PathFillType), CompositionPath>();
         // Holds a LinearEasingFunction that can be reused in multiple animations.
         LinearEasingFunction _linearEasingFunction;
         // Holds a StepEasingFunction that can be reused in multiple animations.
@@ -2499,21 +2501,28 @@ namespace LottieToWinComp
 
         CompositionPath CompositionPathFromPathGeometry(PathGeometry pathGeometry, SolidColorFill.PathFillType fillType)
         {
-            using (var builder = new WinCompData.Mgcg.CanvasPathBuilder(null))
+            // CompositionPaths can be shared by many SpriteShapes.
+            if (!_compositionPaths.TryGetValue((pathGeometry, fillType), out var result))
             {
-                var canvasFilledRegionDetermination = FilledRegionDetermination(fillType);
-
-                builder.SetFilledRegionDetermination(canvasFilledRegionDetermination);
-                builder.BeginFigure(Vector2(pathGeometry.Start));
-
-                foreach (var bezier in pathGeometry.Beziers)
+                using (var builder = new WinCompData.Mgcg.CanvasPathBuilder(null))
                 {
-                    builder.AddCubicBezier(Vector2(bezier.ControlPoint1), Vector2(bezier.ControlPoint2), Vector2(bezier.Vertex));
+                    var canvasFilledRegionDetermination = FilledRegionDetermination(fillType);
+
+                    builder.SetFilledRegionDetermination(canvasFilledRegionDetermination);
+                    builder.BeginFigure(Vector2(pathGeometry.Start));
+
+                    foreach (var bezier in pathGeometry.Beziers)
+                    {
+                        builder.AddCubicBezier(Vector2(bezier.ControlPoint1), Vector2(bezier.ControlPoint2), Vector2(bezier.Vertex));
+                    }
+
+                    builder.EndFigure(pathGeometry.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
+                    result = new CompositionPath(CanvasGeometry.CreatePath(builder));
                 }
 
-                builder.EndFigure(pathGeometry.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
-                return new CompositionPath(CanvasGeometry.CreatePath(builder));
+                _compositionPaths.Add((pathGeometry, fillType), result);
             }
+            return result;
         }
 
         Animatable<Color> MultiplyAnimatableColorByAnimatableOpacityPercent(

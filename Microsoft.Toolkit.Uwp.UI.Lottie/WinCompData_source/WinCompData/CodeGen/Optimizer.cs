@@ -41,8 +41,8 @@ namespace WinCompData.CodeGen
         {
             var graph = ObjectGraph<ObjectData2>.FromCompositionObject(root, includeVertices: true);
             RemoveRedundantCenterPoints(graph);
-            OptimizeContainerShapes(graph);
-            OptimizeContainerVisuals(graph);
+            CoalesceContainerShapes(graph);
+            CoalesceContainerVisuals(graph);
             return root;
         }
 
@@ -89,7 +89,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        static void OptimizeContainerShapes(ObjectGraph<ObjectData2> graph)
+        static void CoalesceContainerShapes(ObjectGraph<ObjectData2> graph)
         {
             var containerShapes = graph.Where(n => n.Object is CompositionContainerShape).ToArray();
 
@@ -120,7 +120,7 @@ namespace WinCompData.CodeGen
                 }
                 // Child also has only translate properties.
                 return true;
-            }).ToArray();
+            });
 
             // Push the offset and centerpoint from the container down to the child and remove the container.
             foreach (var node in elidableContainers)
@@ -158,16 +158,62 @@ namespace WinCompData.CodeGen
                 container.Shapes.Clear();
                 parent.Shapes[index] = child;
             }
+
+            // If a container has no properties set, its children can be inserted into its parent.
+            var containersWithNoPropertiesSet = containerShapes.Where(n =>
+            {
+                var container = (CompositionContainerShape)n.Object;
+                if (container.Type != CompositionObjectType.CompositionContainerShape ||
+                    container.CenterPoint != null ||
+                    container.Offset != null ||
+                    container.RotationAngleInDegrees != null ||
+                    container.Scale != null ||
+                    container.TransformMatrix != null ||
+                    container.Animators.Any() ||
+                    container.Properties.PropertyNames.Any())
+                {
+                    return false;
+                }
+                // Container has no properties set.
+                return true;
+            }).Select(n => (CompositionContainerShape)n.Object);
+
+            foreach (var container in containersWithNoPropertiesSet)
+            {
+                // Insert the children into the parent.
+                var parent = container.Parent;
+                if (parent == null)
+                {
+                    // The container may have already been removed, or it might be a root.
+                    continue;
+                }
+
+                // Find the index in the parent of the container.
+                // If childCount is 1, just replace the the container in the parent.
+                // If childCount is >1, insert into the parent.
+                var index = parent.Shapes.IndexOf(container);
+                // Get the children from the container.
+                var children = container.Shapes.ToArray();
+                // Remove the children from the container.
+                container.Shapes.Clear();
+                // Insert the first child where the container was.
+                parent.Shapes[index] = children[0];
+
+                // Insert the rest of the children.
+                for (var i = 1; i < children.Length; i++)
+                {
+                    parent.Shapes.Insert(index + i, children[i]);
+                }
+            }
         }
 
-        static void OptimizeContainerVisuals(ObjectGraph<ObjectData2> graph)
+        static void CoalesceContainerVisuals(ObjectGraph<ObjectData2> graph)
         {
-            var elidableContainers = graph.Where(n =>
+            var containersWithNoPropertiesSet = graph.Where(n =>
             {
+                // Find the ContainerVisuals that have no properties set.
                 return
                     n.Object is ContainerVisual container &&
-                    !container.Properties.PropertyNames.Any() &&
-                    !container.Animators.Any() &&
                     container.CenterPoint == null &&
                     container.Clip == null &&
                     container.Offset == null &&
@@ -175,21 +221,37 @@ namespace WinCompData.CodeGen
                     container.RotationAngleInDegrees == null &&
                     container.Scale == null &&
                     container.Size == null &&
-                    container.Children.Count == 1;
-            }).ToArray();
+                    !container.Animators.Any() &&
+                    !container.Properties.PropertyNames.Any();
+            }).Select(n => (ContainerVisual)n.Object);
 
-            // Remove the unnecessary containers.
-            foreach (var node in elidableContainers)
+            // Pull the children of the container into the parent of the container. Remove the unnecessary containers.
+            foreach (var container in containersWithNoPropertiesSet)
             {
-                var container = (ContainerVisual)node.Object;
+                // Insert the children into the parent.
                 var parent = container.Parent;
-                var child = container.Children.Single();
+                if (parent == null)
+                {
+                    // The container may have already been removed, or it might be a root.
+                    continue;
+                }
 
-                // Remove the container. The child must be placed in the slot where the container was.
+                // Find the index in the parent of the container.
+                // If childCount is 1, just replace the the container in the parent.
+                // If childCount is >1, insert into the parent.
                 var index = parent.Children.IndexOf(container);
-                // Clear the container to unparent the child. This must be done before reparenting.
+                // Get the children from the container.
+                var children = container.Children.ToArray();
+                // Remove the children from the container.
                 container.Children.Clear();
-                parent.Children[index] = child;
+                // Insert the first child where the container was.
+                parent.Children[index] = children[0];
+
+                // Insert the rest of the children.
+                for (var i = 1; i < children.Length; i++)
+                {
+                    parent.Children.Insert(index + i, children[i]);
+                }
             }
         }
 
