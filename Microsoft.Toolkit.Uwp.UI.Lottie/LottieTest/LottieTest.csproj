@@ -208,7 +208,7 @@
       <Project>{dc73f166-0b2f-4494-979d-91273c4c3182}</Project>
       <Name>Lottie_development</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
       <Name>Microsoft_UI_Xaml_Controls</Name>
     </ProjectReference>

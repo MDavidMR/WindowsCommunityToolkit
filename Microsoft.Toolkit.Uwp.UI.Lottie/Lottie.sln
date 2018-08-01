@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottieTest", "LottieTest\Lo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LottieCPPTest", "LottieCPPTest\LottieCPPTest.vcxproj", "{4EA5DA20-2398-4ED5-83FB-00F1F0AF1B41}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft_UI_Xaml_Controls", "Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dep.CompositionPlayer", "dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieGen", "LottieGen\LottieGen.csproj", "{4389B06B-F11A-4CB0-83D5-4C4507640538}"
 EndProject

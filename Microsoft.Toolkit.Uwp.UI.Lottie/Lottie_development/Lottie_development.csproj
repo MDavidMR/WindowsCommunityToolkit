@@ -146,7 +146,7 @@
       <Project>{4a4964e2-f3a6-4c89-9ecd-8de2f54adc8e}</Project>
       <Name>LottieToWinComp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
       <Name>Microsoft_UI_Xaml_Controls</Name>
     </ProjectReference>

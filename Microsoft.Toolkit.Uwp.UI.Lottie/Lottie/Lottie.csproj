@@ -129,7 +129,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft_UI_Xaml_Controls\Microsoft_UI_Xaml_Controls.vcxproj">
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
       <Name>Microsoft_UI_Xaml_Controls</Name>
     </ProjectReference>
