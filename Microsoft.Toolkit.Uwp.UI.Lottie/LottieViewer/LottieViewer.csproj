@@ -17,13 +17,13 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>LottieUwpPlayground_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>LottieViewer_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>1FC2381D85CB6B9131E884D1E13F4AE32BC4AA94</PackageCertificateThumbprint>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>CCBEB9D2555015750C6EB044ADD6844F7E7A296A</PackageCertificateThumbprint>
     <AppxPackageDir>\\scratch2\scratch\simeonc\Lottie</AppxPackageDir>
-    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppInstallerUri>\\scratch2\scratch\simeonc\Lottie</AppInstallerUri>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
@@ -125,6 +125,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="LottieUwpPlayground_TemporaryKey.pfx" />
+    <None Include="LottieViewer_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />

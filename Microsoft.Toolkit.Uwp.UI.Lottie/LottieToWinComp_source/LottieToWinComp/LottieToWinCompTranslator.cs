@@ -34,7 +34,6 @@ using Expr = WinCompData.Expressions.Expression;
 using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
 using TypeConstraint = WinCompData.Expressions.TypeConstraint;
 using ExpressionType = WinCompData.Expressions.ExpressionType;
-using ShapeOrVisual = WinCompData.CompositionObject;
 using WinCompData.Mgcg;
 
 namespace LottieToWinComp
@@ -867,7 +866,7 @@ namespace LottieToWinComp
         }
 
         // May return null if the layer does not produce any renderable content.
-        ShapeOrVisual TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
+        ShapeOrVisual? TranslateShapeLayer(TranslationContext context, ShapeLayer layer)
         {
             if (!TryCreateContainerShapeTransformChain(context, layer, out var rootNode, out var contentsNode))
             {
@@ -1731,7 +1730,7 @@ namespace LottieToWinComp
             return CreateAnimatedColorBrush(context, MultiplyAnimatableColorByAnimatableOpacityPercent(shapeFill.Color, shapeFill.OpacityPercent), opacityPercent);
         }
 
-        ShapeOrVisual TranslateSolidLayer(TranslationContext context, SolidLayer layer)
+        ShapeOrVisual? TranslateSolidLayer(TranslationContext context, SolidLayer layer)
         {
             if (layer.IsHidden || layer.Transform.OpacityPercent.AlwaysEquals(0))
             {
@@ -2967,6 +2966,16 @@ namespace LottieToWinComp
             }
 
             public override int GetHashCode() => _scale.GetHashCode() ^ _offset.GetHashCode();
+        }
+
+
+        // A type that is either a CompositionType or a Visual.
+        struct ShapeOrVisual
+        {
+            CompositionObject _shapeOrVisual;
+            public static implicit operator ShapeOrVisual(CompositionShape shape) => new ShapeOrVisual { _shapeOrVisual = shape };
+            public static implicit operator ShapeOrVisual(Visual visual) => new ShapeOrVisual { _shapeOrVisual = visual };
+            public static implicit operator CompositionObject(ShapeOrVisual shapeOrVisual) => shapeOrVisual._shapeOrVisual;
         }
     }
 }

@@ -32,8 +32,8 @@ sealed class CommandLineOptions
     internal string OutputFolder => _outputFolder;
     internal bool StrictMode { get; private set; }
     internal bool HelpRequested { get; private set; }
-    internal bool DisableOptimizer { get; private set; }
-    internal bool DisableFieldOptimization { get; private set; }
+    internal bool DisableTranslationOptimizer { get; private set; }
+    internal bool DisableCodeGenOptimizer { get; private set; }
 
     enum Keyword
     {
@@ -45,8 +45,8 @@ sealed class CommandLineOptions
         ClassName,
         OutputFolder,
         Strict,
-        DisableOptimizer,
-        DisableFieldOptimization,
+        DisableTranslationOptimizer,
+        DisableCodeGenOptimizer,
     }
 
     // Returns the parsed command line. If ErrorDescription is non-null, then the parse failed.
@@ -97,8 +97,8 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("outputfolder", Keyword.OutputFolder)
             .AddPrefixedKeyword("strict", Keyword.Strict)
             // Undocumented keywords used for internal testing
-            .AddPrefixedKeyword("disableofieldoptimization", Keyword.DisableFieldOptimization)
-            .AddPrefixedKeyword("disableoptimizer", Keyword.DisableOptimizer);
+            .AddPrefixedKeyword("disableocodegenoptimizer", Keyword.DisableCodeGenOptimizer)
+            .AddPrefixedKeyword("disableotranslationoptimizer", Keyword.DisableTranslationOptimizer);
 
         // Sentinel to indicate that there is no parameter expected for the current argument.
         string noParameterSentinel = "noParameterSentinel";
@@ -149,13 +149,11 @@ sealed class CommandLineOptions
                 case Keyword.Strict:
                     StrictMode = true;
                     break;
-
-                // Undocumented switches used for internal testing.
-                case Keyword.DisableFieldOptimization:
-                    DisableFieldOptimization = true;
+                case Keyword.DisableCodeGenOptimizer:
+                    DisableCodeGenOptimizer = true;
                     break;
-                case Keyword.DisableOptimizer:
-                    DisableOptimizer = true;
+                case Keyword.DisableTranslationOptimizer:
+                    DisableTranslationOptimizer = true;
                     break;
                 default:
                     // Should never get here.

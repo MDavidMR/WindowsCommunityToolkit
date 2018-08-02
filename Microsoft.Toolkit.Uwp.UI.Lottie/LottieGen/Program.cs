@@ -130,8 +130,8 @@ static class Program
                         codeGenClassName: options.ClassName,
                         language: options.Language,
                         strictTranslation: options.StrictMode,
-                        disableFieldOptimization: options.DisableFieldOptimization,
-                        disableOptimizer: options.DisableOptimizer,
+                        disableCodeGenOptimizer: options.DisableCodeGenOptimizer,
+                        disableTranslationOptimizer: options.DisableTranslationOptimizer,
                         infoStream: infoStream,
                         errorStream: errorStream,
                         profiler: profiler,
@@ -229,8 +229,8 @@ static class Program
         string codeGenClassName,
         Lang language,
         bool strictTranslation,
-        bool disableOptimizer,
-        bool disableFieldOptimization,
+        bool disableTranslationOptimizer,
+        bool disableCodeGenOptimizer,
         TextWriter infoStream,
         TextWriter errorStream,
         Profiler profiler,
@@ -321,7 +321,7 @@ static class Program
 
         // Optimize the code unless told not to.
         Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
-        if (!disableOptimizer)
+        if (!disableTranslationOptimizer)
         {
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
             profiler.OnOptimizationFinished();
@@ -343,7 +343,7 @@ static class Program
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"),
-                    disableFieldOptimization: disableFieldOptimization,
+                    disableCodeGenOptimizer: disableCodeGenOptimizer,
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnCodeGenFinished();
@@ -358,7 +358,7 @@ static class Program
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{lottieFileNameBase}.h"),
                     Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"),
-                    disableFieldOptimization: disableFieldOptimization,
+                    disableCodeGenOptimizer: disableCodeGenOptimizer,
                     infoStream: infoStream,
                     errorStream: errorStream);
                 profiler.OnCodeGenFinished();
@@ -452,7 +452,7 @@ static class Program
         float compositionHeight,
         TimeSpan duration,
         string outputFilePath,
-        bool disableFieldOptimization,
+        bool disableCodeGenOptimizer,
         TextWriter infoStream,
         TextWriter errorStream)
     {
@@ -488,7 +488,7 @@ static class Program
         TimeSpan duration,
         string outputHeaderFilePath,
         string outputCppFilePath,
-        bool disableFieldOptimization,
+        bool disableCodeGenOptimizer,
         TextWriter infoStream,
         TextWriter errorStream)
     {
@@ -642,12 +642,12 @@ OVERVIEW:
                        the language and will also be used as the base name of 
                        the output 
                        file(s).
-         -DisableFieldOptimization
-                       Disables the optimization of fields in the generated code.
-                       This is useful when the generated code is going to be
-                       hacked on.
-         -DisableOptimizer  
-                       Disables optimization of the generated code.
+         -DisableTranslationOptimizer  
+                       Disables optimization of the translation from Lottie to
+                       Windows code. Mainly used to detect bugs in the optimizer.
+         -DisableCodeGenOptimizer
+                       Disables optimization done by the code generator. This is 
+                       useful when the generated code is going to be hacked on.
          -OutputFolder Specifies the output folder for the generated files. If not
                        specified the files will be written to the current directory.
          -Strict       Fails on any parsing or translation issue. If not specified, 
