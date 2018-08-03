@@ -193,21 +193,25 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lottie\Lottie.csproj">
-      <Project>{e392bad0-f936-4b64-a445-552597795cc7}</Project>
-      <Name>Lottie</Name>
-    </ProjectReference>
     <ProjectReference Include="..\dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
       <Name>Microsoft_UI_Xaml_Controls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <Import Project="..\Lottie_source\Lottie_source.projitems" Label="Shared" />
+  <Import Project="..\LottieReader_source\LottieReader_source.projitems" Label="Shared" />
+  <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
+  <Import Project="..\LottieToWinComp_source\LottieToWinComp_source.projitems" Label="Shared" />
+  <Import Project="..\WinCompData_source\WinCompData_source.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -107,16 +107,14 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Lottie\Issue.cs" />
-    <Compile Include="Lottie\LottieCompositionDiagnostics.cs" />
-    <Compile Include="Lottie\LottieCompositionOptions.cs" />
-    <Compile Include="Lottie\LottieCompositionSource.cs" />
-    <Compile Include="Lottie\Instantiator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft_UI_Xaml_Controls_CompositionPlayer">
+      <Version>0.1.0.8</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
@@ -129,12 +127,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj">
-      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
-      <Name>Microsoft_UI_Xaml_Controls</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Lottie.rd.xml" />
   </ItemGroup>
   <ItemGroup />
@@ -142,6 +134,7 @@
   <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
   <Import Project="..\WinCompData_source\WinCompData_source.projitems" Label="Shared" />
   <Import Project="..\LottieReader_source\LottieReader_source.projitems" Label="Shared" />
+  <Import Project="..\Lottie_source\Lottie_source.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
