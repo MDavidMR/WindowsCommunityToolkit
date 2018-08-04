@@ -121,8 +121,9 @@ static class Program
             // Get the input file as an absolute path.
             var inputFile = MakeAbsolutePath(file);
 
-            Stats beforeOptimizationStats;
-            Stats afterOptimizationStats;
+            LottieData.Tools.Stats lottieStats;
+            WinCompData.Tools.Stats beforeOptimizationStats;
+            WinCompData.Tools.Stats afterOptimizationStats;
 
             var codeGenResult = TryGenerateCode(
                         lottieJsonFile: inputFile,
@@ -135,6 +136,7 @@ static class Program
                         infoStream: infoStream,
                         errorStream: errorStream,
                         profiler: profiler,
+                        lottieStats: out lottieStats,
                         beforeOptimizationStats: out beforeOptimizationStats,
                         afterOptimizationStats: out afterOptimizationStats)
                     ? RunResult.Success
@@ -145,7 +147,10 @@ static class Program
             profiler.WriteReport(infoStream);
 
             infoStream.WriteLine();
-            WriteStatsReport(infoStream, beforeOptimizationStats, afterOptimizationStats);
+            WriteLottieStatsReport(infoStream, lottieStats);
+
+            infoStream.WriteLine();
+            WriteCodeGenStatsReport(infoStream, beforeOptimizationStats, afterOptimizationStats);
 
             if (result == RunResult.Success && codeGenResult != RunResult.Success)
             {
@@ -161,14 +166,52 @@ static class Program
         }
     }
 
-    static void WriteStatsReport(TextWriter writer, Stats beforeOptimization, Stats afterOptimization)
+    static void WriteLottieStatsReport(
+        TextWriter writer,
+        LottieData.Tools.Stats stats)
+    {
+        writer.WriteLine(" === Lottie info ===");
+        WriteStatsStringLine("BodyMovin Version", stats.Version.ToString());
+        WriteStatsStringLine("Name", stats.Name);
+        WriteStatsStringLine("Size", $"{stats.Width} x {stats.Height}");
+        WriteStatsIntLine("PreComps", stats.PreCompLayerCount);
+        WriteStatsIntLine("Solids", stats.SolidLayerCount);
+        WriteStatsIntLine("Images", stats.ImageLayerCount);
+        WriteStatsIntLine("Nulls", stats.NullLayerCount);
+        WriteStatsIntLine("Shapes", stats.ShapeLayerCount);
+        WriteStatsIntLine("Texts", stats.TextLayerCount);
+
+        const int nameWidth = 19;
+        void WriteStatsIntLine(string name, int value)
+        {
+            if (value > 0)
+            {
+                writer.WriteLine($"{name,nameWidth}  {value,6:n0}");
+            }
+        }
+
+        void WriteStatsStringLine(string name, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                writer.WriteLine($"{name,nameWidth}  {value}");
+            }
+        }
+
+    }
+
+    static void WriteCodeGenStatsReport(
+        TextWriter writer,
+        WinCompData.Tools.Stats beforeOptimization,
+        WinCompData.Tools.Stats afterOptimization)
     {
         if (beforeOptimization == null)
         {
             return;
         }
 
-        writer.WriteLine(" === Stats ===");
+        writer.WriteLine(" === Translation output stats ===");
+
         writer.WriteLine("                      Type   Count  Optimized away");
 
         if (afterOptimization == null)
@@ -234,9 +277,11 @@ static class Program
         TextWriter infoStream,
         TextWriter errorStream,
         Profiler profiler,
-        out Stats beforeOptimizationStats,
-        out Stats afterOptimizationStats)
+        out LottieData.Tools.Stats lottieStats,
+        out WinCompData.Tools.Stats beforeOptimizationStats,
+        out WinCompData.Tools.Stats afterOptimizationStats)
     {
+        lottieStats = null;
         beforeOptimizationStats = null;
         afterOptimizationStats = null;
 
@@ -264,6 +309,8 @@ static class Program
                 out var readerIssues);
 
         profiler.OnParseFinished();
+
+        lottieStats = new LottieData.Tools.Stats(lottieComposition);
 
         foreach (var issue in readerIssues)
         {
@@ -303,21 +350,14 @@ static class Program
             }
         }
 
-        beforeOptimizationStats = new Stats(wincompDataRootVisual);
+        beforeOptimizationStats = new WinCompData.Tools.Stats(wincompDataRootVisual);
         profiler.OnUnmeasuredFinished();
 
         // Get an appropriate name for the class.
-        string className = SanitizeTypeName(codeGenClassName);
-        if (string.IsNullOrWhiteSpace(className))
-        {
-            // No name was specified. Infer it from the Lottie name.
-            className = SanitizeTypeName(lottieComposition.Name);
-            if (string.IsNullOrWhiteSpace(className))
-            {
-                // The Lottie has no name. Use the Lottie file name.
-                className = SanitizeTypeName(Path.GetFileNameWithoutExtension(lottieJsonFile));
-            }
-        }
+        string className =
+            InstantiatorGeneratorBase.TrySynthesizeClassName(codeGenClassName) ??
+            InstantiatorGeneratorBase.TrySynthesizeClassName(lottieComposition.Name) ??
+            InstantiatorGeneratorBase.TrySynthesizeClassName(Path.GetFileNameWithoutExtension(lottieJsonFile));
 
         // Optimize the code unless told not to.
         Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
@@ -326,7 +366,7 @@ static class Program
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
             profiler.OnOptimizationFinished();
 
-            afterOptimizationStats = new Stats(optimizedWincompDataRootVisual);
+            afterOptimizationStats = new WinCompData.Tools.Stats(optimizedWincompDataRootVisual);
             profiler.OnUnmeasuredFinished();
         }
 
@@ -476,7 +516,7 @@ static class Program
             return false;
         }
 
-        infoStream.WriteLine($"C# code written to {outputFilePath}");
+        infoStream.WriteLine($"C# code for class {className} written to {outputFilePath}");
         return true;
     }
 
@@ -526,37 +566,9 @@ static class Program
             return false;
         }
 
-        infoStream.WriteLine($"Header code written to {outputHeaderFilePath}");
-        infoStream.WriteLine($"Source code written to {outputCppFilePath}");
+        infoStream.WriteLine($"Header code for class {className} written to {outputHeaderFilePath}");
+        infoStream.WriteLine($"Source code for class {className} written to {outputCppFilePath}");
         return true;
-    }
-
-    // Makes the given name suitable for use as a class name in C# or C++.
-    static string SanitizeTypeName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return null;
-        }
-
-        // If the first character is not a letter, prepend an underscore.
-        if (!char.IsLetter(name, 0))
-        {
-            name = "_" + name;
-        }
-
-        // Replace any disallowed character with underscores.
-        name =
-            new string((from ch in name
-                        select char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
-
-        // Remove any duplicated underscores.
-        name = name.Replace("__", "_");
-
-        // Capitalize the first letter.
-        name = name.ToUpperInvariant().Substring(0, 1) + name.Substring(1);
-
-        return name;
     }
 
     static bool TryEnsureDirectoryExists(string directoryPath)
@@ -640,8 +652,7 @@ OVERVIEW:
                        if such a name exists or else the name of the Lottie file.
                        The class name will be sanitized as necessary to be valid for
                        the language and will also be used as the base name of 
-                       the output 
-                       file(s).
+                       the output file(s).
          -DisableTranslationOptimizer  
                        Disables optimization of the translation from Lottie to
                        Windows code. Mainly used to detect bugs in the optimizer.

@@ -113,8 +113,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft_UI_Xaml_Controls_CompositionPlayer">
-      <Version>0.1.0.8</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.CompositionPlayer">
+      <Version>0.1.0.10</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

@@ -29,11 +29,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCompData_source", "WinCo
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LottieReader_source", "LottieReader_source\LottieReader_source.shproj", "{4E7D8957-3F5F-46E1-99A8-2012B806C9B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieJsonReader", "LottieJsonReader\LottieJsonReader.csproj", "{427814E7-79C7-4862-A26E-FC4F6B3A1794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieReader", "LottieReader\LottieReader.csproj", "{427814E7-79C7-4862-A26E-FC4F6B3A1794}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lottie_source", "Lottie_source\Lottie_source.shproj", "{8EF7BD77-28E9-4998-8DBB-8036F988FE65}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft_UI_Xaml_Controls", "dep.CompositionPlayer\Microsoft_UI_Xaml_Controls.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.CompositionPlayer", "dep.CompositionPlayer\Microsoft.UI.Xaml.CompositionPlayer.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -47,6 +47,7 @@ Global
 		Lottie_source\Lottie_source.projitems*{8ef7bd77-28e9-4998-8dbb-8036f988fe65}*SharedItemsImports = 13
 		LottieData_source\LottieData_source.projitems*{b3db16ee-a821-4474-a188-e64926529bbd}*SharedItemsImports = 13
 		WinCompData_source\WinCompData_source.projitems*{d02870de-7ded-4916-85d4-3175ceedef74}*SharedItemsImports = 13
+		Lottie_source\Lottie_source.projitems*{dc73f166-0b2f-4494-979d-91273c4c3182}*SharedItemsImports = 4
 		LottieData_source\LottieData_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
 		LottieReader_source\LottieReader_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4
 		LottieToWinComp_source\LottieToWinComp_source.projitems*{e392bad0-f936-4b64-a445-552597795cc7}*SharedItemsImports = 4

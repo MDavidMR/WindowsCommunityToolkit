@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft_UI_Xaml_Controls;
+using Microsoft.UI.Xaml.CompositionPlayer;
 using System.IO;
 
 namespace Lottie
@@ -38,8 +38,12 @@ namespace Lottie
         Uri _uriSource;
         ContentFactory _contentFactory;
 
+        // Optimize Lotties by default. Optimization takes a little longer but usually produces much
+        // more efficient translations. The only reason someone would turn optimization off is if
+        // the time to translate is too high, but in that case the Lottie is probably going to perform
+        // so badly on the machine that it won't really be usable with our without optimization.
         public static DependencyProperty OptionsProperty { get; } =
-            RegisterDP(nameof(Options), LottieCompositionOptions.None);
+            RegisterDP(nameof(Options), LottieCompositionOptions.Optimize);
 
         public static DependencyProperty UriSourceProperty { get; } =
             RegisterDP<Uri>(nameof(UriSource), null,

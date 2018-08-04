@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Compositions;
-using Microsoft_UI_Xaml_Controls;
+using Microsoft.UI.Xaml.CompositionPlayer;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;

@@ -190,16 +190,20 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.8</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft_UI_Xaml_Controls_CompositionPlayer">
-      <Version>0.1.0.8</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.CompositionPlayer">
+      <Version>0.1.0.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.CompositionPlayer.vcxproj">
+      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
+      <Name>Microsoft.UI.Xaml.CompositionPlayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>
       <Name>LottieData</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LottieJsonReader\LottieJsonReader.csproj">
+    <ProjectReference Include="..\LottieReader\LottieReader.csproj">
       <Project>{427814e7-79c7-4862-a26e-fc4f6b3a1794}</Project>
       <Name>LottieJsonReader</Name>
     </ProjectReference>

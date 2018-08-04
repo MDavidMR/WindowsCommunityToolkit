@@ -1,5 +1,5 @@
 ﻿using Lottie;
-using Microsoft_UI_Xaml_Controls;
+using Microsoft.UI.Xaml.CompositionPlayer;
 using System;
 using System.Collections.Generic;
 using System.IO;

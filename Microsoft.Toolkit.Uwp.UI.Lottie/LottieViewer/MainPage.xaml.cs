@@ -41,7 +41,7 @@ namespace LottieViewer
             var filePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-                SuggestedFileName = diagnostics.SuggestedName,
+                SuggestedFileName = diagnostics.SuggestedFileName,
             };
 
             // Dropdown of file types the user can save the file as
@@ -72,7 +72,7 @@ namespace LottieViewer
                 // If an unrecognized file type is specified, treat it as C#.
                 default:
                 case ".cs":
-                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode(suggestedClassName));
+                    await FileIO.WriteTextAsync(pickedFile, diagnostics.GenerateCSharpCode());
                     break;
                 case ".cpp":
                     await GenerateCxCode(diagnostics, suggestedClassName, pickedFile);
@@ -119,7 +119,7 @@ namespace LottieViewer
             var iCompositionSourceHeader = await iCompositionSourceFilePicker.PickSaveFileAsync();
 
             // Generate the .cpp and the .h text.
-            diagnostics.GenerateCxCode(suggestedClassName, hFile.Name, out var cppText, out var hText);
+            diagnostics.GenerateCxCode(hFile.Name, out var cppText, out var hText);
 
             // Write the .cpp file.
             await FileIO.WriteTextAsync(cppFile, cppText);

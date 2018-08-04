@@ -5,19 +5,15 @@
 // but not parsed. This is used to help test that parsing is complete.
 #define CheckForUnparsedFields
 
-using LottieData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-
-using ParsingIssues = LottieData.Serialization.ParsingIssues;
-using LottieJsonReaderException = LottieData.Serialization.LottieJsonReaderException;
-using System.IO;
 
 #if CheckForUnparsedFields
 using JObject = LottieData.Serialization.CheckedJsonObject;
@@ -97,7 +93,7 @@ namespace LottieData.Serialization
             {
                 result = reader.ParseLottieComposition(jsonReader);
             }
-            catch (LottieJsonReaderException e)
+            catch (LottieCompositionReaderException e)
             {
                 reader._issues.FatalError(e.Message);
             }
@@ -209,27 +205,27 @@ namespace LottieData.Serialization
                         {
                             if (version == null)
                             {
-                                throw new LottieJsonReaderException("Version parameter not found.");
+                                throw new LottieCompositionReaderException("Version parameter not found.");
                             }
 
                             if (!width.HasValue)
                             {
-                                throw new LottieJsonReaderException("Width parameter not found.");
+                                throw new LottieCompositionReaderException("Width parameter not found.");
                             }
 
                             if (!height.HasValue)
                             {
-                                throw new LottieJsonReaderException("Height parameter not found.");
+                                throw new LottieCompositionReaderException("Height parameter not found.");
                             }
 
                             if (!inPoint.HasValue)
                             {
-                                throw new LottieJsonReaderException("Start frame parameter not found.");
+                                throw new LottieCompositionReaderException("Start frame parameter not found.");
                             }
 
                             if (!outPoint.HasValue)
                             {
-                                throw new LottieJsonReaderException("End frame parameter not found.");
+                                throw new LottieCompositionReaderException("End frame parameter not found.");
                             }
 
                             int[] versions = new[] { 0, 0, 0 };
@@ -248,7 +244,7 @@ namespace LottieData.Serialization
 
                             if (layers == null)
                             {
-                                throw new LottieJsonReaderException("No layers found.");
+                                throw new LottieCompositionReaderException("No layers found.");
                             }
 
                             var result = new LottieComposition(
@@ -672,7 +668,7 @@ namespace LottieData.Serialization
                         mode = Mask.MaskMode.Difference;
                         break;
                     default:
-                        throw new LottieJsonReaderException($"Unexpected mask mode: {maskMode}");
+                        throw new LottieCompositionReaderException($"Unexpected mask mode: {maskMode}");
                 }
 
                 AssertAllFieldsRead(obj);
@@ -1196,7 +1192,7 @@ namespace LottieData.Serialization
             }
             else
             {
-                throw new LottieJsonReaderException("Missing transform for position");
+                throw new LottieCompositionReaderException("Missing transform for position");
             }
 
             var scaleJson = obj.GetNamedObject("s", null);
@@ -1221,7 +1217,7 @@ namespace LottieData.Serialization
             }
             else
             {
-                throw new LottieJsonReaderException("Missing transform for rotation");
+                throw new LottieCompositionReaderException("Missing transform for rotation");
             }
 
             var opacity = ReadOpacityPercent(obj);
@@ -1333,14 +1329,14 @@ namespace LottieData.Serialization
                         z = number;
                         break;
                     default:
-                        throw new LottieJsonReaderException("Too many values for Vector3.");
+                        throw new LottieCompositionReaderException("Too many values for Vector3.");
                 }
             }
 
             // Allow either 2 or 3 values to be specified. If 2 values, assume z==0.
             if (i < 2)
             {
-                throw new LottieJsonReaderException("Not enough values for Vector3.");
+                throw new LottieCompositionReaderException("Not enough values for Vector3.");
             }
 
             return new Vector3(x, y, z);
@@ -1412,13 +1408,13 @@ namespace LottieData.Serialization
                             a = number;
                             break;
                         default:
-                            throw new LottieJsonReaderException("Too many values for Color.");
+                            throw new LottieCompositionReaderException("Too many values for Color.");
                     }
                 }
 
                 if (i != 4)
                 {
-                    throw new LottieJsonReaderException("Not enough values for Color.");
+                    throw new LottieCompositionReaderException("Not enough values for Color.");
                 }
 
                 // If all the values are <= 1, treat the values as floats, otherwise they're bytes.
@@ -1467,7 +1463,7 @@ namespace LottieData.Serialization
 
                 if (vertices == null || inTangents == null || outTangents == null || vertices.Count != inTangents.Count || vertices.Count != outTangents.Count)
                 {
-                    throw new LottieJsonReaderException($"Unable to process points array or tangents. {pointsData}");
+                    throw new LottieCompositionReaderException($"Unable to process points array or tangents. {pointsData}");
                 }
 
                 var initialPoint = new Vector3();
@@ -1612,7 +1608,7 @@ namespace LottieData.Serialization
 
                 if (isAnimated && keyFrames == s_emptyKeyFrames)
                 {
-                    throw new LottieJsonReaderException("Expected keyframes.");
+                    throw new LottieCompositionReaderException("Expected keyframes.");
                 }
             }
 
@@ -1746,7 +1742,7 @@ namespace LottieData.Serialization
                         switch (array.Count)
                         {
                             case 0:
-                                throw new LottieJsonReaderException("Expecting float but found empty array.");
+                                throw new LottieCompositionReaderException("Expecting float but found empty array.");
                             case 1:
                                 return (double)array[0];
                             default:
@@ -1760,7 +1756,7 @@ namespace LottieData.Serialization
                 case JTokenType.String:
                 case JTokenType.Object:
                 default:
-                    throw new LottieJsonReaderException($"Expected float but found {jsonValue.Type}.");
+                    throw new LottieCompositionReaderException($"Expected float but found {jsonValue.Type}.");
             }
         }
 
@@ -1787,10 +1783,10 @@ namespace LottieData.Serialization
                     case 14: return BlendMode.Color;
                     case 15: return BlendMode.Luminosity;
                     default:
-                        throw new LottieJsonReaderException($"Unexpected blend mode: {bm}.");
+                        throw new LottieCompositionReaderException($"Unexpected blend mode: {bm}.");
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected layer type: {bm}.");
+            throw new LottieCompositionReaderException($"Unexpected layer type: {bm}.");
         }
 
         static Layer.LayerType TyToLayerType(double ty)
@@ -1807,7 +1803,7 @@ namespace LottieData.Serialization
                     case 5: return Layer.LayerType.Text;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected layer type: {ty}.");
+            throw new LottieCompositionReaderException($"Unexpected layer type: {ty}.");
         }
 
         static Polystar.PolyStarType SyToPolystarType(double sy)
@@ -1820,7 +1816,7 @@ namespace LottieData.Serialization
                     case 2: return Polystar.PolyStarType.Polygon;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected polystar type: {sy}.");
+            throw new LottieCompositionReaderException($"Unexpected polystar type: {sy}.");
         }
 
         static SolidColorStroke.LineCapType LcToLineCapType(double lc)
@@ -1834,7 +1830,7 @@ namespace LottieData.Serialization
                     case 3: return SolidColorStroke.LineCapType.Projected;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected linecap type: {lc}.");
+            throw new LottieCompositionReaderException($"Unexpected linecap type: {lc}.");
         }
 
         static SolidColorStroke.LineJoinType LjToLineJoinType(double lj)
@@ -1848,7 +1844,7 @@ namespace LottieData.Serialization
                     case 3: return SolidColorStroke.LineJoinType.Bevel;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected linejoin type: {lj}.");
+            throw new LottieCompositionReaderException($"Unexpected linejoin type: {lj}.");
         }
 
         static TrimPath.TrimType MToTrimType(double m)
@@ -1861,7 +1857,7 @@ namespace LottieData.Serialization
                     case 2: return TrimPath.TrimType.Individually;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected trim type: {m}.");
+            throw new LottieCompositionReaderException($"Unexpected trim type: {m}.");
         }
 
         static MergePaths.MergeMode MmToMergeMode(double mm)
@@ -1877,7 +1873,7 @@ namespace LottieData.Serialization
                     case 5: return MergePaths.MergeMode.ExcludeIntersections;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected merge mode: {mm}.");
+            throw new LottieCompositionReaderException($"Unexpected merge mode: {mm}.");
         }
 
         static GradientType TToGradientType(double t)
@@ -1890,7 +1886,7 @@ namespace LottieData.Serialization
                     case 2: return GradientType.Radial;
                 }
             }
-            throw new LottieJsonReaderException($"Unexpected gradient type: {t}");
+            throw new LottieCompositionReaderException($"Unexpected gradient type: {t}");
         }
 
         enum GradientType
@@ -2101,13 +2097,13 @@ namespace LottieData.Serialization
             throw EofException;
         }
 
-        static LottieJsonReaderException EofException => new LottieJsonReaderException("EOF");
+        static LottieCompositionReaderException EofException => new LottieCompositionReaderException("EOF");
 
-        static LottieJsonReaderException UnexpectedFieldException(JsonReader reader, string field) => Exception($"Unexpected field: {field}", reader);
+        static LottieCompositionReaderException UnexpectedFieldException(JsonReader reader, string field) => Exception($"Unexpected field: {field}", reader);
 
-        static LottieJsonReaderException UnexpectedTokenException(JsonReader reader) => Exception($"Unexpected token: {reader.TokenType}", reader);
+        static LottieCompositionReaderException UnexpectedTokenException(JsonReader reader) => Exception($"Unexpected token: {reader.TokenType}", reader);
 
-        static LottieJsonReaderException Exception(string message, JsonReader reader) => new LottieJsonReaderException($"{message} @ {reader.Path}");
+        static LottieCompositionReaderException Exception(string message, JsonReader reader) => new LottieCompositionReaderException($"{message} @ {reader.Path}");
     }
 
 #if CheckForUnparsedFields
@@ -2269,7 +2265,7 @@ namespace LottieData.Serialization
                 {
                     exceptionString += $" Failed to cast to correct type for token in path: {token.Path}.";
                 }
-                throw new LottieJsonReaderException(exceptionString, ex);
+                throw new LottieCompositionReaderException(exceptionString, ex);
             }
         }
 
@@ -2286,7 +2282,7 @@ namespace LottieData.Serialization
                 {
                     exceptionString += $" Failed to cast to correct type for token in path: {token.Path}.";
                 }
-                throw new LottieJsonReaderException(exceptionString, ex);
+                throw new LottieCompositionReaderException(exceptionString, ex);
             }
         }
     }

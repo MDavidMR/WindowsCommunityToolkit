@@ -59,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\SolidColorStroke.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\SolidLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\TextLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Tools\Stats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\TrimPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\ValidationIssues.cs" />

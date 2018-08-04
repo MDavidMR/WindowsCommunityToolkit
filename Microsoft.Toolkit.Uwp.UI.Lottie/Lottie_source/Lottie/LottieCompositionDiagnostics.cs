@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WinCompData.CodeGen;
 
 namespace Lottie
 {
@@ -19,12 +20,21 @@ namespace Lottie
 
         public string FileName { get; internal set; } = "";
 
-        public string SuggestedName
+        public string SuggestedFileName => 
+            string.IsNullOrWhiteSpace(FileName) 
+                ? "MyComposition" 
+                : Path.GetFileNameWithoutExtension(FileName);
+            
+        public string SuggestedClassName
         {
             get
             {
-                var name = string.IsNullOrWhiteSpace(FileName) ? "MyComposition" : FileName;
-                return Path.GetFileNameWithoutExtension(name);
+                string result = null;
+                if (LottieComposition != null)
+                {
+                    result = InstantiatorGeneratorBase.TrySynthesizeClassName(LottieComposition.Name);
+                }
+                return result ?? InstantiatorGeneratorBase.TrySynthesizeClassName(SuggestedFileName);
             }
         }
 
@@ -72,21 +82,20 @@ namespace Lottie
             return WinCompData.Tools.CompositionObjectXmlSerializer.ToXml(RootVisual).ToString();
         }
 
-        public string GenerateCSharpCode(string suggestedClassName)
+        public string GenerateCSharpCode()
         {
             if (LottieComposition == null) { return null; }
-            var optimizedRoot = WinCompData.CodeGen.Optimizer.Optimize(RootVisual, ignoreCommentProperties: true);
+
             return
-                WinCompData.CodeGen.CSharpInstantiatorGenerator.CreateFactoryCode(
-                    MakeNameSuitableForTypeName(suggestedClassName),
-                    optimizedRoot,
+                CSharpInstantiatorGenerator.CreateFactoryCode(
+                    SuggestedClassName,
+                    RootVisual,
                     (float)LottieComposition.Width,
                     (float)LottieComposition.Height,
                     LottieComposition.Duration);
         }
 
-
-        public void GenerateCxCode(string suggestedClassName, string headerFileName, out string cppText, out string hText)
+        public void GenerateCxCode(string headerFileName, out string cppText, out string hText)
         {
             if (LottieComposition == null) {
                 cppText = null;
@@ -94,38 +103,15 @@ namespace Lottie
                 return;
             }
 
-            var optimizedRoot = WinCompData.CodeGen.Optimizer.Optimize(RootVisual, ignoreCommentProperties: true);
-            WinCompData.CodeGen.CxInstantiatorGenerator.CreateFactoryCode(
-                MakeNameSuitableForTypeName(suggestedClassName),
-                optimizedRoot,
+            CxInstantiatorGenerator.CreateFactoryCode(
+                SuggestedClassName,
+                RootVisual,
                 (float)LottieComposition.Width,
                 (float)LottieComposition.Height,
                 LottieComposition.Duration,
                 headerFileName,
                 out cppText,
                 out hText);
-        }
-
-        static string MakeNameSuitableForTypeName(string name)
-        {
-            // If the first character is not a letter, prepend an underscore.
-            if (!char.IsLetter(name, 0))
-            {
-                name = "_" + name;
-            }
-
-            // Replace any disallowed character with underscores.
-            name =
-                new string((from ch in name
-                            select char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
-
-            // Remove any duplicated underscores.
-            name = name.Replace("__", "_");
-
-            // Capitalize the first letter.
-            name = name.ToUpperInvariant().Substring(0, 1) + name.Substring(1);
-
-            return name;
         }
 
         public KeyValuePair<string, double>[] Markers { get; internal set; } = s_emptyMarkers;
@@ -159,50 +145,12 @@ namespace Lottie
         {
             if (LottieComposition == null) { return null; }
 
-            int precompLayerCount = 0;
-            int solidLayerCount = 0;
-            int imageLayerCount = 0;
-            int nullLayerCount = 0;
-            int shapeLayerCount = 0;
-            int textLayerCount = 0;
-
-            // Get the layers stored in assets.
-            var layersInAssets =
-                from asset in LottieComposition.Assets
-                where asset.Type == Asset.AssetType.LayerCollection
-                let layerCollection = (LayerCollectionAsset)asset
-                from layer in layerCollection.Layers.GetLayersBottomToTop()
-                select layer;
-
-            foreach (var layer in LottieComposition.Layers.GetLayersBottomToTop().Concat(layersInAssets))
-            {
-                switch (layer.Type)
-                {
-                    case Layer.LayerType.PreComp:
-                        precompLayerCount++;
-                        break;
-                    case Layer.LayerType.Solid:
-                        solidLayerCount++;
-                        break;
-                    case Layer.LayerType.Image:
-                        imageLayerCount++;
-                        break;
-                    case Layer.LayerType.Null:
-                        nullLayerCount++;
-                        break;
-                    case Layer.LayerType.Shape:
-                        shapeLayerCount++;
-                        break;
-                    case Layer.LayerType.Text:
-                        textLayerCount++;
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
+            var stats = new LottieData.Tools.Stats(LottieComposition);
 
             return $"LottieCompositionSource w={LottieComposition.Width} h={LottieComposition.Height} " +
-                $"layers: precomp={precompLayerCount} solid={solidLayerCount} image={imageLayerCount} null={nullLayerCount} shape={shapeLayerCount} text={textLayerCount}";
+                $"layers: precomp={stats.PreCompLayerCount} solid={stats.SolidLayerCount} " +
+                $"image={stats.ImageLayerCount} null={stats.NullLayerCount} " +
+                $"shape={stats.ShapeLayerCount} text={stats.TextLayerCount}";
         }
     }
 }

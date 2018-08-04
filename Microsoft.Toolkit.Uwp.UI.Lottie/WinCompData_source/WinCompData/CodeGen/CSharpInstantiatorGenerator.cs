@@ -56,7 +56,7 @@ namespace WinCompData.CodeGen
         // Called by the base class to write the start of the file (i.e. everything up to the body of the Instantiator class).
         protected override void WriteFileStart(CodeBuilder builder, CodeGenInfo info)
         {
-            builder.WriteLine("using Host = Microsoft_UI_Xaml_Controls;");
+            builder.WriteLine("using Host = Microsoft.UI.Xaml.CompositionPlayer;");
             if (info.RequiresWin2d)
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");

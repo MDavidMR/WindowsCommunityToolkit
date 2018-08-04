@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieCompositionReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieJsonReaderException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieCompositionReaderException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\ParsingIssues.cs" />
   </ItemGroup>
 </Project>
