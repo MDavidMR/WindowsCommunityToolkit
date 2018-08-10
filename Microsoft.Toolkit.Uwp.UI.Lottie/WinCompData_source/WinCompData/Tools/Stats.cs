@@ -41,6 +41,7 @@ namespace WinCompData.Tools
         readonly int _stepEasingFunctionCount;
         readonly int _vector2KeyFrameAnimationCount;
         readonly int _vector3KeyFrameAnimationCount;
+        readonly int _propertyCount;
 
         public Stats(CompositionObject root)
         {
@@ -78,9 +79,13 @@ namespace WinCompData.Tools
                                     _pathGeometryCount++;
                                     break;
                                 case CompositionObjectType.CompositionPropertySet:
-                                    if (((CompositionPropertySet)co).PropertyNames.Any())
                                     {
-                                        _propertySetCount++;
+                                        var propertyCount = ((CompositionPropertySet)co).PropertyNames.Count();
+                                        if (propertyCount > 0)
+                                        {
+                                            _propertySetCount++;
+                                            _propertyCount += propertyCount;
+                                        }
                                     }
                                     break;
                                 case CompositionObjectType.CompositionRectangleGeometry:
@@ -170,6 +175,8 @@ namespace WinCompData.Tools
 
         public int PathGeometryCount => _pathGeometryCount;
 
+        public int PropertyCount => _propertyCount;
+
         public int PropertySetCount => _propertySetCount;
 
         public int RectangleGeometryCount => _rectangleGeometryCount;
@@ -205,6 +212,6 @@ namespace WinCompData.Tools
         sealed class ObjectData : Graph.Node<ObjectData>
         { }
 
-        
+
     }
 }

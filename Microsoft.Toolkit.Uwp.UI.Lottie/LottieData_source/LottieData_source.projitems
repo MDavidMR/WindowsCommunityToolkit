@@ -63,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\TrimPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\ValidationIssues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Vector2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Vector3.cs" />
   </ItemGroup>
 </Project>

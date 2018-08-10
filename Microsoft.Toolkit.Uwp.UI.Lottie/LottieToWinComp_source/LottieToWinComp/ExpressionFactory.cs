@@ -26,7 +26,14 @@ namespace LottieToWinComp
                         Divide(Scalar("my.Size.Y"), Scalar(2))));
         internal static readonly Expression TransformMatrixM11Expression = Scalar("my.TransformMatrix._11");
         internal static readonly Expression MyAnchor2 = Vector2("my.Anchor");
-        internal static readonly Expression PositionMinusAnchor = Subtract(Vector2("my.Position"), MyAnchor2);
+        internal static readonly Expression MyPosition2 = Vector2("my.Position");
+        internal static readonly Expression PositionMinusAnchor = Subtract(MyPosition2, MyAnchor2);
+        internal static readonly Expression MyAnchor3 = Vector3(Scalar("my.Anchor.X"), Scalar("my.Anchor.Y"));
+        internal static readonly Expression PositionMinusAnchor3 = Vector3(
+                                                                        Subtract(Scalar("my.Position.X"), Scalar("my.Anchor.X")),
+                                                                        Subtract(Scalar("my.Position.Y"), Scalar("my.Anchor.Y")),
+                                                                        Scalar(0));
+
         internal static Expression ScaledAndOffsetRootProgress(double scale, double offset)
         {
             var result = RootProgress;

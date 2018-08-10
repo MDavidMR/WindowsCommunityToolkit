@@ -16,7 +16,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace LottieTest
 {
@@ -59,31 +58,6 @@ namespace LottieTest
                 default:
                     throw new InvalidOperationException();
             }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Player.Stop();
-        }
-
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            await Player.PlayAsync(0, 1, 1, false);
-        }
-
-        private async void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            await Player.PlayAsync(0.25, 0.75, 1, true);
-        }
-
-        private async void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            await Player.PlayAsync(0, 0.5, 1, true);
-        }
-
-        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            Player.PlaybackRate = e.NewValue;
         }
     }
 }

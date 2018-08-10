@@ -35,6 +35,7 @@ using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
 using TypeConstraint = WinCompData.Expressions.TypeConstraint;
 using ExpressionType = WinCompData.Expressions.ExpressionType;
 using WinCompData.Mgcg;
+using static LottieToWinComp.ExpressionFactory;
 
 namespace LottieToWinComp
 {
@@ -61,7 +62,7 @@ namespace LottieToWinComp
         // Holds ColorBrushes that are not animated and can therefore be reused.
         readonly Dictionary<Color, CompositionColorBrush> _nonAnimatedColorBrushes = new Dictionary<Color, CompositionColorBrush>();
         // Paths are shareable.
-        readonly Dictionary<(PathGeometry, SolidColorFill.PathFillType), CompositionPath> _compositionPaths = new Dictionary<(PathGeometry, SolidColorFill.PathFillType), CompositionPath>();
+        readonly Dictionary<(PathGeometry, SolidColorFill.PathFillType, bool), CompositionPath> _compositionPaths = new Dictionary<(PathGeometry, SolidColorFill.PathFillType, bool), CompositionPath>();
         // Holds a LinearEasingFunction that can be reused in multiple animations.
         LinearEasingFunction _linearEasingFunction;
         // Holds a StepEasingFunction that can be reused in multiple animations.
@@ -1155,7 +1156,7 @@ namespace LottieToWinComp
                         continue;
 
                     case ShapeContentType.Path:
-                        yield return CreateWin2dPathGeometry((Shape)shapeContent, pathFillType);
+                        yield return CreateWin2dPathGeometryFromShape((Shape)shapeContent, pathFillType, optimizeLines:true);
                         break;
                     case ShapeContentType.Ellipse:
                         yield return CreateWin2dEllipseGeometry((Ellipse)shapeContent);
@@ -1170,119 +1171,13 @@ namespace LottieToWinComp
                         throw new InvalidOperationException();
                 }
             }
-
         }
 
-        // Returns true iff all of the points lie on the same line, and p1 and p2 are between p0 and p3.
-        // Such cubic beziers can be replaced by a line from p0 to p3.
-        static bool IsCubicBezierALine(
-            WinCompData.Sn.Vector2 p0,
-            WinCompData.Sn.Vector2 p1,
-            WinCompData.Sn.Vector2 p2,
-            WinCompData.Sn.Vector2 p3)
+        CanvasGeometry CreateWin2dPathGeometry(PathGeometry figure, SolidColorFill.PathFillType fillType, bool optimizeLines)
         {
-            if (!IsCubicBezierColinear(p0, p1, p2, p3))
-            {
-                return false;
-            }
-
-            // The points are on the same line. The cubic bezier is a line if
-            // p1 and p2 are between p0..p3.
-            var outerDiffX = Math.Abs(p0.X - p3.X);
-
-            if (Math.Abs(p0.X - p1.X) > outerDiffX)
-            {
-                return false;
-            }
-            if (Math.Abs(p3.X - p1.X) > outerDiffX)
-            {
-                return false;
-            }
-
-            if (Math.Abs(p0.X - p2.X) > outerDiffX)
-            {
-                return false;
-            }
-            if (Math.Abs(p3.X - p2.X) > outerDiffX)
-            {
-                return false;
-            }
-
-
-            var outerDiffY = Math.Abs(p0.Y - p3.Y);
-
-            if (Math.Abs(p0.Y - p1.Y) > outerDiffY)
-            {
-                return false;
-            }
-            if (Math.Abs(p3.Y - p1.Y) > outerDiffY)
-            {
-                return false;
-            }
-
-            if (Math.Abs(p0.Y - p2.Y) > outerDiffY)
-            {
-                return false;
-            }
-            if (Math.Abs(p3.Y - p2.Y) > outerDiffY)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        // Returns true if each of the given points is on the same line.
-        static bool IsCubicBezierColinear(
-            WinCompData.Sn.Vector2 p0,
-            WinCompData.Sn.Vector2 p1,
-            WinCompData.Sn.Vector2 p2,
-            WinCompData.Sn.Vector2 p3)
-        {
-            var p01X = p0.X - p1.X;
-            var p01Y = p0.Y - p1.Y;
-
-            var p02X = p0.X - p2.X;
-            var p02Y = p0.Y - p2.Y;
-
-            var p03X = p0.X - p3.X;
-            var p03Y = p0.Y - p3.Y;
-
-            if (p01Y == 0 || p02Y == 0 || p03Y == 0)
-            {
-                // Can't divide by Y because it's 0 in at least one case. (i.e. horizontal line)
-                if (p01X == 0 || p02X == 0 || p03X == 0)
-                {
-                    // Can't divide by X because it's 0 in at least one case (i.e. vertical line)
-                    // The points can only be colinear if they're all equal.
-                    return p0 == p1 && p0 == p2 && p0 == p3;
-                }
-                else
-                {
-                    return (p01Y / p01X) == (p02Y / p02X) &&
-                           (p01Y / p01X) == (p03Y / p03X);
-                }
-            }
-            else
-            {
-                return (p01X / p01Y) == (p02X / p02Y) &&
-                       (p01X / p01Y) == (p03X / p03Y);
-            }
-        }
-
-        CanvasGeometry CreateWin2dPathGeometry(Shape path, SolidColorFill.PathFillType fillType)
-        {
-            if (path.PathData.IsAnimated)
-            {
-                _unsupported.CombiningAnimatedShapes();
-            }
-
-            var pathData = path.PathData.InitialValue;
-            var beziers = pathData.Beziers.ToArray();
-
+            var beziers = figure.Beziers.ToArray();
             using (var builder = new CanvasPathBuilder(null))
             {
-                builder.SetFilledRegionDetermination(FilledRegionDetermination(fillType));
                 if (beziers.Length == 0)
                 {
                     builder.BeginFigure(Vector2(0));
@@ -1290,15 +1185,18 @@ namespace LottieToWinComp
                 }
                 else
                 {
-                    var cp0 = Vector2(pathData.Start);
-                    builder.BeginFigure(Vector2(pathData.Start));
+                    builder.SetFilledRegionDetermination(FilledRegionDetermination(fillType));
+                    builder.BeginFigure(Vector2(beziers[0].ControlPoint0));
+
                     foreach (var segment in beziers)
                     {
+                        var cp0 = Vector2(segment.ControlPoint0);
                         var cp1 = Vector2(segment.ControlPoint1);
                         var cp2 = Vector2(segment.ControlPoint2);
-                        var cp3 = Vector2(segment.Vertex);
+                        var cp3 = Vector2(segment.ControlPoint3);
 
-                        if (IsCubicBezierALine(cp0, cp1, cp2, cp3))
+                        // Add a line rather than a cubic bezier if the segment is a straight line.
+                        if (optimizeLines && segment.IsALine)
                         {
                             // Ignore 0-length lines.
                             if (!cp0.Equals(cp3))
@@ -1310,17 +1208,33 @@ namespace LottieToWinComp
                         {
                             builder.AddCubicBezier(cp1, cp2, cp3);
                         }
-                        cp0 = cp3;
                     }
-                    builder.EndFigure(pathData.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
+
+                    // Leave the figure open. If Lottie wanted it closed it will have defined
+                    // a final bezier segment back to the start.
+                    // Closed simply tells D2D to synthesize a final segment.
+                    builder.EndFigure(CanvasFigureLoop.Open);
                 }
-                var result = CanvasGeometry.CreatePath(builder);
-                if (_addDescriptions)
-                {
-                    Describe(result, path.Name);
-                }
-                return result;
+
+                return CanvasGeometry.CreatePath(builder);
+            } // end using
+        }
+
+        CanvasGeometry CreateWin2dPathGeometryFromShape(Shape path, SolidColorFill.PathFillType fillType, bool optimizeLines)
+        {
+            if (path.PathData.IsAnimated)
+            {
+                _unsupported.CombiningAnimatedShapes();
             }
+
+            var result = CreateWin2dPathGeometry(path.PathData.InitialValue, fillType, optimizeLines: optimizeLines);
+
+            if (_addDescriptions)
+            {
+                Describe(result, path.Name);
+            }
+
+            return result;
         }
 
         CanvasGeometry CreateWin2dEllipseGeometry(Ellipse ellipse)
@@ -1395,10 +1309,10 @@ namespace LottieToWinComp
                 Describe(compositionEllipseGeometry, $"{shapeContent.Name}.EllipseGeometry");
             }
             compositionEllipseGeometry.Center = Vector2(shapeContent.Position.InitialValue);
-            ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center", "Center", null);
+            ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, compositionEllipseGeometry, "Center");
 
             compositionEllipseGeometry.Radius = Vector2(shapeContent.Diameter.InitialValue) * 0.5F;
-            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Diameter, 0.5, compositionEllipseGeometry, "Radius", "Radius", null);
+            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Diameter, 0.5, compositionEllipseGeometry, "Radius");
 
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape);
 
@@ -1423,11 +1337,11 @@ namespace LottieToWinComp
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
 
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position), "Position", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
 
                 // Map Rectangle's size to RoundedRectangleGeometry.Size
                 geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size), "Size", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size));
 
             }
             else
@@ -1444,11 +1358,11 @@ namespace LottieToWinComp
                 compositionOffsetExpression.SetReferenceParameter("my", geometry);
                 StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
 
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position", "Position", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position");
 
                 // Map Rectangle's size to RoundedRectangleGeometry.Size
                 geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(geometry.Size), "Size", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(geometry.Size));
 
                 // Map Rectangle's size to RoundedRectangleGeometry.CornerRadius
                 // If a RoundedRectangle is in the context, use it to override the corner radius.
@@ -1456,8 +1370,8 @@ namespace LottieToWinComp
                 if (cornerRadius.IsAnimated || cornerRadius.InitialValue != 0)
                 {
                     geometry.CornerRadius = Vector2((float)cornerRadius.InitialValue);
-                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.X", "CornerRadius.X", null);
-                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.Y", "CornerRadius.Y", null);
+                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.X");
+                    ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.Y");
                 }
             }
 
@@ -1497,21 +1411,24 @@ namespace LottieToWinComp
             }
 
             // Map Path's Geometry data to PathGeometry.Path
-            var geometry = shapeContent.PathData;
+            var pathGeometry = shapeContent.PathData;
 
             // A path is represented as a SpriteShape with a CompositionPathGeometry.
             var compositionSpriteShape = CreateSpriteShape();
 
             var compositionPathGeometry = CreatePathGeometry();
             compositionSpriteShape.Geometry = compositionPathGeometry;
-            compositionPathGeometry.Path = CompositionPathFromPathGeometry(geometry.InitialValue, GetPathFillType(shapeContext.Fill));
+            compositionPathGeometry.Path = CompositionPathFromPathGeometry(
+                pathGeometry.InitialValue, 
+                GetPathFillType(shapeContext.Fill), 
+                optimizeLines: true);
 
             if (_addDescriptions)
             {
                 Describe(compositionSpriteShape, shapeContent.Name);
                 Describe(compositionPathGeometry, $"{shapeContent.Name}.PathGeometry");
             }
-            ApplyPathKeyFrameAnimation(context, geometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path", "Path", null);
+            ApplyPathKeyFrameAnimation(context, pathGeometry, GetPathFillType(shapeContext.Fill), compositionPathGeometry, "Path", "Path", null);
 
             TranslateAndApplyShapeContentContext(context, shapeContext, compositionSpriteShape, 0);
 
@@ -1697,7 +1614,7 @@ namespace LottieToWinComp
 
             // Map ShapeStroke's width to SpriteShape.StrokeThickness
             sprite.StrokeThickness = (float)shapeStroke.Thickness.InitialValue;
-            ApplyScalarKeyFrameAnimation(context, shapeStroke.Thickness, sprite, nameof(sprite.StrokeThickness), "StrokeThickness", null);
+            ApplyScalarKeyFrameAnimation(context, shapeStroke.Thickness, sprite, nameof(sprite.StrokeThickness));
 
             // Map ShapeStroke's linecap to SpriteShape.StrokeStart/End/DashCap
             sprite.StrokeStartCap = sprite.StrokeEndCap = sprite.StrokeDashCap = StrokeCap(shapeStroke.CapType);
@@ -1717,7 +1634,7 @@ namespace LottieToWinComp
 
             // Set DashOffset
             sprite.StrokeDashOffset = (float)shapeStroke.DashOffset.InitialValue;
-            ApplyScalarKeyFrameAnimation(context, shapeStroke.DashOffset, sprite, nameof(sprite.StrokeDashOffset), "StrokeDashOffset", null);
+            ApplyScalarKeyFrameAnimation(context, shapeStroke.DashOffset, sprite, nameof(sprite.StrokeDashOffset));
         }
 
         CompositionColorBrush TranslateShapeFill(TranslationContext context, SolidColorFill shapeFill, Animatable<double> opacityPercent)
@@ -1851,69 +1768,7 @@ namespace LottieToWinComp
 
         void TranslateAndApplyTransformToContainerVisual(TranslationContext context, Transform transform, ContainerVisual container)
         {
-            var initialAnchor = Vector2(transform.Anchor.InitialValue);
-            var initialPosition = Vector2(transform.Position.InitialValue);
-
-            if (transform.Anchor.IsAnimated || transform.Position.IsAnimated ||
-                transform.Anchor.Type == AnimatableVector3Type.XYZ || transform.Position.Type == AnimatableVector3Type.XYZ)
-            {
-                container.Properties.InsertVector2("Anchor", initialAnchor);
-                container.Properties.InsertVector2("Position", initialPosition);
-            }
-
-            if (transform.Anchor.IsAnimated)
-            {
-                var centerPointExpression = CreateExpressionAnimation(
-                    Expr.Vector3(
-                            Expr.Scalar("my.Anchor.X"),
-                            Expr.Scalar("my.Anchor.Y"),
-                            Expr.Scalar(0)));
-                centerPointExpression.SetReferenceParameter("my", container);
-                StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
-            }
-            else
-            {
-                container.CenterPoint = Vector3DefaultIsZero(initialAnchor);
-            }
-
-            if (transform.Anchor.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)transform.Anchor;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X", "Anchor.X", null);
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y", "Anchor.Y", null);
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor", "Anchor", null);
-            }
-
-            if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
-            {
-                var offsetExpression = CreateExpressionAnimation(
-                    Expr.Vector3(
-                        Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar("my.Anchor.X")),
-                        Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar("my.Anchor.Y")),
-                        Expr.Scalar(0)));
-                offsetExpression.SetReferenceParameter("my", container);
-                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
-            }
-            else
-            {
-                container.Offset = Vector3DefaultIsZero(initialPosition - initialAnchor);
-            }
-
-            if (transform.Position.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)transform.Position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X", "Position.X", null);
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y", "Position.Y", null);
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position", "Position", null);
-            }
+            TranslateAndApplyAnchorAndPositionToContainerVisual(context, transform.Anchor, transform.Position, container);
 
 #if !NoScaling
             container.Scale = Vector3DefaultIsOne(transform.ScalePercent.InitialValue * (1 / 100.0));
@@ -1921,7 +1776,7 @@ namespace LottieToWinComp
 #endif
 
             container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
-            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees), "RotationAngleInDegress", null);
+            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees));
 
             if (transform.OpacityPercent.IsAnimated || transform.OpacityPercent.InitialValue != 100)
             {
@@ -1933,19 +1788,122 @@ namespace LottieToWinComp
 
         void TranslateAndApplyTransformToContainerShape(TranslationContext context, Transform transform, CompositionContainerShape container)
         {
-            var initialAnchor = Vector2(transform.Anchor.InitialValue);
-            var initialPosition = Vector2(transform.Position.InitialValue);
+            TranslateAndApplyAnchorAndPositionToContainerShape(context, transform.Anchor, transform.Position, container);
 
-            if (transform.Anchor.IsAnimated || transform.Position.IsAnimated ||
-                transform.Anchor.Type == AnimatableVector3Type.XYZ || transform.Position.Type == AnimatableVector3Type.XYZ)
+#if !NoScaling
+            container.Scale = Vector2DefaultIsOne(transform.ScalePercent.InitialValue * (1 / 100.0));
+            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale), "Scale", null);
+#endif
+
+            container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
+            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees));
+
+            // set Skew and Skew Axis
+            // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
+        }
+
+        void TranslateAndApplyAnchorAndPositionToContainerVisual(TranslationContext context, IAnimatableVector3 anchor, IAnimatableVector3 position, ContainerVisual container)
+        {
+            var initialAnchor = Vector2(anchor.InitialValue);
+
+            if (anchor.IsAnimated || anchor.Type == AnimatableVector3Type.XYZ)
             {
                 container.Properties.InsertVector2("Anchor", initialAnchor);
+            }
+
+            var initialPosition = Vector2(position.InitialValue);
+
+            if (position.IsAnimated || position.Type == AnimatableVector3Type.XYZ)
+            {
                 container.Properties.InsertVector2("Position", initialPosition);
             }
 
-            if (transform.Anchor.IsAnimated)
+            if (anchor.IsAnimated)
             {
-                var centerPointExpression = CreateExpressionAnimation(ExpressionFactory.MyAnchor2);
+                var centerPointExpression = CreateExpressionAnimation(MyAnchor3);
+                centerPointExpression.SetReferenceParameter("my", container);
+                StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
+            }
+            else
+            {
+                container.CenterPoint = Vector3DefaultIsZero(initialAnchor);
+            }
+
+            if (anchor.Type == AnimatableVector3Type.XYZ)
+            {
+                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                var anchorValue = (AnimatableXYZ)position;
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Anchor.X");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Anchor.Y");
+            }
+            else
+            {
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
+            }
+
+            ExpressionAnimation offsetExpression = null;
+            if (position.IsAnimated && anchor.IsAnimated)
+            {
+                // Both position and anchor are animated.
+                offsetExpression = CreateExpressionAnimation(PositionMinusAnchor3);
+            }
+            else if (position.IsAnimated)
+            {
+                // Only position is animated.
+                offsetExpression = CreateExpressionAnimation(Expr.Vector3(
+                                        Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar(initialAnchor.X)),
+                                        Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar(initialAnchor.Y))));
+            }
+            else if (anchor.IsAnimated)
+            {
+                // Only anchor is animated.
+                offsetExpression = CreateExpressionAnimation(Expr.Vector3(
+                                        Expr.Subtract(Expr.Scalar(initialPosition.X), Expr.Scalar("my.Anchor.X")),
+                                        Expr.Subtract(Expr.Scalar(initialPosition.Y), Expr.Scalar("myAnchor.Y"))));
+            }
+            else
+            {
+                container.Offset = Vector3DefaultIsZero(initialPosition - initialAnchor);
+            }
+
+            if (offsetExpression != null)
+            {
+                offsetExpression.SetReferenceParameter("my", container);
+                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
+            }
+
+            if (position.Type == AnimatableVector3Type.XYZ)
+            {
+                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                var anchorValue = (AnimatableXYZ)position;
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Position.X");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Position.Y");
+            }
+            else
+            {
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
+            }
+        }
+
+        void TranslateAndApplyAnchorAndPositionToContainerShape(TranslationContext context, IAnimatableVector3 anchor, IAnimatableVector3 position, CompositionContainerShape container)
+        {
+            var initialAnchor = Vector2(anchor.InitialValue);
+
+            if (anchor.IsAnimated || anchor.Type == AnimatableVector3Type.XYZ)
+            {
+                container.Properties.InsertVector2("Anchor", initialAnchor);
+            }
+
+            var initialPosition = Vector2(position.InitialValue);
+
+            if (position.IsAnimated || position.Type == AnimatableVector3Type.XYZ)
+            {
+                container.Properties.InsertVector2("Position", initialPosition);
+            }
+
+            if (anchor.IsAnimated)
+            {
+                var centerPointExpression = CreateExpressionAnimation(MyAnchor2);
                 centerPointExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
             }
@@ -1954,51 +1912,56 @@ namespace LottieToWinComp
                 container.CenterPoint = Vector2DefaultIsZero(initialAnchor);
             }
 
-            if (transform.Anchor.Type == AnimatableVector3Type.XYZ)
+            if (anchor.Type == AnimatableVector3Type.XYZ)
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)transform.Anchor;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X", "Anchor.X", null);
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y", "Anchor.Y", null);
+                var anchorValue = (AnimatableXYZ)anchor;
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y");
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Anchor, container, "Anchor", "Anchor", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
             }
 
-            if (transform.Position.IsAnimated || transform.Anchor.IsAnimated)
+            ExpressionAnimation offsetExpression = null;
+            if (position.IsAnimated && anchor.IsAnimated)
             {
-                var offsetExpression = CreateExpressionAnimation(ExpressionFactory.PositionMinusAnchor);
-                offsetExpression.SetReferenceParameter("my", container);
-                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
+                // Position and Anchor are both animated.
+                offsetExpression = CreateExpressionAnimation(PositionMinusAnchor);
+            }
+            else if (position.IsAnimated)
+            {
+                // Only position is animated.
+                offsetExpression = CreateExpressionAnimation(Expr.Subtract(MyPosition2, Expr.Vector2(initialAnchor)));
+            }
+            else if (anchor.IsAnimated)
+            {
+                // Only Anchor is animated.
+                offsetExpression = CreateExpressionAnimation(Expr.Subtract(Expr.Vector2(initialPosition), MyAnchor2));
             }
             else
             {
                 container.Offset = Vector2DefaultIsZero(initialPosition - initialAnchor);
             }
 
-            if (transform.Position.Type == AnimatableVector3Type.XYZ)
+            if (offsetExpression != null)
+            {
+                offsetExpression.SetReferenceParameter("my", container);
+                StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
+            }
+
+            if (position.Type == AnimatableVector3Type.XYZ)
             {
                 // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)transform.Position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Position.X", "Position.X", null);
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Position.Y", "Position.Y", null);
+                var anchorValue = (AnimatableXYZ)position;
+                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Position.X");
+                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Position.Y");
             }
             else
             {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)transform.Position, container, "Position", "Position", null);
+                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
             }
-
-#if !NoScaling
-            container.Scale = Vector2DefaultIsOne(transform.ScalePercent.InitialValue * (1 / 100.0));
-            ApplyScaledVector2KeyFrameAnimation(context, (AnimatableVector3)transform.ScalePercent, 1 / 100.0, container, nameof(container.Scale), "Scale", null);
-#endif
-
-            container.RotationAngleInDegrees = FloatDefaultIsZero(transform.RotationDegrees.InitialValue);
-            ApplyScalarKeyFrameAnimation(context, transform.RotationDegrees, container, nameof(container.RotationAngleInDegrees), "RotationAngleInDegrees", null);
-
-            // set Skew and Skew Axis
-            // TODO: TransformMatrix --> for a Layer, does this clash with Visibility? Should I add an extra ContainerShape?
         }
 
         void StartExpressionAnimation(CompositionObject compObject, string target, ExpressionAnimation animation)
@@ -2040,8 +2003,8 @@ namespace LottieToWinComp
             Animatable<double> value,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
             => ApplyScaledScalarKeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledScalarKeyFrameAnimation(
@@ -2074,8 +2037,8 @@ namespace LottieToWinComp
             Animatable<LottieData.Color> value,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
         {
             value = _lottieDataOptimizer.GetOptimized(value);
             if (value.IsAnimated)
@@ -2099,8 +2062,8 @@ namespace LottieToWinComp
             SolidColorFill.PathFillType fillType,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
         {
             value = _lottieDataOptimizer.GetOptimized(value);
             if (value.IsAnimated)
@@ -2109,7 +2072,16 @@ namespace LottieToWinComp
                     context,
                     value,
                     CreatePathKeyFrameAnimation,
-                    (ca, progress, val, easing) => ca.InsertKeyFrame(progress, CompositionPathFromPathGeometry(val, fillType), easing),
+                    (ca, progress, val, easing) => ca.InsertKeyFrame(
+                        progress,
+                        CompositionPathFromPathGeometry(
+                            val,
+                            fillType,
+                            // Turn off the optimization that replaces cubic beziers with
+                            // segments because it may result in different numbers of
+                            // control points in each path in the keyframes.
+                            optimizeLines: false),
+                        easing),
                     null,
                     targetObject,
                     targetPropertyName,
@@ -2123,8 +2095,8 @@ namespace LottieToWinComp
             AnimatableVector3 value,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
             => ApplyScaledVector2KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledVector2KeyFrameAnimation(
@@ -2133,8 +2105,8 @@ namespace LottieToWinComp
             double scale,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
         {
             if (value.IsAnimated)
             {
@@ -2156,8 +2128,8 @@ namespace LottieToWinComp
             AnimatableVector3 value,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
             => ApplyScaledVector3KeyFrameAnimation(context, value, 1, targetObject, targetPropertyName, longDescription, shortDescription);
 
         void ApplyScaledVector3KeyFrameAnimation(
@@ -2166,8 +2138,8 @@ namespace LottieToWinComp
             double scale,
             CompositionObject targetObject,
             string targetPropertyName,
-            string longDescription,
-            string shortDescription)
+            string longDescription = null,
+            string shortDescription = null)
         {
             if (value.IsAnimated)
             {
@@ -2198,7 +2170,7 @@ namespace LottieToWinComp
             var compositionAnimation = compositionAnimationFactory();
             if (_addDescriptions)
             {
-                Describe(compositionAnimation, longDescription, shortDescription);
+                Describe(compositionAnimation, longDescription ?? targetPropertyName, shortDescription ?? targetPropertyName);
             }
             compositionAnimation.Duration = _lc.Duration;
 
@@ -2498,28 +2470,16 @@ namespace LottieToWinComp
 
         static SolidColorFill.PathFillType GetPathFillType(SolidColorFill fill) => fill == null ? SolidColorFill.PathFillType.EvenOdd : fill.FillType;
 
-        CompositionPath CompositionPathFromPathGeometry(PathGeometry pathGeometry, SolidColorFill.PathFillType fillType)
+        CompositionPath CompositionPathFromPathGeometry(
+            PathGeometry pathGeometry, 
+            SolidColorFill.PathFillType fillType, 
+            bool optimizeLines)
         {
             // CompositionPaths can be shared by many SpriteShapes.
-            if (!_compositionPaths.TryGetValue((pathGeometry, fillType), out var result))
+            if (!_compositionPaths.TryGetValue((pathGeometry, fillType, optimizeLines), out var result))
             {
-                using (var builder = new WinCompData.Mgcg.CanvasPathBuilder(null))
-                {
-                    var canvasFilledRegionDetermination = FilledRegionDetermination(fillType);
-
-                    builder.SetFilledRegionDetermination(canvasFilledRegionDetermination);
-                    builder.BeginFigure(Vector2(pathGeometry.Start));
-
-                    foreach (var bezier in pathGeometry.Beziers)
-                    {
-                        builder.AddCubicBezier(Vector2(bezier.ControlPoint1), Vector2(bezier.ControlPoint2), Vector2(bezier.Vertex));
-                    }
-
-                    builder.EndFigure(pathGeometry.IsClosed ? CanvasFigureLoop.Closed : CanvasFigureLoop.Open);
-                    result = new CompositionPath(CanvasGeometry.CreatePath(builder));
-                }
-
-                _compositionPaths.Add((pathGeometry, fillType), result);
+                result = new CompositionPath(CreateWin2dPathGeometry(pathGeometry, fillType, optimizeLines));
+                _compositionPaths.Add((pathGeometry, fillType, optimizeLines), result);
             }
             return result;
         }
@@ -2873,6 +2833,7 @@ namespace LottieToWinComp
         static WinCompData.Sn.Matrix3x2 Matrix3x2Zero => new WinCompData.Sn.Matrix3x2();
 
         static WinCompData.Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
+        static WinCompData.Sn.Vector2 Vector2(LottieData.Vector2 vector2) => Vector2(vector2.X, vector2.Y);
         static WinCompData.Sn.Vector2 Vector2(double x, double y) => new WinCompData.Sn.Vector2((float)x, (float)y);
         static WinCompData.Sn.Vector2 Vector2(float x, float y) => new WinCompData.Sn.Vector2(x, y);
         static WinCompData.Sn.Vector2 Vector2(float x) => new WinCompData.Sn.Vector2(x, x);

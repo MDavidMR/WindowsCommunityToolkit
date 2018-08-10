@@ -1342,6 +1342,36 @@ namespace LottieData.Serialization
             return new Vector3(x, y, z);
         }
 
+        static Vector2 ReadVector2FromJsonArray(JArray array)
+        {
+            double x = 0;
+            double y = 0;
+            int i = 0;
+            var count = array.Count;
+            for (; i < count; i++)
+            {
+                // NOTE: indexing JsonArray is faster than enumerating it.
+                var number = (double)array[i];
+                switch (i)
+                {
+                    case 0:
+                        x = number;
+                        break;
+                    case 1:
+                        y = number;
+                        break;
+                }
+            }
+
+            if (i < 2)
+            {
+                throw new LottieCompositionReaderException("Not enough values for Vector2.");
+            }
+
+            return new Vector2(x, y);
+        }
+
+
         struct AfterEffectsName
         {
             internal string Name;
@@ -1459,78 +1489,69 @@ namespace LottieData.Serialization
                 var vertices = pointsData.GetNamedArray("v", null);
                 var inTangents = pointsData.GetNamedArray("i", null);
                 var outTangents = pointsData.GetNamedArray("o", null);
-                var closed = pointsData.GetNamedBoolean("c", false);
+                var isClosed = pointsData.GetNamedBoolean("c", false);
 
-                if (vertices == null || inTangents == null || outTangents == null || vertices.Count != inTangents.Count || vertices.Count != outTangents.Count)
+                if (vertices == null || inTangents == null || outTangents == null)
                 {
                     throw new LottieCompositionReaderException($"Unable to process points array or tangents. {pointsData}");
                 }
 
-                var initialPoint = new Vector3();
-                var beziers = new List<BezierSegment>();
+                var beziers = new BezierSegment[isClosed ? vertices.Count : Math.Max(vertices.Count - 1, 0)];
 
-                if (vertices.Count == 0)
+                if (beziers.Length > 0)
                 {
-                    return new PathGeometry(initialPoint, beziers, false);
+                    // The vertices for the figure.
+                    var verticesAsVector2 = ReadVector2Array(vertices);
+
+                    // The control points that define the cubic beziers between the vertices.
+                    var inTangentsAsVector2 = ReadVector2Array(inTangents);
+                    var outTangentsAsVector2 = ReadVector2Array(outTangents);
+
+                    if (verticesAsVector2.Length != inTangentsAsVector2.Length ||
+                        verticesAsVector2.Length != outTangentsAsVector2.Length)
+                    {
+                        throw new LottieCompositionReaderException($"Invalid path data. {pointsData}");
+                    }
+
+                    var cp3 = verticesAsVector2[0];
+
+                    for (var i = 0; i < beziers.Length; i++)
+                    {
+                        // cp0 is the start point of the segment.
+                        var cp0 = cp3;
+
+                        // cp1 is relative to cp0
+                        var cp1 = cp0 + outTangentsAsVector2[i];
+
+                        // cp3 is the endpoint of the segment.
+                        cp3 = verticesAsVector2[(i + 1) % verticesAsVector2.Length];
+
+                        // cp2 is relative to cp3
+                        var cp2 = cp3 + inTangentsAsVector2[(i + 1) % inTangentsAsVector2.Length];
+
+                        beziers[i] = new BezierSegment(
+                            cp0: cp0,
+                            cp1: cp1,
+                            cp2: cp2,
+                            cp3: cp3);
+                    }
                 }
 
-                var verticesAsVector3 = ReadVector3Array(vertices);
-                var inTangentsAsVector3 = ReadVector3Array(inTangents);
-                var outTangentsAsVector3 = ReadVector3Array(outTangents);
-
-                var vertex = verticesAsVector3[0];
-
-                initialPoint = vertex; // initial point
-
-                for (var i = 1; i < verticesAsVector3.Length; i++)
-                {
-                    vertex = verticesAsVector3[i];
-                    var previousVertex = verticesAsVector3[i - 1];
-                    var relCp1 = outTangentsAsVector3[i - 1];
-                    var relCp2 = inTangentsAsVector3[i];
-                    var controlPoint1 = previousVertex + relCp1;
-                    var controlPoint2 = vertex + relCp2;
-
-                    var bezier = new BezierSegment(
-                        cp1: controlPoint1,
-                        cp2: controlPoint2,
-                        vertex: vertex);
-                    beziers.Add(bezier);
-                }
-
-                // If the path is closed, add another bezier back to the starting point.
-                if (closed)
-                {
-                    vertex = verticesAsVector3[0];
-                    var previousVertex = verticesAsVector3[verticesAsVector3.Length - 1];
-                    var relCp1 = outTangentsAsVector3[verticesAsVector3.Length - 1];
-                    var relCp2 = inTangentsAsVector3[0];
-                    var controlPoint1 = previousVertex + relCp1;
-                    var controlPoint2 = vertex + relCp2;
-
-                    var bezier = new BezierSegment(
-                        cp1: controlPoint1,
-                        cp2: controlPoint2,
-                        vertex: vertex);
-
-                    beziers.Add(bezier);
-                }
-
-                return new PathGeometry(initialPoint, beziers, closed);
+                return new PathGeometry(beziers);
             }
 
-            static Vector3[] ReadVector3Array(JArray array)
+            static Vector2[] ReadVector2Array(JArray array)
             {
-                IEnumerable<Vector3> ToVector3Enumerable()
+                IEnumerable<Vector2> ToVector2Enumerable()
                 {
                     var count = array.Count;
                     for (int i = 0; i < count; i++)
                     {
-                        yield return ReadVector3FromJsonArray(array[i].AsArray());
+                        yield return ReadVector2FromJsonArray(array[i].AsArray());
                     }
                 }
 
-                return ToVector3Enumerable().ToArray();
+                return ToVector2Enumerable().ToArray();
             }
         }
 

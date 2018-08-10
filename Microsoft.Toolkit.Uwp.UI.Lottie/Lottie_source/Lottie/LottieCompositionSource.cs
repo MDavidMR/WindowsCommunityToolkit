@@ -147,14 +147,14 @@ namespace Lottie
         //bool ICompositionSource.TryCreateInstance(
             Compositor compositor,
             out Visual rootVisual,
-            out Vector2 size,
+            out System.Numerics.Vector2 size,
             out TimeSpan duration,
             out object diagnostics)
         {
             if (_contentFactory == null)
             {
                 rootVisual = null;
-                size = default(Vector2);
+                size = default(System.Numerics.Vector2);
                 duration = default(TimeSpan);
                 diagnostics = null;
                 return false;
@@ -548,7 +548,7 @@ namespace Lottie
             public bool TryCreateInstance(
                 Compositor compositor,
                 out Visual rootVisual,
-                out Vector2 size,
+                out System.Numerics.Vector2 size,
                 out TimeSpan duration,
                 out object diagnostics)
             {
@@ -558,7 +558,7 @@ namespace Lottie
                 if (!CanInstantiate)
                 {
                     rootVisual = null;
-                    size = default(Vector2);
+                    size = default(System.Numerics.Vector2);
                     duration = default(TimeSpan);
                     return false;
                 }
@@ -567,7 +567,7 @@ namespace Lottie
                     var sw = Stopwatch.StartNew();
 
                     rootVisual = Instantiator.CreateVisual(compositor, _wincompDataRootVisual);
-                    size = new Vector2((float)_width, (float)_height);
+                    size = new System.Numerics.Vector2((float)_width, (float)_height);
                     duration = _duration;
 
                     if (diags != null)

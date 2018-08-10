@@ -21,26 +21,6 @@
             <NavigationViewItem Content="Loading perf exerciser" Tag="LoadingPerfExerciser"/>
         </NavigationView.MenuItems>
         <StackPanel>
-            <Border BorderBrush="HotPink" BorderThickness="5">
-                <cp:CompositionPlayer x:Name="Player" Width="300" >
-                    <comps:Empty_box/>
-                </cp:CompositionPlayer>
-            </Border>
-            <StackPanel Orientation="Horizontal">
-                <Button HorizontalAlignment="Center" Click="Button_Click_1">
-                    Play1
-                </Button>
-                <Button HorizontalAlignment="Center" Click="Button_Click_2">
-                    Play2
-                </Button>
-                <Button HorizontalAlignment="Center" Click="Button_Click_3">
-                    Play3
-                </Button>
-                <Button HorizontalAlignment="Center" Click="Button_Click">
-                    Stop!
-                </Button>
-            </StackPanel>
-            <Slider Orientation="Horizontal" Minimum="-5" Maximum="5" Value="1" ValueChanged="Slider_ValueChanged" StepFrequency="0.025" HorizontalAlignment="Stretch" />
 
             <!--<Border BorderBrush="Green" BorderThickness="5">
                 <compPlayer:CompositionPlayer>

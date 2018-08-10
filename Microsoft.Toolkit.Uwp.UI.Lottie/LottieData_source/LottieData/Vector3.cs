@@ -31,6 +31,9 @@ namespace LottieData
         public static Vector3 operator +(Vector3 left, Vector3 right) =>
             new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
 
+        public static Vector3 operator -(Vector3 left, Vector3 right) =>
+            new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+
         public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
         public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
 

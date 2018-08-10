@@ -7,29 +7,29 @@ using System.Linq;
 
 namespace LottieData
 {
+    /// <summary>
+    /// A geometric figure. The geometry is represented as a series of 
+    /// cubic bezier segments.
+    /// </summary>
 #if !WINDOWS_UWP
     public
 #endif
     sealed class PathGeometry : IEquatable<PathGeometry>
     {
-        public PathGeometry(
-            Vector3 start,
-            IEnumerable<BezierSegment> beziers,
-            bool isClosed)
+        readonly BezierSegment[] _beziers;
+
+        public PathGeometry(IEnumerable<BezierSegment> beziers)
         {
-            Start = start;
-            Beziers = beziers;
-            IsClosed = isClosed;
+            _beziers = beziers.ToArray();
         }
 
-        public Vector3 Start { get; }
-        public IEnumerable<BezierSegment> Beziers { get; }
-        public bool IsClosed { get; }
+        /// <summary>
+        /// The beziers that make up the figure.
+        /// </summary>
+        public IEnumerable<BezierSegment> Beziers => _beziers;
 
-        public bool Equals(PathGeometry other) => 
+        public bool Equals(PathGeometry other) =>
             other != null &&
-            Start.Equals(other.Start) && 
-            IsClosed == other.IsClosed && 
             Enumerable.SequenceEqual(Beziers, other.Beziers, BezierSegment.EqualityComparer);
     }
 }

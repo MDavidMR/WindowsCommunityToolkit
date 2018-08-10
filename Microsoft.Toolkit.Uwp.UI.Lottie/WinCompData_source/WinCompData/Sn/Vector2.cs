@@ -29,6 +29,7 @@ namespace WinCompData.Sn
         public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
 
         public static Vector2 One { get; } = new Vector2(1, 1);
+        public static Vector2 Zero { get; } = new Vector2(0, 0);
 
         public static Vector2 operator *(Vector2 left, float right) => new Vector2(left.X * right, left.Y * right);
         public static Vector2 operator /(Vector2 left, float right) => new Vector2(left.X / right, left.Y / right);

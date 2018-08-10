@@ -31,8 +31,11 @@ namespace WinCompData.Expressions
 
         public static TypeAssert Vector2(string name) => Name(name, TypeConstraint.Vector2);
         public static Vector2 Vector2(Expression x, Expression y) => new Vector2(x, y);
+        public static Vector2 Vector2(double x, double y) => new Vector2(Scalar(x), Scalar(y));
+        public static Vector2 Vector2(Sn.Vector2 value) => new Vector2(Scalar(value.X), Scalar(value.Y));
 
         public static Vector3 Vector3(Expression x, Expression y, Expression z) => new Vector3(x, y, z);
+        public static Vector3 Vector3(Expression x, Expression y) => new Vector3(x, y, Scalar(0));
 
         protected static Squared Squared(Expression expression) => new Squared(expression);
 
@@ -78,7 +81,7 @@ namespace WinCompData.Expressions
             // Expressions are immutable, so it's always safe to return a cached string representation.
             return m_expressionStringCache != null 
                 ? m_expressionStringCache 
-                : m_expressionStringCache = CreateExpressionString();
+                : m_expressionStringCache = Simplified.CreateExpressionString();
         }
 
         /// <summary>
