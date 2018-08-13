@@ -645,15 +645,18 @@ namespace LottieData.Serialization
                 var name = obj.GetNamedString("nm");
                 var animatedGeometry = ReadAnimatableGeometry(obj.GetNamedObject("pt"));
                 var opacity = ReadAnimatableFloat(obj.GetNamedObject("o"));
-                Mask.MaskMode mode = Mask.MaskMode.None;
+                var mode = Mask.MaskMode.None;
                 var maskMode = obj.GetNamedString("mode");
                 switch (maskMode)
                 {
                     case "a":
                         mode = Mask.MaskMode.Additive;
                         break;
-                    case "s":
-                        mode = Mask.MaskMode.Subtract;
+                    case "d":
+                        mode = Mask.MaskMode.Darken;
+                        break;
+                    case "f":
+                        mode = Mask.MaskMode.Difference;
                         break;
                     case "i":
                         mode = Mask.MaskMode.Intersect;
@@ -661,11 +664,11 @@ namespace LottieData.Serialization
                     case "l":
                         mode = Mask.MaskMode.Lighten;
                         break;
-                    case "d":
-                        mode = Mask.MaskMode.Darken;
+                    case "n":
+                        mode = Mask.MaskMode.None;
                         break;
-                    case "f":
-                        mode = Mask.MaskMode.Difference;
+                    case "s":
+                        mode = Mask.MaskMode.Subtract;
                         break;
                     default:
                         throw new LottieCompositionReaderException($"Unexpected mask mode: {maskMode}");
