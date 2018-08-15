@@ -50,50 +50,42 @@ namespace WinCompData.Expressions
 
                 // The points are on the same line. The cubic bezier is a line if
                 // p1 and p2 are between p0..p3.
-                var outerDiffX = Math.Abs(_p0.X - _p3.X);
-
-                if (Math.Abs(_p0.X - _p1.X) > outerDiffX)
-                {
-                    return false;
-                }
-                if (Math.Abs(_p3.X - _p1.X) > outerDiffX)
+                if (!IsBetween(_p0.X, _p1.X, _p2.X, _p3.X))
                 {
                     return false;
                 }
 
-                if (Math.Abs(_p0.X - _p2.X) > outerDiffX)
-                {
-                    return false;
-                }
-                if (Math.Abs(_p3.X - _p2.X) > outerDiffX)
-                {
-                    return false;
-                }
-
-
-                var outerDiffY = Math.Abs(_p0.Y - _p3.Y);
-
-                if (Math.Abs(_p0.Y - _p1.Y) > outerDiffY)
-                {
-                    return false;
-                }
-                if (Math.Abs(_p3.Y - _p1.Y) > outerDiffY)
-                {
-                    return false;
-                }
-
-                if (Math.Abs(_p0.Y - _p2.Y) > outerDiffY)
-                {
-                    return false;
-                }
-                if (Math.Abs(_p3.Y - _p2.Y) > outerDiffY)
+                if (!IsBetween(_p0.Y, _p1.Y, _p2.Y, _p3.Y))
                 {
                     return false;
                 }
 
                 return true;
-
             }
+        }
+
+        // Returns true iff b and c and between a and d.
+        static bool IsBetween(double a, double b, double c, double d)
+        {
+            var deltaAD = Math.Abs(a - d);
+
+            if (Math.Abs(a - b) > deltaAD)
+            {
+                return false;
+            }
+            if (Math.Abs(d - b) > deltaAD)
+            {
+                return false;
+            }
+            if (Math.Abs(a - c) > deltaAD)
+            {
+                return false;
+            }
+            if (Math.Abs(d - c) > deltaAD)
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

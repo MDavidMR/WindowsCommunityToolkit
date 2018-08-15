@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Lottie;
-using Microsoft.UI.Xaml.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System;
 using System.Linq;
 using Windows.Storage;

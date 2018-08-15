@@ -118,9 +118,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.CompositionPlayer.vcxproj">
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.CompositionPlayer.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
-      <Name>Microsoft.UI.Xaml.CompositionPlayer</Name>
+      <Name>Microsoft.UI.Xaml.Controls.CompositionPlayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624d8bbc-00e7-4bc8-8c9c-306ec058cb2b}</Project>

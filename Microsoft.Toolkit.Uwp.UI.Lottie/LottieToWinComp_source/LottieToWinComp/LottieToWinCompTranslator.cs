@@ -1988,7 +1988,7 @@ namespace LottieToWinComp
             var key = new ScaleAndOffset(scale, offset);
             if (!_progressBindingAnimations.TryGetValue(key, out var bindingAnimation))
             {
-                bindingAnimation = CreateExpressionAnimation(ExpressionFactory.ScaledAndOffsetRootProgress(scale, offset));
+                bindingAnimation = CreateExpressionAnimation(ScaledAndOffsetRootProgress(scale, offset));
                 bindingAnimation.SetReferenceParameter(c_rootName, _rootVisual);
                 _progressBindingAnimations.Add(key, bindingAnimation);
             }
@@ -2369,7 +2369,7 @@ namespace LottieToWinComp
             if (progressMappingAnimation != null && progressMappingAnimation.KeyFrameCount > 0)
             {
                 _rootVisual.Properties.InsertScalar(progressMappingProperty, 0);
-                StartKeyframeAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation);
+                StartKeyframeAnimation(_rootVisual, progressMappingProperty, progressMappingAnimation, scale, offset);
             }
         }
 

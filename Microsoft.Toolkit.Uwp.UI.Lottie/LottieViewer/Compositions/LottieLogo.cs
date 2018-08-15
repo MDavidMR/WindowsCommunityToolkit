@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Microsoft.UI.Xaml.CompositionPlayer;
+using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;
@@ -26,14 +26,15 @@ namespace Compositions
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(375, 667);
-            duration = TimeSpan.FromTicks(59670000);
+            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
             return true;
         }
 
+        const long c_durationTicks = 59670000;
+
         sealed class Instantiator
         {
-            const long c_durationTicks = 59670000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _colorBrush_AlmostTeal_FF007A87;
@@ -190,12 +191,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(164.781998F, 57.4729996F));
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_03());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_01());
@@ -210,12 +210,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(196.791F, 266.503998F));
                 propertySet.InsertVector2("Position", new Vector2(43.2630005F, 59.75F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_01());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(196.791,266.504)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_00());
@@ -258,12 +257,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
                 propertySet.InsertVector2("Position", new Vector2(119.167F, 57.4790001F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_02());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_02());
@@ -306,12 +304,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
                 propertySet.InsertVector2("Position", new Vector2(119.167F, 57.4790001F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_03());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_02);
@@ -354,12 +351,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(303.802002F, 282.182007F));
                 propertySet.InsertVector2("Position", new Vector2(93.5940018F, 62.8610001F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_04());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_03());
@@ -402,12 +398,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(303.802002F, 282.182007F));
                 propertySet.InsertVector2("Position", new Vector2(93.5940018F, 62.8610001F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_05());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_03);
@@ -450,12 +445,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(332.049988F, 237.932007F));
                 propertySet.InsertVector2("Position", new Vector2(109.092003F, 33.6100006F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_06());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_04());
@@ -498,12 +492,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(332.049988F, 237.932007F));
                 propertySet.InsertVector2("Position", new Vector2(109.092003F, 33.6100006F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_07());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_04);
@@ -546,12 +539,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(344.671997F, 214.841995F));
                 propertySet.InsertVector2("Position", new Vector2(113.714996F, 9.14599991F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_08());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_05());
@@ -594,12 +586,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(344.671997F, 214.841995F));
                 propertySet.InsertVector2("Position", new Vector2(113.714996F, 9.14599991F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_09());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_05);
@@ -642,12 +633,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(250, 250));
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_10());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(250,250)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_06());
@@ -780,12 +770,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(196.791F, 266.503998F));
                 propertySet.InsertVector2("Position", new Vector2(-62.7919998F, 73.0569992F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_16());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(196.791,266.504)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_08());
@@ -828,12 +817,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(196.791F, 266.503998F));
                 propertySet.InsertVector2("Position", new Vector2(-62.7919998F, 73.0569992F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_17());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(196.791,266.504)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_09());
@@ -876,12 +864,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(250, 250));
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_18());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(250,250)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_06);
@@ -942,12 +929,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(250, 250));
                 propertySet.InsertVector2("Position", new Vector2(39.0429993F, 48.6780014F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_20());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(250,250)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_06);
@@ -990,12 +976,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(-33.6669998F, 8.18200016F));
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_52());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_11());
@@ -1010,12 +995,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(196.791F, 266.503998F));
                 propertySet.InsertVector2("Position", new Vector2(39.875F, 60));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_21());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(196.791,266.504)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_10());
@@ -1093,12 +1077,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(196.791F, 266.503998F));
                 propertySet.InsertVector2("Position", new Vector2(295.770996F, 108.994003F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_24());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(196.791,266.504)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_12());
@@ -1836,7 +1819,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-13.6639996F, -0.144999996F));
-                    builder.AddCubicBezier(new Vector2(-13.6639996F, -0.144999996F), new Vector2(75.663002F, 0.289999992F), new Vector2(75.663002F, 0.289999992F));
+                    builder.AddLine(new Vector2(75.663002F, 0.289999992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1849,7 +1832,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(0.859000027F, -21.1429996F));
-                    builder.AddCubicBezier(new Vector2(0.859000027F, -21.1429996F), new Vector2(-4.35900021F, 70.3919983F), new Vector2(-4.35900021F, 70.3919983F));
+                    builder.AddLine(new Vector2(-4.35900021F, 70.3919983F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1862,7 +1845,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-26.6700001F, -0.282999992F));
-                    builder.AddCubicBezier(new Vector2(-26.6700001F, -0.282999992F), new Vector2(99.1709976F, 0.0659999996F), new Vector2(99.1709976F, 0.0659999996F));
+                    builder.AddLine(new Vector2(99.1709976F, 0.0659999996F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1875,7 +1858,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-13.6639996F, -0.144999996F));
-                    builder.AddCubicBezier(new Vector2(-13.6639996F, -0.144999996F), new Vector2(62.1629982F, 0.289999992F), new Vector2(62.1629982F, 0.289999992F));
+                    builder.AddLine(new Vector2(62.1629982F, 0.289999992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1905,7 +1888,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(246.649994F, 213.813995F));
-                    builder.AddCubicBezier(new Vector2(246.649994F, 213.813995F), new Vector2(340.955994F, 213.628006F), new Vector2(340.955994F, 213.628006F));
+                    builder.AddLine(new Vector2(340.955994F, 213.628006F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1918,7 +1901,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(1.68099999F, -29.9920006F));
-                    builder.AddCubicBezier(new Vector2(1.68099999F, -29.9920006F), new Vector2(-1.68099999F, 29.9920006F), new Vector2(-1.68099999F, 29.9920006F));
+                    builder.AddLine(new Vector2(-1.68099999F, 29.9920006F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -1931,7 +1914,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(1.76800001F, -25.9659996F));
-                    builder.AddCubicBezier(new Vector2(1.76800001F, -25.9659996F), new Vector2(-1.76800001F, 25.9659996F), new Vector2(-1.76800001F, 25.9659996F));
+                    builder.AddLine(new Vector2(-1.76800001F, 25.9659996F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2019,7 +2002,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(16.2310009F, 39.0730019F));
-                    builder.AddCubicBezier(new Vector2(16.2310009F, 39.0730019F), new Vector2(-32.769001F, 57.3650017F), new Vector2(-32.769001F, 57.3650017F));
+                    builder.AddLine(new Vector2(-32.769001F, 57.3650017F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2032,7 +2015,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(7.44999981F, 21.9500008F));
-                    builder.AddCubicBezier(new Vector2(7.44999981F, 21.9500008F), new Vector2(-32.75F, 55.75F), new Vector2(-32.75F, 55.75F));
+                    builder.AddLine(new Vector2(-32.75F, 55.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2045,7 +2028,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-94.5F, 37.0730019F));
-                    builder.AddCubicBezier(new Vector2(-94.5F, 37.0730019F), new Vector2(-48.769001F, 55.3650017F), new Vector2(-48.769001F, 55.3650017F));
+                    builder.AddLine(new Vector2(-48.769001F, 55.3650017F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2058,7 +2041,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-87.5F, 20.9500008F));
-                    builder.AddCubicBezier(new Vector2(-87.5F, 20.9500008F), new Vector2(-48.75F, 54.75F), new Vector2(-48.75F, 54.75F));
+                    builder.AddLine(new Vector2(-48.75F, 54.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2071,7 +2054,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(166.731003F, -7.92700005F));
-                    builder.AddCubicBezier(new Vector2(166.731003F, -7.92700005F), new Vector2(136.731003F, 7.11499977F), new Vector2(136.731003F, 7.11499977F));
+                    builder.AddLine(new Vector2(136.731003F, 7.11499977F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2084,7 +2067,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(156.449997F, -23.0499992F));
-                    builder.AddCubicBezier(new Vector2(156.449997F, -23.0499992F), new Vector2(132, 2.75F), new Vector2(132, 2.75F));
+                    builder.AddLine(new Vector2(132, 2.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2097,7 +2080,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(169.5F, 18.073F));
-                    builder.AddCubicBezier(new Vector2(169.5F, 18.073F), new Vector2(137.481003F, 11.3649998F), new Vector2(137.481003F, 11.3649998F));
+                    builder.AddLine(new Vector2(137.481003F, 11.3649998F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2110,7 +2093,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(119.5F, -45.0499992F));
-                    builder.AddCubicBezier(new Vector2(119.5F, -45.0499992F), new Vector2(82.75F, -44.75F), new Vector2(82.75F, -44.75F));
+                    builder.AddLine(new Vector2(82.75F, -44.75F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2123,7 +2106,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(119.25F, -20.0499992F));
-                    builder.AddCubicBezier(new Vector2(119.25F, -20.0499992F), new Vector2(63.5F, -20.5F), new Vector2(63.5F, -20.5F));
+                    builder.AddLine(new Vector2(63.5F, -20.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2136,7 +2119,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(128, 3.6500001F));
-                    builder.AddCubicBezier(new Vector2(128, 3.6500001F), new Vector2(78.25F, 3.5F), new Vector2(78.25F, 3.5F));
+                    builder.AddLine(new Vector2(78.25F, 3.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2149,7 +2132,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(149.623993F, 8.24400043F));
-                    builder.AddCubicBezier(new Vector2(149.623993F, 8.24400043F), new Vector2(136.647995F, 10.1560001F), new Vector2(136.647995F, 10.1560001F));
+                    builder.AddLine(new Vector2(136.647995F, 10.1560001F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2162,7 +2145,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(144.429001F, -5.39699984F));
-                    builder.AddCubicBezier(new Vector2(144.429001F, -5.39699984F), new Vector2(132.274994F, 4.73099995F), new Vector2(132.274994F, 4.73099995F));
+                    builder.AddLine(new Vector2(132.274994F, 4.73099995F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2175,7 +2158,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(145.677002F, 22.2199993F));
-                    builder.AddCubicBezier(new Vector2(145.677002F, 22.2199993F), new Vector2(134.921997F, 14.7489996F), new Vector2(134.921997F, 14.7489996F));
+                    builder.AddLine(new Vector2(134.921997F, 14.7489996F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2188,7 +2171,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(147.699005F, 13.0249996F));
-                    builder.AddCubicBezier(new Vector2(147.699005F, 13.0249996F), new Vector2(133.195007F, 13.21F), new Vector2(133.195007F, 13.21F));
+                    builder.AddLine(new Vector2(133.195007F, 13.21F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2201,7 +2184,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(142.182999F, -5.11199999F));
-                    builder.AddCubicBezier(new Vector2(142.182999F, -5.11199999F), new Vector2(130.029007F, 5.01599979F), new Vector2(130.029007F, 5.01599979F));
+                    builder.AddLine(new Vector2(130.029007F, 5.01599979F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -2214,7 +2197,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(142.037994F, 29.2779999F));
-                    builder.AddCubicBezier(new Vector2(142.037994F, 29.2779999F), new Vector2(131.281998F, 21.8069992F), new Vector2(131.281998F, 21.8069992F));
+                    builder.AddLine(new Vector2(131.281998F, 21.8069992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }

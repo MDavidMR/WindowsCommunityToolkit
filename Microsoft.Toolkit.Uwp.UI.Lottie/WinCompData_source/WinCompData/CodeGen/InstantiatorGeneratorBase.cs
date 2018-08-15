@@ -175,6 +175,14 @@ namespace WinCompData.CodeGen
             CodeGenInfo info);
 
         /// <summary>
+        /// Writes the start of the Instantiator class.
+        /// </summary>
+        protected abstract void WriteInstantiatorStart(
+            CodeBuilder builder,
+            CodeGenInfo info);
+
+
+        /// <summary>
         /// Writes the end of the class.
         /// </summary>
         protected abstract void WriteFileEnd(
@@ -238,8 +246,8 @@ namespace WinCompData.CodeGen
             var info = new CodeGenInfo(
                 className: className,
                 reusableExpressionAnimationFieldName: c_singletonExpressionAnimationName,
+                durationTicksFieldName: c_durationTicksFieldName,
                 compositionDeclaredSize: new Sn.Vector2(width, height),
-                compositionDuration: _compositionDuration,
                 // Determine whether to add #includes and usings for namespaces.
                 requiresWin2d: _nodes.Where(n => n.RequiresWin2D).Any(),
                 rootVisual: (Visual)_rootNode.Object
@@ -256,10 +264,12 @@ namespace WinCompData.CodeGen
             // up to the start of the Instantiator class.
             WriteFileStart(codeBuilder, info);
 
-            // Write the body of the Instantiator class.
-
             // Write fields for constant values.
             WriteField(codeBuilder, Const(_stringifier.Int64TypeName), $"{c_durationTicksFieldName} = {_stringifier.Int64(_compositionDuration.Ticks)}");
+            codeBuilder.WriteLine();
+
+            // Write the body of the Instantiator class.
+            WriteInstantiatorStart(codeBuilder, info);
 
             // Write fields for each object that needs storage (i.e. objects that are 
             // referenced more than once).
@@ -1372,15 +1382,15 @@ namespace WinCompData.CodeGen
             internal CodeGenInfo(
                 string className,
                 string reusableExpressionAnimationFieldName,
+                string durationTicksFieldName,
                 Vector2 compositionDeclaredSize,
-                TimeSpan compositionDuration,
                 Visual rootVisual,
                 bool requiresWin2d)
             {
                 ClassName = className;
                 ReusableExpressionAnimationFieldName = reusableExpressionAnimationFieldName;
+                DurationTicksFieldName = durationTicksFieldName;
                 CompositionDeclaredSize = compositionDeclaredSize;
-                CompositionDuration = compositionDuration;
                 RequiresWin2d = requiresWin2d;
                 RootVisual = rootVisual;
             }
@@ -1396,9 +1406,9 @@ namespace WinCompData.CodeGen
             public Vector2 CompositionDeclaredSize { get; }
 
             /// <summary>
-            /// The duration of the composition.
+            /// The constant holding the duration of the composition in ticks.
             /// </summary>
-            public TimeSpan CompositionDuration { get; }
+            public string DurationTicksFieldName { get; }
 
             /// <summary>
             /// True iff the composition depends on Win2D or D2D functionality.

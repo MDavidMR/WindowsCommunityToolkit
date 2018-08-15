@@ -97,8 +97,8 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("outputfolder", Keyword.OutputFolder)
             .AddPrefixedKeyword("strict", Keyword.Strict)
             // Undocumented keywords used for internal testing
-            .AddPrefixedKeyword("disableocodegenoptimizer", Keyword.DisableCodeGenOptimizer)
-            .AddPrefixedKeyword("disableotranslationoptimizer", Keyword.DisableTranslationOptimizer);
+            .AddPrefixedKeyword("disablecodegenoptimizer", Keyword.DisableCodeGenOptimizer)
+            .AddPrefixedKeyword("disabletranslationoptimizer", Keyword.DisableTranslationOptimizer);
 
         // Sentinel to indicate that there is no parameter expected for the current argument.
         string noParameterSentinel = "noParameterSentinel";

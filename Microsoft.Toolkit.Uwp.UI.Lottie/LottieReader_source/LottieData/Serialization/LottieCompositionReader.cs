@@ -314,6 +314,7 @@ namespace LottieData.Serialization
         {
             ExpectToken(reader, JsonToken.StartObject);
 
+            int e = 0;
             string id = null;
             double width = 0.0;
             double height = 0.0;
@@ -333,6 +334,10 @@ namespace LottieData.Serialization
 
                             switch (currentProperty)
                             {
+                                case "e":
+                                    // TODO: unknown what this is. It shows up in image assets.
+                                    e = ParseInt(reader);
+                                    break;
                                 case "h":
                                     height = ParseDouble(reader);
                                     break;

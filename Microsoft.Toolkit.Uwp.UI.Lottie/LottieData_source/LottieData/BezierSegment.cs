@@ -146,22 +146,6 @@ namespace LottieData
             return (x * x) + (y * y);
         }
 
-        static void OrderAscending(ref double a, ref double b, ref double c)
-        {
-            if (a < b)
-            {
-                double temp = a;
-                a = b;
-                b = temp;
-            }
-            if (b < c)
-            {
-                double temp = b;
-                b = c;
-                c = temp;
-            }
-        }
-
         enum Segment
         {
             AB,

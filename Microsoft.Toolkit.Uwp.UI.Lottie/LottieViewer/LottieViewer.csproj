@@ -194,18 +194,15 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
+      <Version>0.1.0.12</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.CompositionPlayer.vcxproj">
-      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
-      <Name>Microsoft.UI.Xaml.CompositionPlayer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Lottie_source\Lottie_source.projitems" Label="Shared" />
   <Import Project="..\LottieReader_source\LottieReader_source.projitems" Label="Shared" />

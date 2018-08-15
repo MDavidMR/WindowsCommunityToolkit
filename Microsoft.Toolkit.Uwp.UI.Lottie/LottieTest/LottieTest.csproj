@@ -190,14 +190,14 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.8</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml.CompositionPlayer">
-      <Version>0.1.0.10</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
+      <Version>0.1.0.12</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.CompositionPlayer.vcxproj">
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.CompositionPlayer.vcxproj">
       <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
-      <Name>Microsoft.UI.Xaml.CompositionPlayer</Name>
+      <Name>Microsoft.UI.Xaml.Controls.CompositionPlayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>

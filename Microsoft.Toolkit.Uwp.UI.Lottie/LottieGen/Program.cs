@@ -503,7 +503,8 @@ static class Program
                     rootVisual,
                     compositionWidth,
                     compositionHeight,
-                    duration);
+                    duration,
+                    disableCodeGenOptimizer);
 
         if (string.IsNullOrWhiteSpace(code))
         {
@@ -541,7 +542,8 @@ static class Program
                 duration,
                 className,
                 out var cppText,
-                out var hText);
+                out var hText,
+                disableCodeGenOptimizer);
 
         if (string.IsNullOrWhiteSpace(cppText))
         {

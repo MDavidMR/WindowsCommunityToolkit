@@ -26,14 +26,15 @@ namespace Compositions
         {
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(281, 500);
-            duration = TimeSpan.FromTicks(126000000);
+            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
             return true;
         }
 
+        const long c_durationTicks = 126000000;
+
         sealed class Instantiator
         {
-            const long c_durationTicks = 126000000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
@@ -226,14 +227,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(165.615005F, 264.614014F));
                 propertySet.InsertVector2("Position", new Vector2(213.832993F, 805.997009F));
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_002());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_03());
@@ -293,14 +293,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(165.615005F, 264.614014F));
                 propertySet.InsertVector2("Position", new Vector2(213.832993F, 805.997009F));
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_01());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_04());
@@ -331,14 +330,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(165.615005F, 264.614014F));
                 propertySet.InsertVector2("Position", new Vector2(213.832993F, 805.997009F));
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_02());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_05());
@@ -370,14 +368,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(165.615005F, 264.614014F));
                 propertySet.InsertVector2("Position", new Vector2(213.832993F, 805.997009F));
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_009());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_06());
@@ -420,14 +417,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(165.615005F, 264.614014F));
                 propertySet.InsertVector2("Position", new Vector2(213.832993F, 805.997009F));
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_012());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_07());
@@ -470,14 +466,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_015());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_09());
@@ -492,14 +487,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(40, -210));
                 propertySet.InsertVector2("Position", new Vector2(-27.0639992F, 44.3839989F));
                 result.CenterPoint = new Vector2(40, -210);
                 result.Scale = new Vector2(0.86631F, 0.86631F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_05());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_08());
@@ -531,14 +525,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_018());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -595,14 +588,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_022());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -659,14 +651,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_026());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -723,14 +714,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_030());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -787,14 +777,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_034());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -843,14 +832,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_037());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -899,14 +887,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_040());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -955,14 +942,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_043());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -1011,14 +997,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_046());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -1075,14 +1060,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_050());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
@@ -1139,14 +1123,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_054());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_13());
@@ -1161,14 +1144,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(66.9589996F, 52.9179993F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.092249997F, 0.092249997F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_055());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_12());
@@ -1183,14 +1165,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(40, -210));
                 propertySet.InsertVector2("Position", new Vector2(-1010, -37));
                 result.CenterPoint = new Vector2(40, -210);
                 result.Scale = new Vector2(1.54200006F, 1.54200006F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_16());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_11());
@@ -1222,14 +1203,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_058());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1273,14 +1253,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_061());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1325,14 +1304,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_064());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1376,14 +1354,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_067());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1427,14 +1404,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_070());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1449,14 +1425,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(277.697998F, 247.257996F));
                 propertySet.InsertVector2("Position", new Vector2(64.5660019F, 108.344002F));
                 result.CenterPoint = new Vector2(277.697998F, 247.257996F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_21());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_14());
@@ -1488,14 +1463,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_073());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1510,14 +1484,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(277.697998F, 247.257996F));
                 propertySet.InsertVector2("Position", new Vector2(64.5660019F, 99.1439972F));
                 result.CenterPoint = new Vector2(277.697998F, 247.257996F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_22());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_15());
@@ -1549,14 +1522,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_076());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1600,14 +1572,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_079());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1651,14 +1622,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_082());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1702,14 +1672,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_085());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1752,14 +1721,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_088());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1802,14 +1770,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_091());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1852,14 +1819,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_094());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1902,14 +1868,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_097());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -1952,14 +1917,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_100());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_13);
@@ -2002,14 +1966,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_103());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_17());
@@ -2024,14 +1987,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(303.802002F, 282.182007F));
                 propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
                 result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_32());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_16());
@@ -2063,14 +2025,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_106());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_19());
@@ -2085,14 +2046,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(303.802002F, 282.182007F));
                 propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
                 result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_107());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_16);
@@ -2107,12 +2067,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(303.802002F, 282.182007F));
                 propertySet.InsertVector2("Position", new Vector2(303.21701F, 291.73999F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_33());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_18());
@@ -2144,14 +2103,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_110());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_21());
@@ -2166,14 +2124,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
                 propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
                 result.CenterPoint = new Vector2(345.123993F, 261.800995F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_34());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_20());
@@ -2205,14 +2162,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_113());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_23());
@@ -2227,14 +2183,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(345.123993F, 261.800995F));
                 propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
                 result.CenterPoint = new Vector2(345.123993F, 261.800995F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_35());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_22());
@@ -2266,14 +2221,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_116());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_25());
@@ -2288,14 +2242,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(332.049988F, 237.932007F));
                 propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
                 result.CenterPoint = new Vector2(332.049988F, 237.932007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_36());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_24());
@@ -2327,14 +2280,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_119());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_27());
@@ -2349,14 +2301,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(332.049988F, 237.932007F));
                 propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
                 result.CenterPoint = new Vector2(332.049988F, 237.932007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_120());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_24);
@@ -2371,12 +2322,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(332.049988F, 237.932007F));
                 propertySet.InsertVector2("Position", new Vector2(392.847992F, 237.932007F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_37());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_26());
@@ -2408,14 +2358,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_123());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_29());
@@ -2430,14 +2379,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(344.671997F, 214.841995F));
                 propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
                 result.CenterPoint = new Vector2(344.671997F, 214.841995F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_38());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_28());
@@ -2469,14 +2417,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_126());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_31());
@@ -2491,14 +2438,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(344.671997F, 214.841995F));
                 propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
                 result.CenterPoint = new Vector2(344.671997F, 214.841995F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_127());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_28);
@@ -2513,12 +2459,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(344.671997F, 214.841995F));
                 propertySet.InsertVector2("Position", new Vector2(370.312012F, 214.841995F));
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_39());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_30());
@@ -2550,14 +2495,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_130());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_32());
@@ -2775,14 +2719,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_145());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_33());
@@ -2826,14 +2769,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(46, 60));
                 propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_148());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_37());
@@ -2848,14 +2790,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(127.278F, 60.6500015F));
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.165289998F, 0.165289998F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_149());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_36());
@@ -2870,14 +2811,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(40, -210));
                 propertySet.InsertVector2("Position", new Vector2(-184.132996F, -369.832001F));
                 result.CenterPoint = new Vector2(40, -210);
                 result.Scale = new Vector2(1.02170002F, 1.02170002F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_48());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_35());
@@ -3553,12 +3493,11 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(60, 60));
                 propertySet.InsertVector2("Position", new Vector2(164.770004F, 73.5979996F));
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_198());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_39());
@@ -3573,14 +3512,13 @@ namespace Compositions
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Anchor", new Vector2(40, -210));
                 propertySet.InsertVector2("Position", new Vector2(33.3129997F, 49.9490013F));
                 result.CenterPoint = new Vector2(40, -210);
                 result.Scale = new Vector2(0.172700003F, 0.172700003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_64());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_38());
@@ -4066,7 +4004,7 @@ namespace Compositions
                     builder.AddCubicBezier(new Vector2(212.764008F, 258.013F), new Vector2(205.707001F, 250.955994F), new Vector2(197.001007F, 250.955994F));
                     builder.AddCubicBezier(new Vector2(188.294998F, 250.955994F), new Vector2(181.237F, 258.013F), new Vector2(181.237F, 266.718994F));
                     builder.AddCubicBezier(new Vector2(181.237F, 275.424988F), new Vector2(188.294998F, 282.481995F), new Vector2(197.001007F, 282.481995F));
-                    builder.EndFigure(CanvasFigureLoop.Closed);
+                    builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
                 return result;
@@ -4078,7 +4016,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-26.6700001F, -0.282999992F));
-                    builder.AddCubicBezier(new Vector2(-26.6700001F, -0.282999992F), new Vector2(99.1709976F, 0.0659999996F), new Vector2(99.1709976F, 0.0659999996F));
+                    builder.AddLine(new Vector2(99.1709976F, 0.0659999996F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4091,7 +4029,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(1.68099999F, -29.9920006F));
-                    builder.AddCubicBezier(new Vector2(1.68099999F, -29.9920006F), new Vector2(-1.68099999F, 29.9920006F), new Vector2(-1.68099999F, 29.9920006F));
+                    builder.AddLine(new Vector2(-1.68099999F, 29.9920006F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4104,7 +4042,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(1.76800001F, -25.9659996F));
-                    builder.AddCubicBezier(new Vector2(1.76800001F, -25.9659996F), new Vector2(-1.76800001F, 25.9659996F), new Vector2(-1.76800001F, 25.9659996F));
+                    builder.AddLine(new Vector2(-1.76800001F, 25.9659996F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4117,7 +4055,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(393.066986F, 608.346985F));
-                    builder.AddCubicBezier(new Vector2(393.066986F, 608.346985F), new Vector2(217.567001F, 565), new Vector2(217.567001F, 565));
+                    builder.AddLine(new Vector2(217.567001F, 565));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4130,7 +4068,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(373.566986F, 514.346985F));
-                    builder.AddCubicBezier(new Vector2(373.566986F, 514.346985F), new Vector2(222.567001F, 558.5F), new Vector2(222.567001F, 558.5F));
+                    builder.AddLine(new Vector2(222.567001F, 558.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4143,7 +4081,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(357.566986F, 425.846985F));
-                    builder.AddCubicBezier(new Vector2(357.566986F, 425.846985F), new Vector2(217.067001F, 554), new Vector2(217.067001F, 554));
+                    builder.AddLine(new Vector2(217.067001F, 554));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4156,7 +4094,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-30.1669998F, 598.346985F));
-                    builder.AddCubicBezier(new Vector2(-30.1669998F, 598.346985F), new Vector2(156.567001F, 566), new Vector2(156.567001F, 566));
+                    builder.AddLine(new Vector2(156.567001F, 566));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4169,7 +4107,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-25.1669998F, 488.346985F));
-                    builder.AddCubicBezier(new Vector2(-25.1669998F, 488.346985F), new Vector2(158.567001F, 558.5F), new Vector2(158.567001F, 558.5F));
+                    builder.AddLine(new Vector2(158.567001F, 558.5F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4182,7 +4120,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(1.83299994F, 433.846985F));
-                    builder.AddCubicBezier(new Vector2(1.83299994F, 433.846985F), new Vector2(163.067001F, 552), new Vector2(163.067001F, 552));
+                    builder.AddLine(new Vector2(163.067001F, 552));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4195,7 +4133,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(0.859000027F, -21.1429996F));
-                    builder.AddCubicBezier(new Vector2(0.859000027F, -21.1429996F), new Vector2(-4.35900021F, 70.3919983F), new Vector2(-4.35900021F, 70.3919983F));
+                    builder.AddLine(new Vector2(-4.35900021F, 70.3919983F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4208,7 +4146,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-13.6639996F, -0.144999996F));
-                    builder.AddCubicBezier(new Vector2(-13.6639996F, -0.144999996F), new Vector2(75.663002F, 0.289999992F), new Vector2(75.663002F, 0.289999992F));
+                    builder.AddLine(new Vector2(75.663002F, 0.289999992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4221,7 +4159,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(-13.6639996F, -0.144999996F));
-                    builder.AddCubicBezier(new Vector2(-13.6639996F, -0.144999996F), new Vector2(62.1629982F, 0.289999992F), new Vector2(62.1629982F, 0.289999992F));
+                    builder.AddLine(new Vector2(62.1629982F, 0.289999992F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4234,7 +4172,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(246.649994F, 213.813995F));
-                    builder.AddCubicBezier(new Vector2(246.649994F, 213.813995F), new Vector2(340.955994F, 213.628006F), new Vector2(340.955994F, 213.628006F));
+                    builder.AddLine(new Vector2(340.955994F, 213.628006F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4247,7 +4185,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(86.8330002F, 569.346985F));
-                    builder.AddCubicBezier(new Vector2(86.8330002F, 569.346985F), new Vector2(173.966995F, 563.900024F), new Vector2(173.966995F, 563.900024F));
+                    builder.AddLine(new Vector2(173.966995F, 563.900024F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4260,7 +4198,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(97.8330002F, 523.346985F));
-                    builder.AddCubicBezier(new Vector2(97.8330002F, 523.346985F), new Vector2(173.667007F, 562.900024F), new Vector2(173.667007F, 562.900024F));
+                    builder.AddLine(new Vector2(173.667007F, 562.900024F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4273,7 +4211,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(104.833F, 484.846985F));
-                    builder.AddCubicBezier(new Vector2(104.833F, 484.846985F), new Vector2(175.667007F, 560.799988F), new Vector2(175.667007F, 560.799988F));
+                    builder.AddLine(new Vector2(175.667007F, 560.799988F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4286,7 +4224,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(82.8330002F, 569.346985F));
-                    builder.AddCubicBezier(new Vector2(82.8330002F, 569.346985F), new Vector2(173.966995F, 563.900024F), new Vector2(173.966995F, 563.900024F));
+                    builder.AddLine(new Vector2(173.966995F, 563.900024F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4299,7 +4237,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(105.833F, 526.346985F));
-                    builder.AddCubicBezier(new Vector2(105.833F, 526.346985F), new Vector2(173.667007F, 562.900024F), new Vector2(173.667007F, 562.900024F));
+                    builder.AddLine(new Vector2(173.667007F, 562.900024F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -4312,7 +4250,7 @@ namespace Compositions
                 using (var builder = new CanvasPathBuilder(null))
                 {
                     builder.BeginFigure(new Vector2(97.8330002F, 486.846985F));
-                    builder.AddCubicBezier(new Vector2(97.8330002F, 486.846985F), new Vector2(175.667007F, 560.799988F), new Vector2(175.667007F, 560.799988F));
+                    builder.AddLine(new Vector2(175.667007F, 560.799988F));
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
@@ -7360,14 +7298,14 @@ namespace Compositions
             StepEasingFunction StepEasingFunction_0()
             {
                 var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame  = true;
+                result.IsInitialStepSingleFrame = true;
                 return result;
             }
 
             StepEasingFunction StepEasingFunction_1()
             {
                 var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame  = true;
+                result.IsFinalStepSingleFrame = true;
                 return result;
             }
 

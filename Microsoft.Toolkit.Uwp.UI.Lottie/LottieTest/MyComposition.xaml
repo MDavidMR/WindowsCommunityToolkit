@@ -5,7 +5,7 @@
     xmlns:local="using:LottieTest"
     xmlns:lottie="using:Lottie"
     xmlns:compositions="using:Compositions"
-    xmlns:compPlayer="using:Microsoft.UI.Xaml.CompositionPlayer"
+    xmlns:compPlayer="using:Microsoft.UI.Xaml.Controls.CompositionPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">

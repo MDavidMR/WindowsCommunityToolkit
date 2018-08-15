@@ -56,7 +56,7 @@ namespace WinCompData.CodeGen
         // Called by the base class to write the start of the file (i.e. everything up to the body of the Instantiator class).
         protected override void WriteFileStart(CodeBuilder builder, CodeGenInfo info)
         {
-            builder.WriteLine("using Host = Microsoft.UI.Xaml.CompositionPlayer;");
+            builder.WriteLine("using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;");
             if (info.RequiresWin2d)
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
@@ -84,12 +84,15 @@ namespace WinCompData.CodeGen
             builder.OpenScope();
             builder.WriteLine("rootVisual = Instantiator.InstantiateComposition(compositor);");
             builder.WriteLine($"size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine($"duration = {_stringifier.TimeSpan(info.CompositionDuration)};");
+            builder.WriteLine($"duration = TimeSpan.FromTicks({info.DurationTicksFieldName});");
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("return true;");
             builder.CloseScope();
             builder.WriteLine();
+        }
 
+        protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
+        {
             // Start the instantiator class.
             builder.WriteLine("sealed class Instantiator");
             builder.OpenScope();

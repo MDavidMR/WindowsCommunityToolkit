@@ -46,7 +46,6 @@ namespace WinCompData.CodeGen
             out string cppText,
             out string hText,
             // Rarely set options used mostly for testing.
-            bool disableOptimizer = false,
             bool disableFieldOptimization = false)
         {
             var generator = new CxInstantiatorGenerator(
@@ -131,7 +130,10 @@ public:
 
             // Typedef to simplify generation
             builder.WriteLine("typedef ComPtr<GeoSource> CanvasGeometry;");
+        }
 
+        protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
+        {
             // Start writing the instantiator.
             builder.WriteLine("class Instantiator final");
             builder.OpenScope();
@@ -207,11 +209,10 @@ public:
             builder.OpenScope();
             builder.WriteLine("*rootVisual = Instantiator::InstantiateComposition(compositor);");
             builder.WriteLine($"*size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine($"duration->Duration = {_stringifier.TimeSpan(info.CompositionDuration)};");
+            builder.WriteLine($"duration->Duration = {{{info.DurationTicksFieldName}}};");
             builder.WriteLine("diagnostics = nullptr;");
             builder.WriteLine("return true;");
             builder.CloseScope();
-
         }
 
         protected override void WriteCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, string typeName, string fieldName)

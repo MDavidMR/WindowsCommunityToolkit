@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System.IO;
 
 namespace Lottie
@@ -33,7 +33,7 @@ namespace Lottie
     public sealed class LottieCompositionSource : DependencyObject, IDynamicCompositionSource
     {
         readonly StorageFile _storageFile;
-        EventRegistrationTokenTable<DynamicCompositionSourceEventHandler> _compositionInvalidatedEventTokenTable;
+        EventRegistrationTokenTable<TypedEventHandler<object, object>> _compositionInvalidatedEventTokenTable;
         int _loadVersion;
         Uri _uriSource;
         ContentFactory _contentFactory;
@@ -125,18 +125,18 @@ namespace Lottie
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
         //event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
-        public event DynamicCompositionSourceEventHandler CompositionInvalidated
+        public event TypedEventHandler<object, object> CompositionInvalidated
         {
             add
             {
-                return EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+                return EventRegistrationTokenTable<TypedEventHandler<object, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                    .AddEventHandler(value);
             }
 
             remove
             {
-                EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+                EventRegistrationTokenTable<TypedEventHandler<object, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                     .RemoveEventHandler(value);
             }
@@ -172,9 +172,9 @@ namespace Lottie
 
         void NotifyListenersThatCompositionChanged()
         {
-            EventRegistrationTokenTable<DynamicCompositionSourceEventHandler>
+            EventRegistrationTokenTable<TypedEventHandler<object, object>>
                 .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
-                .InvocationList?.Invoke(this);
+                .InvocationList?.Invoke(this, null);
         }
 
 

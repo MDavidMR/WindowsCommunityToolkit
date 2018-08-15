@@ -114,8 +114,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml.CompositionPlayer">
-      <Version>0.1.0.10</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
+      <Version>0.1.0.12</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
@@ -130,7 +130,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Lottie.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="..\LottieToWinComp_source\LottieToWinComp_source.projitems" Label="Shared" />
   <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
   <Import Project="..\WinCompData_source\WinCompData_source.projitems" Label="Shared" />
