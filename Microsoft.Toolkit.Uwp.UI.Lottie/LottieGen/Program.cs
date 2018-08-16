@@ -540,7 +540,7 @@ static class Program
                 compositionWidth,
                 compositionHeight,
                 duration,
-                className,
+                Path.GetFileName(outputHeaderFilePath),
                 out var cppText,
                 out var hText,
                 disableCodeGenOptimizer);

@@ -75,11 +75,9 @@ $@"#pragma once
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#include ""ICompositionSource.h""
-
 namespace Compositions 
 {{
-ref class {className} sealed : public ICompositionSource
+ref class {className} sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::ICompositionSource
 {{
 public:
     virtual bool TryCreateInstance(
