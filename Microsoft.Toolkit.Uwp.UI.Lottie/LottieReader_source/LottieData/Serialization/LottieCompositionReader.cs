@@ -30,6 +30,7 @@ namespace LottieData.Serialization
     sealed class LottieCompositionReader
     {
         static readonly AnimatableFloatParser s_animatableFloatParser = new AnimatableFloatParser();
+        static readonly AnimatableVector2Parser s_animatableVector2Parser = new AnimatableVector2Parser();
         static readonly AnimatableVector3Parser s_animatableVector3Parser = new AnimatableVector3Parser();
         static readonly AnimatableColorParser s_animatableColorParser = new AnimatableColorParser();
         static readonly AnimatableGeometryParser s_animatableGeometryParser = new AnimatableGeometryParser();
@@ -959,16 +960,16 @@ namespace LottieData.Serialization
         LinearGradientFill ReadLinearGradientFill(JObject obj)
         {
             // Not clear whether we need to read these fields.
-            IgnoreFieldThatIsNotYetSupported(obj, "g");
             IgnoreFieldThatIsNotYetSupported(obj, "r");
             IgnoreFieldThatIsNotYetSupported(obj, "hd");
 
             var name = ReadName(obj);
             var opacity = ReadOpacityPercent(obj);
-            var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
-            var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
+            var startPoint = ReadAnimatableVector2(obj.GetNamedObject("s"));
+            var endPoint = ReadAnimatableVector2(obj.GetNamedObject("e"));
+            var gradientStops = ReadAnimatableGradientStops(obj.GetNamedObject("g"));
             AssertAllFieldsRead(obj);
-            return new LinearGradientFill(name.Name, name.MatchName, opacity, startPoint, endPoint);
+            return new LinearGradientFill(name.Name, name.MatchName, opacity, startPoint, endPoint, gradientStops);
         }
 
         Ellipse ReadEllipse(JObject obj)
@@ -1276,6 +1277,23 @@ namespace LottieData.Serialization
             return intValue;
         }
 
+        Animatable<Vector2> ReadAnimatableVector2(JObject obj)
+        {
+            IgnoreFieldThatIsNotYetSupported(obj, "s");
+            // Expressions not supported.
+            IgnoreFieldThatIsNotYetSupported(obj, "x");
+
+            var propertyIndex = ReadInt(obj, "ix");
+            if (obj.ContainsKey("k"))
+            {
+                s_animatableVector2Parser.ParseJson(this, obj, out IEnumerable<KeyFrame<Vector2>> keyFrames, out Vector2 initialValue);
+                AssertAllFieldsRead(obj);
+                return new Animatable<Vector2>(initialValue, keyFrames, propertyIndex);
+            }
+
+            throw new LottieCompositionReaderException("Animatable Vector2 could not be read.");
+        }
+
         IAnimatableVector3 ReadAnimatableVector3(JObject obj)
         {
             IgnoreFieldThatIsNotYetSupported(obj, "s");
@@ -1305,6 +1323,15 @@ namespace LottieData.Serialization
             s_animatableGeometryParser.ParseJson(this, obj, out IEnumerable<KeyFrame<PathGeometry>> keyFrames, out PathGeometry initialValue);
             var propertyIndex = ReadInt(obj, "ix");
             return new Animatable<PathGeometry>(initialValue, keyFrames, propertyIndex);
+        }
+
+        Animatable<GradientStopCollection> ReadAnimatableGradientStops(JObject obj)
+        {
+            var numberOfColorStops = ReadInt(obj, "p");
+            var animatableGradientStopsParser = new AnimatableGradientStopsParser(numberOfColorStops);
+            animatableGradientStopsParser.ParseJson(this, obj.GetNamedObject("k"), out IEnumerable<KeyFrame<GradientStopCollection>> keyFrames, out GradientStopCollection initialValue);
+            var propertyIndex = ReadInt(obj, "ix");
+            return new Animatable<GradientStopCollection>(initialValue, keyFrames, propertyIndex);
         }
 
         Animatable<double> ReadAnimatableFloat(JObject obj)
@@ -1409,16 +1436,19 @@ namespace LottieData.Serialization
             return result;
         }
 
+        sealed class AnimatableVector2Parser : AnimatableParser<Vector2>
+        {
+            protected override Vector2 ReadValue(JToken obj) => ReadVector2FromJsonArray(obj.AsArray());
+        }
+
         sealed class AnimatableVector3Parser : AnimatableParser<Vector3>
         {
-            internal AnimatableVector3Parser() : base((JToken obj) => ReadVector3FromJsonArray(obj.AsArray())) { }
+            protected override Vector3 ReadValue(JToken obj) => ReadVector3FromJsonArray(obj.AsArray());
         }
 
         sealed class AnimatableColorParser : AnimatableParser<Color>
         {
-            internal AnimatableColorParser() : base(ColorValueFactory) { }
-
-            static Func<JToken, Color> ColorValueFactory => (JToken obj) =>
+            protected override Color ReadValue(JToken obj)
             {
                 var colorArray = obj.AsArray();
                 double a = 0;
@@ -1465,14 +1495,12 @@ namespace LottieData.Serialization
                     b /= 255;
                 }
                 return Color.FromArgb(a, r, g, b);
-            };
+            }
         }
 
         sealed class AnimatableGeometryParser : AnimatableParser<PathGeometry>
         {
-            internal AnimatableGeometryParser() : base(ReadPathGeometryFromJson) { }
-
-            static PathGeometry ReadPathGeometryFromJson(JToken value)
+            protected override PathGeometry ReadValue(JToken value)
             {
                 JObject pointsData = null;
                 if (value.Type == JTokenType.Array)
@@ -1563,20 +1591,118 @@ namespace LottieData.Serialization
             }
         }
 
+        sealed class AnimatableGradientStopsParser : AnimatableParser<GradientStopCollection>
+        {
+            internal AnimatableGradientStopsParser(int? colorStopCount) { _colorStopCount = colorStopCount; }
+
+            protected override GradientStopCollection ReadValue(JToken obj)
+            {
+                var gradientStopsArray = obj.AsArray();
+
+                int maxNumColorStops = gradientStopsArray.Count / 4;
+                if (maxNumColorStops < _colorStopCount)
+                {
+                    throw new LottieCompositionReaderException("Fewer gradient stop values than expected");
+                }
+
+                double position = 0;
+                double r = 0;
+                double g = 0;
+                double b = 0;
+                int colorStopsToRead = _colorStopCount ?? maxNumColorStops;
+                int colorStopValuesToRead = colorStopsToRead * 4;
+                var colorStops = new List<Tuple<double, Color>>();
+                for (int i = 0; i < colorStopValuesToRead; i++)
+                {
+                    var number = (double)gradientStopsArray[i];
+                    switch (i % 4)
+                    {
+                        case 0:
+                            position = number;
+                            break;
+                        case 1:
+                            r = number;
+                            break;
+                        case 2:
+                            g = number;
+                            break;
+                        case 3:
+                            b = number;
+                            // If all the values are <= 1, treat the values as floats, otherwise they're bytes.
+                            if (r > 1 || g > 1 || b > 1)
+                            {
+                                // Convert byte to float.
+                                r /= 255;
+                                g /= 255;
+                                b /= 255;
+                            }
+                            colorStops.Add(Tuple.Create(position, Color.FromArgb(1, r, g, b)));
+                            break;
+                    }
+                }
+
+                var opacityStops = new List<Tuple<double, double>>();
+                for (int i = colorStopValuesToRead; i < gradientStopsArray.Count; i++)
+                {
+                    var number = (double)gradientStopsArray[i];
+                    if (i % 2 == 0)
+                    {
+                        position = number;
+                    }
+                    else
+                    {
+                        double opacity = number;
+                        // If the opacity value are <= 1, treat the value as floats, otherwise its a byte.
+                        if (opacity > 1)
+                        {
+                            opacity /= 255;
+                        }
+                        opacityStops.Add(Tuple.Create(position, opacity));
+                    }
+                }
+
+                return new GradientStopCollection(CreateGradientStops(colorStops, opacityStops).OrderBy(gs => gs.Offset));
+            }
+
+            private IEnumerable<GradientStopCollection.GradientStop> CreateGradientStops(List<Tuple<double, Color>> colorStops, List<Tuple<double, double>> opacityStops)
+            {
+                foreach (var colorStop in colorStops)
+                {
+                    if (opacityStops != null)
+                    {
+                        for (int i = 0; i < opacityStops.Count(); i++)
+                        {
+                            if (colorStop.Item1 == opacityStops[i].Item1)
+                            {
+                                var opacityEntryToMerge = opacityStops[i];
+                                opacityStops.RemoveAt(i);
+                                yield return new GradientStopCollection.GradientStop(colorStop.Item1, colorStop.Item2, opacityEntryToMerge.Item2);
+                            }
+                        }
+                    }
+
+                    yield return new GradientStopCollection.GradientStop(colorStop.Item1, colorStop.Item2);
+                }
+
+                foreach (var opacityStop in opacityStops)
+                {
+                    yield return new GradientStopCollection.GradientStop(opacityStop.Item1, opacityStop.Item2);
+                }
+            }
+
+            private int? _colorStopCount;
+        }
+
         sealed class AnimatableFloatParser : AnimatableParser<double>
         {
-            internal AnimatableFloatParser() : base((JToken obj) => ReadFloat(obj)) { }
+            protected override double ReadValue(JToken obj) => ReadFloat(obj);
         }
 
         abstract class AnimatableParser<T> where T : IEquatable<T>
         {
-            readonly Func<JToken, T> _valueFactory;
             static readonly KeyFrame<T>[] s_emptyKeyFrames = new KeyFrame<T>[0];
 
-            protected AnimatableParser(Func<JToken, T> valueFactory)
-            {
-                _valueFactory = valueFactory;
-            }
+            protected abstract T ReadValue(JToken obj);
 
             internal void ParseJson(LottieCompositionReader reader, JObject obj, out IEnumerable<KeyFrame<T>> keyFrames, out T initialValue)
             {
@@ -1604,7 +1730,7 @@ namespace LottieData.Serialization
 
                                 if (keyFrames == s_emptyKeyFrames)
                                 {
-                                    initialValue = _valueFactory(k);
+                                    initialValue = ReadValue(k);
                                 }
                             }
                             break;
@@ -1704,7 +1830,7 @@ namespace LottieData.Serialization
                     }
 
                     // Read the start value.
-                    var startValue = _valueFactory(lottieKeyFrame.GetNamedValue("s"));
+                    var startValue = ReadValue(lottieKeyFrame.GetNamedValue("s"));
 
                     // The start of the next entry must be the same as the end of the previous entry
                     // unless in a hold.
@@ -1750,7 +1876,7 @@ namespace LottieData.Serialization
 
                         // Read the end value. The end frame number isn't known until 
                         // the next pair is read.
-                        endValue = _valueFactory(lottieKeyFrame.GetNamedValue("e"));
+                        endValue = ReadValue(lottieKeyFrame.GetNamedValue("e"));
                     }
 
                     reader.AssertAllFieldsRead(lottieKeyFrame);

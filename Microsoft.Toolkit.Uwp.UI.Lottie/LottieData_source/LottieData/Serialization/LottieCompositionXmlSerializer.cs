@@ -439,6 +439,8 @@ namespace LottieData.Tools
                 {
                     yield return item;
                 }
+
+                yield return FromAnimatable("GradientStop", content.GradientStops);
             }
         }
 

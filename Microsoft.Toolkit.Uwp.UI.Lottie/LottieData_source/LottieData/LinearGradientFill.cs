@@ -12,20 +12,24 @@ namespace LottieData
             string name,
             string matchName,
             Animatable<double> opacity,
-            IAnimatableVector3 startPoint,
-            IAnimatableVector3 endPoint)
+            Animatable<Vector2> startPoint,
+            Animatable<Vector2> endPoint,
+            Animatable<GradientStopCollection> gradientStops)
             : base(name, matchName)
         {
             Opacity = opacity;
             StartPoint = startPoint;
             EndPoint = endPoint;
+            GradientStops = gradientStops;
         }
 
-        public IAnimatableVector3 StartPoint { get; }
+        public Animatable<Vector2> StartPoint { get; }
 
-        public IAnimatableVector3 EndPoint { get; }
+        public Animatable<Vector2> EndPoint { get; }
 
         public Animatable<double> Opacity { get; }
+
+        public Animatable<GradientStopCollection> GradientStops { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.LinearGradientFill;
 
