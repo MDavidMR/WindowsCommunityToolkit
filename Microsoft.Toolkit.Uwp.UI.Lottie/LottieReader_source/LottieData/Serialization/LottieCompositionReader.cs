@@ -1328,8 +1328,13 @@ namespace LottieData.Serialization
         Animatable<GradientStopCollection> ReadAnimatableGradientStops(JObject obj)
         {
             var numberOfColorStops = ReadInt(obj, "p");
+
             var animatableGradientStopsParser = new AnimatableGradientStopsParser(numberOfColorStops);
-            animatableGradientStopsParser.ParseJson(this, obj.GetNamedObject("k"), out IEnumerable<KeyFrame<GradientStopCollection>> keyFrames, out GradientStopCollection initialValue);
+            animatableGradientStopsParser.ParseJson(
+                this,
+                obj.GetNamedObject("k"), out IEnumerable<KeyFrame<GradientStopCollection>> keyFrames,
+                out GradientStopCollection initialValue);
+
             var propertyIndex = ReadInt(obj, "ix");
             return new Animatable<GradientStopCollection>(initialValue, keyFrames, propertyIndex);
         }
@@ -1485,7 +1490,7 @@ namespace LottieData.Serialization
                     throw new LottieCompositionReaderException("Not enough values for Color.");
                 }
 
-                // If all the values are <= 1, treat the values as floats, otherwise they're bytes.
+                // Some versions of Lottie use floats, some use bytes. Assume bytes if any values are > 1.
                 if (r > 1 || g > 1 || b > 1 || a > 1)
                 {
                     // Convert byte to float.
@@ -1593,42 +1598,50 @@ namespace LottieData.Serialization
 
         sealed class AnimatableGradientStopsParser : AnimatableParser<GradientStopCollection>
         {
+            // The number of color stops. The opacity stops follow this number
+            // of color stops. If not specified, all of the values are color stops.
+            readonly int? _colorStopCount;
+
             internal AnimatableGradientStopsParser(int? colorStopCount) { _colorStopCount = colorStopCount; }
 
             protected override GradientStopCollection ReadValue(JToken obj)
             {
-                var gradientStopsArray = obj.AsArray();
+                var gradientStopsData = obj.AsArray().Select(v => (double)v).ToArray();
 
-                int maxNumColorStops = gradientStopsArray.Count / 4;
-                if (maxNumColorStops < _colorStopCount)
+                // Get the number of color stops. If _colorStopCount wasn't specified, all of
+                // the data in the array is for color stops.
+                var colorStopsDataLength = _colorStopCount.HasValue 
+                    ? _colorStopCount.Value * 4 
+                    : gradientStopsData.Length;
+
+                if (gradientStopsData.Length < colorStopsDataLength)
                 {
                     throw new LottieCompositionReaderException("Fewer gradient stop values than expected");
                 }
 
-                double position = 0;
-                double r = 0;
-                double g = 0;
-                double b = 0;
-                int colorStopsToRead = _colorStopCount ?? maxNumColorStops;
-                int colorStopValuesToRead = colorStopsToRead * 4;
-                var colorStops = new List<Tuple<double, Color>>();
-                for (int i = 0; i < colorStopValuesToRead; i++)
+                var gradientStops = new List<GradientStop>(colorStopsDataLength / 4);
+
+                var offset = 0.0;
+                var r = 0.0;
+                var g = 0.0;
+                int i;
+                for (i = 0; i < colorStopsDataLength; i++)
                 {
-                    var number = (double)gradientStopsArray[i];
+                    var value = gradientStopsData[i];
                     switch (i % 4)
                     {
                         case 0:
-                            position = number;
+                            offset = value;
                             break;
                         case 1:
-                            r = number;
+                            r = value;
                             break;
                         case 2:
-                            g = number;
+                            g = value;
                             break;
                         case 3:
-                            b = number;
-                            // If all the values are <= 1, treat the values as floats, otherwise they're bytes.
+                            var b = value;
+                            // Some versions of Lottie use floats, some use bytes. Assume bytes if any values are > 1.
                             if (r > 1 || g > 1 || b > 1)
                             {
                                 // Convert byte to float.
@@ -1636,61 +1649,46 @@ namespace LottieData.Serialization
                                 g /= 255;
                                 b /= 255;
                             }
-                            colorStops.Add(Tuple.Create(position, Color.FromArgb(1, r, g, b)));
+                            gradientStops.Add(GradientStop.FromColor(offset, Color.FromArgb(1, r, g, b)));
                             break;
                     }
                 }
 
-                var opacityStops = new List<Tuple<double, double>>();
-                for (int i = colorStopValuesToRead; i < gradientStopsArray.Count; i++)
+                // The rest of the array contains the opacity stops.
+                for (; i < gradientStopsData.Length; i++)
                 {
-                    var number = (double)gradientStopsArray[i];
-                    if (i % 2 == 0)
+                    var value = gradientStopsData[i];
+                    switch (i % 2)
                     {
-                        position = number;
-                    }
-                    else
-                    {
-                        double opacity = number;
-                        // If the opacity value are <= 1, treat the value as floats, otherwise its a byte.
-                        if (opacity > 1)
-                        {
-                            opacity /= 255;
-                        }
-                        opacityStops.Add(Tuple.Create(position, opacity));
-                    }
-                }
-
-                return new GradientStopCollection(CreateGradientStops(colorStops, opacityStops).OrderBy(gs => gs.Offset));
-            }
-
-            private IEnumerable<GradientStopCollection.GradientStop> CreateGradientStops(List<Tuple<double, Color>> colorStops, List<Tuple<double, double>> opacityStops)
-            {
-                foreach (var colorStop in colorStops)
-                {
-                    if (opacityStops != null)
-                    {
-                        for (int i = 0; i < opacityStops.Count(); i++)
-                        {
-                            if (colorStop.Item1 == opacityStops[i].Item1)
+                        case 0:
+                            offset = value;
+                            break;
+                        case 1:
+                            double opacity = value;
+                            // Some versions of Lottie use floats, some use bytes. Assume bytes if any values are > 1.
+                            if (opacity > 1)
                             {
-                                var opacityEntryToMerge = opacityStops[i];
-                                opacityStops.RemoveAt(i);
-                                yield return new GradientStopCollection.GradientStop(colorStop.Item1, colorStop.Item2, opacityEntryToMerge.Item2);
+                                // Convert byte to float.
+                                opacity /= 255;
                             }
-                        }
+                            gradientStops.Add(GradientStop.FromOpacity(offset, opacity));
+                            break;
                     }
-
-                    yield return new GradientStopCollection.GradientStop(colorStop.Item1, colorStop.Item2);
                 }
 
-                foreach (var opacityStop in opacityStops)
-                {
-                    yield return new GradientStopCollection.GradientStop(opacityStop.Item1, opacityStop.Item2);
-                }
+                // Merge the stops that have the same offset, and order by offset.
+                var merged =
+                    from stop in gradientStops
+                    group stop by stop.Offset into grouped
+                    // Order by offset.
+                    orderby grouped.Key
+                    // Note that if there are multiple color stops with the same offset or
+                    // multiple opacity stops with the same offset, one will be chosen at
+                    // random.
+                    select grouped.Aggregate((g1, g2) => new GradientStop(g1.Offset, g1.Color ?? g2.Color, g1.Opacity ?? g2.Opacity));
+
+                return new GradientStopCollection(merged);
             }
-
-            private int? _colorStopCount;
         }
 
         sealed class AnimatableFloatParser : AnimatableParser<double>
@@ -2283,9 +2281,7 @@ namespace LottieData.Serialization
         internal bool TryGetValue(string propertyName, out JToken value)
         {
             _readFields.Add(propertyName);
-            bool result = _wrapped.TryGetValue(propertyName, out JToken wrappedOutValue);
-            value = wrappedOutValue;
-            return result;
+            return _wrapped.TryGetValue(propertyName, out value);
         }
 
         internal static CheckedJsonObject Load(JsonReader reader, JsonLoadSettings settings)

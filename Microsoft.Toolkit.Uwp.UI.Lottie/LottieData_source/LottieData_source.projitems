@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\CubicBezierEasing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Ellipse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\GradientStop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\GradientStopCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\HoldEasing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\IAnimatableValue.cs" />
