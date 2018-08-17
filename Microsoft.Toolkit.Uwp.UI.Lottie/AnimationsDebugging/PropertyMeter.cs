@@ -6,12 +6,12 @@ using System.Numerics;
 using Windows.UI;
 using Windows.UI.Composition;
 
-namespace AnimationsDebug
+namespace AnimationsDebugging
 {
     /// <summary>
     /// Creates a Visual that displays the value of an animated properties.
     /// </summary>
-    sealed class PropertyMeter
+    public sealed class PropertyMeter
     {
         const float c_digitHeight = 8;
         const float c_digitWidth = 8;
@@ -49,7 +49,13 @@ namespace AnimationsDebug
         /// <summary>
         /// Starts tracking a scalar property value.
         /// </summary>
-        public void AddScalar(CompositionObject propertyOwner, string scalarPropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces = 0)
+        public void AddScalar(CompositionObject propertyOwner, string scalarPropertyAccessor, int numberOfDigits)
+            => AddScalar(propertyOwner, scalarPropertyAccessor, numberOfDigits, numberOfDecimalPlaces: 0);
+
+        /// <summary>
+        /// Starts tracking a scalar property value.
+        /// </summary>
+        public void AddScalar(CompositionObject propertyOwner, string scalarPropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
             AddScalarMeter(propertyOwner, scalarPropertyAccessor, numberOfDigits, numberOfDecimalPlaces);
             AddGapToNextMeter();
@@ -58,7 +64,13 @@ namespace AnimationsDebug
         /// <summary>
         /// Starts tracking a Vector2 property value.
         /// </summary>
-        public void AddVector2(CompositionObject propertyOwner, string vector2PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces = 0)
+        public void AddVector2(CompositionObject propertyOwner, string vector2PropertyAccessor, int numberOfDigits)
+            => AddVector2(propertyOwner, vector2PropertyAccessor, numberOfDigits, numberOfDecimalPlaces: 0);
+
+        /// <summary>
+        /// Starts tracking a Vector2 property value.
+        /// </summary>
+        public void AddVector2(CompositionObject propertyOwner, string vector2PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
             AddScalarMeter(propertyOwner, $"{vector2PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
             AddScalarMeter(propertyOwner, $"{vector2PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
@@ -68,7 +80,13 @@ namespace AnimationsDebug
         /// <summary>
         /// Starts tracking a Vector3 property value.
         /// </summary>
-        public void AddVector3(CompositionObject propertyOwner, string vector3PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces = 0)
+        public void AddVector3(CompositionObject propertyOwner, string vector3PropertyAccessor, int numberOfDigits)
+            => AddVector3(propertyOwner, vector3PropertyAccessor, numberOfDigits, numberOfDecimalPlaces: 0);
+
+        /// <summary>
+        /// Starts tracking a Vector3 property value.
+        /// </summary>
+        public void AddVector3(CompositionObject propertyOwner, string vector3PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
             AddScalarMeter(propertyOwner, $"{vector3PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
             AddScalarMeter(propertyOwner, $"{vector3PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
@@ -217,7 +235,7 @@ namespace AnimationsDebug
             var isOverflowing = $"{absoluteValue}>={Pow10(numberOfDigitsToLeftOfDecimalPlace)}";
 
             var overflowBackgroundShape = _c.CreateSpriteShape(backgroundRectangle);
-            overflowBackgroundShape.FillBrush = _c.CreateColorBrush(Colors.Black);
+            overflowBackgroundShape.FillBrush = _c.CreateColorBrush(Colors.DarkOrange);
             overflowContainer.Shapes.Add(overflowBackgroundShape);
 
             var overflowGeometry = GetNumberStripGeometry();

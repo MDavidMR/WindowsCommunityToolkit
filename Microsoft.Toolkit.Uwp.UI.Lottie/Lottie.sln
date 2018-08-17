@@ -33,14 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottieReader", "LottieReade
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lottie_source", "Lottie_source\Lottie_source.shproj", "{8EF7BD77-28E9-4998-8DBB-8036F988FE65}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Debug_source", "Debug_source\Debug_source.shproj", "{498F9BA2-B8D0-4D8F-9DD8-67C35A4A61E7}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.Controls.CompositionPlayer", "dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.CompositionPlayer.vcxproj", "{C7F59620-47AA-4101-83AD-213A6749377E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsDebugging", "AnimationsDebugging\AnimationsDebugging.csproj", "{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		LottieToWinComp_source\LottieToWinComp_source.projitems*{0340244a-683c-405e-838b-f93872779532}*SharedItemsImports = 13
-		Debug_source\Debug_source.projitems*{498f9ba2-b8d0-4d8f-9dd8-67c35a4a61e7}*SharedItemsImports = 13
 		LottieReader_source\LottieReader_source.projitems*{4e7d8957-3f5f-46e1-99a8-2012b806c9b0}*SharedItemsImports = 13
 		LottieData_source\LottieData_source.projitems*{5120efd7-a556-46bf-8d56-f65f1ef9a305}*SharedItemsImports = 4
 		LottieReader_source\LottieReader_source.projitems*{5120efd7-a556-46bf-8d56-f65f1ef9a305}*SharedItemsImports = 4
@@ -264,6 +263,22 @@ Global
 		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x64.Build.0 = Release|x64
 		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x86.ActiveCfg = Release|Win32
 		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x86.Build.0 = Release|Win32
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|ARM.Build.0 = Debug|ARM
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|x64.ActiveCfg = Debug|x64
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|x64.Build.0 = Debug|x64
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|x86.ActiveCfg = Debug|x86
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|x86.Build.0 = Debug|x86
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|ARM.ActiveCfg = Release|ARM
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|ARM.Build.0 = Release|ARM
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x64.ActiveCfg = Release|x64
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x64.Build.0 = Release|x64
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x86.ActiveCfg = Release|x86
+		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
