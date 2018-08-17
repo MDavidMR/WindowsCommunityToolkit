@@ -9,6 +9,6 @@
     <Import_RootNamespace>Debug_source</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ScalarPropertyMeter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertyMeter.cs" />
   </ItemGroup>
 </Project>

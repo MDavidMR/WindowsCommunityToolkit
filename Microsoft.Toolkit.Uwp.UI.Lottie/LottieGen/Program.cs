@@ -174,6 +174,7 @@ static class Program
         WriteStatsStringLine("BodyMovin Version", stats.Version.ToString());
         WriteStatsStringLine("Name", stats.Name);
         WriteStatsStringLine("Size", $"{stats.Width} x {stats.Height}");
+        WriteStatsStringLine("Duration", $"{stats.Duration.TotalSeconds.ToString("#,##0.0##")} seconds");
         WriteStatsIntLine("PreComps", stats.PreCompLayerCount);
         WriteStatsIntLine("Solids", stats.SolidLayerCount);
         WriteStatsIntLine("Images", stats.ImageLayerCount);
@@ -357,8 +358,9 @@ static class Program
         // Get an appropriate name for the class.
         string className =
             InstantiatorGeneratorBase.TrySynthesizeClassName(codeGenClassName) ??
-            InstantiatorGeneratorBase.TrySynthesizeClassName(lottieComposition.Name) ??
-            InstantiatorGeneratorBase.TrySynthesizeClassName(Path.GetFileNameWithoutExtension(lottieJsonFile));
+            InstantiatorGeneratorBase.TrySynthesizeClassName(Path.GetFileNameWithoutExtension(lottieJsonFile)) ??
+            // If all else fails, just call it Lottie.
+            InstantiatorGeneratorBase.TrySynthesizeClassName("Lottie");
 
         // Optimize the code unless told not to.
         Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
@@ -651,10 +653,9 @@ OVERVIEW:
 
          -Help         Print this help message and exit.
          -ClassName    Uses the given class name for the generated code. If not 
-                       specified the name is synthesized from the name in the Lottie 
-                       if such a name exists or else the name of the Lottie file.
-                       The class name will be sanitized as necessary to be valid for
-                       the language and will also be used as the base name of 
+                       specified the name is synthesized from the name of the Lottie 
+                       file. The class name will be sanitized as necessary to be valid
+                       for the language and will also be used as the base name of 
                        the output file(s).
          -DisableTranslationOptimizer  
                        Disables optimization of the translation from Lottie to

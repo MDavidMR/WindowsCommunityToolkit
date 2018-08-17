@@ -18,6 +18,7 @@ namespace LottieData.Tools
         readonly string _name;
         readonly double _width;
         readonly double _height;
+        readonly TimeSpan _duration;
         readonly int _preCompLayerCount;
         readonly int _solidLayerCount;
         readonly int _imageLayerCount;
@@ -34,6 +35,7 @@ namespace LottieData.Tools
             _version = lottieComposition.Version;
             _width = lottieComposition.Width;
             _height = lottieComposition.Height;
+            _duration = lottieComposition.Duration;
 
             // Get the layers stored in assets.
             var layersInAssets =
@@ -79,6 +81,7 @@ namespace LottieData.Tools
         public int TextLayerCount => _textLayerCount;
         public double Width => _width;
         public double Height => _height;
+        public TimeSpan Duration => _duration;
         public string Name => _name;
         public Version Version => _version;
     }
