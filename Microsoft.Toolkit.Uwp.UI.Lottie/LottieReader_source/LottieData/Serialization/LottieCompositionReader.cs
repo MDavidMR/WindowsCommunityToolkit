@@ -1939,7 +1939,7 @@ namespace LottieData.Serialization
                         throw new LottieCompositionReaderException($"Unexpected blend mode: {bm}.");
                 }
             }
-            throw new LottieCompositionReaderException($"Unexpected layer type: {bm}.");
+            throw new LottieCompositionReaderException($"Unexpected blend mode: {bm}.");
         }
 
         static Layer.LayerType TyToLayerType(double ty)
