@@ -17,7 +17,7 @@ namespace WinCompData.Tools
     {
         int _vertexCounter;
 
-        internal Graph() { }
+        protected private Graph() { }
 
         /// <summary>
         /// Returns the graph of nodes reachable from the given <see cref="CompositionObject"/> root.

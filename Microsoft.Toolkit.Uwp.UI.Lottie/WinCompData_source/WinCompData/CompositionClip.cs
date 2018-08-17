@@ -10,7 +10,7 @@ namespace WinCompData
 #endif
     abstract class CompositionClip : CompositionObject
     {
-        internal CompositionClip() {  }
+        protected private CompositionClip() {  }
 
         // Default is 0,0.
         public Vector2 CenterPoint { get; set; }

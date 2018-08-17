@@ -10,7 +10,7 @@ namespace WinCompData.Expressions
     {
         public Expression Left { get; }
         public Expression Right { get; }
-        internal BinaryExpression(Expression left, Expression right)
+        protected private BinaryExpression(Expression left, Expression right)
         {
             Left = left;
             Right = right;

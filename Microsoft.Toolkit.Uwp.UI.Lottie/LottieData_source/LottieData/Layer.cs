@@ -21,7 +21,7 @@ namespace LottieData
         static Mask[] _emptyMasks = new Mask[0];
         readonly Mask[] _masks;
 
-        protected Layer(
+        protected private Layer(
             string name,
             int index,
             int? parent,

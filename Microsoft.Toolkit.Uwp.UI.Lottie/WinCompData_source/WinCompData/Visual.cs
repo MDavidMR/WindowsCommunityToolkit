@@ -11,7 +11,7 @@ namespace WinCompData
 #endif
     abstract class Visual : CompositionObject, CompositionObject.IContainedBy<ContainerVisual>
     {
-        internal Visual() { }
+        protected private Visual() { }
         public ContainerVisual Parent { get; private set; }
         public Vector3? CenterPoint { get; set; }
         public CompositionClip Clip { get; set; }

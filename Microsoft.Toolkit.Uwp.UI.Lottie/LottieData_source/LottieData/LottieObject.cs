@@ -9,7 +9,7 @@ namespace LottieData
 #endif
     abstract class LottieObject
     {
-        internal LottieObject(string name) { Name = name; }
+        protected private LottieObject(string name) { Name = name; }
 
         public string Name { get; }
 

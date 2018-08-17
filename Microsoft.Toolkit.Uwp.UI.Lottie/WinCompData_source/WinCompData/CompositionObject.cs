@@ -16,7 +16,7 @@ namespace WinCompData
         readonly ListOfNeverNull<Animator> _animators = new ListOfNeverNull<Animator>(null);
         CompositionPropertySet _propertySet;
 
-        internal CompositionObject()
+        protected private CompositionObject()
         {
             if (Type == CompositionObjectType.CompositionPropertySet)
             {

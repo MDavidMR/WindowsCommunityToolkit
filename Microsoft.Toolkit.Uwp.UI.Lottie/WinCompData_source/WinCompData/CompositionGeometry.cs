@@ -8,7 +8,7 @@ namespace WinCompData
 #endif
     abstract class CompositionGeometry : CompositionObject
     {
-        internal CompositionGeometry() { }
+        protected private CompositionGeometry() { }
 
         // Default = 1
         public float TrimEnd { get; set; } = 1;

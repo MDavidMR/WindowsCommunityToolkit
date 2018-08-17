@@ -10,6 +10,6 @@ namespace WinCompData
 #endif
     abstract class CompositionEasingFunction : CompositionObject
     {
-        internal CompositionEasingFunction() { }
+        protected private CompositionEasingFunction() { }
     }
 }

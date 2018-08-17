@@ -13,7 +13,7 @@ namespace WinCompData
     {
         readonly Dictionary<string, CompositionObject> _referencedParameters = new Dictionary<string, CompositionObject>();
 
-        internal CompositionAnimation(CompositionAnimation other)
+        protected private CompositionAnimation(CompositionAnimation other)
         {
             if (other != null)
             {

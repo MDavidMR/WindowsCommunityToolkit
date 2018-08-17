@@ -1700,6 +1700,8 @@ namespace LottieData.Serialization
         {
             static readonly KeyFrame<T>[] s_emptyKeyFrames = new KeyFrame<T>[0];
 
+            protected private AnimatableParser() { }
+
             protected abstract T ReadValue(JToken obj);
 
             internal void ParseJson(LottieCompositionReader reader, JObject obj, out IEnumerable<KeyFrame<T>> keyFrames, out T initialValue)

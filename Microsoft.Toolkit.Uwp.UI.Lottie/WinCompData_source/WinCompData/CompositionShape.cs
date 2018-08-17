@@ -11,7 +11,7 @@ namespace WinCompData
 #endif
     abstract class CompositionShape : CompositionObject, CompositionObject.IContainedBy<IContainShapes>
     {
-        internal CompositionShape() { }
+        protected private CompositionShape() { }
 
         public IContainShapes Parent { get; private set; }
         public Vector2? CenterPoint { get; set; }

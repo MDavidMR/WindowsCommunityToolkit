@@ -8,7 +8,7 @@ namespace LottieData
 #endif
     abstract class ShapeLayerContent : LottieObject
     {
-        internal ShapeLayerContent(string name, string matchName) : base(name)
+        protected private ShapeLayerContent(string name, string matchName) : base(name)
         {
             MatchName = matchName;
         }

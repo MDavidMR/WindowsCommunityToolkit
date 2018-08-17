@@ -8,6 +8,6 @@ namespace WinCompData
 #endif
     abstract class CompositionBrush : CompositionObject
     {
-        internal CompositionBrush() { }
+        protected private CompositionBrush() { }
     }
 }

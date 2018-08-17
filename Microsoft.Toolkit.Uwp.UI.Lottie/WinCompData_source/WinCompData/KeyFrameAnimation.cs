@@ -16,7 +16,7 @@ namespace WinCompData
 
         public abstract int KeyFrameCount { get; }
 
-        internal KeyFrameAnimation_(KeyFrameAnimation_ other) : base(other) { }
+        protected private KeyFrameAnimation_(KeyFrameAnimation_ other) : base(other) { }
     }
 
 #if !WINDOWS_UWP
@@ -26,7 +26,7 @@ namespace WinCompData
     {
         readonly Dictionary<float, KeyFrame> _keyFrames = new Dictionary<float, KeyFrame>();
 
-        protected KeyFrameAnimation(KeyFrameAnimation<T> other) : base(other)
+        protected private KeyFrameAnimation(KeyFrameAnimation<T> other) : base(other)
         {
             if (other != null)
             {
@@ -76,6 +76,8 @@ namespace WinCompData
 
         public abstract class KeyFrame 
         {
+            protected private KeyFrame() { }
+
             public float Progress { get; internal set; }
             public CompositionEasingFunction Easing { get; internal set; }
             public abstract KeyFrameType Type { get; }

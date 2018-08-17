@@ -10,7 +10,7 @@ namespace LottieData
 #endif
     abstract class Easing : IEquatable<Easing>
     {
-        internal Easing() { }
+        protected private Easing() { }
 
         public abstract EasingType Type { get; }
 

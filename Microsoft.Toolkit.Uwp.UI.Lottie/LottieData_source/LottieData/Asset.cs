@@ -8,7 +8,7 @@ namespace LottieData
 #endif
     abstract class Asset
     {
-        internal Asset(string id)
+        protected private Asset(string id)
         {
             Id = id;
         }
