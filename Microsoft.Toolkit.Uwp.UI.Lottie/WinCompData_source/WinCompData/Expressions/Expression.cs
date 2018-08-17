@@ -11,7 +11,7 @@ namespace WinCompData.Expressions
         string m_expressionStringCache;
         Expression m_simplifiedExpressionCache;
 
-        protected private Expression() { }
+        protected Expression() { }
 
 
         public virtual ExpressionType InferredType { get; } = new ExpressionType(TypeConstraint.NoType);
