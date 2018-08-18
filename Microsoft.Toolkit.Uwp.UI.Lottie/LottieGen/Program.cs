@@ -13,9 +13,13 @@ using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Tools;
 
-static class Program
+sealed class Program
 {
     static readonly Assembly s_thisAssembly = Assembly.GetExecutingAssembly();
+    readonly CommandLineOptions _options;
+    readonly TextWriter _infoStream;
+    readonly TextWriter _errorStream;
+    readonly Profiler _profiler;
 
     enum RunResult
     {
@@ -59,36 +63,55 @@ static class Program
         return Directory.EnumerateFiles(directoryPath, Path.GetFileName(path));
     }
 
+    // Helper for writing errors to the error stream with a standard format
+    void WriteError(string errorMessage)
+    {
+        _errorStream.WriteLine($"Error: {errorMessage}");
+    }
+
+    Program(CommandLineOptions options, TextWriter infoStream, TextWriter errorStream)
+    {
+        _options = options;
+        _infoStream = infoStream;
+        _errorStream = errorStream;
+        _profiler = new Profiler();
+    }
+
     static RunResult Run(CommandLineOptions options, TextWriter infoStream, TextWriter errorStream)
+    {
+        return new Program(options, infoStream, errorStream).Run();
+    }
+
+    RunResult Run()
     {
         // Sign on
         var assemblyVersion = s_thisAssembly.GetName().Version;
 
         var toolNameAndVersion = $"Lottie for Windows Code Generator version {assemblyVersion}";
-        infoStream.WriteLine(toolNameAndVersion);
-        infoStream.WriteLine();
+        _infoStream.WriteLine(toolNameAndVersion);
+        _infoStream.WriteLine();
 
-        if (options.ErrorDescription != null)
+        if (_options.ErrorDescription != null)
         {
             // Failed to parse the command line.
             WriteError("Invalid arguments.");
-            errorStream.WriteLine(options.ErrorDescription);
+            _errorStream.WriteLine(_options.ErrorDescription);
             return RunResult.InvalidUsage;
         }
-        else if (options.HelpRequested)
+        else if (_options.HelpRequested)
         {
-            ShowHelp(infoStream);
+            ShowHelp(_infoStream);
             return RunResult.Success;
         }
 
         // Check for required args
-        if (options.InputFile == null)
+        if (_options.InputFile == null)
         {
             WriteError("Lottie file not specified.");
             return RunResult.InvalidUsage;
         }
 
-        switch (options.Language)
+        switch (_options.Language)
         {
             case Lang.Unknown:
                 WriteError("Invalid language.");
@@ -99,18 +122,16 @@ static class Program
         }
 
         // Check that at least one file matches InputFile.
-        var matchingInputFiles = ExpandWildcards(options.InputFile).ToArray();
+        var matchingInputFiles = ExpandWildcards(_options.InputFile).ToArray();
         if (matchingInputFiles.Length == 0)
         {
-            WriteError($"File not found: {options.InputFile}");
+            WriteError($"File not found: {_options.InputFile}");
             return RunResult.Failure;
         }
 
-        var profiler = new Profiler();
-
         // Get the output folder as an absolute path, defaulting to the current directory
         // if no output folder was specified.
-        var outputFolder = MakeAbsolutePath(options.OutputFolder ?? Directory.GetCurrentDirectory());
+        var outputFolder = MakeAbsolutePath(_options.OutputFolder ?? Directory.GetCurrentDirectory());
 
 
         // Assume success.
@@ -128,29 +149,32 @@ static class Program
             var codeGenResult = TryGenerateCode(
                         lottieJsonFile: inputFile,
                         outputFolder: outputFolder,
-                        codeGenClassName: options.ClassName,
-                        language: options.Language,
-                        strictTranslation: options.StrictMode,
-                        disableCodeGenOptimizer: options.DisableCodeGenOptimizer,
-                        disableTranslationOptimizer: options.DisableTranslationOptimizer,
-                        infoStream: infoStream,
-                        errorStream: errorStream,
-                        profiler: profiler,
+                        codeGenClassName: _options.ClassName,
+                        strictTranslation: _options.StrictMode,
                         lottieStats: out lottieStats,
                         beforeOptimizationStats: out beforeOptimizationStats,
                         afterOptimizationStats: out afterOptimizationStats)
                     ? RunResult.Success
                     : RunResult.Failure;
 
-            infoStream.WriteLine();
-            infoStream.WriteLine(" === Timings ===");
-            profiler.WriteReport(infoStream);
+            if (_profiler.HasAnyResults)
+            {
+                _infoStream.WriteLine();
+                _infoStream.WriteLine(" === Timings ===");
+                _profiler.WriteReport(_infoStream);
+            }
 
-            infoStream.WriteLine();
-            WriteLottieStatsReport(infoStream, lottieStats);
+            if (lottieStats != null)
+            {
+                _infoStream.WriteLine();
+                WriteLottieStatsReport(_infoStream, lottieStats);
+            }
 
-            infoStream.WriteLine();
-            WriteCodeGenStatsReport(infoStream, beforeOptimizationStats, afterOptimizationStats);
+            if (beforeOptimizationStats != null && afterOptimizationStats != null)
+            {
+                _infoStream.WriteLine();
+                WriteCodeGenStatsReport(_infoStream, beforeOptimizationStats, afterOptimizationStats);
+            }
 
             if (result == RunResult.Success && codeGenResult != RunResult.Success)
             {
@@ -158,12 +182,6 @@ static class Program
             }
         }
         return result;
-
-        // Helper for writing errors to the error stream.
-        void WriteError(string errorMessage)
-        {
-            errorStream.WriteLine($"Error: {errorMessage}");
-        }
     }
 
     static void WriteLottieStatsReport(
@@ -175,12 +193,19 @@ static class Program
         WriteStatsStringLine("Name", stats.Name);
         WriteStatsStringLine("Size", $"{stats.Width} x {stats.Height}");
         WriteStatsStringLine("Duration", $"{stats.Duration.TotalSeconds.ToString("#,##0.0##")} seconds");
-        WriteStatsIntLine("PreComps", stats.PreCompLayerCount);
-        WriteStatsIntLine("Solids", stats.SolidLayerCount);
         WriteStatsIntLine("Images", stats.ImageLayerCount);
-        WriteStatsIntLine("Nulls", stats.NullLayerCount);
+        WriteStatsIntLine("PreComps", stats.PreCompLayerCount);
         WriteStatsIntLine("Shapes", stats.ShapeLayerCount);
+        WriteStatsIntLine("Solids", stats.SolidLayerCount);
+        WriteStatsIntLine("Nulls", stats.NullLayerCount);
         WriteStatsIntLine("Texts", stats.TextLayerCount);
+        WriteStatsIntLine("Masks", stats.MaskCount);
+        WriteStatsIntLine("MaskAdditive", stats.MaskAdditiveCount);
+        WriteStatsIntLine("MaskDarken", stats.MaskDarkenCount);
+        WriteStatsIntLine("MaskDifference", stats.MaskDifferenceCount);
+        WriteStatsIntLine("MaskIntersect", stats.MaskIntersectCount);
+        WriteStatsIntLine("MaskLighten", stats.MaskLightenCount);
+        WriteStatsIntLine("MaskSubtract", stats.MaskSubtractCount);
 
         const int nameWidth = 19;
         void WriteStatsIntLine(string name, int value)
@@ -268,17 +293,11 @@ static class Program
     }
 
 
-    static bool TryGenerateCode(
+    bool TryGenerateCode(
         string lottieJsonFile,
         string outputFolder,
         string codeGenClassName,
-        Lang language,
         bool strictTranslation,
-        bool disableTranslationOptimizer,
-        bool disableCodeGenOptimizer,
-        TextWriter infoStream,
-        TextWriter errorStream,
-        Profiler profiler,
         out LottieData.Tools.Stats lottieStats,
         out WinCompData.Tools.Stats beforeOptimizationStats,
         out WinCompData.Tools.Stats afterOptimizationStats)
@@ -289,17 +308,17 @@ static class Program
 
         if (!TryEnsureDirectoryExists(outputFolder))
         {
-            errorStream.WriteLine($"Failed to create the output directory: {outputFolder}");
+            WriteError($"Failed to create the output directory: {outputFolder}");
             return false;
         }
 
         // Read the Lottie .json text.
-        infoStream.WriteLine($"Reading Lottie file: {lottieJsonFile}");
+        _infoStream.WriteLine($"Reading Lottie file: {lottieJsonFile}");
         var jsonStream = TryReadTextFile(lottieJsonFile);
 
         if (jsonStream == null)
         {
-            errorStream.WriteLine($"Failed to read Lottie file: {lottieJsonFile}");
+            WriteError($"Failed to read Lottie file: {lottieJsonFile}");
             return false;
         }
 
@@ -310,26 +329,26 @@ static class Program
                 LottieCompositionReader.Options.IgnoreMatchNames,
                 out var readerIssues);
 
-        profiler.OnParseFinished();
-
-        lottieStats = new LottieData.Tools.Stats(lottieComposition);
+        _profiler.OnParseFinished();
 
         foreach (var issue in readerIssues)
         {
-            infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
+            _infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
         }
 
         if (lottieComposition == null)
         {
-            errorStream.WriteLine($"Failed to parse Lottie file: {lottieJsonFile}");
+            WriteError($"Failed to parse Lottie file: {lottieJsonFile}");
             return false;
         }
+
+        lottieStats = new LottieData.Tools.Stats(lottieComposition);
 
         bool translateSucceeded = false;
         Visual wincompDataRootVisual = null;
 
         // LottieXml doesn't need the Lottie to be translated. Everyone else does.
-        if (language != Lang.LottieXml)
+        if (_options.Language != Lang.LottieXml)
         {
             translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
                         lottieComposition,
@@ -338,22 +357,22 @@ static class Program
                         out wincompDataRootVisual,
                         out var translationIssues);
 
-            profiler.OnTranslateFinished();
+            _profiler.OnTranslateFinished();
 
             foreach (var issue in translationIssues)
             {
-                infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
+                _infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
             }
 
             if (!translateSucceeded)
             {
-                errorStream.WriteLine("Failed to translate Lottie file.");
+                WriteError("Failed to translate Lottie file.");
                 return false;
             }
         }
 
         beforeOptimizationStats = new WinCompData.Tools.Stats(wincompDataRootVisual);
-        profiler.OnUnmeasuredFinished();
+        _profiler.OnUnmeasuredFinished();
 
         // Get an appropriate name for the class.
         string className =
@@ -364,19 +383,19 @@ static class Program
 
         // Optimize the code unless told not to.
         Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
-        if (!disableTranslationOptimizer)
+        if (!_options.DisableTranslationOptimizer)
         {
             optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
-            profiler.OnOptimizationFinished();
+            _profiler.OnOptimizationFinished();
 
             afterOptimizationStats = new WinCompData.Tools.Stats(optimizedWincompDataRootVisual);
-            profiler.OnUnmeasuredFinished();
+            _profiler.OnUnmeasuredFinished();
         }
 
         var lottieFileNameBase = Path.GetFileNameWithoutExtension(lottieJsonFile);
 
         bool codeGenSucceeded = false;
-        switch (language)
+        switch (_options.Language)
         {
             case Lang.CSharp:
                 codeGenSucceeded = TryGenerateCSharpCode(
@@ -385,11 +404,8 @@ static class Program
                     (float)lottieComposition.Width,
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"),
-                    disableCodeGenOptimizer: disableCodeGenOptimizer,
-                    infoStream: infoStream,
-                    errorStream: errorStream);
-                profiler.OnCodeGenFinished();
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"));
+                _profiler.OnCodeGenFinished();
                 break;
 
             case Lang.Cx:
@@ -400,42 +416,33 @@ static class Program
                     (float)lottieComposition.Height,
                     lottieComposition.Duration,
                     Path.Combine(outputFolder, $"{lottieFileNameBase}.h"),
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"),
-                    disableCodeGenOptimizer: disableCodeGenOptimizer,
-                    infoStream: infoStream,
-                    errorStream: errorStream);
-                profiler.OnCodeGenFinished();
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"));
+                _profiler.OnCodeGenFinished();
                 break;
 
             case Lang.LottieXml:
                 codeGenSucceeded = TryGenerateLottieXml(
                     lottieComposition,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"),
-                    infoStream,
-                    errorStream);
-                profiler.OnSerializationFinished();
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
+                _profiler.OnSerializationFinished();
                 break;
 
             case Lang.WinCompXml:
                 codeGenSucceeded = TryGenerateWincompXml(
                     optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"),
-                    infoStream,
-                    errorStream);
-                profiler.OnSerializationFinished();
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
+                _profiler.OnSerializationFinished();
                 break;
 
             case Lang.WinCompDgml:
                 codeGenSucceeded = TryGenerateWincompDgml(
                     optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.dgml"),
-                    infoStream: infoStream,
-                    errorStream: errorStream);
-                profiler.OnSerializationFinished();
+                    Path.Combine(outputFolder, $"{lottieFileNameBase}.dgml"));
+                _profiler.OnSerializationFinished();
                 break;
 
             default:
-                errorStream.WriteLine($"Language {language} is not supported.");
+                WriteError($"Language {_options.Language} is not supported.");
                 return false;
         };
 
@@ -443,61 +450,52 @@ static class Program
         return codeGenSucceeded;
     }
 
-    static bool TryGenerateLottieXml(
+    bool TryGenerateLottieXml(
         LottieComposition lottieComposition,
-        string outputFilePath,
-        TextWriter infoStream,
-        TextWriter errorStream)
+        string outputFilePath)
     {
         var result = TryWriteTextFile(
             outputFilePath,
             LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString());
 
-        infoStream.WriteLine($"Lottie XML written to {outputFilePath}");
+        _infoStream.WriteLine($"Lottie XML written to {outputFilePath}");
 
         return result;
     }
 
-    static bool TryGenerateWincompXml(
+    bool TryGenerateWincompXml(
         Visual rootVisual,
-        string outputFilePath,
-        TextWriter infoStream,
-        TextWriter errorStream)
+        string outputFilePath)
     {
         var result = TryWriteTextFile(
             outputFilePath,
             CompositionObjectXmlSerializer.ToXml(rootVisual).ToString());
 
-        infoStream.WriteLine($"WinComp XML written to {outputFilePath}");
+        _infoStream.WriteLine($"WinComp XML written to {outputFilePath}");
 
         return result;
     }
 
-    static bool TryGenerateWincompDgml(
+    bool TryGenerateWincompDgml(
         Visual rootVisual,
-        string outputFilePath,
-        TextWriter infoStream,
-        TextWriter errorStream)
+        string outputFilePath)
     {
         var result = TryWriteTextFile(
             outputFilePath,
             CompositionObjectDgmlSerializer.ToXml(rootVisual).ToString());
 
-        infoStream.WriteLine($"WinComp DGML written to {outputFilePath}");
+        _infoStream.WriteLine($"WinComp DGML written to {outputFilePath}");
 
         return result;
     }
 
-    static bool TryGenerateCSharpCode(
+    bool TryGenerateCSharpCode(
         string className,
         Visual rootVisual,
         float compositionWidth,
         float compositionHeight,
         TimeSpan duration,
-        string outputFilePath,
-        bool disableCodeGenOptimizer,
-        TextWriter infoStream,
-        TextWriter errorStream)
+        string outputFilePath)
     {
 
         var code = CSharpInstantiatorGenerator.CreateFactoryCode(
@@ -506,35 +504,32 @@ static class Program
                     compositionWidth,
                     compositionHeight,
                     duration,
-                    disableCodeGenOptimizer);
+                    _options.DisableCodeGenOptimizer);
 
         if (string.IsNullOrWhiteSpace(code))
         {
-            errorStream.WriteLine("Failed to create the C# code.");
+            WriteError("Failed to create the C# code.");
             return false;
         }
 
         if (!TryWriteTextFile(outputFilePath, code))
         {
-            errorStream.WriteLine($"Failed to write C# code to {outputFilePath}");
+            WriteError($"Failed to write C# code to {outputFilePath}");
             return false;
         }
 
-        infoStream.WriteLine($"C# code for class {className} written to {outputFilePath}");
+        _infoStream.WriteLine($"C# code for class {className} written to {outputFilePath}");
         return true;
     }
 
-    static bool TryGenerateCXCode(
+    bool TryGenerateCXCode(
         string className,
         Visual rootVisual,
         float compositionWidth,
         float compositionHeight,
         TimeSpan duration,
         string outputHeaderFilePath,
-        string outputCppFilePath,
-        bool disableCodeGenOptimizer,
-        TextWriter infoStream,
-        TextWriter errorStream)
+        string outputCppFilePath)
     {
         CxInstantiatorGenerator.CreateFactoryCode(
                 className,
@@ -545,34 +540,34 @@ static class Program
                 Path.GetFileName(outputHeaderFilePath),
                 out var cppText,
                 out var hText,
-                disableCodeGenOptimizer);
+                _options.DisableCodeGenOptimizer);
 
         if (string.IsNullOrWhiteSpace(cppText))
         {
-            errorStream.WriteLine("Failed to generate the .cpp code.");
+            WriteError("Failed to generate the .cpp code.");
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(hText))
         {
-            errorStream.WriteLine("Failed to generate the .h code.");
+            WriteError("Failed to generate the .h code.");
             return false;
         }
 
         if (!TryWriteTextFile(outputHeaderFilePath, hText))
         {
-            errorStream.WriteLine($"Failed to write .h code to {outputHeaderFilePath}");
+            WriteError($"Failed to write .h code to {outputHeaderFilePath}");
             return false;
         }
 
         if (!TryWriteTextFile(outputCppFilePath, cppText))
         {
-            errorStream.WriteLine($"Failed to write .cpp code to {outputCppFilePath}");
+            WriteError($"Failed to write .cpp code to {outputCppFilePath}");
             return false;
         }
 
-        infoStream.WriteLine($"Header code for class {className} written to {outputHeaderFilePath}");
-        infoStream.WriteLine($"Source code for class {className} written to {outputCppFilePath}");
+        _infoStream.WriteLine($"Header code for class {className} written to {outputHeaderFilePath}");
+        _infoStream.WriteLine($"Source code for class {className} written to {outputCppFilePath}");
         return true;
     }
 
@@ -708,6 +703,16 @@ EXAMPLES:
             counter = _sw.Elapsed;
             _sw.Restart();
         }
+
+        // True if there is at least one time value.
+        internal bool HasAnyResults
+            => new[] {
+                _parseTime,
+                _translateTime,
+                _optimizationTime,
+                _codegenTime,
+                _serializationTime
+            }.Any(ts => ts > TimeSpan.Zero);
 
         internal void WriteReport(TextWriter writer)
         {

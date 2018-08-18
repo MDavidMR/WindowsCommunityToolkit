@@ -22,9 +22,16 @@ namespace LottieData.Tools
         readonly int _preCompLayerCount;
         readonly int _solidLayerCount;
         readonly int _imageLayerCount;
+        readonly int _maskCount;
         readonly int _nullLayerCount;
         readonly int _shapeLayerCount;
         readonly int _textLayerCount;
+        readonly int _maskAdditiveCount;
+        readonly int _maskDarkenCount;
+        readonly int _maskDifferenceCount;
+        readonly int _maskIntersectCount;
+        readonly int _maskLightenCount;
+        readonly int _maskSubtractiveCount;
 
         // Creates a string that describes the Lottie.
         public Stats(LottieComposition lottieComposition)
@@ -70,12 +77,46 @@ namespace LottieData.Tools
                     default:
                         throw new InvalidOperationException();
                 }
+                foreach (var mask in layer.Masks)
+                {
+                    _maskCount++;
+                    switch (mask.Mode)
+                    {
+                        case Mask.MaskMode.Additive:
+                            _maskAdditiveCount++;
+                            break;
+                        case Mask.MaskMode.Darken:
+                            _maskDarkenCount++;
+                            break;
+                        case Mask.MaskMode.Difference:
+                            _maskDifferenceCount++;
+                            break;
+                        case Mask.MaskMode.Intersect:
+                            _maskIntersectCount++;
+                            break;
+                        case Mask.MaskMode.Lighten:
+                            _maskLightenCount++;
+                            break;
+                        case Mask.MaskMode.Subtract:
+                            _maskSubtractiveCount++;
+                            break;
+                    }
+                }
+                _maskCount += layer.Masks.Count();
             }
         }
 
         public int PreCompLayerCount => _preCompLayerCount;
         public int SolidLayerCount => _solidLayerCount;
         public int ImageLayerCount => _imageLayerCount;
+        public int MaskCount => _maskCount;
+        public int MaskAdditiveCount => _maskAdditiveCount;
+        public int MaskDarkenCount => _maskDarkenCount;
+        public int MaskDifferenceCount => _maskDifferenceCount;
+        public int MaskIntersectCount => _maskIntersectCount;
+        public int MaskLightenCount => _maskLightenCount;
+        public int MaskSubtractCount => _maskSubtractiveCount;
+
         public int NullLayerCount => _nullLayerCount;
         public int ShapeLayerCount => _shapeLayerCount;
         public int TextLayerCount => _textLayerCount;

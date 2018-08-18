@@ -94,6 +94,10 @@ namespace LottieData.Serialization
             {
                 result = reader.ParseLottieComposition(jsonReader);
             }
+            catch (JsonReaderException e)
+            {
+                reader._issues.FatalError(e.Message);
+            }
             catch (LottieCompositionReaderException e)
             {
                 reader._issues.FatalError(e.Message);

@@ -43,11 +43,11 @@ namespace LottieData
         {
             None = 0,
             Additive,
-            Subtract,
+            Darken,
+            Difference,
             Intersect,
             Lighten,
-            Darken,
-            Difference
+            Subtract,
         }
     }
 }

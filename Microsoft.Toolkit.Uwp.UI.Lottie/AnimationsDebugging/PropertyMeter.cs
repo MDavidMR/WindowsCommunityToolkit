@@ -9,7 +9,7 @@ using Windows.UI.Composition;
 namespace AnimationsDebugging
 {
     /// <summary>
-    /// Creates a Visual that displays the value of an animated properties.
+    /// Creates a <see cref="Visual"/> that displays the value of animated properties.
     /// </summary>
     public sealed class PropertyMeter
     {
