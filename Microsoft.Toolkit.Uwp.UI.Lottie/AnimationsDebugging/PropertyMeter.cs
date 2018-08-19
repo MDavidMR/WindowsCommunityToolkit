@@ -2,6 +2,7 @@
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Windows.UI;
 using Windows.UI.Composition;
@@ -57,7 +58,7 @@ namespace AnimationsDebugging
         /// </summary>
         public void AddScalar(CompositionObject propertyOwner, string scalarPropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
-            AddScalarMeter(propertyOwner, scalarPropertyAccessor, numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, scalarPropertyAccessor, numberOfDigits, numberOfDecimalPlaces);
             AddGapToNextMeter();
         }
 
@@ -72,8 +73,8 @@ namespace AnimationsDebugging
         /// </summary>
         public void AddVector2(CompositionObject propertyOwner, string vector2PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
-            AddScalarMeter(propertyOwner, $"{vector2PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
-            AddScalarMeter(propertyOwner, $"{vector2PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, $"{vector2PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, $"{vector2PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
             AddGapToNextMeter();
         }
 
@@ -88,9 +89,9 @@ namespace AnimationsDebugging
         /// </summary>
         public void AddVector3(CompositionObject propertyOwner, string vector3PropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
         {
-            AddScalarMeter(propertyOwner, $"{vector3PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
-            AddScalarMeter(propertyOwner, $"{vector3PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
-            AddScalarMeter(propertyOwner, $"{vector3PropertyAccessor}.Z", numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, $"{vector3PropertyAccessor}.X", numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, $"{vector3PropertyAccessor}.Y", numberOfDigits, numberOfDecimalPlaces);
+            AddScalarProperty(propertyOwner, $"{vector3PropertyAccessor}.Z", numberOfDigits, numberOfDecimalPlaces);
             AddGapToNextMeter();
         }
 
@@ -101,8 +102,20 @@ namespace AnimationsDebugging
             _nextMeterVerticalOffset += c_digitHeight * 0.12F;
         }
 
-        void AddScalarMeter(CompositionObject propertyOwner, string scalarPropertyAccessor, int numberOfDigits, int numberOfDecimalPlaces)
+        void AddScalarProperty(CompositionObject propertyOwner, string scalarPropertyAccessorExpression, int numberOfDigits, int numberOfDecimalPlaces)
+            => AddScalarExpression(scalarPropertyAccessorExpression, new[] { ("_", propertyOwner) }, numberOfDigits, numberOfDecimalPlaces);
+
+        void AddScalarExpression(string scalarExpression, IEnumerable<(string, CompositionObject)> objectBindings, int numberOfDigits, int numberOfDecimalPlaces)
         {
+            // Binds the variables in an expression to CompositionObjects.
+            void BindVariables(CompositionAnimation animation)
+            {
+                foreach ((var name, var obj) in objectBindings)
+                {
+                    animation.SetReferenceParameter(name, obj);
+                }
+            }
+
             var numberOfDigitsToLeftOfDecimalPlace = numberOfDigits - numberOfDecimalPlaces;
 
             if (numberOfDigits < 1 || numberOfDecimalPlaces < 0 || numberOfDigitsToLeftOfDecimalPlace < 0)
@@ -131,8 +144,8 @@ namespace AnimationsDebugging
 
             const string objectReferenceName = "_";
 
-            var rawValue = $"({objectReferenceName}.{scalarPropertyAccessor})";
-            var absoluteValue = $"Abs({objectReferenceName}.{scalarPropertyAccessor})";
+            var rawValue = $"({objectReferenceName}.{scalarExpression})";
+            var absoluteValue = $"Abs({objectReferenceName}.{scalarExpression})";
             var isNegative = $"{rawValue}<0";
 
             // Animate the foreground color so it changes when the value is negative.
@@ -144,7 +157,7 @@ namespace AnimationsDebugging
                 var white = "ColorHsl(0,0,1)";
                 var expression = $"{isNegative}?{red}:{white}";
                 var brushColorAnimation = _c.CreateExpressionAnimation(expression);
-                brushColorAnimation.SetReferenceParameter(objectReferenceName, propertyOwner);
+                BindVariables(brushColorAnimation);
                 foregroundBrush.StartAnimation(nameof(foregroundBrush.Color), brushColorAnimation);
             }
 
@@ -178,9 +191,9 @@ namespace AnimationsDebugging
                     var minValueForDigit = DoubleToString(Math.Pow(10, numberOfDigitsToLeftOfDecimalPlace - i - 1));
                     // Hide the digit by setting its scale to 0 if it is a leading 0.
                     var expression = $"{absoluteValue}<{minValueForDigit}?Vector2(0,0):Vector2(1,1)";
-                    var animation = _c.CreateExpressionAnimation(expression);
-                    animation.SetReferenceParameter(objectReferenceName, propertyOwner);
-                    digit.StartAnimation(nameof(digit.Scale), animation);
+                    var digitVisibilityAnimation = _c.CreateExpressionAnimation(expression);
+                    BindVariables(digitVisibilityAnimation);
+                    digit.StartAnimation(nameof(digit.Scale), digitVisibilityAnimation);
                 }
 
                 // Expression to get the value for the current digit. The evaluated value is [0..10). The further to the
@@ -220,8 +233,8 @@ namespace AnimationsDebugging
                 var offsetExpression = $"Vector2({i * c_digitWidth},({digitValueExpression}*-{c_digitHeight}) - 1.5)";
 
                 var digitOffsetAnimation = _c.CreateExpressionAnimation(offsetExpression);
-                digitOffsetAnimation.SetReferenceParameter(objectReferenceName, propertyOwner);
-
+                BindVariables(digitOffsetAnimation);
+           
                 // Animate the offset of the number string for this digit.
                 digit.StartAnimation(nameof(digit.Offset), digitOffsetAnimation);
             }
@@ -249,9 +262,9 @@ namespace AnimationsDebugging
             // Hide the overflow indicator as long as the value is within range.
             {
                 var overflowScale = $"{isOverflowing}?Vector2(1,1):Vector2(0,0)";
-                var animation = _c.CreateExpressionAnimation(overflowScale);
-                animation.SetReferenceParameter(objectReferenceName, propertyOwner);
-                overflowContainer.StartAnimation(nameof(overflowContainer.Scale), animation);
+                var overflowVisibilityAnimation = _c.CreateExpressionAnimation(overflowScale);
+                BindVariables(overflowVisibilityAnimation);
+                overflowContainer.StartAnimation(nameof(overflowContainer.Scale), overflowVisibilityAnimation);
             }
 
             // Create the minus sign. This sits on top of everything so it is visible even
@@ -272,9 +285,9 @@ namespace AnimationsDebugging
                 var minusSignPositionX = $"{c_digitWidth}*({numberOfDigitsToLeftOfDecimalPlace - 1}-({numberOfSignificantDigitsMinus1}))";
                 var minusSignPositionY = $"{DoubleToString((c_digitHeight - minusGeometry.Size.Y) / 2)}";
                 var expression = $"Vector2({isNegative}?({isOverflowing}?0:{minusSignPositionX}):-100,{minusSignPositionY})";
-                var animation = _c.CreateExpressionAnimation(expression);
-                animation.SetReferenceParameter(objectReferenceName, propertyOwner);
-                minusShape.StartAnimation(nameof(minusShape.Offset), animation);
+                var minusSignVisibilityAnimation = _c.CreateExpressionAnimation(expression);
+                BindVariables(minusSignVisibilityAnimation);
+                minusShape.StartAnimation(nameof(minusShape.Offset), minusSignVisibilityAnimation);
             }
 
             // Add the minus sign.
