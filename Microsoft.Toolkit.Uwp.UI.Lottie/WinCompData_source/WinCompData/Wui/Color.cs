@@ -9,16 +9,16 @@ namespace WinCompData.Wui
 #if !WINDOWS_UWP
     public
 #endif
-    struct Color : IEquatable<Color>
+    readonly struct Color : IEquatable<Color>
     {
         Color(byte a, byte r, byte g, byte b) { A = a; R = r; G = g; B = b; }
 
         public static Color FromArgb(byte a, byte r, byte g, byte b) => new Color(a, r, g, b);
 
-        public byte A { get; }
-        public byte B { get; }
-        public byte G { get; }
-        public byte R { get; }
+        public readonly byte A;
+        public readonly byte B;
+        public readonly byte G;
+        public readonly byte R;
 
         public override string ToString() => Name;
 

@@ -10,6 +10,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;PUBLIC</DefineConstants>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ namespace LottieData
 #if !WINDOWS_UWP
     public
 #endif
-struct GradientStop
+    readonly struct GradientStop
     {
         public GradientStop(double offset, Color color, double? opacity)
         {
@@ -33,9 +33,9 @@ struct GradientStop
 
         public static GradientStop FromOpacity(double offset, double opacity) => new GradientStop(offset, null, opacity);
 
-        public double Offset { get; }
-        public Color Color { get; }
-        public double? Opacity { get; }
+        public readonly Color Color;
+        public readonly double Offset;
+        public readonly double? Opacity;
 
         public override string ToString()
         {

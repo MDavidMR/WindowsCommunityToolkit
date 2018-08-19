@@ -8,7 +8,7 @@ namespace LottieData
 #if !WINDOWS_UWP
     public
 #endif
-    struct Vector3 : IEquatable<Vector3>
+    readonly struct Vector3 : IEquatable<Vector3>
     {
         public Vector3(double x, double y, double z)
         {
@@ -17,13 +17,13 @@ namespace LottieData
             Z = z;
         }
 
-        public double X { get; }
-        public double Y { get; }
-        public double Z { get; }
+        public readonly double X;
+        public readonly double Y;
+        public readonly double Z;
 
-        public static Vector3 Zero { get; } = new Vector3(0, 0, 0);
+        public static readonly Vector3 Zero = new Vector3(0, 0, 0);
 
-        public static Vector3 One { get; } = new Vector3(1, 1, 1);
+        public static readonly Vector3 One = new Vector3(1, 1, 1);
 
         public static Vector3 operator *(Vector3 left, double right) =>
             new Vector3(left.X * right, left.Y * right, left.Z * right);

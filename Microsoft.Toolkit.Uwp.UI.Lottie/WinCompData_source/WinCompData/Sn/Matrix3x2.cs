@@ -6,16 +6,17 @@ namespace WinCompData.Sn
 #if !WINDOWS_UWP
     public
 #endif
-    struct Matrix3x2
+    readonly struct Matrix3x2
     {
-        public float M11;
-        public float M12;
-        public float M21;
-        public float M22;
-        public float M31;
-        public float M32;
+        public readonly float M11;
+        public readonly float M12;
+        public readonly float M21;
+        public readonly float M22;
+        public readonly float M31;
+        public readonly float M32;
 
-        public static Matrix3x2 Identity => new Matrix3x2 { M11 = 1, M22 = 1};
+        public static Matrix3x2 Identity => new Matrix3x2(m11: 1, 0, 0, m22: 1, 0, 0);
+
         public Matrix3x2(float m11, float m12, float m21, float m22, float m31, float m32)
         {
             M11 = m11;

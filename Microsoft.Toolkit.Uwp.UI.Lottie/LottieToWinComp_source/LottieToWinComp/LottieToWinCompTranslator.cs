@@ -1156,7 +1156,7 @@ namespace LottieToWinComp
                         continue;
 
                     case ShapeContentType.Path:
-                        yield return CreateWin2dPathGeometryFromShape((Shape)shapeContent, pathFillType, optimizeLines:true);
+                        yield return CreateWin2dPathGeometryFromShape((Shape)shapeContent, pathFillType, optimizeLines: true);
                         break;
                     case ShapeContentType.Ellipse:
                         yield return CreateWin2dEllipseGeometry((Ellipse)shapeContent);
@@ -1419,8 +1419,8 @@ namespace LottieToWinComp
             var compositionPathGeometry = CreatePathGeometry();
             compositionSpriteShape.Geometry = compositionPathGeometry;
             compositionPathGeometry.Path = CompositionPathFromPathGeometry(
-                pathGeometry.InitialValue, 
-                GetPathFillType(shapeContext.Fill), 
+                pathGeometry.InitialValue,
+                GetPathFillType(shapeContext.Fill),
                 optimizeLines: true);
 
             if (_addDescriptions)
@@ -2471,8 +2471,8 @@ namespace LottieToWinComp
         static SolidColorFill.PathFillType GetPathFillType(SolidColorFill fill) => fill == null ? SolidColorFill.PathFillType.EvenOdd : fill.FillType;
 
         CompositionPath CompositionPathFromPathGeometry(
-            PathGeometry pathGeometry, 
-            SolidColorFill.PathFillType fillType, 
+            PathGeometry pathGeometry,
+            SolidColorFill.PathFillType fillType,
             bool optimizeLines)
         {
             // CompositionPaths can be shared by many SpriteShapes.
@@ -2931,11 +2931,12 @@ namespace LottieToWinComp
 
 
         // A type that is either a CompositionType or a Visual.
-        struct ShapeOrVisual
+        readonly struct ShapeOrVisual
         {
-            CompositionObject _shapeOrVisual;
-            public static implicit operator ShapeOrVisual(CompositionShape shape) => new ShapeOrVisual { _shapeOrVisual = shape };
-            public static implicit operator ShapeOrVisual(Visual visual) => new ShapeOrVisual { _shapeOrVisual = visual };
+            readonly CompositionObject _shapeOrVisual;
+            ShapeOrVisual(CompositionObject shapeOrVisual) { _shapeOrVisual = shapeOrVisual; }
+            public static implicit operator ShapeOrVisual(CompositionShape shape) => new ShapeOrVisual(shape);
+            public static implicit operator ShapeOrVisual(Visual visual) => new ShapeOrVisual(visual);
             public static implicit operator CompositionObject(ShapeOrVisual shapeOrVisual) => shapeOrVisual._shapeOrVisual;
         }
     }
