@@ -1,6 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+
 // Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
 // for multiple trim paths, so it's possible this is actually the most correct.
 #define SimpleTrimPathCombining
@@ -62,7 +63,7 @@ namespace LottieToWinComp
         // Holds ColorBrushes that are not animated and can therefore be reused.
         readonly Dictionary<Color, CompositionColorBrush> _nonAnimatedColorBrushes = new Dictionary<Color, CompositionColorBrush>();
         // Paths are shareable.
-        readonly Dictionary<(PathGeometry, SolidColorFill.PathFillType, bool), CompositionPath> _compositionPaths = new Dictionary<(PathGeometry, SolidColorFill.PathFillType, bool), CompositionPath>();
+        readonly Dictionary<(Sequence<BezierSegment>, SolidColorFill.PathFillType, bool), CompositionPath> _compositionPaths = new Dictionary<(Sequence<BezierSegment>, SolidColorFill.PathFillType, bool), CompositionPath>();
         // Holds a LinearEasingFunction that can be reused in multiple animations.
         LinearEasingFunction _linearEasingFunction;
         // Holds a StepEasingFunction that can be reused in multiple animations.
@@ -1235,9 +1236,9 @@ namespace LottieToWinComp
             }
         }
 
-        CanvasGeometry CreateWin2dPathGeometry(PathGeometry figure, SolidColorFill.PathFillType fillType, bool optimizeLines)
+        CanvasGeometry CreateWin2dPathGeometry(Sequence<BezierSegment> figure, SolidColorFill.PathFillType fillType, bool optimizeLines)
         {
-            var beziers = figure.Beziers.ToArray();
+            var beziers = figure.Items.ToArray();
             using (var builder = new CanvasPathBuilder(null))
             {
                 if (beziers.Length == 0)
@@ -2141,7 +2142,7 @@ namespace LottieToWinComp
 
         void ApplyPathKeyFrameAnimation(
             TranslationContext context,
-            Animatable<PathGeometry> value,
+            Animatable<Sequence<BezierSegment>> value,
             SolidColorFill.PathFillType fillType,
             CompositionObject targetObject,
             string targetPropertyName,
@@ -2554,7 +2555,7 @@ namespace LottieToWinComp
         static SolidColorFill.PathFillType GetPathFillType(SolidColorFill fill) => fill == null ? SolidColorFill.PathFillType.EvenOdd : fill.FillType;
 
         CompositionPath CompositionPathFromPathGeometry(
-            PathGeometry pathGeometry,
+            Sequence<BezierSegment> pathGeometry,
             SolidColorFill.PathFillType fillType,
             bool optimizeLines)
         {

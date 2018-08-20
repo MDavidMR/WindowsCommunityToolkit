@@ -18,26 +18,26 @@ namespace LottieData.Optimization
     {
         static readonly AnimatableComparer<Color> s_colorComparer = new AnimatableComparer<Color>();
         static readonly AnimatableComparer<double> s_floatComparer = new AnimatableComparer<double>();
-        static readonly AnimatableComparer<PathGeometry> s_pathGeometryComparer = new AnimatableComparer<PathGeometry>();
+        static readonly AnimatableComparer<Sequence<BezierSegment>> s_pathGeometryComparer = new AnimatableComparer<Sequence<BezierSegment>>();
         readonly Dictionary<Animatable<Color>, Animatable<Color>> _animatableColorsCache;
         readonly Dictionary<Animatable<double>, Animatable<double>> _animatableFloatsCache;
-        readonly Dictionary<Animatable<PathGeometry>, Animatable<PathGeometry>> _animatablePathGeometriesCache;
+        readonly Dictionary<Animatable<Sequence<BezierSegment>>, Animatable<Sequence<BezierSegment>>> _animatablePathGeometriesCache;
 
         public Optimizer()
         {
             _animatableColorsCache = new Dictionary<Animatable<Color>, Animatable<Color>>(s_colorComparer);
             _animatableFloatsCache = new Dictionary<Animatable<double>, Animatable<double>>(s_floatComparer);
-            _animatablePathGeometriesCache = new Dictionary<Animatable<PathGeometry>, Animatable<PathGeometry>>(s_pathGeometryComparer);
+            _animatablePathGeometriesCache = new Dictionary<Animatable<Sequence<BezierSegment>>, Animatable<Sequence<BezierSegment>>>(s_pathGeometryComparer);
         }
 
         public Animatable<Color> GetOptimized(Animatable<Color> value) => GetOptimized(value, s_colorComparer, _animatableColorsCache);
         public Animatable<double> GetOptimized(Animatable<double> value) => GetOptimized(value, s_floatComparer, _animatableFloatsCache);
-        public Animatable<PathGeometry> GetOptimized(Animatable<PathGeometry> value)
+        public Animatable<Sequence<BezierSegment>> GetOptimized(Animatable<Sequence<BezierSegment>> value)
         {
             var optimized = GetOptimized(value, s_pathGeometryComparer, _animatablePathGeometriesCache);
             // If the geometries have different numbers of segments they can't be animated. However
             // in one specific case we can fix that.
-            var geometries = value.KeyFrames.Select(kf => kf.Value.Beziers.ToArray()).ToArray();
+            var geometries = value.KeyFrames.Select(kf => kf.Value.Items.ToArray()).ToArray();
             var distinctSegmentCounts = geometries.Select(g => g.Length).Distinct().Count();
 
             if (distinctSegmentCounts != 2)
@@ -98,12 +98,12 @@ namespace LottieData.Optimization
 
             // Create a new Animatable<PathGeometry> which has only one segment in each keyframe.
             var hacked = optimized.KeyFrames.Select(pg => HackPathGeometry(pg));
-            return new Animatable<PathGeometry>(hacked.First().Value, hacked, optimized.PropertyIndex);
+            return new Animatable<Sequence<BezierSegment>>(hacked.First().Value, hacked, optimized.PropertyIndex);
         }
 
-        static KeyFrame<PathGeometry> HackPathGeometry(KeyFrame<PathGeometry> value)
+        static KeyFrame<Sequence<BezierSegment>> HackPathGeometry(KeyFrame<Sequence<BezierSegment>> value)
         {
-            return new KeyFrame<PathGeometry>(value.Frame, new PathGeometry(new[] { value.Value.Beziers.First() }), Vector3.Zero, Vector3.Zero, value.Easing);
+            return new KeyFrame<Sequence<BezierSegment>>(value.Frame, new Sequence<BezierSegment>(new[] { value.Value.Items.First() }), Vector3.Zero, Vector3.Zero, value.Easing);
         }
 
         // True iff b is between and c.

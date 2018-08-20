@@ -21,7 +21,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Ellipse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\GradientStop.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LottieData\GradientStopCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\HoldEasing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\IAnimatableValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\IAnimatableVector3.cs" />
@@ -43,7 +42,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\MergePaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\NullLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Optimization\Optimizer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LottieData\PathGeometry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Polystar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\PreCompLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\RadialGradientFill.cs" />
@@ -51,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Repeater.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\RoundedCorner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Sequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieCompositionXmlSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Shape.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\ShapeContentType.cs" />

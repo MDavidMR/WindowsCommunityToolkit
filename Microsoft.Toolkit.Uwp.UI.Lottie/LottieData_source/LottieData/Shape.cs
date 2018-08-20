@@ -12,7 +12,7 @@ namespace LottieData
             string name,
             string matchName,
             bool direction,
-            Animatable<PathGeometry> geometry)
+            Animatable<Sequence<BezierSegment>> geometry)
             : base(name, matchName)
         {
             Direction = direction;
@@ -21,7 +21,7 @@ namespace LottieData
 
         public bool Direction { get; }
 
-        public Animatable<PathGeometry> PathData { get; }
+        public Animatable<Sequence<BezierSegment>> PathData { get; }
 
         public override ShapeContentType ContentType => ShapeContentType.Path;
 

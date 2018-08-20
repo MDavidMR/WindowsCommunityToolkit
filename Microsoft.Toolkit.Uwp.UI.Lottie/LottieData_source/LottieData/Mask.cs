@@ -14,7 +14,7 @@ namespace LottieData
         public Mask(
             bool inverted,
             string name,
-            Animatable<PathGeometry> points,
+            Animatable<Sequence<BezierSegment>> points,
             Animatable<double> opacity,
             MaskMode mode
         )
@@ -30,10 +30,7 @@ namespace LottieData
 
         public string Name { get; }
 
-        /// <summary>
-        /// Path geometry that is represented in Lottie as an array of animatable points
-        /// </summary>
-        public Animatable<PathGeometry> Points { get; }
+        public Animatable<Sequence<BezierSegment>> Points { get; }
 
         public Animatable<double> Opacity { get; }
 

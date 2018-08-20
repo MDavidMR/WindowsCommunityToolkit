@@ -4,6 +4,7 @@
 // If defined, an issue will be reported for each field that is discovered
 // but not parsed. This is used to help test that parsing is complete.
 #define CheckForUnparsedFields
+using PathGeometry = LottieData.Sequence<LottieData.BezierSegment>;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1329,18 +1330,18 @@ namespace LottieData.Serialization
             return new Animatable<PathGeometry>(initialValue, keyFrames, propertyIndex);
         }
 
-        Animatable<GradientStopCollection> ReadAnimatableGradientStops(JObject obj)
+        Animatable<Sequence<GradientStop>> ReadAnimatableGradientStops(JObject obj)
         {
             var numberOfColorStops = ReadInt(obj, "p");
 
             var animatableGradientStopsParser = new AnimatableGradientStopsParser(numberOfColorStops);
             animatableGradientStopsParser.ParseJson(
                 this,
-                obj.GetNamedObject("k"), out IEnumerable<KeyFrame<GradientStopCollection>> keyFrames,
-                out GradientStopCollection initialValue);
+                obj.GetNamedObject("k"), out IEnumerable<KeyFrame<Sequence<GradientStop>>> keyFrames,
+                out Sequence<GradientStop> initialValue);
 
             var propertyIndex = ReadInt(obj, "ix");
-            return new Animatable<GradientStopCollection>(initialValue, keyFrames, propertyIndex);
+            return new Animatable<Sequence<GradientStop>>(initialValue, keyFrames, propertyIndex);
         }
 
         Animatable<double> ReadAnimatableFloat(JObject obj)
@@ -1600,7 +1601,7 @@ namespace LottieData.Serialization
             }
         }
 
-        sealed class AnimatableGradientStopsParser : AnimatableParser<GradientStopCollection>
+        sealed class AnimatableGradientStopsParser : AnimatableParser<Sequence<GradientStop>>
         {
             // The number of color stops. The opacity stops follow this number
             // of color stops. If not specified, all of the values are color stops.
@@ -1608,7 +1609,7 @@ namespace LottieData.Serialization
 
             internal AnimatableGradientStopsParser(int? colorStopCount) { _colorStopCount = colorStopCount; }
 
-            protected override GradientStopCollection ReadValue(JToken obj)
+            protected override Sequence<GradientStop> ReadValue(JToken obj)
             {
                 var gradientStopsData = obj.AsArray().Select(v => (double)v).ToArray();
 
@@ -1691,7 +1692,7 @@ namespace LottieData.Serialization
                     // random.
                     select grouped.Aggregate((g1, g2) => new GradientStop(g1.Offset, g1.Color ?? g2.Color, g1.Opacity ?? g2.Opacity));
 
-                return new GradientStopCollection(merged);
+                return new Sequence<GradientStop>(merged);
             }
         }
 
