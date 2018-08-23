@@ -300,6 +300,8 @@ namespace WinCompData.CodeGen
                     return GetCompositionContainerShape((CompositionContainerShape)obj);
                 case CompositionObjectType.CompositionEllipseGeometry:
                     return GetCompositionEllipseGeometry((CompositionEllipseGeometry)obj);
+                case CompositionObjectType.CompositionGeometricClip:
+                    return GetCompositionGeometricClip((CompositionGeometricClip)obj);
                 case CompositionObjectType.CompositionPathGeometry:
                     return GetCompositionPathGeometry((CompositionPathGeometry)obj);
                 case CompositionObjectType.CompositionPropertySet:
@@ -564,7 +566,15 @@ namespace WinCompData.CodeGen
 
         CompositionClip GetCompositionClip(CompositionClip obj)
         {
-            return GetInsetClip((InsetClip)obj);
+            switch (obj.Type)
+            {
+                case CompositionObjectType.InsetClip:
+                    return GetInsetClip((InsetClip)obj);
+                case CompositionObjectType.CompositionGeometricClip:
+                    return GetCompositionGeometricClip((CompositionGeometricClip)obj);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         InsetClip GetInsetClip(InsetClip obj)
@@ -604,6 +614,19 @@ namespace WinCompData.CodeGen
             StartAnimationsAndFreeze(obj, result);
             return result;
 
+        }
+
+        CompositionGeometricClip GetCompositionGeometricClip(CompositionGeometricClip obj)
+        {
+            if (GetExisting(obj, out CompositionGeometricClip result))
+            {
+                return result;
+            }
+
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateCompositionGeometricClip());
+            result.Geometry = obj.Geometry;
+
+            return result;
         }
 
         LinearEasingFunction GetLinearEasingFunction(LinearEasingFunction obj)
