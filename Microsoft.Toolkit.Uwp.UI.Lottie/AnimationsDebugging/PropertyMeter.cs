@@ -103,16 +103,16 @@ namespace AnimationsDebugging
         }
 
         void AddScalarProperty(CompositionObject propertyOwner, string scalarPropertyAccessorExpression, int numberOfDigits, int numberOfDecimalPlaces)
-            => AddScalarExpression(scalarPropertyAccessorExpression, new[] { ("_", propertyOwner) }, numberOfDigits, numberOfDecimalPlaces);
+            => AddScalarExpression(scalarPropertyAccessorExpression, new[] { new ObjectBinding("_", propertyOwner) }, numberOfDigits, numberOfDecimalPlaces);
 
-        void AddScalarExpression(string scalarExpression, IEnumerable<(string, CompositionObject)> objectBindings, int numberOfDigits, int numberOfDecimalPlaces)
+        void AddScalarExpression(string scalarExpression, IEnumerable<ObjectBinding> objectBindings, int numberOfDigits, int numberOfDecimalPlaces)
         {
             // Binds the variables in an expression to CompositionObjects.
             void BindVariables(CompositionAnimation animation)
             {
-                foreach ((var name, var obj) in objectBindings)
+                foreach (var binding in objectBindings)
                 {
-                    animation.SetReferenceParameter(name, obj);
+                    animation.SetReferenceParameter(binding.Name, binding.Object);
                 }
             }
 
@@ -234,7 +234,7 @@ namespace AnimationsDebugging
 
                 var digitOffsetAnimation = _c.CreateExpressionAnimation(offsetExpression);
                 BindVariables(digitOffsetAnimation);
-           
+
                 // Animate the offset of the number string for this digit.
                 digit.StartAnimation(nameof(digit.Offset), digitOffsetAnimation);
             }
@@ -328,7 +328,6 @@ namespace AnimationsDebugging
         // Returns the value of 10 raised to the given value, as a string that can be used in a Composition animation expression.
         static string Pow10(double value) => DoubleToString(Math.Pow(10, value));
 
-
         // Converts a floating point value to a string suitable for a Composition animation expression.
         static string DoubleToString(double value)
         {
@@ -336,6 +335,19 @@ namespace AnimationsDebugging
             return Math.Floor(fValue) == fValue
                 ? fValue.ToString("0")
                 : fValue.ToString("0.0####################");
+        }
+
+        // This is used instead of a ValueTuple so that the app that the meter is used in
+        // doesn't depend on the ValueTuple NuGet.
+        readonly struct ObjectBinding
+        {
+            public readonly string Name;
+            public readonly CompositionObject Object;
+            internal ObjectBinding(string name, CompositionObject @object)
+            {
+                Name = name;
+                Object = @object;
+            }
         }
     }
 }
