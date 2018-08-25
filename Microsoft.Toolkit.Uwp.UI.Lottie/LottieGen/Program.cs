@@ -8,10 +8,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Tools;
+
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyProduct("Lottie Windows")]
+[assembly: AssemblyCopyright("Microsoft 2018")]
+[assembly: AssemblyDescription("Command line Lottie code generator tool")]
 
 sealed class Program
 {
@@ -63,7 +70,19 @@ sealed class Program
         return Directory.EnumerateFiles(directoryPath, Path.GetFileName(path));
     }
 
-    // Helper for writing errors to the error stream with a standard format
+    // Helper for writing info lines to the info stream.
+    void WriteInfo(string infoMessage)
+    {
+        _infoStream.WriteLine(infoMessage);
+    }
+
+    // Writes a new line to the info stream.
+    void WriteInfoNewLine()
+    {
+        _infoStream.WriteLine();
+    }
+
+    // Helper for writing errors to the error stream with a standard format.
     void WriteError(string errorMessage)
     {
         _errorStream.WriteLine($"Error: {errorMessage}");
@@ -88,8 +107,8 @@ sealed class Program
         var assemblyVersion = s_thisAssembly.GetName().Version;
 
         var toolNameAndVersion = $"Lottie for Windows Code Generator version {assemblyVersion}";
-        _infoStream.WriteLine(toolNameAndVersion);
-        _infoStream.WriteLine();
+        WriteInfo(toolNameAndVersion);
+        WriteInfoNewLine();
 
         if (_options.ErrorDescription != null)
         {
@@ -111,14 +130,20 @@ sealed class Program
             return RunResult.InvalidUsage;
         }
 
-        switch (_options.Language)
+        // Validate the languages.
+        if (!_options.Languages.Any())
         {
-            case Lang.Unknown:
+            WriteError("Language not specified.");
+            return RunResult.InvalidUsage;
+        }
+
+        foreach (var language in _options.Languages)
+        {
+            if (language == Lang.Unknown)
+            {
                 WriteError("Invalid language.");
                 return RunResult.InvalidUsage;
-            case Lang.Unspecified:
-                WriteError("Language not specified.");
-                return RunResult.InvalidUsage;
+            }
         }
 
         // Check that at least one file matches InputFile.
@@ -147,7 +172,7 @@ sealed class Program
             WinCompData.Tools.Stats afterOptimizationStats;
 
             var codeGenResult = TryGenerateCode(
-                        lottieJsonFile: inputFile,
+                        lottieJsonFilePath: inputFile,
                         outputFolder: outputFolder,
                         codeGenClassName: _options.ClassName,
                         strictTranslation: _options.StrictMode,
@@ -157,23 +182,27 @@ sealed class Program
                     ? RunResult.Success
                     : RunResult.Failure;
 
-            if (_profiler.HasAnyResults)
+            // Output extra information if the user specified verbose output.
+            if (_options.Verbose)
             {
-                _infoStream.WriteLine();
-                _infoStream.WriteLine(" === Timings ===");
-                _profiler.WriteReport(_infoStream);
-            }
+                if (_profiler.HasAnyResults)
+                {
+                    WriteInfoNewLine();
+                    WriteInfo(" === Timings ===");
+                    _profiler.WriteReport(_infoStream);
+                }
 
-            if (lottieStats != null)
-            {
-                _infoStream.WriteLine();
-                WriteLottieStatsReport(_infoStream, lottieStats);
-            }
+                if (lottieStats != null)
+                {
+                    WriteInfoNewLine();
+                    WriteLottieStatsReport(_infoStream, lottieStats);
+                }
 
-            if (beforeOptimizationStats != null && afterOptimizationStats != null)
-            {
-                _infoStream.WriteLine();
-                WriteCodeGenStatsReport(_infoStream, beforeOptimizationStats, afterOptimizationStats);
+                if (beforeOptimizationStats != null && afterOptimizationStats != null)
+                {
+                    WriteInfoNewLine();
+                    WriteCodeGenStatsReport(_infoStream, beforeOptimizationStats, afterOptimizationStats);
+                }
             }
 
             if (result == RunResult.Success && codeGenResult != RunResult.Success)
@@ -262,7 +291,7 @@ sealed class Program
         WriteStatsLine("LinearEasingFunction", beforeOptimization.LinearEasingFunctionCount, afterOptimization.LinearEasingFunctionCount);
         WriteStatsLine("PathGeometry", beforeOptimization.PathGeometryCount, afterOptimization.PathGeometryCount);
         WriteStatsLine("PathKeyFrameAnimation", beforeOptimization.PathKeyFrameAnimationCount, afterOptimization.PathKeyFrameAnimationCount);
-        WriteStatsLine("Property value", beforeOptimization.PropertyCount, afterOptimization.PropertyCount);
+        WriteStatsLine("Property value", beforeOptimization.PropertySetProperyCount, afterOptimization.PropertySetProperyCount);
         WriteStatsLine("PropertySet", beforeOptimization.PropertySetCount, afterOptimization.PropertySetCount);
         WriteStatsLine("RectangleGeometry", beforeOptimization.RectangleGeometryCount, afterOptimization.RectangleGeometryCount);
         WriteStatsLine("RoundedRectangleGeometry", beforeOptimization.RoundedRectangleGeometryCount, afterOptimization.RoundedRectangleGeometryCount);
@@ -294,7 +323,7 @@ sealed class Program
 
 
     bool TryGenerateCode(
-        string lottieJsonFile,
+        string lottieJsonFilePath,
         string outputFolder,
         string codeGenClassName,
         bool strictTranslation,
@@ -313,12 +342,12 @@ sealed class Program
         }
 
         // Read the Lottie .json text.
-        _infoStream.WriteLine($"Reading Lottie file: {lottieJsonFile}");
-        var jsonStream = TryReadTextFile(lottieJsonFile);
+        WriteInfo($"Reading Lottie file: {lottieJsonFilePath}");
+        var jsonStream = TryReadTextFile(lottieJsonFilePath);
 
         if (jsonStream == null)
         {
-            WriteError($"Failed to read Lottie file: {lottieJsonFile}");
+            WriteError($"Failed to read Lottie file: {lottieJsonFilePath}");
             return false;
         }
 
@@ -333,12 +362,12 @@ sealed class Program
 
         foreach (var issue in readerIssues)
         {
-            _infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
+            WriteInfo(IssueToString(lottieJsonFilePath, issue));
         }
 
         if (lottieComposition == null)
         {
-            WriteError($"Failed to parse Lottie file: {lottieJsonFile}");
+            WriteError($"Failed to parse Lottie file: {lottieJsonFilePath}");
             return false;
         }
 
@@ -348,20 +377,21 @@ sealed class Program
         Visual wincompDataRootVisual = null;
 
         // LottieXml doesn't need the Lottie to be translated. Everyone else does.
-        if (_options.Language != Lang.LottieXml)
+        (string Code, string Description)[] translationIssues = null;
+        if (!(_options.Languages.Count() == 1 && _options.Languages.First() == Lang.LottieXml))
         {
             translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
                         lottieComposition,
                         strictTranslation, // strictTranslation
                         true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
                         out wincompDataRootVisual,
-                        out var translationIssues);
+                        out translationIssues);
 
             _profiler.OnTranslateFinished();
 
             foreach (var issue in translationIssues)
             {
-                _infoStream.WriteLine(IssueToString(lottieJsonFile, issue));
+                WriteInfo(IssueToString(lottieJsonFilePath, issue));
             }
 
             if (!translateSucceeded)
@@ -377,7 +407,7 @@ sealed class Program
         // Get an appropriate name for the class.
         string className =
             InstantiatorGeneratorBase.TrySynthesizeClassName(codeGenClassName) ??
-            InstantiatorGeneratorBase.TrySynthesizeClassName(Path.GetFileNameWithoutExtension(lottieJsonFile)) ??
+            InstantiatorGeneratorBase.TrySynthesizeClassName(Path.GetFileNameWithoutExtension(lottieJsonFilePath)) ??
             // If all else fails, just call it Lottie.
             InstantiatorGeneratorBase.TrySynthesizeClassName("Lottie");
 
@@ -392,62 +422,173 @@ sealed class Program
             _profiler.OnUnmeasuredFinished();
         }
 
-        var lottieFileNameBase = Path.GetFileNameWithoutExtension(lottieJsonFile);
+        var lottieFileNameBase = Path.GetFileNameWithoutExtension(lottieJsonFilePath);
 
-        bool codeGenSucceeded = false;
-        switch (_options.Language)
+        var codeGenSucceeded = true;
+        foreach (var lang in _options.Languages)
         {
-            case Lang.CSharp:
-                codeGenSucceeded = TryGenerateCSharpCode(
-                    className,
-                    optimizedWincompDataRootVisual,
-                    (float)lottieComposition.Width,
-                    (float)lottieComposition.Height,
-                    lottieComposition.Duration,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"));
-                _profiler.OnCodeGenFinished();
-                break;
+            switch (lang)
+            {
+                case Lang.CSharp:
+                    codeGenSucceeded &= TryGenerateCSharpCode(
+                        className,
+                        optimizedWincompDataRootVisual,
+                        (float)lottieComposition.Width,
+                        (float)lottieComposition.Height,
+                        lottieComposition.Duration,
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.cs"));
+                    _profiler.OnCodeGenFinished();
+                    break;
 
-            case Lang.Cx:
-                codeGenSucceeded = TryGenerateCXCode(
-                    className,
-                    optimizedWincompDataRootVisual,
-                    (float)lottieComposition.Width,
-                    (float)lottieComposition.Height,
-                    lottieComposition.Duration,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.h"),
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"));
-                _profiler.OnCodeGenFinished();
-                break;
+                case Lang.Cx:
+                    codeGenSucceeded &= TryGenerateCXCode(
+                        className,
+                        optimizedWincompDataRootVisual,
+                        (float)lottieComposition.Width,
+                        (float)lottieComposition.Height,
+                        lottieComposition.Duration,
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.h"),
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.cpp"));
+                    _profiler.OnCodeGenFinished();
+                    break;
 
-            case Lang.LottieXml:
-                codeGenSucceeded = TryGenerateLottieXml(
-                    lottieComposition,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
-                _profiler.OnSerializationFinished();
-                break;
+                case Lang.LottieXml:
+                    codeGenSucceeded &= TryGenerateLottieXml(
+                        lottieComposition,
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
+                    _profiler.OnSerializationFinished();
+                    break;
 
-            case Lang.WinCompXml:
-                codeGenSucceeded = TryGenerateWincompXml(
-                    optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
-                _profiler.OnSerializationFinished();
-                break;
+                case Lang.WinCompXml:
+                    codeGenSucceeded &= TryGenerateWincompXml(
+                        optimizedWincompDataRootVisual,
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.xml"));
+                    _profiler.OnSerializationFinished();
+                    break;
 
-            case Lang.WinCompDgml:
-                codeGenSucceeded = TryGenerateWincompDgml(
-                    optimizedWincompDataRootVisual,
-                    Path.Combine(outputFolder, $"{lottieFileNameBase}.dgml"));
-                _profiler.OnSerializationFinished();
-                break;
+                case Lang.WinCompDgml:
+                    codeGenSucceeded &= TryGenerateWincompDgml(
+                        optimizedWincompDataRootVisual,
+                        Path.Combine(outputFolder, $"{lottieFileNameBase}.dgml"));
+                    _profiler.OnSerializationFinished();
+                    break;
 
-            default:
-                WriteError($"Language {_options.Language} is not supported.");
-                return false;
-        };
+                case Lang.Stats:
+                    codeGenSucceeded &= TryGenerateStats(
+                        lottieJsonFilePath,
+                        lottieStats,
+                        afterOptimizationStats ?? beforeOptimizationStats,
+                        readerIssues.Concat(translationIssues),
+                        Path.Combine(outputFolder, lottieFileNameBase));
+                    break;
 
+                default:
+                    WriteError($"Language {lang} is not supported.");
+                    return false;
+            }
+        }
 
         return codeGenSucceeded;
+    }
+
+    static string GenerateHashFromString(string input)
+    {
+        using (var hasher = SHA256.Create())
+        using (var stream = new MemoryStream())
+        using (var writer = new StreamWriter(stream))
+        {
+            // Write into the stream so that hasher can consume the input.
+            writer.Write(input);
+
+            // Generate the hash. This returns a 32 byte (256 bit) value.
+            var hash = hasher.ComputeHash(stream);
+
+            // Encode the hash as base 64 so that it is all readable characters.
+            // This will return a string that is 44 characters long.
+            var hashedString = Convert.ToBase64String(hash);
+
+            // Return just the first 8 characters of the base64 encoded hash.
+            return hashedString.Substring(0, 8);
+        }
+    }
+
+    /// <summary>
+    /// Generates csv files describing the Lottie and its translation.
+    /// </summary>
+    bool TryGenerateStats(
+        string lottieJsonFilePath,
+        LottieData.Tools.Stats lottieStats,
+        WinCompData.Tools.Stats translationStats,
+        IEnumerable<(string Code, string Description)> issues,
+        string outputFilePathBase)
+    {
+        // Assume success.
+        var success = true;
+
+        // Create an id for this file, based on the path.
+        // The key is used so that other tables (e.g. the errors table) can reference the entry
+        // for this file.
+        var key = GenerateHashFromString(lottieJsonFilePath).Substring(0, 8);
+
+        // Create the main table. Other tables will reference rows in this table.
+        // Note that the main table has only one row. Typical usage will be to
+        // generate tables for many Lottie files then combine them in a script.
+        var sb = new StringBuilder();
+        sb.AppendLine(
+            "Key,Path,FileName,LottieVersion,DurationSeconds,ErrorCount,PrecompLayerCount,ShapeLayerCount," +
+            "SolidLayerCount,ImageLayerCount,TextLayerCount,MaskCount,ContainerShapeCount,ContainerVisualCount," +
+            "ExpressionAnimationCount,PropertySetPropertyCount,SpriteShapeCount");
+        sb.Append($"\"{key}\"");
+        AppendColumnValue(lottieJsonFilePath);
+        AppendColumnValue(Path.GetFileName(lottieJsonFilePath));
+        AppendColumnValue(lottieStats.Version);
+        AppendColumnValue(lottieStats.Duration.TotalSeconds);
+        AppendColumnValue(issues.Count());
+        AppendColumnValue(lottieStats.PreCompLayerCount);
+        AppendColumnValue(lottieStats.ShapeLayerCount);
+        AppendColumnValue(lottieStats.SolidLayerCount);
+        AppendColumnValue(lottieStats.ImageLayerCount);
+        AppendColumnValue(lottieStats.TextLayerCount);
+        AppendColumnValue(lottieStats.MaskCount);
+        AppendColumnValue(translationStats.ContainerShapeCount);
+        AppendColumnValue(translationStats.ContainerVisualCount);
+        AppendColumnValue(translationStats.ExpressionAnimationCount);
+        AppendColumnValue(translationStats.PropertySetProperyCount);
+        AppendColumnValue(translationStats.SpriteShapeCount);
+        sb.AppendLine();
+
+        WriteCsvFile("basicInfo", sb.ToString());
+
+        // Create the error table.
+        sb.Clear();
+        sb.AppendLine("Key,ErrorCode,Description");
+        foreach ((var Code, var Description) in issues)
+        {
+            sb.Append($"\"{key}\"");
+            AppendColumnValue(Code);
+            AppendColumnValue(Description);
+            sb.AppendLine();
+        }
+
+        WriteCsvFile("errors", sb.ToString());
+
+        void AppendColumnValue(object columnValue)
+        {
+            sb.Append($",\"{columnValue}\"");
+        }
+
+        void WriteCsvFile(string fileDifferentiator, string text)
+        {
+            var filePath = $"{outputFilePathBase}.{fileDifferentiator}.csv";
+
+            success &= TryWriteTextFile(filePath, text);
+            if (success)
+            {
+                WriteInfo($"Stats data written to {filePath}");
+            }
+        }
+
+        return success;
     }
 
     bool TryGenerateLottieXml(
@@ -458,7 +599,7 @@ sealed class Program
             outputFilePath,
             LottieCompositionXmlSerializer.ToXml(lottieComposition).ToString());
 
-        _infoStream.WriteLine($"Lottie XML written to {outputFilePath}");
+        WriteInfo($"Lottie XML written to {outputFilePath}");
 
         return result;
     }
@@ -471,7 +612,7 @@ sealed class Program
             outputFilePath,
             CompositionObjectXmlSerializer.ToXml(rootVisual).ToString());
 
-        _infoStream.WriteLine($"WinComp XML written to {outputFilePath}");
+        WriteInfo($"WinComp XML written to {outputFilePath}");
 
         return result;
     }
@@ -484,7 +625,7 @@ sealed class Program
             outputFilePath,
             CompositionObjectDgmlSerializer.ToXml(rootVisual).ToString());
 
-        _infoStream.WriteLine($"WinComp DGML written to {outputFilePath}");
+        WriteInfo($"WinComp DGML written to {outputFilePath}");
 
         return result;
     }
@@ -518,7 +659,7 @@ sealed class Program
             return false;
         }
 
-        _infoStream.WriteLine($"C# code for class {className} written to {outputFilePath}");
+        WriteInfo($"C# code for class {className} written to {outputFilePath}");
         return true;
     }
 
@@ -566,8 +707,8 @@ sealed class Program
             return false;
         }
 
-        _infoStream.WriteLine($"Header code for class {className} written to {outputHeaderFilePath}");
-        _infoStream.WriteLine($"Source code for class {className} written to {outputCppFilePath}");
+        WriteInfo($"Header code for class {className} written to {outputHeaderFilePath}");
+        WriteInfo($"Source code for class {className} written to {outputCppFilePath}");
         return true;
     }
 
@@ -587,27 +728,31 @@ sealed class Program
         return true;
     }
 
-    static Stream TryReadTextFile(string filePath)
+    Stream TryReadTextFile(string filePath)
     {
         try
         {
             return File.OpenRead(filePath);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            WriteError($"Failed to read from {filePath}");
+            WriteError(e.Message);
             return null;
         }
     }
 
-    static bool TryWriteTextFile(string filePath, string contents)
+    bool TryWriteTextFile(string filePath, string contents)
     {
         try
         {
             File.WriteAllText(filePath, contents, Encoding.UTF8);
             return true;
         }
-        catch
+        catch (Exception e)
         {
+            WriteError($"Failed to write to {filePath}");
+            WriteError(e.Message);
             return false;
         }
     }
@@ -642,7 +787,8 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
        LOTTIEFILE is a Lottie .json file. LOTTIEFILE may contain wildcards.
-       LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, or dgml.
+       LANG is one or more of cs, cppcx, winrtcpp, wincompxml, lottiexml, dgml, 
+       and stats.
 
        [Other options]
 
@@ -663,6 +809,7 @@ OVERVIEW:
          -Strict       Fails on any parsing or translation issue. If not specified, 
                        a best effort will be made to create valid output, and any 
                        issues will be reported to STDOUT.
+         -Verbose      Outputs extra info to the STDOUT.
 
 EXAMPLES:
 

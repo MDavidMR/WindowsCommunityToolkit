@@ -41,7 +41,7 @@ namespace WinCompData.Tools
         readonly int _stepEasingFunctionCount;
         readonly int _vector2KeyFrameAnimationCount;
         readonly int _vector3KeyFrameAnimationCount;
-        readonly int _propertyCount;
+        readonly int _propertySetPropertyCount;
 
         public Stats(CompositionObject root)
         {
@@ -84,7 +84,7 @@ namespace WinCompData.Tools
                                         if (propertyCount > 0)
                                         {
                                             _propertySetCount++;
-                                            _propertyCount += propertyCount;
+                                            _propertySetPropertyCount += propertyCount;
                                         }
                                     }
                                     break;
@@ -175,7 +175,7 @@ namespace WinCompData.Tools
 
         public int PathGeometryCount => _pathGeometryCount;
 
-        public int PropertyCount => _propertyCount;
+        public int PropertySetProperyCount => _propertySetPropertyCount;
 
         public int PropertySetCount => _propertySetCount;
 

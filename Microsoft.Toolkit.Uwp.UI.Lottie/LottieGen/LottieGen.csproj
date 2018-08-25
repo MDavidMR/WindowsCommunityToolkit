@@ -11,6 +11,8 @@
     <Copyright>Microsoft</Copyright>
     <RootNamespace>LottieGen</RootNamespace>
     <AssemblyName>LottieGen</AssemblyName>
+    <!-- Turn off automatic assembly info generation so we can specify version number attributes in code. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
