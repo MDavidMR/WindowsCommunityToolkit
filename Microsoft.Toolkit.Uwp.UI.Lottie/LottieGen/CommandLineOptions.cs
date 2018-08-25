@@ -102,7 +102,6 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("classname", Keyword.ClassName)
             .AddPrefixedKeyword("outputfolder", Keyword.OutputFolder)
             .AddPrefixedKeyword("strict", Keyword.Strict)
-            // Undocumented keywords used for internal testing
             .AddPrefixedKeyword("disablecodegenoptimizer", Keyword.DisableCodeGenOptimizer)
             .AddPrefixedKeyword("disabletranslationoptimizer", Keyword.DisableTranslationOptimizer)
             .AddPrefixedKeyword("verbose", Keyword.Verbose);
