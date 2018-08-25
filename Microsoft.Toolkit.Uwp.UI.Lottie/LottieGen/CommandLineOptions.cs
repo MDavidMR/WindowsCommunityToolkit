@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 internal enum Lang
 {
@@ -6,8 +8,6 @@ internal enum Lang
     Unknown,
     // Language specified was ambigious.
     Ambiguous,
-    // Language wasn't specified.
-    Unspecified,
 
     CSharp,
     Cx,
@@ -15,6 +15,7 @@ internal enum Lang
     LottieXml,
     WinCompXml,
     WinCompDgml,
+    Stats,
 }
 
 sealed class CommandLineOptions
@@ -22,18 +23,19 @@ sealed class CommandLineOptions
     string _inputFile;
     string _className;
     string _outputFolder;
-    string _language;
+    readonly List<string> _languageStrings = new List<string>();
 
     // The parse error, or null if the parse succeeded.
     internal string ErrorDescription { get; private set; }
     internal string InputFile => _inputFile;
-    internal Lang Language { get; private set; } = Lang.Unspecified;
+    internal IEnumerable<Lang> Languages { get; private set; }
     internal string ClassName => _className;
     internal string OutputFolder => _outputFolder;
     internal bool StrictMode { get; private set; }
     internal bool HelpRequested { get; private set; }
     internal bool DisableTranslationOptimizer { get; private set; }
     internal bool DisableCodeGenOptimizer { get; private set; }
+    internal bool Verbose { get; private set; }
 
     enum Keyword
     {
@@ -47,6 +49,7 @@ sealed class CommandLineOptions
         Strict,
         DisableTranslationOptimizer,
         DisableCodeGenOptimizer,
+        Verbose,
     }
 
     // Returns the parsed command line. If ErrorDescription is non-null, then the parse failed.
@@ -55,32 +58,35 @@ sealed class CommandLineOptions
         var result = new CommandLineOptions();
         result.ParseCommandLineStrings(args);
 
-        // Convert the language string to a language value.
-        if (result._language != null)
+        // Convert the language strings to language values.
+        var languageTokenizer = new CommandlineTokenizer<Lang>(Lang.Ambiguous)
+                .AddKeyword("csharp", Lang.CSharp)
+                .AddKeyword("cppcx", Lang.Cx)
+                .AddKeyword("cx", Lang.Cx)
+                .AddKeyword("winrtcpp", Lang.WinrtCpp)
+                .AddKeyword("lottiexml", Lang.LottieXml)
+                .AddKeyword("wincompxml", Lang.WinCompXml)
+                .AddKeyword("dgml", Lang.WinCompDgml)
+                .AddKeyword("stats", Lang.Stats);
+
+        var languages = new List<Lang>();
+
+        // Parse the language string.
+        foreach (var languageString in result._languageStrings)
         {
-            // Parse the language string.
-            var languageTokenizer = new CommandlineTokenizer<Lang>(Lang.Ambiguous)
-                    .AddKeyword("csharp", Lang.CSharp)
-                    .AddKeyword("cppcx", Lang.Cx)
-                    .AddKeyword("cx", Lang.Cx)
-                    .AddKeyword("winrtcpp", Lang.WinrtCpp)
-                    .AddKeyword("lottiexml", Lang.LottieXml)
-                    .AddKeyword("wincompxml", Lang.WinCompXml)
-                    .AddKeyword("dgml", Lang.WinCompDgml);
-
-
-            languageTokenizer.TryMatchKeyword(result._language, out var language);
-            result.Language = language;
+            languageTokenizer.TryMatchKeyword(languageString, out var language);
+            languages.Add(language);
             switch (language)
             {
                 case Lang.Unknown:
-                    result.ErrorDescription = $"Unrecognized language: {result._language}";
+                    result.ErrorDescription = $"Unrecognized language: {languageString}";
                     break;
                 case Lang.Ambiguous:
-                    result.ErrorDescription = $"Ambiguous language: {result._language}";
+                    result.ErrorDescription = $"Ambiguous language: {languageString}";
                     break;
             }
         }
+        result.Languages = languages.Distinct();
 
         return result;
     }
@@ -98,77 +104,99 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("strict", Keyword.Strict)
             // Undocumented keywords used for internal testing
             .AddPrefixedKeyword("disablecodegenoptimizer", Keyword.DisableCodeGenOptimizer)
-            .AddPrefixedKeyword("disabletranslationoptimizer", Keyword.DisableTranslationOptimizer);
+            .AddPrefixedKeyword("disabletranslationoptimizer", Keyword.DisableTranslationOptimizer)
+            .AddPrefixedKeyword("verbose", Keyword.Verbose);
+
+
+        // The keyword for the next parameter value, or None if not expecting a parameter value.
+        var previousKeyword = Keyword.None;
 
         // Sentinel to indicate that there is no parameter expected for the current argument.
         string noParameterSentinel = "noParameterSentinel";
         ref string argParameter = ref noParameterSentinel;
 
+
         foreach (var (keyword, arg) in tokenizer.Tokenize(args))
         {
-            switch (keyword)
+            switch (previousKeyword)
             {
-                case Keyword.Ambiguous:
                 case Keyword.None:
-                    if (ReferenceEquals(argParameter, noParameterSentinel))
+                    // Expecting a keyword.
+                    switch (keyword)
                     {
-                        if (keyword == Keyword.Ambiguous)
-                        {
+                        case Keyword.Ambiguous:
                             ErrorDescription = $"Ambiguous: {arg}";
                             return;
-                        }
-                        else
-                        {
+                        case Keyword.None:
                             ErrorDescription = $"Unexpected: {arg}";
                             return;
-                        }
-                    }
-                    else
-                    {
-                        // Save the parameter
-                        argParameter = arg;
-                        // Clear the parameter.
-                        argParameter = ref noParameterSentinel;
+                        case Keyword.Help:
+                            HelpRequested = true;
+                            return;
+                        case Keyword.Strict:
+                            StrictMode = true;
+                            break;
+                        case Keyword.DisableCodeGenOptimizer:
+                            DisableCodeGenOptimizer = true;
+                            break;
+                        case Keyword.DisableTranslationOptimizer:
+                            DisableTranslationOptimizer = true;
+                            break;
+                        case Keyword.Verbose:
+                            Verbose = true;
+                            break;
+
+                        // The following keywords require a parameter as the next token.
+                        case Keyword.InputFile:
+                        case Keyword.Language:
+                        case Keyword.ClassName:
+                        case Keyword.OutputFolder:
+                            previousKeyword = keyword;
+                            break;
+                        default:
+                            // Should never get here.
+                            throw new InvalidOperationException();
                     }
                     break;
-                case Keyword.Help:
-                    HelpRequested = true;
-                    return;
                 case Keyword.InputFile:
-                    argParameter = ref _inputFile;
+                    if (_inputFile != null)
+                    {
+                        ErrorDescription = "input specified more than once";
+                        return;
+                    }
+                    _inputFile = arg;
+                    previousKeyword = Keyword.None;
                     break;
                 case Keyword.Language:
-                    argParameter = ref _language;
+                    _languageStrings.Add(arg);
+                    previousKeyword = Keyword.None;
                     break;
                 case Keyword.ClassName:
-                    argParameter = ref _className;
+                    if (_className != null)
+                    {
+                        ErrorDescription = "class name specified more than once";
+                        return;
+                    }
+                    _className = arg;
+                    previousKeyword = Keyword.None;
                     break;
                 case Keyword.OutputFolder:
-                    argParameter = ref _outputFolder;
-                    break;
-                case Keyword.Strict:
-                    StrictMode = true;
-                    break;
-                case Keyword.DisableCodeGenOptimizer:
-                    DisableCodeGenOptimizer = true;
-                    break;
-                case Keyword.DisableTranslationOptimizer:
-                    DisableTranslationOptimizer = true;
+                    if (_outputFolder != null)
+                    {
+                        ErrorDescription = "output folder specified more than once";
+                        return;
+                    }
+                    _outputFolder = arg;
+                    previousKeyword = Keyword.None;
                     break;
                 default:
                     // Should never get here.
                     throw new InvalidOperationException();
             }
-
-            if (!ReferenceEquals(argParameter, noParameterSentinel) &&
-                argParameter != null)
-            {
-                ErrorDescription = $"{arg} specified more than once";
-                return;
-            }
         }
 
-        if (!ReferenceEquals(argParameter, noParameterSentinel))
+        // All tokens consumed. Ensure we are not waiting for the final parameter value.
+        if (previousKeyword != Keyword.None)
         {
             ErrorDescription = "Missing value";
         }
