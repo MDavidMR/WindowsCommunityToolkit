@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using System;
 using System.Collections.Generic;
 
 // Recognizes command line argument keywords such as "-help" or "-include". Matches partial

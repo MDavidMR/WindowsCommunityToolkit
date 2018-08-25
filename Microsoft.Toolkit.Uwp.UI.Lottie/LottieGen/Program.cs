@@ -1,4 +1,7 @@
-﻿using LottieData;
+﻿// Copyright(c) Microsoft Corporation.All rights reserved.
+// Licensed under the MIT License.
+
+using LottieData;
 using LottieData.Serialization;
 using LottieData.Tools;
 using LottieToWinComp;
