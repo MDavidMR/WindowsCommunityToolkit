@@ -106,18 +106,15 @@ sealed class CommandLineOptions
             .AddPrefixedKeyword("disabletranslationoptimizer", Keyword.DisableTranslationOptimizer)
             .AddPrefixedKeyword("verbose", Keyword.Verbose);
 
-
-        // The keyword for the next parameter value, or None if not expecting a parameter value.
+        // The last keyword recognized. This defines what the following parameter value is for, 
+        // or None if not expecting a parameter value.
         var previousKeyword = Keyword.None;
-
-        // Sentinel to indicate that there is no parameter expected for the current argument.
-        string noParameterSentinel = "noParameterSentinel";
-        ref string argParameter = ref noParameterSentinel;
-
 
         foreach (var (keyword, arg) in tokenizer.Tokenize(args))
         {
-            switch (previousKeyword)
+            var prev = previousKeyword;
+            previousKeyword = Keyword.None;
+            switch (prev)
             {
                 case Keyword.None:
                     // Expecting a keyword.
@@ -168,7 +165,6 @@ sealed class CommandLineOptions
                     break;
                 case Keyword.Language:
                     _languageStrings.Add(arg);
-                    previousKeyword = Keyword.None;
                     break;
                 case Keyword.ClassName:
                     if (ClassName != null)
@@ -177,7 +173,6 @@ sealed class CommandLineOptions
                         return;
                     }
                     ClassName = arg;
-                    previousKeyword = Keyword.None;
                     break;
                 case Keyword.OutputFolder:
                     if (OutputFolder != null)
@@ -186,7 +181,6 @@ sealed class CommandLineOptions
                         return;
                     }
                     OutputFolder = arg;
-                    previousKeyword = Keyword.None;
                     break;
                 default:
                     // Should never get here.

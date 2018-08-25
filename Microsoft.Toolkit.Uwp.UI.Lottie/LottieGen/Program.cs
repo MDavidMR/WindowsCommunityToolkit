@@ -17,8 +17,8 @@ using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Tools;
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.0.1")]
+[assembly: AssemblyFileVersion("0.1.0.1")]
 [assembly: AssemblyProduct("Lottie Windows")]
 [assembly: AssemblyCopyright("Microsoft 2018")]
 [assembly: AssemblyDescription("Command line Lottie code generator tool")]
