@@ -23,17 +23,14 @@ internal enum Lang
 
 sealed class CommandLineOptions
 {
-    string _inputFile;
-    string _className;
-    string _outputFolder;
     readonly List<string> _languageStrings = new List<string>();
 
     // The parse error, or null if the parse succeeded.
     internal string ErrorDescription { get; private set; }
-    internal string InputFile => _inputFile;
+    internal string InputFile { get; private set; }
     internal IEnumerable<Lang> Languages { get; private set; }
-    internal string ClassName => _className;
-    internal string OutputFolder => _outputFolder;
+    internal string ClassName { get; private set; }
+    internal string OutputFolder { get; private set; }
     internal bool StrictMode { get; private set; }
     internal bool HelpRequested { get; private set; }
     internal bool DisableTranslationOptimizer { get; private set; }
@@ -162,12 +159,12 @@ sealed class CommandLineOptions
                     }
                     break;
                 case Keyword.InputFile:
-                    if (_inputFile != null)
+                    if (InputFile != null)
                     {
                         ErrorDescription = "input specified more than once";
                         return;
                     }
-                    _inputFile = arg;
+                    InputFile = arg;
                     previousKeyword = Keyword.None;
                     break;
                 case Keyword.Language:
@@ -175,21 +172,21 @@ sealed class CommandLineOptions
                     previousKeyword = Keyword.None;
                     break;
                 case Keyword.ClassName:
-                    if (_className != null)
+                    if (ClassName != null)
                     {
                         ErrorDescription = "class name specified more than once";
                         return;
                     }
-                    _className = arg;
+                    ClassName = arg;
                     previousKeyword = Keyword.None;
                     break;
                 case Keyword.OutputFolder:
-                    if (_outputFolder != null)
+                    if (OutputFolder != null)
                     {
                         ErrorDescription = "output folder specified more than once";
                         return;
                     }
-                    _outputFolder = arg;
+                    OutputFolder = arg;
                     previousKeyword = Keyword.None;
                     break;
                 default:
