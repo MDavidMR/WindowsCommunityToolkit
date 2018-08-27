@@ -17,8 +17,8 @@ using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Tools;
 
-[assembly: AssemblyVersion("0.1.0.1")]
-[assembly: AssemblyFileVersion("0.1.0.1")]
+[assembly: AssemblyVersion("0.1.0.2")]
+[assembly: AssemblyFileVersion("0.1.0.2")]
 [assembly: AssemblyProduct("Lottie Windows")]
 [assembly: AssemblyCopyright("Microsoft 2018")]
 [assembly: AssemblyDescription("Command line Lottie code generator tool")]
@@ -376,35 +376,27 @@ sealed class Program
 
         lottieStats = new LottieData.Tools.Stats(lottieComposition);
 
-        bool translateSucceeded = false;
-        Visual wincompDataRootVisual = null;
+        var translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
+                    lottieComposition,
+                    strictTranslation, // strictTranslation
+                    true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
+                    out var winCompDataRootVisual,
+                    out var translationIssues);
 
-        // LottieXml doesn't need the Lottie to be translated. Everyone else does.
-        (string Code, string Description)[] translationIssues = null;
-        if (!(_options.Languages.Count() == 1 && _options.Languages.First() == Lang.LottieXml))
+        _profiler.OnTranslateFinished();
+
+        foreach (var issue in translationIssues)
         {
-            translateSucceeded = LottieToWinCompTranslator.TryTranslateLottieComposition(
-                        lottieComposition,
-                        strictTranslation, // strictTranslation
-                        true, // TODO - make this configurable?  !excludeCodegenDescriptions, // add descriptions for codegen commments
-                        out wincompDataRootVisual,
-                        out translationIssues);
-
-            _profiler.OnTranslateFinished();
-
-            foreach (var issue in translationIssues)
-            {
-                WriteInfo(IssueToString(lottieJsonFilePath, issue));
-            }
-
-            if (!translateSucceeded)
-            {
-                WriteError("Failed to translate Lottie file.");
-                return false;
-            }
+            WriteInfo(IssueToString(lottieJsonFilePath, issue));
         }
 
-        beforeOptimizationStats = new WinCompData.Tools.Stats(wincompDataRootVisual);
+        if (!translateSucceeded)
+        {
+            WriteError("Failed to translate Lottie file.");
+            return false;
+        }
+
+        beforeOptimizationStats = new WinCompData.Tools.Stats(winCompDataRootVisual);
         _profiler.OnUnmeasuredFinished();
 
         // Get an appropriate name for the class.
@@ -415,10 +407,10 @@ sealed class Program
             InstantiatorGeneratorBase.TrySynthesizeClassName("Lottie");
 
         // Optimize the code unless told not to.
-        Visual optimizedWincompDataRootVisual = wincompDataRootVisual;
+        Visual optimizedWincompDataRootVisual = winCompDataRootVisual;
         if (!_options.DisableTranslationOptimizer)
         {
-            optimizedWincompDataRootVisual = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
+            optimizedWincompDataRootVisual = Optimizer.Optimize(winCompDataRootVisual, ignoreCommentProperties: true);
             _profiler.OnOptimizationFinished();
 
             afterOptimizationStats = new WinCompData.Tools.Stats(optimizedWincompDataRootVisual);
@@ -790,8 +782,8 @@ Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 OVERVIEW:
        Generates source code from Lottie files for playing in the CompositionPlayer. 
        LOTTIEFILE is a Lottie .json file. LOTTIEFILE may contain wildcards.
-       LANG is one or more of cs, cppcx, winrtcpp, wincompxml, lottiexml, dgml, 
-       and stats.
+       LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, dgml, or stats.
+       -Language LANG may be specified multiple times.
 
        [Other options]
 
@@ -812,7 +804,7 @@ OVERVIEW:
          -Strict       Fails on any parsing or translation issue. If not specified, 
                        a best effort will be made to create valid output, and any 
                        issues will be reported to STDOUT.
-         -Verbose      Outputs extra info to the STDOUT.
+         -Verbose      Outputs extra info to STDOUT.
 
 EXAMPLES:
 
