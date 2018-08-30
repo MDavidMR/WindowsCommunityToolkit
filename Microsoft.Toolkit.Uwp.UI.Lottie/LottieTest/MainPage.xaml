@@ -22,11 +22,19 @@
         </NavigationView.MenuItems>
         <StackPanel>
 
-            <!--<Border BorderBrush="Green" BorderThickness="5">
-                <compPlayer:CompositionPlayer>
+            <Border BorderBrush="Green" BorderThickness="5">
+                <cp:CompositionPlayer Tag="My Player">
                     <comps:MyComposition/>
-                </compPlayer:CompositionPlayer>
-            </Border>-->
+                    <cp:CompositionPlayer.FallbackContent>
+                        <DataTemplate>
+                            <StackPanel Background="PaleVioletRed" HorizontalAlignment="Stretch">
+                                <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">We couldn't load the Lottie that's supposed to be here.</TextBlock>
+                                <TextBlock FontSize="16" HorizontalAlignment="Center">This is expected - for testing purposes the code is designed to fail loading randomly.</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </cp:CompositionPlayer.FallbackContent>
+                </cp:CompositionPlayer>
+            </Border>
             <Frame x:Name="ContentFrame">
 
             </Frame>

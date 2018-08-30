@@ -157,7 +157,9 @@ namespace Lottie
                 size = default(System.Numerics.Vector2);
                 duration = default(TimeSpan);
                 diagnostics = null;
-                return false;
+                // Return true to indicate that this is a successful load of null content.
+                // Only return false if a load actually failed.
+                return true;
             }
             else
             {
@@ -176,7 +178,6 @@ namespace Lottie
                 .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                 .InvocationList?.Invoke(this, null);
         }
-
 
         // Called when the UriSource property is updated.
         void HandleUriSourcePropertyChanged(Uri oldValue, Uri newValue)

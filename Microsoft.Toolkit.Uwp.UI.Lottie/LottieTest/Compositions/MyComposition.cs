@@ -29,7 +29,8 @@ namespace Compositions
             size = new Vector2(426, 213);
             duration = TimeSpan.FromTicks(102330000);
             diagnostics = null;
-            return true;
+            // Fail loading randomly half of the time in order to test the fallback code.
+            return (DateTime.Now.Second % 2) == 0;
         }
 
         sealed class Instantiator
