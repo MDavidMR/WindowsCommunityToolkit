@@ -44,6 +44,13 @@
     <PackageReference Include="System.Memory" Version="4.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Windows.Foundation.FoundationContract">
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0\Windows.Foundation.FoundationContract\3.0.0.0\Windows.Foundation.FoundationContract.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+
   <Import Project="..\LottieData_source\LottieData_source.projitems" Label="Shared" />
 
   <Import Project="..\LottieToWinComp_source\LottieToWinComp_source.projitems" Label="Shared" />

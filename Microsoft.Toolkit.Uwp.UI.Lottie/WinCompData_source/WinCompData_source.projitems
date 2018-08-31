@@ -92,6 +92,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Canonicalizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\ListOfNeverNull.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\ObjectGraph.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Tools\ApiCompatibility.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Vector2KeyFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Vector3KeyFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Visual.cs" />

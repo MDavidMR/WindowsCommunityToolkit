@@ -205,10 +205,17 @@ public:
             builder.WriteLine("Object^* diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
+            builder.WriteLine("diagnostics = nullptr;");
+            builder.WriteLine("if (!IsRuntimeCompatible())");
+            builder.OpenScope();
+            builder.WriteLine("*rootVisual = nullptr;");
+            builder.WriteLine("*size = {0, 0};");
+            builder.WriteLine("duration = {0};");
+            builder.WriteLine("return false;");
+            builder.CloseScope();
             builder.WriteLine("*rootVisual = Instantiator::InstantiateComposition(compositor);");
             builder.WriteLine($"*size = {Vector2(info.CompositionDeclaredSize)};");
             builder.WriteLine($"duration->Duration = {{{info.DurationTicksFieldName}}};");
-            builder.WriteLine("diagnostics = nullptr;");
             builder.WriteLine("return true;");
             builder.CloseScope();
         }

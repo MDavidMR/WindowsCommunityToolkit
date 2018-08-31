@@ -23,6 +23,7 @@ using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System.IO;
+using WinCompData.Tools;
 
 namespace Lottie
 {
@@ -256,12 +257,14 @@ namespace Lottie
             readonly Uri _uri;
             readonly StorageFile _storageFile;
 
-            internal Loader(LottieCompositionSource owner, Uri uri) {
+            internal Loader(LottieCompositionSource owner, Uri uri)
+            {
                 _owner = owner;
                 _uri = uri;
             }
 
-            internal Loader(LottieCompositionSource owner, StorageFile storageFile) {
+            internal Loader(LottieCompositionSource owner, StorageFile storageFile)
+            {
                 _owner = owner;
                 _storageFile = storageFile;
             }
@@ -534,7 +537,14 @@ namespace Lottie
 
             internal void SetRootVisual(WinCompData.Visual rootVisual)
             {
-                _wincompDataRootVisual = rootVisual;
+                // Ensure the visual is compatible with the current OS.
+                // If it's not compatible, do not save the visual.
+                var versionCompatiblity = ApiCompatibility.Analyze(rootVisual);
+                if (IsRuntimeCompatible(versionCompatiblity))
+                {
+                    _diagnostics.IsCompatibleWithCurrentOS = true;
+                    _wincompDataRootVisual = rootVisual;
+                }
             }
 
             internal bool CanInstantiate => _wincompDataRootVisual != null;
@@ -587,7 +597,20 @@ namespace Lottie
             return $"LottieCompositionSource({identity})";
         }
 
-#region DEBUG
+        /// <summary>
+        /// Returns true if the given compatibility describes compatibility with the current operating system.
+        /// </summary>
+        static bool IsRuntimeCompatible(ApiCompatibility compatibility)
+        {
+            if (compatibility.RequiresCompositionGeometricClip && 
+                !ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        #region DEBUG
         // For testing purposes, slows down a task.
 #if SlowAwaits
         const int _checkedDelayMs = 5;
@@ -604,7 +627,7 @@ namespace Lottie
 #endif
         }
 
-#endregion DEBUG
+        #endregion DEBUG
     }
 }
 
