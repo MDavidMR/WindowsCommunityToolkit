@@ -304,7 +304,7 @@ namespace LottieViewer
                     _playStopButton.IsChecked = true;
                 }
 
-                await _stage.Player.PlayAsync(0, 1, playbackRate: _stage.Player.PlaybackRate, looped: true);
+                await _stage.Player.PlayAsync(0, 1, looped: true);
             }
         }
 

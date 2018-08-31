@@ -110,7 +110,7 @@ namespace LottieViewer
             await startDroppedAnimation;
 
             _player.Opacity = 1;
-            await Player.PlayAsync(0, 1, Player.PlaybackRate, true);
+            await Player.PlayAsync(0, 1, true);
         }
 
 

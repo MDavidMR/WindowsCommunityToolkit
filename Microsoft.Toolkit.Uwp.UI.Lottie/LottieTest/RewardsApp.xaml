@@ -24,42 +24,42 @@
             </Grid.RowDefinitions>
             <!--<Button x:Name="testButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
-                <compPlayer:CompositionPlayer x:Name="bannerTest1" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="bannerTest1" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="source1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_06_AmazingXboxOffers_large.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
 
             <!--<Button x:Name="testButton2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
-                <compPlayer:CompositionPlayer x:Name="bannerTest2" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="bannerTest2" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="source2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_14_Smores_Large.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
 
             <!--<Button x:Name="testButton3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-                <compPlayer:CompositionPlayer x:Name="bannerTest3" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="bannerTest3" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="source3" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_10_AmazingEdgeOffers_large.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare1" Grid.Row="3" Grid.Column="0" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare1" Grid.Row="3" Grid.Column="0">
-                <compPlayer:CompositionPlayer x:Name="squareTest1" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="squareTest1" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="squareSource1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quest.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare2" Grid.Row="3" Grid.Column="1" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare2" Grid.Row="3" Grid.Column="1" >
-                <compPlayer:CompositionPlayer x:Name="squareTest2" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="squareTest2" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="squareSource2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quiz_04_warpspeed.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare3" Grid.Row="3" Grid.Column="2" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare3" Grid.Row="3" Grid.Column="2" >
-                <compPlayer:CompositionPlayer x:Name="squareTest3" IsLoopingEnabled="True" AutoPlay="True">
+                <compPlayer:CompositionPlayer x:Name="squareTest3" AutoPlay="True">
                     <lottie:LottieCompositionSource x:Name="squareSource3"  Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/streak_TreasureChest.json" />
                 </compPlayer:CompositionPlayer>
             </Button>
