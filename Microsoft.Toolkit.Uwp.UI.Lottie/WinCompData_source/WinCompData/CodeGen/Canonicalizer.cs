@@ -67,38 +67,32 @@ namespace WinCompData.CodeGen
 
             T NodeFor(object obj) => _graph[obj].Canonical;
 
-            C CanonicalObject<C>(object obj) => (C)(NodeFor(obj).Object);
+            C CanonicalObject<C>(object obj) => (C)NodeFor(obj).Object;
 
-            IEnumerable<T> GetCompositionObjects(CompositionObjectType type)
-            {
-                return from node in _graph
-                       where node.Type == Graph.NodeType.CompositionObject
-                       let obj = (CompositionObject)node.Object
-                       where obj.Type == type
-                       select node;
-            }
-
-            IEnumerable<NodeAndObject<C>> GetCanonicalizableCompositionObjects<C>(CompositionObjectType type)
+            IEnumerable<(T Node, C Object)> GetCompositionObjects<C>(CompositionObjectType type) where C : CompositionObject
+                => _graph.CompositionObjectNodes.Where(n => n.Object.Type == type).Select(n => (n.Node, (C)n.Object));
+ 
+            IEnumerable<(T Node, C Object)> GetCanonicalizableCompositionObjects<C>(CompositionObjectType type)
                 where C : CompositionObject
             {
-                var nodes = GetCompositionObjects(type);
+                var items = GetCompositionObjects<C>(type);
                 return
-                    from node in nodes
-                    let obj = (C)node.Object
+                    from item in items
+                    let obj = item.Object
                     where (_ignoreCommentProperties || obj.Comment == null)
                        && !obj.Properties.PropertyNames.Any()
                        && !obj.Animators.Any()
-                    select NewNodeAndObject(node, obj);
+                    select (item.Node, obj);
             }
 
-            IEnumerable<NodeAndObject<C>> GetCanonicalizableCanvasGeometries<C>(CanvasGeometry.GeometryType type) where C : CanvasGeometry
+            IEnumerable<(T Node, C Object)> GetCanonicalizableCanvasGeometries<C>(CanvasGeometry.GeometryType type) 
+                where C : CanvasGeometry
             {
                 return
-                    from node in _graph
-                    where node.Type == Graph.NodeType.CanvasGeometry
-                    let obj = (CanvasGeometry)node.Object
+                    from item in _graph.CanvasGeometryNodes
+                    let obj = item.Object
                     where obj.Type == type
-                    select NewNodeAndObject(node, (C)obj);
+                    select (item.Node, (C)obj);
             }
 
             void CanonicalizeExpressionAnimations()
@@ -108,8 +102,8 @@ namespace WinCompData.CodeGen
                 // TODO - handle more than one reference parameter.
                 var grouping =
                     from item in items
-                    where item.Obj.ReferenceParameters.Count() == 1
-                    group item.Node by GetExpressionAnimationKey1(item)
+                    where item.Object.ReferenceParameters.Count() == 1
+                    group item.Node by GetExpressionAnimationKey1(item.Object)
                     into grouped
                     select grouped;
 
@@ -117,11 +111,11 @@ namespace WinCompData.CodeGen
             }
 
 
-            (WinCompData.Expressions.Expression, string, string, CompositionObject) GetExpressionAnimationKey1(NodeAndObject<ExpressionAnimation> item)
+            (WinCompData.Expressions.Expression, string, string, CompositionObject) GetExpressionAnimationKey1(ExpressionAnimation animation)
             {
-                var rp0 = item.Obj.ReferenceParameters.First();
+                var rp0 = animation.ReferenceParameters.First();
 
-                return (item.Obj.Expression, item.Obj.Target, rp0.Key, CanonicalObject<CompositionObject>(rp0.Value));
+                return (animation.Expression, animation.Target, rp0.Key, CanonicalObject<CompositionObject>(rp0.Value));
             }
 
             void CanonicalizeKeyFrameAnimations<A, V>(CompositionObjectType animationType) where A : KeyFrameAnimation<V>
@@ -130,7 +124,7 @@ namespace WinCompData.CodeGen
 
                 var grouping =
                     from item in items
-                    group item.Node by new KeyFrameAnimationKey<V>(this, item.Obj)
+                    group item.Node by new KeyFrameAnimationKey<V>(this, item.Object)
                     into grouped
                     select grouped;
 
@@ -238,18 +232,18 @@ namespace WinCompData.CodeGen
             void CanonicalizeColorBrushes()
             {
                 // Canonicalize color brushes that have no animations, or have just a Color animation.
-                var nodes = GetCompositionObjects(CompositionObjectType.CompositionColorBrush);
+                var nodes = GetCompositionObjects<CompositionColorBrush>(CompositionObjectType.CompositionColorBrush);
 
                 var items =
-                    from node in nodes
-                    let obj = (CompositionColorBrush)node.Object
+                    from item in nodes
+                    let obj = item.Object
                     where (_ignoreCommentProperties || obj.Comment == null)
                        && !obj.Properties.PropertyNames.Any()
-                    select NewNodeAndObject(node, obj);
+                    select (item.Node, obj);
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.obj
                     let animators = obj.Animators.ToArray()
                     where animators.Length == 0 || (animators.Length == 1 && animators[0].AnimatedProperty == "Color")
                     let animator = animators.FirstOrDefault()
@@ -273,7 +267,7 @@ namespace WinCompData.CodeGen
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by new
                     {
                         obj.Center.X,
@@ -295,7 +289,7 @@ namespace WinCompData.CodeGen
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by new
                     {
                         obj.Size.X,
@@ -309,14 +303,13 @@ namespace WinCompData.CodeGen
                 CanonicalizeGrouping(grouping);
             }
 
-
             void CanonicalizeCompositionPathGeometries()
             {
                 var items = GetCanonicalizableCompositionObjects<CompositionPathGeometry>(CompositionObjectType.CompositionPathGeometry);
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     let path = CanonicalObject<CompositionPath>(obj.Path)
                     group item.Node by new
                     {
@@ -335,7 +328,7 @@ namespace WinCompData.CodeGen
                 var items = GetCanonicalizableCanvasGeometries<CanvasGeometry.Path>(CanvasGeometry.GeometryType.Path);
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by obj into grouped
                     select grouped;
 
@@ -344,15 +337,9 @@ namespace WinCompData.CodeGen
 
             void CanonicalizeCompositionPaths()
             {
-                var items =
-                    from node in _graph
-                    where node.Type == Graph.NodeType.CompositionPath
-                    let obj = (CompositionPath)node.Object
-                    select NewNodeAndObject(node, obj);
-
                 var grouping =
-                    from item in items
-                    let obj = item.Obj
+                    from item in _graph.CompositionPathNodes
+                    let obj = item.Object
                     let canonicalSource = CanonicalObject<CanvasGeometry>(obj.Source)
                     group item.Node by canonicalSource into grouped
                     select grouped;
@@ -366,7 +353,7 @@ namespace WinCompData.CodeGen
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by
                     new
                     {
@@ -384,13 +371,14 @@ namespace WinCompData.CodeGen
 
                 CanonicalizeGrouping(grouping);
             }
+
             void CanonicalizeCubicBezierEasingFunctions()
             {
                 var items = GetCanonicalizableCompositionObjects<CubicBezierEasingFunction>(CompositionObjectType.CubicBezierEasingFunction);
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by
                     new
                     {
@@ -424,7 +412,7 @@ namespace WinCompData.CodeGen
 
                 var grouping =
                     from item in items
-                    let obj = item.Obj
+                    let obj = item.Object
                     group item.Node by
                     new
                     {
@@ -439,17 +427,6 @@ namespace WinCompData.CodeGen
 
                 CanonicalizeGrouping(grouping);
             }
-
-
-            static NodeAndObject<C> NewNodeAndObject<C>(T node, C obj)
-                => new NodeAndObject<C> { Node = node, Obj = obj };
-
-            struct NodeAndObject<C>
-            {
-                internal T Node;
-                internal C Obj;
-            }
-
 
             static void CanonicalizeGrouping<K>(IEnumerable<IGrouping<K, T>> grouping)
             {

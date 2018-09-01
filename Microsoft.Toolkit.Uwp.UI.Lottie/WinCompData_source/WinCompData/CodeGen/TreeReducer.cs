@@ -23,7 +23,7 @@ namespace WinCompData.CodeGen
         // Set the CenterPoint property to null on objects that have no Scale or Rotation set.
         static void RemoveRedundantCenterPoints(ObjectGraph<Graph.Node> graph)
         {
-            foreach (var obj in graph.Where(node => node.Type == Graph.NodeType.CompositionObject).Select(node => (CompositionObject)node.Object))
+            foreach (var (_, obj) in graph.CompositionObjectNodes)
             {
                 switch (obj.Type)
                 {

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using WinCompData.Mgcg;
 
 namespace WinCompData.Tools
@@ -151,7 +152,16 @@ namespace WinCompData.Tools
             return _references.Values.GetEnumerator();
         }
 
-        internal T this[Object obj] => _references[obj];
+        public IEnumerable<(T Node, CompositionObject Object)> CompositionObjectNodes =>
+            this.Where(n => n.Type == NodeType.CompositionObject).Select(n => (n, (CompositionObject)n.Object));
+
+        public IEnumerable<(T Node, CanvasGeometry Object)> CanvasGeometryNodes =>
+            this.Where(n => n.Type == NodeType.CanvasGeometry).Select(n => (n, (CanvasGeometry)n.Object));
+
+        public IEnumerable<(T Node, CompositionPath Object)> CompositionPathNodes =>
+            this.Where(n => n.Type == NodeType.CompositionPath).Select(n => (n, (CompositionPath)n.Object));
+
+        internal T this[object obj] => _references[obj];
 
         void Reference(T from, CompositionObject obj)
         {
