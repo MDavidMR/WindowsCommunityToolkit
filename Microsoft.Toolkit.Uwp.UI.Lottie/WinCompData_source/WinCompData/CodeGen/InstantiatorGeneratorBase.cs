@@ -62,7 +62,7 @@ namespace WinCompData.CodeGen
 
             // Filter out ExpressionAnimations that are unique. They will use a single instance that is reset on each use.
             var nodes =
-                from node in _objectGraph
+                from node in _objectGraph.Nodes
                 where !(node.Object is ExpressionAnimation) ||
                 // TODO - should look at the distinct inrefs - i.e. how many objects are referencing, to deal with objects that reference multiple times.
                         node.InReferences.Length > 1

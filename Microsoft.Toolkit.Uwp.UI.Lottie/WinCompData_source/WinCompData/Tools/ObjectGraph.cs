@@ -120,7 +120,7 @@ namespace WinCompData.Tools
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class ObjectGraph<T> : Graph, IEnumerable<T> where T : Graph.Node<T>, new()
+    sealed class ObjectGraph<T> : Graph where T : Graph.Node<T>, new()
     {
         readonly bool _includeVertices;
         readonly Dictionary<object, T> _references = new Dictionary<object, T>();
@@ -142,24 +142,16 @@ namespace WinCompData.Tools
             return result;
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _references.Values.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _references.Values.GetEnumerator();
-        }
+        public IEnumerable<T> Nodes => _references.Values;
 
         public IEnumerable<(T Node, CompositionObject Object)> CompositionObjectNodes =>
-            this.Where(n => n.Type == NodeType.CompositionObject).Select(n => (n, (CompositionObject)n.Object));
+            _references.Values.Where(n => n.Type == NodeType.CompositionObject).Select(n => (n, (CompositionObject)n.Object));
 
         public IEnumerable<(T Node, CanvasGeometry Object)> CanvasGeometryNodes =>
-            this.Where(n => n.Type == NodeType.CanvasGeometry).Select(n => (n, (CanvasGeometry)n.Object));
+            _references.Values.Where(n => n.Type == NodeType.CanvasGeometry).Select(n => (n, (CanvasGeometry)n.Object));
 
         public IEnumerable<(T Node, CompositionPath Object)> CompositionPathNodes =>
-            this.Where(n => n.Type == NodeType.CompositionPath).Select(n => (n, (CompositionPath)n.Object));
+            _references.Values.Where(n => n.Type == NodeType.CompositionPath).Select(n => (n, (CompositionPath)n.Object));
 
         internal T this[object obj] => _references[obj];
 
@@ -169,7 +161,6 @@ namespace WinCompData.Tools
             {
                 return;
             }
-
 
             if (_references.TryGetValue(obj, out var node))
             {

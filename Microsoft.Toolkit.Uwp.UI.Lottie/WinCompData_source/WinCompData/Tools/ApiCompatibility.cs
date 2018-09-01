@@ -25,7 +25,7 @@ namespace WinCompData.Tools
         {
             var graph = Graph.FromCompositionObject(graphRoot, includeVertices: false);
 
-            var requiresCompositionGeometricClip = graph.Where(obj => obj.Object is CompositionGeometricClip).Any();
+            var requiresCompositionGeometricClip = graph.Nodes.Where(obj => obj.Object is CompositionGeometricClip).Any();
             // Require CompostionGeometryClip anyway - this ensures that we are never compatible with
             // RS4 (geometries are flaky in RS4, and CompositionGeometryClip is new in RS5).
             requiresCompositionGeometricClip = true;

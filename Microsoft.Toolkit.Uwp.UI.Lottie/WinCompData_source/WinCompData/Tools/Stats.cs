@@ -47,7 +47,7 @@ namespace WinCompData.Tools
         {
             var objectGraph = Graph.FromCompositionObject(root, includeVertices: false);
 
-            foreach (var obj in objectGraph)
+            foreach (var obj in objectGraph.Nodes)
             {
                 switch (obj.Type)
                 {

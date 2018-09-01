@@ -65,7 +65,7 @@ namespace WinCompData.CodeGen
 
         static void CoalesceContainerShapes(ObjectGraph<Graph.Node> graph)
         {
-            var containerShapes = graph.Where(n => n.Object is CompositionContainerShape).ToArray();
+            var containerShapes = graph.Nodes.Where(n => n.Object is CompositionContainerShape).ToArray();
 
             // If a container sets just the translate properties (offset and centerpoint) and the child
             // also sets only the translate properties, the container's properties can be pushed down to
@@ -183,7 +183,7 @@ namespace WinCompData.CodeGen
 
         static void CoalesceContainerVisuals(ObjectGraph<Graph.Node> graph)
         {
-            var containersWithNoPropertiesSet = graph.Where(n =>
+            var containersWithNoPropertiesSet = graph.Nodes.Where(n =>
             {
                 // Find the ContainerVisuals that have no properties set.
                 return

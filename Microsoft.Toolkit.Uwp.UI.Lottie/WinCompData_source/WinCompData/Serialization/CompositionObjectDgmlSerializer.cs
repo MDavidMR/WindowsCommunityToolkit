@@ -33,19 +33,19 @@ namespace WinCompData.Tools
             _objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(compositionObject, includeVertices: true);
 
             // Give names to each object.
-            foreach ((var node, var name) in CodeGen.NodeNamer<ObjectData>.GenerateNodeNames(_objectGraph))
+            foreach ((var node, var name) in CodeGen.NodeNamer<ObjectData>.GenerateNodeNames(_objectGraph.Nodes))
             {
                 node.Name = name;
             }
 
             // Initialize each node. 
-            foreach (var n in _objectGraph)
+            foreach (var n in _objectGraph.Nodes)
             {
                 n.Initialize(this);
             }
 
             // Second stage initialization - relies on all nodes having had the first stage of initialization.
-            foreach (var n in _objectGraph)
+            foreach (var n in _objectGraph.Nodes)
             {
                 n.Initialize2();
             }
@@ -61,7 +61,7 @@ namespace WinCompData.Tools
 
             // Create the DGML nodes.
             var nodes =
-                from n in _objectGraph
+                from n in _objectGraph.Nodes
                 where n.IsDgmlNode
                 select CreateNodeXml(id: n.Id, label: n.Name, category: n.Category);
 
@@ -72,7 +72,7 @@ namespace WinCompData.Tools
 
             // Create the links between the nodes.
             var links =
-                from n in _objectGraph
+                from n in _objectGraph.Nodes
                 where n.IsDgmlNode
                 from otherNode in n.Children
                 select new XElement(ns + "Link", new XAttribute("Source", n.Id), new XAttribute("Target", otherNode.Id));
