@@ -45,7 +45,7 @@ namespace WinCompData.Tools
 
         public Stats(CompositionObject root)
         {
-            var objectGraph = ObjectGraph<ObjectData>.FromCompositionObject(root, includeVertices: false);
+            var objectGraph = Graph.FromCompositionObject(root, includeVertices: false);
 
             foreach (var obj in objectGraph)
             {
@@ -208,10 +208,6 @@ namespace WinCompData.Tools
         public int Vector2KeyFrameAnimationCount => _vector2KeyFrameAnimationCount;
 
         public int Vector3KeyFrameAnimationCount => _vector3KeyFrameAnimationCount;
-
-        sealed class ObjectData : Graph.Node<ObjectData>
-        { }
-
-
+        
     }
 }

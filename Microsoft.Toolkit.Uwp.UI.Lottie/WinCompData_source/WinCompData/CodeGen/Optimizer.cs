@@ -40,7 +40,7 @@ namespace WinCompData.CodeGen
         sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
             // The copied object.
-            internal Object Copied { get; set; }
+            internal object Copied { get; set; }
         }
 
         Optimizer(ObjectGraph<ObjectData> graph)

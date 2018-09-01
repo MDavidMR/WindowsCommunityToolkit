@@ -23,7 +23,7 @@ namespace WinCompData.Tools
         /// </summary>
         public static ApiCompatibility Analyze(CompositionObject graphRoot)
         {
-            var graph = ObjectGraph<ObjectData>.FromCompositionObject(graphRoot, includeVertices: false);
+            var graph = Graph.FromCompositionObject(graphRoot, includeVertices: false);
 
             var requiresCompositionGeometricClip = graph.Where(obj => obj.Object is CompositionGeometricClip).Any();
             // Require CompostionGeometryClip anyway - this ensures that we are never compatible with
@@ -34,9 +34,5 @@ namespace WinCompData.Tools
         }
 
         public bool RequiresCompositionGeometricClip { get; }
-
-        sealed class ObjectData : Graph.Node<ObjectData>
-        {
-        }
     }
 }

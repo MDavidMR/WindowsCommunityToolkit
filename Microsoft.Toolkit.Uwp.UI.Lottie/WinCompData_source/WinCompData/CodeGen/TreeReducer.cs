@@ -13,7 +13,7 @@ namespace WinCompData.CodeGen
     {
         internal static Visual OptimizeContainers(Visual root)
         {
-            var graph = ObjectGraph<ObjectData>.FromCompositionObject(root, includeVertices: true);
+            var graph = Graph.FromCompositionObject(root, includeVertices: true);
             RemoveRedundantCenterPoints(graph);
             CoalesceContainerShapes(graph);
             CoalesceContainerVisuals(graph);
@@ -21,7 +21,7 @@ namespace WinCompData.CodeGen
         }
 
         // Set the CenterPoint property to null on objects that have no Scale or Rotation set.
-        static void RemoveRedundantCenterPoints(ObjectGraph<ObjectData> graph)
+        static void RemoveRedundantCenterPoints(ObjectGraph<Graph.Node> graph)
         {
             foreach (var obj in graph.Where(node => node.Type == Graph.NodeType.CompositionObject).Select(node => (CompositionObject)node.Object))
             {
@@ -63,7 +63,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        static void CoalesceContainerShapes(ObjectGraph<ObjectData> graph)
+        static void CoalesceContainerShapes(ObjectGraph<Graph.Node> graph)
         {
             var containerShapes = graph.Where(n => n.Object is CompositionContainerShape).ToArray();
 
@@ -181,7 +181,7 @@ namespace WinCompData.CodeGen
             }
         }
 
-        static void CoalesceContainerVisuals(ObjectGraph<ObjectData> graph)
+        static void CoalesceContainerVisuals(ObjectGraph<Graph.Node> graph)
         {
             var containersWithNoPropertiesSet = graph.Where(n =>
             {
@@ -235,10 +235,6 @@ namespace WinCompData.CodeGen
                     parent.Children.Insert(index + i, children[i]);
                 }
             }
-        }
-
-        sealed class ObjectData : Graph.Node<ObjectData>
-        {
         }
     }
 }
