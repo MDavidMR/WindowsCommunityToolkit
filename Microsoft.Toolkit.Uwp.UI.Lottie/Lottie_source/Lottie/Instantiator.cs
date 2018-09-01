@@ -308,10 +308,8 @@ namespace Lottie
                     return GetExpressionAnimation((Wd.ExpressionAnimation)obj);
                 case Wd.CompositionObjectType.InsetClip:
                     return GetInsetClip((Wd.InsetClip)obj);
-#if RS5_SUPPORT
                 case Wd.CompositionObjectType.CompositionGeometricClip:
                     return GetCompositionGeometricClip((Wd.CompositionGeometricClip)obj);
-#endif
                 case Wd.CompositionObjectType.LinearEasingFunction:
                     return GetLinearEasingFunction((Wd.LinearEasingFunction)obj);
                 case Wd.CompositionObjectType.PathKeyFrameAnimation:
@@ -581,10 +579,8 @@ namespace Lottie
             {
                 case Wd.CompositionObjectType.InsetClip:
                     return GetInsetClip((Wd.InsetClip)obj);
-#if RS5_SUPPORT
                 case Wd.CompositionObjectType.CompositionGeometricClip:
                     return GetCompositionGeometricClip((Wd.CompositionGeometricClip)obj);
-#endif
                 default:
                     throw new InvalidOperationException();
             }
@@ -626,10 +622,8 @@ namespace Lottie
             }
             StartAnimations(obj, result);
             return result;
-
         }
 
-#if RS5_SUPPORT
         Wc.CompositionGeometricClip GetCompositionGeometricClip(Wd.CompositionGeometricClip obj)
         {
             if (GetExisting(obj, out Wc.CompositionGeometricClip result))
@@ -641,7 +635,6 @@ namespace Lottie
             StartAnimations(obj, result);
             return result;
         }
-#endif
 
         Wc.LinearEasingFunction GetLinearEasingFunction(Wd.LinearEasingFunction obj)
         {

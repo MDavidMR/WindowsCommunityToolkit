@@ -1613,6 +1613,7 @@ namespace WinCompData.CodeGen
                         ancestorIndent += 2;
                     }
                     sb.Append(((IDescribable)Object).LongDescription);
+
                     return sb.ToString();
                 }
             }

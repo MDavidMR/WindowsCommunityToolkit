@@ -20,14 +20,15 @@ namespace WinCompData.CodeGen
 
         public static Visual Optimize(Visual root, bool ignoreCommentProperties)
         {
-
             // Build the object graph.
             var graph = ObjectGraph<ObjectData>.FromCompositionObject(root, includeVertices: true);
 
-            // Canonicalize the nodes.
+            // Find the canonical objects in the graph.
             Canonicalizer.Canonicalize(graph, ignoreCommentProperties: ignoreCommentProperties);
 
-            // Create WinCompData objects from the canonical objects.
+            // Create a copy of the WinCompData objects from the canonical objects.
+            // The copy is needed so that we can modify the tree without affecting the graph that
+            // was given to us.
             var result = (Visual)new Optimizer(graph).GetCompositionObject(root);
 
             // Try to optimize away redundant containers.
@@ -35,7 +36,6 @@ namespace WinCompData.CodeGen
 
             return result;
         }
-
 
         sealed class ObjectData : CanonicalizedNode<ObjectData>
         {
@@ -135,7 +135,8 @@ namespace WinCompData.CodeGen
             CacheAndInitializeCompositionObject(source, target);
             foreach (var parameter in source.ReferenceParameters)
             {
-                target.SetReferenceParameter(parameter.Key, GetCompositionObject(parameter.Value));
+                var referenceObject = GetCompositionObject(parameter.Value);
+                target.SetReferenceParameter(parameter.Key, referenceObject);
             }
             if (!string.IsNullOrWhiteSpace(source.Target))
             {
@@ -286,6 +287,9 @@ namespace WinCompData.CodeGen
             return result;
         }
 
+        /// <summary>
+        /// Returns a copy of the graph of composition objects starting at the given object.
+        /// </summary>
         CompositionObject GetCompositionObject(CompositionObject obj)
         {
             switch (obj.Type)
@@ -624,7 +628,7 @@ namespace WinCompData.CodeGen
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateCompositionGeometricClip());
-            result.Geometry = obj.Geometry;
+            result.Geometry = GetCompositionGeometry(obj.Geometry);
 
             return result;
         }

@@ -245,7 +245,6 @@ namespace LottieToWinComp
             if (layer.Masks != null &&
                 layer.Masks.Any())
             {
-#if RS5_SUPPORT
                 Mask mask = layer.Masks.First();
 
                 if (mask.Inverted)
@@ -299,19 +298,16 @@ namespace LottieToWinComp
 
                     visualForMask.Clip = compositionGeometricClip;
                 }
-#else
-                _unsupported.MaskSDKSupport();
-#endif
             }
 #endif
         }
 
 
         ContainerVisual ApplyMaskToTreeWithShapes(
-            TranslationContext context, 
-            Layer layer, 
-            CompositionContainerShape containerShape, 
-            ContainerVisual contentContainerVisual, 
+            TranslationContext context,
+            Layer layer,
+            CompositionContainerShape containerShape,
+            ContainerVisual contentContainerVisual,
             ContainerVisual rootContainerVisual)
         {
             // Add a mask to a shape tree by inserting a ShapeVisual as the CompositionContainerShape parent and then
@@ -945,11 +941,11 @@ namespace LottieToWinComp
             if (contents.Length > 0)
             {
                 containerShapeContentNode.Shapes.AddRange(contents);
-#if NoClipping
-                return rootNode;
-#else
-                return layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) : (ShapeOrVisual)containerShapeRootNode;
+                return
+#if !NoClipping
+                 layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) : 
 #endif
+                    (ShapeOrVisual)containerShapeRootNode;
             }
             else
             {
@@ -1762,11 +1758,11 @@ namespace LottieToWinComp
                 Describe(rectangleGeometry, "SolidLayerRectangle.RectangleGeometry");
             }
 
-#if NoClipping
-            return rootNode;
-#else
-            return layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) : (ShapeOrVisual)containerShapeRootNode;
+            return
+#if !NoClipping
+            layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) :
 #endif
+                 (ShapeOrVisual)containerShapeRootNode;
         }
 
         Visual TranslateTextLayer(TranslationContext context, TextLayer layer)
