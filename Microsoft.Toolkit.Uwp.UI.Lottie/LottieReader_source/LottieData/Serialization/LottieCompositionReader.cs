@@ -747,7 +747,7 @@ namespace LottieData.Serialization
                 case "rd":
                     return ReadRoundedCorner(obj);
                 case "rp":
-                    return ReadReapeter(obj);
+                    return ReadRepeater(obj);
                 default:
                     break;
             }
@@ -1121,7 +1121,7 @@ namespace LottieData.Serialization
                 offsetDegrees);
         }
 
-        Repeater ReadReapeter(JObject obj)
+        Repeater ReadRepeater(JObject obj)
         {
             var name = ReadName(obj);
             return new Repeater(name.Name, name.MatchName);

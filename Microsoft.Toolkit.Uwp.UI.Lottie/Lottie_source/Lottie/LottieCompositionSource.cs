@@ -542,7 +542,10 @@ namespace Lottie
                 var versionCompatiblity = ApiCompatibility.Analyze(rootVisual);
                 if (IsRuntimeCompatible(versionCompatiblity))
                 {
-                    _diagnostics.IsCompatibleWithCurrentOS = true;
+                    if (_diagnostics != null)
+                    {
+                        _diagnostics.IsCompatibleWithCurrentOS = true;
+                    }
                     _wincompDataRootVisual = rootVisual;
                 }
             }
