@@ -65,9 +65,13 @@ namespace WinCompData.CodeGen
                 CanonicalizeColorBrushes();
             }
 
-            T NodeFor(object obj) => _graph[obj].Canonical;
+            T NodeFor(Wg.IGeometrySource2D obj) => _graph[obj].Canonical;
+            T NodeFor(CompositionObject obj) => _graph[obj].Canonical;
+            T NodeFor(CompositionPath obj) => _graph[obj].Canonical;
 
-            C CanonicalObject<C>(object obj) => (C)NodeFor(obj).Object;
+            C CanonicalObject<C>(Wg.IGeometrySource2D obj) => (C)NodeFor(obj).Object;
+            C CanonicalObject<C>(CompositionObject obj) => (C)NodeFor(obj).Object;
+            C CanonicalObject<C>(CompositionPath obj) => (C)NodeFor(obj).Object;
 
             IEnumerable<(T Node, C Object)> GetCompositionObjects<C>(CompositionObjectType type) where C : CompositionObject
                 => _graph.CompositionObjectNodes.Where(n => n.Object.Type == type).Select(n => (n.Node, (C)n.Object));

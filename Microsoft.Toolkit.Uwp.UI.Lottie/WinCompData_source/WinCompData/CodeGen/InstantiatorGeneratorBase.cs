@@ -307,7 +307,16 @@ namespace WinCompData.CodeGen
         /// <summary>
         /// Returns the code to call the factory for the given object.
         /// </summary>
-        protected string CallFactoryFor(object obj)
+        protected string CallFactoryFor(CompositionObject obj)
+        {
+            var node = NodeFor(obj);
+            return node.FactoryCall();
+        }
+
+        /// <summary>
+        /// Returns the code to call the factory for the given object.
+        /// </summary>
+        protected string CallFactoryFor(CanvasGeometry obj)
         {
             var node = NodeFor(obj);
             return node.FactoryCall();
@@ -391,10 +400,14 @@ namespace WinCompData.CodeGen
 
 
         // Returns the code to call the factory for the given object from the given node.
-        string CallFactoryFromFor(ObjectData callerNode, object obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
+        string CallFactoryFromFor(ObjectData callerNode, CompositionObject obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
+        string CallFactoryFromFor(ObjectData callerNode, CompositionPath obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
+        string CallFactoryFromFor(ObjectData callerNode, Wg.IGeometrySource2D obj) => CallFactoryFromFor(callerNode, NodeFor(obj));
 
         // Returns the node for the given object.
-        ObjectData NodeFor(object obj) => _objectGraph[obj];
+        ObjectData NodeFor(CompositionObject obj) => _objectGraph[obj];
+        ObjectData NodeFor(CompositionPath obj) => _objectGraph[obj];
+        ObjectData NodeFor(Wg.IGeometrySource2D obj) => _objectGraph[obj];
 
         // Gets the InReferences for node, ignoring those from ExpressionAnimations
         // that have a single instance because they are treated specially (they are initialized inline).
@@ -1105,7 +1118,7 @@ namespace WinCompData.CodeGen
         bool GenerateCompositionPathGeometryFactory(CodeBuilder builder, CompositionPathGeometry obj, ObjectData node)
         {
             WriteObjectFactoryStart(builder, node);
-            var path = NodeFor(obj.Path);
+            var path = _objectGraph[obj.Path];
             WriteCreateAssignment(builder, node, $"_c{Deref}CreatePathGeometry({CallFactoryFromFor(node, path)})");
             InitializeCompositionGeometry(builder, obj, node);
             StartAnimations(builder, obj, node);
@@ -1245,7 +1258,7 @@ namespace WinCompData.CodeGen
 
         bool GenerateCompositionPathFactory(CodeBuilder builder, CompositionPath obj, ObjectData node)
         {
-            var canvasGeometry = NodeFor((CanvasGeometry)obj.Source);
+            var canvasGeometry = _objectGraph[(CanvasGeometry)obj.Source];
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"{New} CompositionPath({_stringifier.FactoryCall(canvasGeometry.FactoryCall())})");
             WriteObjectFactoryEnd(builder);

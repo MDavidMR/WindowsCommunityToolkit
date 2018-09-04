@@ -47,106 +47,89 @@ namespace WinCompData.Tools
         {
             var objectGraph = Graph.FromCompositionObject(root, includeVertices: false);
 
-            foreach (var obj in objectGraph.Nodes)
+            _compositionPathCount = objectGraph.CompositionPathNodes.Count();
+            _canvasGeometryCount = objectGraph.CanvasGeometryNodes.Count();
+
+            foreach (var n in objectGraph.CompositionObjectNodes)
             {
-                switch (obj.Type)
+                _compositionObjectCount++;
+                switch (n.Object.Type)
                 {
-                    case Graph.NodeType.CompositionObject:
+                    case CompositionObjectType.AnimationController:
+                        _animationControllerCount++;
+                        break;
+                    case CompositionObjectType.ColorKeyFrameAnimation:
+                        _colorKeyFrameAnimationCount++;
+                        break;
+                    case CompositionObjectType.CompositionColorBrush:
+                        _colorBrushCount++;
+                        break;
+                    case CompositionObjectType.CompositionContainerShape:
+                        _containerShapeCount++;
+                        break;
+                    case CompositionObjectType.CompositionEllipseGeometry:
+                        _ellipseGeometryCount++;
+                        break;
+                    case CompositionObjectType.CompositionGeometricClip:
+                        _geometricClipCount++;
+                        break;
+                    case CompositionObjectType.CompositionPathGeometry:
+                        _pathGeometryCount++;
+                        break;
+                    case CompositionObjectType.CompositionPropertySet:
                         {
-                            var co = (CompositionObject)obj.Object;
-                            _compositionObjectCount++;
-                            switch (co.Type)
+                            var propertyCount = ((CompositionPropertySet)n.Object).PropertyNames.Count();
+                            if (propertyCount > 0)
                             {
-                                case CompositionObjectType.AnimationController:
-                                    _animationControllerCount++;
-                                    break;
-                                case CompositionObjectType.ColorKeyFrameAnimation:
-                                    _colorKeyFrameAnimationCount++;
-                                    break;
-                                case CompositionObjectType.CompositionColorBrush:
-                                    _colorBrushCount++;
-                                    break;
-                                case CompositionObjectType.CompositionContainerShape:
-                                    _containerShapeCount++;
-                                    break;
-                                case CompositionObjectType.CompositionEllipseGeometry:
-                                    _ellipseGeometryCount++;
-                                    break;
-                                case CompositionObjectType.CompositionGeometricClip:
-                                    _geometricClipCount++;
-                                    break;
-                                case CompositionObjectType.CompositionPathGeometry:
-                                    _pathGeometryCount++;
-                                    break;
-                                case CompositionObjectType.CompositionPropertySet:
-                                    {
-                                        var propertyCount = ((CompositionPropertySet)co).PropertyNames.Count();
-                                        if (propertyCount > 0)
-                                        {
-                                            _propertySetCount++;
-                                            _propertySetPropertyCount += propertyCount;
-                                        }
-                                    }
-                                    break;
-                                case CompositionObjectType.CompositionRectangleGeometry:
-                                    _rectangleGeometryCount++;
-                                    break;
-                                case CompositionObjectType.CompositionRoundedRectangleGeometry:
-                                    _roundedRectangleGeometryCount++;
-                                    break;
-                                case CompositionObjectType.CompositionSpriteShape:
-                                    _spriteShapeCount++;
-                                    break;
-                                case CompositionObjectType.CompositionViewBox:
-                                    _viewBoxCount++;
-                                    break;
-                                case CompositionObjectType.ContainerVisual:
-                                    _containerVisualCount++;
-                                    break;
-                                case CompositionObjectType.CubicBezierEasingFunction:
-                                    _cubicBezierEasingFunctionCount++;
-                                    break;
-                                case CompositionObjectType.ExpressionAnimation:
-                                    _expressionAnimationCount++;
-                                    break;
-                                case CompositionObjectType.InsetClip:
-                                    _insetClipCount++;
-                                    break;
-                                case CompositionObjectType.LinearEasingFunction:
-                                    _linearEasingFunctionCount++;
-                                    break;
-                                case CompositionObjectType.PathKeyFrameAnimation:
-                                    _pathKeyFrameAnimationCount++;
-                                    break;
-                                case CompositionObjectType.ScalarKeyFrameAnimation:
-                                    _scalarKeyFrameAnimationCount++;
-                                    break;
-                                case CompositionObjectType.ShapeVisual:
-                                    _shapeVisualCount++;
-                                    break;
-                                case CompositionObjectType.StepEasingFunction:
-                                    _stepEasingFunctionCount++;
-                                    break;
-                                case CompositionObjectType.Vector2KeyFrameAnimation:
-                                    _vector2KeyFrameAnimationCount++;
-                                    break;
-                                case CompositionObjectType.Vector3KeyFrameAnimation:
-                                    _vector3KeyFrameAnimationCount++;
-                                    break;
-                                default:
-                                    throw new InvalidOperationException();
+                                _propertySetCount++;
+                                _propertySetPropertyCount += propertyCount;
                             }
                         }
                         break;
-                    case Graph.NodeType.CompositionPath:
-                        {
-                            _compositionPathCount++;
-                        }
+                    case CompositionObjectType.CompositionRectangleGeometry:
+                        _rectangleGeometryCount++;
                         break;
-                    case Graph.NodeType.CanvasGeometry:
-                        {
-                            _canvasGeometryCount++;
-                        }
+                    case CompositionObjectType.CompositionRoundedRectangleGeometry:
+                        _roundedRectangleGeometryCount++;
+                        break;
+                    case CompositionObjectType.CompositionSpriteShape:
+                        _spriteShapeCount++;
+                        break;
+                    case CompositionObjectType.CompositionViewBox:
+                        _viewBoxCount++;
+                        break;
+                    case CompositionObjectType.ContainerVisual:
+                        _containerVisualCount++;
+                        break;
+                    case CompositionObjectType.CubicBezierEasingFunction:
+                        _cubicBezierEasingFunctionCount++;
+                        break;
+                    case CompositionObjectType.ExpressionAnimation:
+                        _expressionAnimationCount++;
+                        break;
+                    case CompositionObjectType.InsetClip:
+                        _insetClipCount++;
+                        break;
+                    case CompositionObjectType.LinearEasingFunction:
+                        _linearEasingFunctionCount++;
+                        break;
+                    case CompositionObjectType.PathKeyFrameAnimation:
+                        _pathKeyFrameAnimationCount++;
+                        break;
+                    case CompositionObjectType.ScalarKeyFrameAnimation:
+                        _scalarKeyFrameAnimationCount++;
+                        break;
+                    case CompositionObjectType.ShapeVisual:
+                        _shapeVisualCount++;
+                        break;
+                    case CompositionObjectType.StepEasingFunction:
+                        _stepEasingFunctionCount++;
+                        break;
+                    case CompositionObjectType.Vector2KeyFrameAnimation:
+                        _vector2KeyFrameAnimationCount++;
+                        break;
+                    case CompositionObjectType.Vector3KeyFrameAnimation:
+                        _vector3KeyFrameAnimationCount++;
                         break;
                     default:
                         throw new InvalidOperationException();

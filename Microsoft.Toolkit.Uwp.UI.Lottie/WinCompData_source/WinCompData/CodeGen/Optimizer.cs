@@ -48,14 +48,36 @@ namespace WinCompData.CodeGen
             _graph = graph;
         }
 
-        ObjectData NodeFor(object obj)
+        ObjectData NodeFor(CanvasGeometry obj)
         {
             return _graph[obj].Canonical;
         }
 
-        bool GetExisting<T>(T key, out T result)
+        ObjectData NodeFor(CompositionObject obj)
+        {
+            return _graph[obj].Canonical;
+        }
+
+        ObjectData NodeFor(CompositionPath obj)
+        {
+            return _graph[obj].Canonical;
+        }
+
+        bool GetExisting<T>(T key, out T result) where T: CompositionObject
         {
             result = (T)NodeFor(key).Copied;
+            return result != null;
+        }
+
+        bool GetExistingCanvasGeometry(CanvasGeometry key, out CanvasGeometry result)
+        {
+            result = (CanvasGeometry)NodeFor(key).Copied;
+            return result != null;
+        }
+
+        bool GetExisting(CompositionPath key, out CompositionPath result)
+        {
+            result = (CompositionPath)NodeFor(key).Copied;
             return result != null;
         }
 
@@ -172,7 +194,7 @@ namespace WinCompData.CodeGen
             return target;
         }
 
-        T Cache<T>(T key, T obj)
+        CanvasGeometry CacheCanvasGeometry(CanvasGeometry key, CanvasGeometry obj)
         {
             var node = NodeFor(key);
             Debug.Assert(node.Copied == null);
@@ -180,6 +202,25 @@ namespace WinCompData.CodeGen
             node.Copied = obj;
             return obj;
         }
+
+        T Cache<T>(T key, T obj) where T : CompositionObject
+        {
+            var node = NodeFor(key);
+            Debug.Assert(node.Copied == null);
+            Debug.Assert(!ReferenceEquals(key, obj));
+            node.Copied = obj;
+            return obj;
+        }
+
+        CompositionPath Cache(CompositionPath key, CompositionPath obj)
+        {
+            var node = NodeFor(key);
+            Debug.Assert(node.Copied == null);
+            Debug.Assert(!ReferenceEquals(key, obj));
+            node.Copied = obj;
+            return obj;
+        }
+
 
         ShapeVisual GetShapeVisual(ShapeVisual obj)
         {
@@ -896,7 +937,7 @@ namespace WinCompData.CodeGen
 
         CanvasGeometry GetCanvasGeometry(Wg.IGeometrySource2D obj)
         {
-            if (GetExisting((CanvasGeometry)obj, out CanvasGeometry result))
+            if (GetExistingCanvasGeometry((CanvasGeometry)obj, out CanvasGeometry result))
             {
                 return result;
             }
@@ -907,7 +948,7 @@ namespace WinCompData.CodeGen
                 case Mgcg.CanvasGeometry.GeometryType.Combination:
                     {
                         var combination = (Mgcg.CanvasGeometry.Combination)canvasGeometry;
-                        result = Cache((CanvasGeometry)obj, GetCanvasGeometry(combination.A).CombineWith(
+                        result = CacheCanvasGeometry((CanvasGeometry)obj, GetCanvasGeometry(combination.A).CombineWith(
                             GetCanvasGeometry(combination.B),
                             combination.Matrix,
                             combination.CombineMode));
@@ -953,7 +994,7 @@ namespace WinCompData.CodeGen
                                     throw new InvalidOperationException();
                             }
                         }
-                        result = Cache((CanvasGeometry)obj, CanvasGeometry.CreatePath(builder));
+                        result = CacheCanvasGeometry((CanvasGeometry)obj, CanvasGeometry.CreatePath(builder));
                     }
                     break;
                 case Mgcg.CanvasGeometry.GeometryType.RoundedRectangle:

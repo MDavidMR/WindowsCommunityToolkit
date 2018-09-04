@@ -123,7 +123,9 @@ namespace WinCompData.Tools
     sealed class ObjectGraph<T> : Graph where T : Graph.Node<T>, new()
     {
         readonly bool _includeVertices;
-        readonly Dictionary<object, T> _references = new Dictionary<object, T>();
+        readonly Dictionary<Wg.IGeometrySource2D, T> _canvasGeometryReferences = new Dictionary<Wg.IGeometrySource2D, T>();
+        readonly Dictionary<CompositionObject, T> _compositionObjectReferences = new Dictionary<CompositionObject, T>();
+        readonly Dictionary<CompositionPath, T> _compositionPathReferences = new Dictionary<CompositionPath, T>();
         readonly Dictionary<CompositionObjectType, int> _compositionObjectCounter = new Dictionary<CompositionObjectType, int>();
         int _positionCounter;
 
@@ -142,18 +144,23 @@ namespace WinCompData.Tools
             return result;
         }
 
-        public IEnumerable<T> Nodes => _references.Values;
-
-        public IEnumerable<(T Node, CompositionObject Object)> CompositionObjectNodes =>
-            _references.Values.Where(n => n.Type == NodeType.CompositionObject).Select(n => (n, (CompositionObject)n.Object));
+        public IEnumerable<T> Nodes => _compositionObjectReferences.Values.Concat(_compositionPathReferences.Values).Concat(_canvasGeometryReferences.Values);
 
         public IEnumerable<(T Node, CanvasGeometry Object)> CanvasGeometryNodes =>
-            _references.Values.Where(n => n.Type == NodeType.CanvasGeometry).Select(n => (n, (CanvasGeometry)n.Object));
+            _canvasGeometryReferences.Values.Select(n => (n, (CanvasGeometry)n.Object));
+
+        public IEnumerable<(T Node, CompositionObject Object)> CompositionObjectNodes =>
+            _compositionObjectReferences.Values.Select(n => (n, (CompositionObject)n.Object));
 
         public IEnumerable<(T Node, CompositionPath Object)> CompositionPathNodes =>
-            _references.Values.Where(n => n.Type == NodeType.CompositionPath).Select(n => (n, (CompositionPath)n.Object));
+            _compositionPathReferences.Values.Select(n => (n, (CompositionPath)n.Object));
 
-        internal T this[object obj] => _references[obj];
+        internal T this[Wg.IGeometrySource2D obj] => _canvasGeometryReferences[obj];
+
+        internal T this[CompositionObject obj] => _compositionObjectReferences[obj];
+
+        internal T this[CompositionPath obj] => _compositionPathReferences[obj];
+
 
         void Reference(T from, CompositionObject obj)
         {
@@ -162,7 +169,7 @@ namespace WinCompData.Tools
                 return;
             }
 
-            if (_references.TryGetValue(obj, out var node))
+            if (_compositionObjectReferences.TryGetValue(obj, out var node))
             {
                 // Object has been seen before. Just add the reference.
                 if (_includeVertices && from != null)
@@ -183,7 +190,7 @@ namespace WinCompData.Tools
             {
                 AddVertex(from, node);
             }
-            _references.Add(obj, node);
+            _compositionObjectReferences.Add(obj, node);
 
             switch (obj.Type)
             {
@@ -275,7 +282,7 @@ namespace WinCompData.Tools
 
         bool Reference(T from, CompositionPath obj)
         {
-            if (_references.TryGetValue(obj, out var node))
+            if (_compositionPathReferences.TryGetValue(obj, out var node))
             {
                 AddVertex(from, node);
                 return true;
@@ -285,7 +292,7 @@ namespace WinCompData.Tools
                 node = new T { Object = obj };
                 InitializeNode(node, NodeType.CompositionPath, _positionCounter++);
                 AddVertex(from, node);
-                _references.Add(obj, node);
+                _compositionPathReferences.Add(obj, node);
             }
             Reference(node, (CanvasGeometry)obj.Source);
             return true;
@@ -293,7 +300,7 @@ namespace WinCompData.Tools
 
         bool Reference(T from, CanvasGeometry obj)
         {
-            if (_references.TryGetValue(obj, out var node))
+            if (_canvasGeometryReferences.TryGetValue(obj, out var node))
             {
                 AddVertex(from, node);
                 return true;
@@ -303,7 +310,7 @@ namespace WinCompData.Tools
                 node = new T { Object = obj };
                 InitializeNode(node, NodeType.CanvasGeometry, _positionCounter++);
                 AddVertex(from, node);
-                _references.Add(obj, node);
+                _canvasGeometryReferences.Add(obj, node);
             }
 
             switch (obj.Type)
