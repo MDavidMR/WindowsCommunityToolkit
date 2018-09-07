@@ -6,7 +6,7 @@ namespace LottieData
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class Transform : ShapeLayerContent
+    class Transform : ShapeLayerContent
     {
         public Transform(
             string name,

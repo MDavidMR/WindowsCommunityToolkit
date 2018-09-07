@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\RadialGradientStroke.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Rectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Repeater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\RepeaterTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\RoundedCorner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Sequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Serialization\LottieCompositionXmlSerializer.cs" />

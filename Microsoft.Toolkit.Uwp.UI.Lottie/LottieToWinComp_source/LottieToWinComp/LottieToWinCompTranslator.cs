@@ -40,6 +40,7 @@ using static LottieToWinComp.ExpressionFactory;
 
 namespace LottieToWinComp
 {
+    // See: https://helpx.adobe.com/pdf/after_effects_reference.pdf for the After Effects semantics.
     /// <summary>
     /// Translates a <see cref="LottieData.LottieComposition"/> to an equivalent <see cref="Visual"/>.
     /// </summary>
@@ -281,8 +282,8 @@ namespace LottieToWinComp
 
                     var compositionPathGeometry = CreatePathGeometry();
                     compositionPathGeometry.Path = CompositionPathFromPathGeometry(
-                        geometry.InitialValue, 
-                        SolidColorFill.PathFillType.EvenOdd, 
+                        geometry.InitialValue,
+                        SolidColorFill.PathFillType.EvenOdd,
                         optimizeLines: true);
 
                     var compositionGeometricClip = CreateCompositionGeometricClip();
@@ -899,6 +900,35 @@ namespace LottieToWinComp
                     return a;
                 }
 
+                if (!a.StartPercent.IsAnimated && !a.StartPercent.IsAnimated && !a.OffsetDegrees.IsAnimated)
+                {
+                    // a is not animated.
+                    if (!b.StartPercent.IsAnimated && !b.StartPercent.IsAnimated && !b.OffsetDegrees.IsAnimated)
+                    {
+                        // Both are not animated.
+                        if (a.StartPercent.InitialValue == b.EndPercent.InitialValue)
+                        {
+                            // a trims out everything. b is unnecessary.
+                            return a;
+                        }
+                        else if (b.StartPercent.InitialValue == b.EndPercent.InitialValue)
+                        {
+                            // b trims out everything. a is unnecessary.
+                            return b;
+                        }
+                        else if (a.StartPercent.InitialValue == 0 && a.EndPercent.InitialValue == 100 && a.OffsetDegrees.InitialValue == 0)
+                        {
+                            // a is trimming nothing. a is unnecessary.
+                            return b;
+                        }
+                        else if (b.StartPercent.InitialValue == 0 && b.EndPercent.InitialValue == 100 && b.OffsetDegrees.InitialValue == 0)
+                        {
+                            // b is trimming nothing. b is unnecessary.
+                            return a;
+                        }
+                    }
+                }
+
                 _owner._unsupported.MultipleTrimPaths();
                 return b;
             }
@@ -937,57 +967,89 @@ namespace LottieToWinComp
             var shapeContext = new ShapeContentContext(this);
             shapeContext.UpdateOpacityFromTransform(layer.Transform);
 
-            var contents = TranslateShapeLayerContents(context, shapeContext, layer.Contents, containerShapeContentNode).ToArray();
-            if (contents.Length > 0)
-            {
-                containerShapeContentNode.Shapes.AddRange(contents);
-                return
+            containerShapeContentNode.Shapes.Add(TranslateShapeLayerContents(context, shapeContext, layer.Contents));
+            return
 #if !NoClipping
-                 layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) : 
+                 layerHasMasks ? ApplyMaskToTreeWithShapes(context, layer, containerShapeContentNode, containerVisualContentNode, containerVisualRootNode) :
 #endif
                     (ShapeOrVisual)containerShapeRootNode;
-            }
-            else
-            {
-                return null;
-            }
         }
 
-        // May return null if the group does not produce any renderable content.
         CompositionShape TranslateGroupShapeContent(TranslationContext context, ShapeContentContext shapeContext, ShapeGroup group)
         {
-            var compositionNode = CreateContainerShape();
+            var result = TranslateShapeLayerContents(context, shapeContext, group.Items);
 
-            var contents = TranslateShapeLayerContents(context, shapeContext, group.Items, compositionNode).ToArray();
-
-            if (contents.Length > 0)
+            if (_addDescriptions)
             {
-                if (_addDescriptions)
-                {
-                    Describe(compositionNode, $"ShapeGroup: {group.Name}");
-                }
-                compositionNode.Shapes.AddRange(contents);
-                return compositionNode;
+                Describe(result, $"ShapeGroup: {group.Name}");
             }
-            else
-            {
-                return null;
-            }
+            return result;
         }
 
-        IEnumerable<CompositionShape> TranslateShapeLayerContents<T>(
+        CompositionShape TranslateShapeLayerContents(
             TranslationContext context,
             ShapeContentContext shapeContext,
-            IEnumerable<ShapeLayerContent> contents,
-            T transformContainer) where T : CompositionObject, IContainShapes
+            IEnumerable<ShapeLayerContent> contents)
         {
             // The Contents of a ShapeLayer is a list of instructions for a stack machine.
 
             // When evaluated, the stack of ShapeLayerContent produces a list of CompositionShape.
             // Some ShapeLayerContent modify the evaluation context (e.g. stroke, fill, trim)
             // Some ShapeLayerContent evaluate to geometries (e.g. any geometry, merge path)
-            // Transform only works correctly on a group. It's needed to rotate a rectangle.
-            // TODO - transform that is not on a group
+
+            // Create a container to hold the contents.
+            var container = CreateContainerShape();
+
+            // This is the object that will be returned. Containers may be added above this
+            // as necessary to hold transforms.
+            var result = container;
+
+            // If the contents contains a repeater, generate repeated contents
+            if (contents.Where(slc => slc.ContentType == ShapeContentType.Repeater).Any())
+            {
+                // The contents contains a repeater. Treat it as if there are n sets of items (where n
+                // equals the Count of the repeater). In each set, replace the repeater with
+                // the transform of the repeater, multiplied.
+
+                // Copy the items into an array.
+                var contentsItems = contents.ToArray();
+                // Find the index of the repeater
+                var repeaterIndex = 0;
+                while (contentsItems[repeaterIndex].ContentType != ShapeContentType.Repeater)
+                {
+                    // Keep going until the first repeater is found.
+                    repeaterIndex++;
+                }
+
+                // Get the repeater.
+                var repeater = (Repeater)contentsItems[repeaterIndex];
+
+                // Make sure we can handle it.
+                if (repeater.Count.IsAnimated || repeater.Offset.IsAnimated || repeater.Offset.InitialValue != 0)
+                {
+                    // TODO - handle all cases.
+                    _unsupported.Repeater();
+                }
+                else
+                {
+                    // Get the items before the repeater, and the items after the repeater.
+                    var itemsBeforeRepeater = contentsItems.Take(repeaterIndex).ToArray();
+                    var itemsAfterRepeater = contentsItems.Skip(repeaterIndex + 1).ToArray();
+
+                    var repeaterCount = (int)Math.Round(repeater.Count.InitialValue);
+                    for (var i = 0; i < repeaterCount; i++)
+                    {
+                        // Treat each repeated value as a list of items where the repeater is replaced
+                        // by n transforms.
+                        // TODO - currently ignoring the StartOpacityPercent and EndOpacityPercent - should generate a new transform
+                        //        that interpolates that.
+                        var generatedItems = itemsBeforeRepeater.Concat(Enumerable.Repeat(repeater.Transform, i + 1)).Concat(itemsAfterRepeater);
+                        // Recurse to translate the synthesized items.
+                        container.Shapes.Add(TranslateShapeLayerContents(context, shapeContext, generatedItems));
+                    }
+                    return result;
+                }
+            }
 
             var stack = new Stack<ShapeLayerContent>(contents);
 
@@ -1002,48 +1064,41 @@ namespace LottieToWinComp
                 var shapeContent = stack.Pop();
                 switch (shapeContent.ContentType)
                 {
-                    case ShapeContentType.Transform:
-                        shapeContext.UpdateOpacityFromTransform((Transform)shapeContent);
-                        switch (transformContainer.Type)
-                        {
-                            case CompositionObjectType.ContainerVisual:
-                                TranslateAndApplyTransformToContainerVisual(context, (Transform)shapeContent, (ContainerVisual)(CompositionObject)transformContainer);
-                                break;
-                            case CompositionObjectType.CompositionContainerShape:
-                                TranslateAndApplyTransformToContainerShape(context, (Transform)shapeContent, (CompositionContainerShape)(CompositionObject)transformContainer);
-                                break;
-                            default:
-                                throw new InvalidOperationException();
-                        }
-                        break;
-
-                    case ShapeContentType.Group:
-                        var group = TranslateGroupShapeContent(context, shapeContext.Clone(), (ShapeGroup)shapeContent);
-                        if (group != null)
-                        {
-                            yield return group;
-                        }
-                        break;
-                    case ShapeContentType.Path:
-                        yield return TranslatePathContent(context, shapeContext, (Shape)shapeContent);
-                        break;
                     case ShapeContentType.Ellipse:
-                        yield return TranslateEllipseContent(context, shapeContext, (Ellipse)shapeContent);
+                        container.Shapes.Add(TranslateEllipseContent(context, shapeContext, (Ellipse)shapeContent));
                         break;
-                    case ShapeContentType.Rectangle:
-                        yield return TranslateRectangleContent(context, shapeContext, (Rectangle)shapeContent);
-                        break;
-                    case ShapeContentType.Polystar:
-                        _unsupported.Polystar();
-                        break;
-                    case ShapeContentType.Repeater:
-                        _unsupported.Repeater();
+                    case ShapeContentType.Group:
+                        container.Shapes.Add(TranslateGroupShapeContent(context, shapeContext.Clone(), (ShapeGroup)shapeContent));
                         break;
                     case ShapeContentType.MergePaths:
                         var mergedPaths = TranslateMergePathsContent(context, shapeContext, stack, ((MergePaths)shapeContent).Mode);
                         if (mergedPaths != null)
                         {
-                            yield return mergedPaths;
+                            container.Shapes.Add(mergedPaths);
+                        }
+                        break;
+                    case ShapeContentType.Path:
+                        container.Shapes.Add(TranslatePathContent(context, shapeContext, (Shape)shapeContent));
+                        break;
+                    case ShapeContentType.Polystar:
+                        _unsupported.Polystar();
+                        break;
+                    case ShapeContentType.Rectangle:
+                        container.Shapes.Add(TranslateRectangleContent(context, shapeContext, (Rectangle)shapeContent));
+                        break;
+                    case ShapeContentType.Transform:
+                        {
+                            var transform = (Transform)shapeContent;
+                            // Multiply the opacity in the transform.
+                            shapeContext.UpdateOpacityFromTransform(transform);
+
+                            // Insert a new container at the top. The transform will be applied to it.
+                            var newContainer = CreateContainerShape();
+                            newContainer.Shapes.Add(result);
+                            result = newContainer;
+
+                            // Apply the transform to the new container at the top.
+                            TranslateAndApplyTransformToContainerShape(context, transform, result);
                         }
                         break;
                     default:
@@ -1055,9 +1110,11 @@ namespace LottieToWinComp
                     case ShapeContentType.RadialGradientFill:
                     case ShapeContentType.TrimPath:
                     case ShapeContentType.RoundedCorner:
+                    case ShapeContentType.Repeater:
                         throw new InvalidOperationException();
                 }
             }
+            return result;
         }
 
         // Merge the stack into a single shape. Merging is done recursively - the top geometry on the
@@ -1592,6 +1649,19 @@ namespace LottieToWinComp
             var startPercent = _lottieDataOptimizer.GetOptimized(trimPath.StartPercent);
             var endPercent = _lottieDataOptimizer.GetOptimized(trimPath.EndPercent);
 
+            if (!startPercent.IsAnimated && !endPercent.IsAnimated)
+            {
+                // Handle some well-known static cases
+                if (startPercent.InitialValue == 0 && endPercent.InitialValue == 1)
+                {
+                    // The trim does nothing.
+                    return;
+                }
+                else if (startPercent.InitialValue == endPercent.InitialValue)
+                {
+                    // TODO - the trim trims away all of the path.
+                }
+            }
             var order = GetAnimatableOrder(startPercent, endPercent);
 
             switch (order)

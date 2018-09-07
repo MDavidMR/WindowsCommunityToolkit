@@ -23,8 +23,8 @@ using JArray = LottieData.Serialization.CheckedJsonArray;
 
 namespace LottieData.Serialization
 {
-    // See: https://github.com/airbnb/lottie-web/tree/master/docs/json for the (sometimes out-of-date)
-    // Lottie schema.
+    // See: https://github.com/airbnb/lottie-web/tree/master/docs/json for the (usually out-of-date) schema.
+    // See: https://helpx.adobe.com/pdf/after_effects_reference.pdf for the After Effects semantics.
 #if PUBLIC
     public
 #endif
@@ -1124,7 +1124,10 @@ namespace LottieData.Serialization
         Repeater ReadRepeater(JObject obj)
         {
             var name = ReadName(obj);
-            return new Repeater(name.Name, name.MatchName);
+            var count = ReadAnimatableFloat(obj.GetNamedObject("c"));
+            var offset = ReadAnimatableFloat(obj.GetNamedObject("o"));
+            var transform = ReadRepeaterTransform(obj.GetNamedObject("tr"));
+            return new Repeater(count, offset, transform, name.Name, name.MatchName);
         }
 
         MergePaths ReadMergePaths(JObject obj)
@@ -1159,8 +1162,13 @@ namespace LottieData.Serialization
         Animatable<double> ReadOpacityPercent(JObject obj)
         {
             var jsonOpacity = obj.GetNamedObject("o", null);
-            var result = jsonOpacity != null
-                ? ReadAnimatableFloat(jsonOpacity)
+            return ReadOpacityPercentFromObject(jsonOpacity);
+        }
+
+        Animatable<double> ReadOpacityPercentFromObject(JObject obj)
+        {
+            var result = obj != null
+                ? ReadAnimatableFloat(obj)
                 : new Animatable<double>(100, null);
             return result;
         }
@@ -1180,6 +1188,24 @@ namespace LottieData.Serialization
             var propertyIndex = ReadInt(obj, "ix");
 
             return new Animatable<Color>(initialValue, keyFrames, propertyIndex);
+        }
+
+        // Reads the transform for a repeater. Repeater transforms are the same as regular transforms
+        // except they have an extra couple properties.
+        RepeaterTransform ReadRepeaterTransform(JObject obj)
+        {
+            var startOpacityPercent = ReadOpacityPercentFromObject(obj.GetNamedObject("so", null));
+            var endOpacityPercent = ReadOpacityPercentFromObject(obj.GetNamedObject("eo", null));
+            var transform = ReadTransform(obj);
+            return new RepeaterTransform(
+                transform.Name, 
+                transform.Anchor, 
+                transform.Position, 
+                transform.ScalePercent, 
+                transform.RotationDegrees, 
+                transform.OpacityPercent, 
+                startOpacityPercent, 
+                endOpacityPercent);
         }
 
         Transform ReadTransform(JObject obj)
@@ -1214,11 +1240,6 @@ namespace LottieData.Serialization
             {
                 scalePercent = ReadAnimatableVector3(scaleJson);
             }
-            else
-            {
-                // Repeaters have start/end opacity instead of opacity 
-
-            }
 
             var rotationJson = obj.GetNamedObject("r", null);
             if (rotationJson == null)
@@ -1234,10 +1255,10 @@ namespace LottieData.Serialization
                 throw new LottieCompositionReaderException("Missing transform for rotation");
             }
 
-            var opacity = ReadOpacityPercent(obj);
+            var opacityPercent = ReadOpacityPercent(obj);
             var name = ReadName(obj);
 
-            return new Transform(name.Name, anchor, position, scalePercent, rotation, opacity);
+            return new Transform(name.Name, anchor, position, scalePercent, rotation, opacityPercent);
         }
 
         static bool? ReadBool(JObject obj, string name)

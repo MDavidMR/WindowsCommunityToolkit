@@ -166,10 +166,19 @@ namespace WinCompData.CodeGen
                 // If childCount is 1, just replace the the container in the parent.
                 // If childCount is >1, insert into the parent.
                 var index = parent.Shapes.IndexOf(container);
+
                 // Get the children from the container.
                 var children = container.Shapes.ToArray();
+                if (children.Length == 0)
+                {
+                    // The container has no children. This is rare but can happen if
+                    // the container is for a layer type that we don't support.
+                    continue;
+                }
+
                 // Remove the children from the container.
                 container.Shapes.Clear();
+
                 // Insert the first child where the container was.
                 parent.Shapes[index] = children[0];
 
