@@ -24,14 +24,31 @@ namespace Compositions
             out TimeSpan duration,
             out object diagnostics)
         {
+            diagnostics = null;
+            if (!IsRuntimeCompatible())
+            {
+                rootVisual = null;
+                size = default(Vector2);
+                duration = TimeSpan.Zero;
+                return false;
+            }
+
             rootVisual = Instantiator.InstantiateComposition(compositor);
             size = new Vector2(300, 300);
             duration = TimeSpan.FromTicks(c_durationTicks);
-            diagnostics = null;
             return true;
         }
 
         const long c_durationTicks = 20000000;
+
+        static bool IsRuntimeCompatible()
+        {
+            if (!Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
+            return true;
+        }
 
         sealed class Instantiator
         {
@@ -41,29 +58,30 @@ namespace Compositions
             CompositionColorBrush _colorBrush_AlmostDarkOrange_FFFD8B00;
             CompositionColorBrush _colorBrush_AlmostGainsboro_FFE4E4E4;
             CompositionColorBrush _colorBrush_AlmostMediumOrchid_FFC338B3;
-            CompositionPath _compositionPath_554;
-            CompositionPath _compositionPath_555;
-            CompositionPath _compositionPath_557;
-            CompositionPath _compositionPath_558;
-            CompositionPath _compositionPath_570;
-            CompositionPath _compositionPath_579;
-            CompositionPath _compositionPath_596;
-            CompositionPath _compositionPath_598;
-            CompositionPath _compositionPath_599;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_00;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_02;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_04;
+            CompositionPath _compositionPath_001;
+            CompositionPath _compositionPath_562;
+            CompositionPath _compositionPath_563;
+            CompositionPath _compositionPath_565;
+            CompositionPath _compositionPath_566;
+            CompositionPath _compositionPath_578;
+            CompositionPath _compositionPath_587;
+            CompositionPath _compositionPath_604;
+            CompositionPath _compositionPath_606;
+            CompositionPath _compositionPath_607;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_01;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_03;
             CubicBezierEasingFunction _cubicBezierEasingFunction_05;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_07;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_06;
             CubicBezierEasingFunction _cubicBezierEasingFunction_08;
             CubicBezierEasingFunction _cubicBezierEasingFunction_09;
             CubicBezierEasingFunction _cubicBezierEasingFunction_10;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_14;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_22;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_11;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_15;
             CubicBezierEasingFunction _cubicBezierEasingFunction_23;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_24;
             InsetClip _insetClip;
             LinearEasingFunction _linearEasingFunction;
-            CompositionPathGeometry _pathGeometry_552;
+            CompositionPathGeometry _pathGeometry_553;
             ContainerVisual _root;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_0_0;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_0_1;
@@ -103,19 +121,19 @@ namespace Compositions
                 // AlmostOrange_FFFFBA01
                 result.InsertKeyFrame(0.200000003F, Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01), _linearEasingFunction);
                 // AlmostDarkCyan_FF0063B1
-                result.InsertKeyFrame(0.216666669F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.216666669F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _cubicBezierEasingFunction_01);
                 // AlmostDodgerBlue_FF0177D9
-                result.InsertKeyFrame(0.333333343F, Color.FromArgb(0xFF, 0x01, 0x77, 0xD9), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.333333343F, Color.FromArgb(0xFF, 0x01, 0x77, 0xD9), _cubicBezierEasingFunction_01);
                 // AlmostDarkCyan_FF0063B1
-                result.InsertKeyFrame(0.400000006F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.400000006F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _cubicBezierEasingFunction_01);
                 // AlmostDarkCyan_FF0063B1
                 result.InsertKeyFrame(0.433333337F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _linearEasingFunction);
                 // AlmostHotPink_FFFD41A1
-                result.InsertKeyFrame(0.5F, Color.FromArgb(0xFF, 0xFD, 0x41, 0xA1), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.5F, Color.FromArgb(0xFF, 0xFD, 0x41, 0xA1), _cubicBezierEasingFunction_01);
                 // AlmostDarkMagenta_FF992B9A
-                result.InsertKeyFrame(0.666666687F, Color.FromArgb(0xFF, 0x99, 0x2B, 0x9A), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.666666687F, Color.FromArgb(0xFF, 0x99, 0x2B, 0x9A), _cubicBezierEasingFunction_01);
                 // AlmostDarkMagenta_FF9A008A
-                result.InsertKeyFrame(0.733333349F, Color.FromArgb(0xFF, 0x9A, 0x00, 0x8A), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.733333349F, Color.FromArgb(0xFF, 0x9A, 0x00, 0x8A), _cubicBezierEasingFunction_01);
                 return result;
             }
 
@@ -231,73 +249,75 @@ namespace Compositions
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFD, 0x43, 0x42));
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostWhiteSmoke_FFF1F1F1()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xF1, 0xF1, 0xF1));
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_White()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
             }
 
-            CompositionPath CompositionPath_554()
+            CompositionPath CompositionPath_001()
             {
-                var result = _compositionPath_554 = new CompositionPath(Geometry_554());
+                var result = _compositionPath_001 = new CompositionPath(Geometry_001());
                 return result;
             }
 
-            CompositionPath CompositionPath_555()
+            CompositionPath CompositionPath_562()
             {
-                var result = _compositionPath_555 = new CompositionPath(Geometry_555());
+                var result = _compositionPath_562 = new CompositionPath(Geometry_562());
                 return result;
             }
 
-            CompositionPath CompositionPath_557()
+            CompositionPath CompositionPath_563()
             {
-                var result = _compositionPath_557 = new CompositionPath(Geometry_557());
+                var result = _compositionPath_563 = new CompositionPath(Geometry_563());
                 return result;
             }
 
-            CompositionPath CompositionPath_558()
+            CompositionPath CompositionPath_565()
             {
-                var result = _compositionPath_558 = new CompositionPath(Geometry_558());
+                var result = _compositionPath_565 = new CompositionPath(Geometry_565());
                 return result;
             }
 
-            CompositionPath CompositionPath_570()
+            CompositionPath CompositionPath_566()
             {
-                var result = _compositionPath_570 = new CompositionPath(Geometry_570());
+                var result = _compositionPath_566 = new CompositionPath(Geometry_566());
                 return result;
             }
 
-            CompositionPath CompositionPath_579()
+            CompositionPath CompositionPath_578()
             {
-                var result = _compositionPath_579 = new CompositionPath(Geometry_579());
+                var result = _compositionPath_578 = new CompositionPath(Geometry_578());
                 return result;
             }
 
-            CompositionPath CompositionPath_596()
+            CompositionPath CompositionPath_587()
             {
-                var result = _compositionPath_596 = new CompositionPath(Geometry_596());
+                var result = _compositionPath_587 = new CompositionPath(Geometry_587());
                 return result;
             }
 
-            CompositionPath CompositionPath_598()
+            CompositionPath CompositionPath_604()
             {
-                var result = _compositionPath_598 = new CompositionPath(Geometry_598());
+                var result = _compositionPath_604 = new CompositionPath(Geometry_604());
                 return result;
             }
 
-            CompositionPath CompositionPath_599()
+            CompositionPath CompositionPath_606()
             {
-                var result = _compositionPath_599 = new CompositionPath(Geometry_599());
+                var result = _compositionPath_606 = new CompositionPath(Geometry_606());
+                return result;
+            }
+
+            CompositionPath CompositionPath_607()
+            {
+                var result = _compositionPath_607 = new CompositionPath(Geometry_607());
                 return result;
             }
 
@@ -311,7 +331,7 @@ namespace Compositions
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_0());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
-                controller.StartAnimation("Progress", ScalarExpressionAnimation());
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
@@ -1032,7 +1052,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Layer 1 Outlines
-            // Transforms for Layer 1 Outlines
             CompositionContainerShape ContainerShape_11()
             {
                 var result = _c.CreateContainerShape();
@@ -1553,6 +1572,8 @@ namespace Compositions
                 propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
                 result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
                 var shapes = result.Shapes;
+                shapes.Add(ContainerShape_37());
+                shapes.Add(ContainerShape_38());
                 shapes.Add(SpriteShape_572());
                 shapes.Add(SpriteShape_573());
                 shapes.Add(SpriteShape_574());
@@ -1575,6 +1596,22 @@ namespace Compositions
                 controller = result.TryGetAnimationController("RotationAngleInDegrees");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Brush
+            CompositionContainerShape ContainerShape_37()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(29.7749996F, 151.932007F);
+                return result;
+            }
+
+            // Layer (Shape): Brush
+            CompositionContainerShape ContainerShape_38()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(26.3309994F, 144.279007F);
                 return result;
             }
 
@@ -1674,7 +1711,7 @@ namespace Compositions
                 var result = _c.CreateContainerVisual();
                 result.Opacity = 0;
                 var children = result.Children;
-                children.InsertAtTop(ShapeVisual_0());
+                children.InsertAtTop(ContainerVisual_7());
                 result.StartAnimation("Opacity", _scalarAnimation_1_to_1_0);
                 var controller = result.TryGetAnimationController("Opacity");
                 controller.Pause();
@@ -1682,161 +1719,437 @@ namespace Compositions
                 return result;
             }
 
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
+            ContainerVisual ContainerVisual_7()
+            {
+                var result = _c.CreateContainerVisual();
+                result.Clip = GeometricClip();
+                var children = result.Children;
+                children.InsertAtTop(ShapeVisual_0());
+                return result;
+            }
+
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
+            //   Mask 1
+            //     Mask 1.PathGeometry
+            //       Path
             CubicBezierEasingFunction CubicBezierEasingFunction_00()
             {
-                return _cubicBezierEasingFunction_00 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.833000004F, 0.833000004F));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.833000004F, 0.833000004F));
+            }
+
+            CubicBezierEasingFunction CubicBezierEasingFunction_01()
+            {
+                return _cubicBezierEasingFunction_01 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.833000004F, 0.833000004F));
             }
 
             // Transforms for Paintbrush_2_PaintStroke_MAIN
             //   Scale
-            CubicBezierEasingFunction CubicBezierEasingFunction_01()
+            CubicBezierEasingFunction CubicBezierEasingFunction_02()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.833000004F, 0.967000008F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_02()
+            CubicBezierEasingFunction CubicBezierEasingFunction_03()
             {
-                return _cubicBezierEasingFunction_02 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0, 1));
+                return _cubicBezierEasingFunction_03 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0, 1));
             }
 
             // Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_03()
+            CubicBezierEasingFunction CubicBezierEasingFunction_04()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(1, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_04()
-            {
-                return _cubicBezierEasingFunction_04 = _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.649999976F, 1));
-            }
-
             CubicBezierEasingFunction CubicBezierEasingFunction_05()
             {
-                return _cubicBezierEasingFunction_05 = _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.649999976F, 1));
+                return _cubicBezierEasingFunction_05 = _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.649999976F, 1));
+            }
+
+            CubicBezierEasingFunction CubicBezierEasingFunction_06()
+            {
+                return _cubicBezierEasingFunction_06 = _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.649999976F, 1));
             }
 
             // RotationAngleInDegrees
-            CubicBezierEasingFunction CubicBezierEasingFunction_06()
+            CubicBezierEasingFunction CubicBezierEasingFunction_07()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.266000003F, 0.125F), new Vector2(0.592999995F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_07()
-            {
-                return _cubicBezierEasingFunction_07 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0.349999994F), new Vector2(0, 0));
-            }
-
             CubicBezierEasingFunction CubicBezierEasingFunction_08()
             {
-                return _cubicBezierEasingFunction_08 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(1, 1));
+                return _cubicBezierEasingFunction_08 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0.349999994F), new Vector2(0, 0));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_09()
             {
-                return _cubicBezierEasingFunction_09 = _c.CreateCubicBezierEasingFunction(new Vector2(0.150000006F, 0), new Vector2(0.833000004F, 0.833000004F));
+                return _cubicBezierEasingFunction_09 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(1, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_10()
             {
-                return _cubicBezierEasingFunction_10 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0, 1));
+                return _cubicBezierEasingFunction_10 = _c.CreateCubicBezierEasingFunction(new Vector2(0.150000006F, 0), new Vector2(0.833000004F, 0.833000004F));
             }
 
-            // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_11()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.0329999998F), new Vector2(1, 1));
+                return _cubicBezierEasingFunction_11 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0, 1));
             }
 
             // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_12()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.374000013F, 0), new Vector2(0.833000004F, 0.967000008F));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.0329999998F), new Vector2(1, 1));
             }
 
             // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_13()
             {
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.374000013F, 0), new Vector2(0.833000004F, 0.967000008F));
+            }
+
+            // RotationAngleInDegrees
+            CubicBezierEasingFunction CubicBezierEasingFunction_14()
+            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.0329999998F), new Vector2(0.59799999F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_14()
-            {
-                return _cubicBezierEasingFunction_14 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.833000004F, 0.967000008F));
-            }
-
-            // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_15()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0), new Vector2(1, 1));
+                return _cubicBezierEasingFunction_15 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.833000004F, 0.967000008F));
             }
 
             // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_16()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.75F, 0), new Vector2(0.649999976F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0), new Vector2(1, 1));
             }
 
             // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_17()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.550000012F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.75F, 0), new Vector2(0.649999976F, 1));
             }
 
-            // RotationAngleInDegrees
+            // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_18()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.261000007F, 0.00700000022F), new Vector2(0.441000015F, 0.981999993F));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.550000012F, 1));
             }
 
             // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_19()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.222000003F, 0), new Vector2(0.533999979F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.261000007F, 0.00700000022F), new Vector2(0.441000015F, 0.981999993F));
             }
 
             // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_20()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.412F, 0), new Vector2(0.737999976F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.222000003F, 0), new Vector2(0.533999979F, 1));
             }
 
             // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_21()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.833000004F, 0.0140000004F), new Vector2(0, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.412F, 0), new Vector2(0.737999976F, 1));
             }
 
+            // RotationAngleInDegrees
             CubicBezierEasingFunction CubicBezierEasingFunction_22()
             {
-                return _cubicBezierEasingFunction_22 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.649999976F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.833000004F, 0.0140000004F), new Vector2(0, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_23()
             {
-                return _cubicBezierEasingFunction_23 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.649999976F, 1));
+                return _cubicBezierEasingFunction_23 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.649999976F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_24()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(0.649999976F, 1));
+                return _cubicBezierEasingFunction_24 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.649999976F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_25()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.25F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(0.649999976F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_26()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.809000015F, 0.897000015F));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.25F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_27()
             {
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.809000015F, 0.897000015F));
+            }
+
+            CubicBezierEasingFunction CubicBezierEasingFunction_28()
+            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.497999996F, 0.165000007F), new Vector2(0.333999991F, 1));
             }
 
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
+            // Mask 1
+            CompositionGeometricClip GeometricClip()
+            {
+                var result = _c.CreateGeometricClip();
+                result.Geometry = PathGeometry_000();
+                return result;
+            }
+
             CanvasGeometry Geometry_000()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(64.5F, 143));
+                    builder.AddLine(new Vector2(61, 143.5F));
+                    builder.AddLine(new Vector2(23, 136.5F));
+                    builder.AddLine(new Vector2(80.5F, 105.5F));
+                    builder.AddLine(new Vector2(60.5F, 132.5F));
+                    builder.AddLine(new Vector2(59, 176.5F));
+                    builder.AddLine(new Vector2(93, 174.5F));
+                    builder.AddLine(new Vector2(63.5F, 203.5F));
+                    builder.AddLine(new Vector2(84.5F, 182.5F));
+                    builder.AddLine(new Vector2(56.5F, 203.5F));
+                    builder.AddLine(new Vector2(55, 204));
+                    builder.AddLine(new Vector2(62.5F, 201.5F));
+                    builder.AddLine(new Vector2(67, 194.5F));
+                    builder.AddLine(new Vector2(75, 194.5F));
+                    builder.AddLine(new Vector2(75, 192));
+                    builder.AddLine(new Vector2(76.5230026F, 169.763F));
+                    builder.AddLine(new Vector2(77.5F, 155.5F));
+                    builder.AddLine(new Vector2(71, 148));
+                    builder.AddLine(new Vector2(64, 141));
+                    builder.AddLine(new Vector2(64.5F, 143));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_001()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(64.5F, 143));
+                    builder.AddCubicBezier(new Vector2(64.5F, 143), new Vector2(61, 143.5F), new Vector2(61, 143.5F));
+                    builder.AddCubicBezier(new Vector2(61, 143.5F), new Vector2(23, 136.5F), new Vector2(23, 136.5F));
+                    builder.AddCubicBezier(new Vector2(23, 136.5F), new Vector2(80.5F, 105.5F), new Vector2(80.5F, 105.5F));
+                    builder.AddCubicBezier(new Vector2(80.5F, 105.5F), new Vector2(60.5F, 132.5F), new Vector2(60.5F, 132.5F));
+                    builder.AddCubicBezier(new Vector2(60.5F, 132.5F), new Vector2(59, 176.5F), new Vector2(59, 176.5F));
+                    builder.AddCubicBezier(new Vector2(59, 176.5F), new Vector2(93, 174.5F), new Vector2(93, 174.5F));
+                    builder.AddCubicBezier(new Vector2(93, 174.5F), new Vector2(63.5F, 203.5F), new Vector2(63.5F, 203.5F));
+                    builder.AddCubicBezier(new Vector2(63.5F, 203.5F), new Vector2(84.5F, 182.5F), new Vector2(84.5F, 182.5F));
+                    builder.AddCubicBezier(new Vector2(84.5F, 182.5F), new Vector2(56.5F, 203.5F), new Vector2(56.5F, 203.5F));
+                    builder.AddCubicBezier(new Vector2(56.5F, 203.5F), new Vector2(55, 204), new Vector2(55, 204));
+                    builder.AddCubicBezier(new Vector2(55, 204), new Vector2(62.5F, 201.5F), new Vector2(62.5F, 201.5F));
+                    builder.AddCubicBezier(new Vector2(62.5F, 201.5F), new Vector2(67, 194.5F), new Vector2(67, 194.5F));
+                    builder.AddCubicBezier(new Vector2(67, 194.5F), new Vector2(75, 194.5F), new Vector2(75, 194.5F));
+                    builder.AddCubicBezier(new Vector2(75, 194.5F), new Vector2(75, 192), new Vector2(75, 192));
+                    builder.AddCubicBezier(new Vector2(75, 192), new Vector2(76.5230026F, 169.763F), new Vector2(76.5230026F, 169.763F));
+                    builder.AddCubicBezier(new Vector2(76.5230026F, 169.763F), new Vector2(77.5F, 155.5F), new Vector2(77.5F, 155.5F));
+                    builder.AddCubicBezier(new Vector2(77.5F, 155.5F), new Vector2(71, 148), new Vector2(71, 148));
+                    builder.AddCubicBezier(new Vector2(71, 148), new Vector2(64, 141), new Vector2(64, 141));
+                    builder.AddCubicBezier(new Vector2(64, 141), new Vector2(64.5F, 143), new Vector2(64.5F, 143));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_002()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(74.6829987F, 124.936996F));
+                    builder.AddCubicBezier(new Vector2(74.6829987F, 124.936996F), new Vector2(65.8000031F, 125.446999F), new Vector2(65.8000031F, 125.446999F));
+                    builder.AddCubicBezier(new Vector2(65.8000031F, 125.446999F), new Vector2(26.5629997F, 130.160004F), new Vector2(26.5629997F, 130.160004F));
+                    builder.AddCubicBezier(new Vector2(26.5629997F, 130.160004F), new Vector2(64.9509964F, 110.399002F), new Vector2(64.9509964F, 110.399002F));
+                    builder.AddCubicBezier(new Vector2(64.9509964F, 110.399002F), new Vector2(44.9510002F, 137.399002F), new Vector2(44.9510002F, 137.399002F));
+                    builder.AddCubicBezier(new Vector2(44.9510002F, 137.399002F), new Vector2(43.4510002F, 181.399002F), new Vector2(43.4510002F, 181.399002F));
+                    builder.AddCubicBezier(new Vector2(43.4510002F, 181.399002F), new Vector2(77.4509964F, 179.399002F), new Vector2(77.4509964F, 179.399002F));
+                    builder.AddCubicBezier(new Vector2(77.4509964F, 179.399002F), new Vector2(56.7770004F, 203.319F), new Vector2(56.7770004F, 203.319F));
+                    builder.AddCubicBezier(new Vector2(56.7770004F, 203.319F), new Vector2(79.2369995F, 181.240005F), new Vector2(79.2369995F, 181.240005F));
+                    builder.AddCubicBezier(new Vector2(79.2369995F, 181.240005F), new Vector2(62.7299995F, 197.160995F), new Vector2(62.7299995F, 197.160995F));
+                    builder.AddCubicBezier(new Vector2(62.7299995F, 197.160995F), new Vector2(64.9120026F, 194.041F), new Vector2(64.9120026F, 194.041F));
+                    builder.AddCubicBezier(new Vector2(64.9120026F, 194.041F), new Vector2(77.0469971F, 190.843002F), new Vector2(77.0469971F, 190.843002F));
+                    builder.AddCubicBezier(new Vector2(77.0469971F, 190.843002F), new Vector2(82.9440002F, 184.604996F), new Vector2(82.9440002F, 184.604996F));
+                    builder.AddCubicBezier(new Vector2(82.9440002F, 184.604996F), new Vector2(90.9440002F, 184.604996F), new Vector2(90.9440002F, 184.604996F));
+                    builder.AddCubicBezier(new Vector2(90.9440002F, 184.604996F), new Vector2(74.6989975F, 156.048996F), new Vector2(75.651001F, 154.080994F));
+                    builder.AddCubicBezier(new Vector2(76.1969986F, 152.951996F), new Vector2(113.5F, 145), new Vector2(123.666F, 137.052994F));
+                    builder.AddCubicBezier(new Vector2(135.5F, 127.802002F), new Vector2(140.824005F, 122.457001F), new Vector2(140.824005F, 122.457001F));
+                    builder.AddCubicBezier(new Vector2(140.824005F, 122.457001F), new Vector2(146.613007F, 111.959999F), new Vector2(141.052002F, 105.222F));
+                    builder.AddCubicBezier(new Vector2(135.552994F, 98.5589981F), new Vector2(122.834999F, 101.181999F), new Vector2(122.834999F, 101.181999F));
+                    builder.AddCubicBezier(new Vector2(122.834999F, 101.181999F), new Vector2(74.6829987F, 124.936996F), new Vector2(74.6829987F, 124.936996F));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_003()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(115.403F, 104.598999F));
+                    builder.AddCubicBezier(new Vector2(115.403F, 104.598999F), new Vector2(77.2679977F, 136.123001F), new Vector2(77.2679977F, 136.123001F));
+                    builder.AddCubicBezier(new Vector2(77.2679977F, 136.123001F), new Vector2(31.3630009F, 121.619003F), new Vector2(31.3630009F, 121.619003F));
+                    builder.AddCubicBezier(new Vector2(31.3630009F, 121.619003F), new Vector2(44, 117), new Vector2(44, 117));
+                    builder.AddCubicBezier(new Vector2(44, 117), new Vector2(24, 144), new Vector2(24, 144));
+                    builder.AddCubicBezier(new Vector2(24, 144), new Vector2(22.5F, 188), new Vector2(22.5F, 188));
+                    builder.AddCubicBezier(new Vector2(22.5F, 188), new Vector2(56.5F, 186), new Vector2(56.5F, 186));
+                    builder.AddCubicBezier(new Vector2(56.5F, 186), new Vector2(47.7179985F, 203.076004F), new Vector2(47.7179985F, 203.076004F));
+                    builder.AddCubicBezier(new Vector2(47.7179985F, 203.076004F), new Vector2(72.1460037F, 179.542007F), new Vector2(72.1460037F, 179.542007F));
+                    builder.AddCubicBezier(new Vector2(72.1460037F, 179.542007F), new Vector2(71.1230011F, 188.619003F), new Vector2(71.1230011F, 188.619003F));
+                    builder.AddCubicBezier(new Vector2(71.1230011F, 188.619003F), new Vector2(78.2679977F, 180.623001F), new Vector2(78.2679977F, 180.623001F));
+                    builder.AddCubicBezier(new Vector2(78.2679977F, 180.623001F), new Vector2(79.6490021F, 146.483002F), new Vector2(79.6490021F, 146.483002F));
+                    builder.AddCubicBezier(new Vector2(79.6490021F, 146.483002F), new Vector2(91.4280014F, 158.772003F), new Vector2(91.4280014F, 158.772003F));
+                    builder.AddCubicBezier(new Vector2(91.4280014F, 158.772003F), new Vector2(100.928001F, 154.772003F), new Vector2(100.928001F, 154.772003F));
+                    builder.AddCubicBezier(new Vector2(100.928001F, 154.772003F), new Vector2(107.914001F, 153.315002F), new Vector2(110.150002F, 148.695007F));
+                    builder.AddCubicBezier(new Vector2(111.342003F, 146.231995F), new Vector2(126.875999F, 136.962997F), new Vector2(141.126007F, 128.843002F));
+                    builder.AddCubicBezier(new Vector2(153.613998F, 121.726997F), new Vector2(165.115997F, 115.492996F), new Vector2(165.115997F, 115.492996F));
+                    builder.AddCubicBezier(new Vector2(165.115997F, 115.492996F), new Vector2(187.462997F, 100.959999F), new Vector2(174.408997F, 85.1419983F));
+                    builder.AddCubicBezier(new Vector2(161.5F, 69.5F), new Vector2(141.076996F, 85.0889969F), new Vector2(141.076996F, 85.0889969F));
+                    builder.AddCubicBezier(new Vector2(141.076996F, 85.0889969F), new Vector2(115.403F, 104.598999F), new Vector2(115.403F, 104.598999F));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_004()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(178.201996F, 71.2990036F));
+                    builder.AddCubicBezier(new Vector2(178.201996F, 71.2990036F), new Vector2(133.884003F, 90.060997F), new Vector2(133.884003F, 90.060997F));
+                    builder.AddCubicBezier(new Vector2(133.884003F, 90.060997F), new Vector2(100.181999F, 115.058998F), new Vector2(100.181999F, 115.058998F));
+                    builder.AddCubicBezier(new Vector2(100.181999F, 115.058998F), new Vector2(74.25F, 140.75F), new Vector2(74.25F, 140.75F));
+                    builder.AddCubicBezier(new Vector2(74.25F, 140.75F), new Vector2(24, 144), new Vector2(24, 144));
+                    builder.AddCubicBezier(new Vector2(24, 144), new Vector2(22.5F, 188), new Vector2(22.5F, 188));
+                    builder.AddCubicBezier(new Vector2(22.5F, 188), new Vector2(79.25F, 146.5F), new Vector2(79.25F, 146.5F));
+                    builder.AddCubicBezier(new Vector2(79.25F, 146.5F), new Vector2(88.6090012F, 153.287994F), new Vector2(88.6090012F, 153.287994F));
+                    builder.AddCubicBezier(new Vector2(88.6090012F, 153.287994F), new Vector2(98.322998F, 157.520996F), new Vector2(98.322998F, 157.520996F));
+                    builder.AddCubicBezier(new Vector2(98.322998F, 157.520996F), new Vector2(109.061996F, 148.059006F), new Vector2(109.061996F, 148.059006F));
+                    builder.AddCubicBezier(new Vector2(109.061996F, 148.059006F), new Vector2(124.384003F, 137.311005F), new Vector2(124.384003F, 137.311005F));
+                    builder.AddCubicBezier(new Vector2(124.384003F, 137.311005F), new Vector2(133.324005F, 134.492004F), new Vector2(133.324005F, 134.492004F));
+                    builder.AddCubicBezier(new Vector2(133.324005F, 134.492004F), new Vector2(146.964005F, 129.136002F), new Vector2(146.964005F, 129.136002F));
+                    builder.AddCubicBezier(new Vector2(146.964005F, 129.136002F), new Vector2(159.464005F, 114.886002F), new Vector2(159.464005F, 114.886002F));
+                    builder.AddCubicBezier(new Vector2(159.464005F, 114.886002F), new Vector2(197.207001F, 99.9069977F), new Vector2(200.574997F, 88.8470001F));
+                    builder.AddCubicBezier(new Vector2(202.399994F, 82.8349991F), new Vector2(195.192993F, 94.1969986F), new Vector2(199.556F, 88.8710022F));
+                    builder.AddCubicBezier(new Vector2(203.744995F, 84.3710022F), new Vector2(207.557999F, 80.9960022F), new Vector2(207.557999F, 80.9960022F));
+                    builder.AddCubicBezier(new Vector2(207.557999F, 80.9960022F), new Vector2(204.231003F, 70.2300034F), new Vector2(197.703995F, 62.3209991F));
+                    builder.AddCubicBezier(new Vector2(191.25F, 54.5F), new Vector2(179.037994F, 64.7949982F), new Vector2(179.037994F, 64.7949982F));
+                    builder.AddCubicBezier(new Vector2(179.037994F, 64.7949982F), new Vector2(178.201996F, 71.2990036F), new Vector2(178.201996F, 71.2990036F));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_005()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(241, 38));
+                    builder.AddCubicBezier(new Vector2(241, 38), new Vector2(196.5F, 60), new Vector2(196.5F, 60));
+                    builder.AddCubicBezier(new Vector2(196.5F, 60), new Vector2(145, 83.5F), new Vector2(145, 83.5F));
+                    builder.AddCubicBezier(new Vector2(145, 83.5F), new Vector2(80.5F, 130.5F), new Vector2(80.5F, 130.5F));
+                    builder.AddCubicBezier(new Vector2(80.5F, 130.5F), new Vector2(24, 144), new Vector2(24, 144));
+                    builder.AddCubicBezier(new Vector2(24, 144), new Vector2(22.5F, 188), new Vector2(22.5F, 188));
+                    builder.AddCubicBezier(new Vector2(22.5F, 188), new Vector2(79, 151), new Vector2(79, 151));
+                    builder.AddCubicBezier(new Vector2(79, 151), new Vector2(101.5F, 154.5F), new Vector2(101.5F, 154.5F));
+                    builder.AddCubicBezier(new Vector2(101.5F, 154.5F), new Vector2(124.5F, 135.5F), new Vector2(124.5F, 135.5F));
+                    builder.AddCubicBezier(new Vector2(124.5F, 135.5F), new Vector2(159, 114.5F), new Vector2(159, 114.5F));
+                    builder.AddCubicBezier(new Vector2(159, 114.5F), new Vector2(187.5F, 107), new Vector2(187.5F, 107));
+                    builder.AddCubicBezier(new Vector2(187.5F, 107), new Vector2(191.5F, 97.5F), new Vector2(191.5F, 97.5F));
+                    builder.AddCubicBezier(new Vector2(191.5F, 97.5F), new Vector2(207, 96.5F), new Vector2(207, 96.5F));
+                    builder.AddCubicBezier(new Vector2(207, 96.5F), new Vector2(221, 87), new Vector2(221, 87));
+                    builder.AddCubicBezier(new Vector2(221, 87), new Vector2(262.5F, 83.5F), new Vector2(267, 66));
+                    builder.AddCubicBezier(new Vector2(269.459015F, 56.4379997F), new Vector2(263.51001F, 51.4300003F), new Vector2(257.985992F, 48.8979988F));
+                    builder.AddCubicBezier(new Vector2(253.875F, 47.0139999F), new Vector2(250, 46.5F), new Vector2(250, 46.5F));
+                    builder.AddCubicBezier(new Vector2(250, 46.5F), new Vector2(221, 39.5F), new Vector2(221, 39.5F));
+                    builder.AddCubicBezier(new Vector2(221, 39.5F), new Vector2(217, 44.5F), new Vector2(217, 44.5F));
+                    builder.AddCubicBezier(new Vector2(217, 44.5F), new Vector2(241, 38), new Vector2(241, 38));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_006()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(228, 50.875F));
+                    builder.AddCubicBezier(new Vector2(228, 50.875F), new Vector2(198.375F, 64.875F), new Vector2(198.375F, 64.875F));
+                    builder.AddCubicBezier(new Vector2(198.375F, 64.875F), new Vector2(172.5F, 70), new Vector2(172.5F, 70));
+                    builder.AddCubicBezier(new Vector2(172.5F, 70), new Vector2(118, 102.5F), new Vector2(118, 102.5F));
+                    builder.AddCubicBezier(new Vector2(118, 102.5F), new Vector2(80.5F, 133.5F), new Vector2(80.5F, 133.5F));
+                    builder.AddCubicBezier(new Vector2(80.5F, 133.5F), new Vector2(22.5F, 188), new Vector2(22.5F, 188));
+                    builder.AddCubicBezier(new Vector2(22.5F, 188), new Vector2(78.5F, 151.5F), new Vector2(78.5F, 151.5F));
+                    builder.AddCubicBezier(new Vector2(78.5F, 151.5F), new Vector2(100, 155), new Vector2(100, 155));
+                    builder.AddCubicBezier(new Vector2(100, 155), new Vector2(124.5F, 139), new Vector2(124.5F, 139));
+                    builder.AddCubicBezier(new Vector2(124.5F, 139), new Vector2(158.5F, 114.5F), new Vector2(158.5F, 114.5F));
+                    builder.AddCubicBezier(new Vector2(158.5F, 114.5F), new Vector2(190.875F, 104.375F), new Vector2(190.875F, 104.375F));
+                    builder.AddCubicBezier(new Vector2(190.875F, 104.375F), new Vector2(207.875F, 92.75F), new Vector2(207.875F, 92.75F));
+                    builder.AddCubicBezier(new Vector2(207.875F, 92.75F), new Vector2(228.625F, 85.25F), new Vector2(228.625F, 85.25F));
+                    builder.AddCubicBezier(new Vector2(228.625F, 85.25F), new Vector2(276, 73.5F), new Vector2(276, 73.5F));
+                    builder.AddCubicBezier(new Vector2(276, 73.5F), new Vector2(325, 92), new Vector2(333.125F, 84.5F));
+                    builder.AddCubicBezier(new Vector2(343.885986F, 81.5830002F), new Vector2(339.362F, 71.572998F), new Vector2(335.25F, 61.0040016F));
+                    builder.AddCubicBezier(new Vector2(332.190002F, 53.1389999F), new Vector2(295.75F, 44.125F), new Vector2(295.75F, 44.125F));
+                    builder.AddCubicBezier(new Vector2(295.75F, 44.125F), new Vector2(273.5F, 46.375F), new Vector2(273.5F, 46.375F));
+                    builder.AddCubicBezier(new Vector2(273.5F, 46.375F), new Vector2(254.25F, 43.5F), new Vector2(254.25F, 43.5F));
+                    builder.AddCubicBezier(new Vector2(254.25F, 43.5F), new Vector2(228, 50.875F), new Vector2(228, 50.875F));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_007()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
+                    builder.BeginFigure(new Vector2(270, 44.75F));
+                    builder.AddCubicBezier(new Vector2(270, 44.75F), new Vector2(235.25F, 47.25F), new Vector2(235.25F, 47.25F));
+                    builder.AddCubicBezier(new Vector2(235.25F, 47.25F), new Vector2(170.5F, 71), new Vector2(170.5F, 71));
+                    builder.AddCubicBezier(new Vector2(170.5F, 71), new Vector2(111.5F, 106.5F), new Vector2(111.5F, 106.5F));
+                    builder.AddCubicBezier(new Vector2(111.5F, 106.5F), new Vector2(84.5F, 132), new Vector2(84.5F, 132));
+                    builder.AddCubicBezier(new Vector2(84.5F, 132), new Vector2(66.5F, 161.5F), new Vector2(66.5F, 161.5F));
+                    builder.AddCubicBezier(new Vector2(66.5F, 161.5F), new Vector2(79, 152.5F), new Vector2(79, 152.5F));
+                    builder.AddCubicBezier(new Vector2(79, 152.5F), new Vector2(94, 156.5F), new Vector2(94, 156.5F));
+                    builder.AddCubicBezier(new Vector2(94, 156.5F), new Vector2(117.5F, 142.5F), new Vector2(117.5F, 142.5F));
+                    builder.AddCubicBezier(new Vector2(117.5F, 142.5F), new Vector2(162, 112.5F), new Vector2(162, 112.5F));
+                    builder.AddCubicBezier(new Vector2(162, 112.5F), new Vector2(203.25F, 102.75F), new Vector2(203.25F, 102.75F));
+                    builder.AddCubicBezier(new Vector2(203.25F, 102.75F), new Vector2(225.25F, 90), new Vector2(225.25F, 90));
+                    builder.AddCubicBezier(new Vector2(225.25F, 90), new Vector2(258.25F, 94), new Vector2(258.25F, 94));
+                    builder.AddCubicBezier(new Vector2(258.25F, 94), new Vector2(323, 104), new Vector2(323, 104));
+                    builder.AddCubicBezier(new Vector2(323, 104), new Vector2(328.5F, 142.5F), new Vector2(347.75F, 141.5F));
+                    builder.AddCubicBezier(new Vector2(358.5F, 138), new Vector2(358.872986F, 129.238007F), new Vector2(356.733002F, 99.1309967F));
+                    builder.AddCubicBezier(new Vector2(355.140991F, 76.7279968F), new Vector2(338.5F, 62.25F), new Vector2(338.5F, 62.25F));
+                    builder.AddCubicBezier(new Vector2(338.5F, 62.25F), new Vector2(316.5F, 44.75F), new Vector2(316.5F, 44.75F));
+                    builder.AddCubicBezier(new Vector2(316.5F, 44.75F), new Vector2(294, 40.5F), new Vector2(294, 40.5F));
+                    builder.AddCubicBezier(new Vector2(294, 40.5F), new Vector2(270, 44.75F), new Vector2(270, 44.75F));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_008()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1852,7 +2165,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_001()
+            CanvasGeometry Geometry_009()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1868,7 +2181,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_002()
+            CanvasGeometry Geometry_010()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1883,7 +2196,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_003()
+            CanvasGeometry Geometry_011()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1898,7 +2211,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_004()
+            CanvasGeometry Geometry_012()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1915,7 +2228,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_005()
+            CanvasGeometry Geometry_013()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1931,7 +2244,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_006()
+            CanvasGeometry Geometry_014()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1947,7 +2260,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_007()
+            CanvasGeometry Geometry_015()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1963,7 +2276,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_008()
+            CanvasGeometry Geometry_016()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1980,7 +2293,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_009()
+            CanvasGeometry Geometry_017()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -1997,7 +2310,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_010()
+            CanvasGeometry Geometry_018()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2014,7 +2327,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_011()
+            CanvasGeometry Geometry_019()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2031,7 +2344,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_012()
+            CanvasGeometry Geometry_020()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2046,7 +2359,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_013()
+            CanvasGeometry Geometry_021()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2062,7 +2375,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_014()
+            CanvasGeometry Geometry_022()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2081,7 +2394,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_015()
+            CanvasGeometry Geometry_023()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2100,7 +2413,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_016()
+            CanvasGeometry Geometry_024()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2116,7 +2429,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_017()
+            CanvasGeometry Geometry_025()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2131,7 +2444,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_018()
+            CanvasGeometry Geometry_026()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2146,7 +2459,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_019()
+            CanvasGeometry Geometry_027()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2161,7 +2474,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_020()
+            CanvasGeometry Geometry_028()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2176,7 +2489,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_021()
+            CanvasGeometry Geometry_029()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2191,7 +2504,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_022()
+            CanvasGeometry Geometry_030()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2210,7 +2523,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_023()
+            CanvasGeometry Geometry_031()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2225,7 +2538,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_024()
+            CanvasGeometry Geometry_032()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2240,7 +2553,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_025()
+            CanvasGeometry Geometry_033()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2257,7 +2570,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_026()
+            CanvasGeometry Geometry_034()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2274,7 +2587,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_027()
+            CanvasGeometry Geometry_035()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2290,7 +2603,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_028()
+            CanvasGeometry Geometry_036()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2307,7 +2620,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_029()
+            CanvasGeometry Geometry_037()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2324,7 +2637,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_030()
+            CanvasGeometry Geometry_038()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2339,7 +2652,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_031()
+            CanvasGeometry Geometry_039()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2355,7 +2668,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_032()
+            CanvasGeometry Geometry_040()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2375,7 +2688,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_033()
+            CanvasGeometry Geometry_041()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2390,7 +2703,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_034()
+            CanvasGeometry Geometry_042()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2405,7 +2718,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_035()
+            CanvasGeometry Geometry_043()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2421,7 +2734,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_036()
+            CanvasGeometry Geometry_044()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2436,7 +2749,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_037()
+            CanvasGeometry Geometry_045()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2451,7 +2764,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_038()
+            CanvasGeometry Geometry_046()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2467,7 +2780,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_039()
+            CanvasGeometry Geometry_047()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2482,7 +2795,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_040()
+            CanvasGeometry Geometry_048()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2498,7 +2811,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_041()
+            CanvasGeometry Geometry_049()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2513,7 +2826,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_042()
+            CanvasGeometry Geometry_050()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2528,7 +2841,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_043()
+            CanvasGeometry Geometry_051()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2543,7 +2856,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_044()
+            CanvasGeometry Geometry_052()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2558,7 +2871,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_045()
+            CanvasGeometry Geometry_053()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2575,7 +2888,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_046()
+            CanvasGeometry Geometry_054()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2593,7 +2906,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_047()
+            CanvasGeometry Geometry_055()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2608,7 +2921,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_048()
+            CanvasGeometry Geometry_056()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2632,7 +2945,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_049()
+            CanvasGeometry Geometry_057()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2650,7 +2963,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_050()
+            CanvasGeometry Geometry_058()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2666,7 +2979,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_051()
+            CanvasGeometry Geometry_059()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2681,7 +2994,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_052()
+            CanvasGeometry Geometry_060()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2697,7 +3010,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_053()
+            CanvasGeometry Geometry_061()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2713,7 +3026,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_054()
+            CanvasGeometry Geometry_062()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2729,7 +3042,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_055()
+            CanvasGeometry Geometry_063()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2744,7 +3057,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_056()
+            CanvasGeometry Geometry_064()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2759,7 +3072,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_057()
+            CanvasGeometry Geometry_065()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2774,7 +3087,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_058()
+            CanvasGeometry Geometry_066()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2791,7 +3104,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_059()
+            CanvasGeometry Geometry_067()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2806,7 +3119,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_060()
+            CanvasGeometry Geometry_068()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2822,7 +3135,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_061()
+            CanvasGeometry Geometry_069()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2837,7 +3150,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_062()
+            CanvasGeometry Geometry_070()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2852,7 +3165,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_063()
+            CanvasGeometry Geometry_071()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2871,7 +3184,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_064()
+            CanvasGeometry Geometry_072()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2887,7 +3200,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_065()
+            CanvasGeometry Geometry_073()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2902,7 +3215,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_066()
+            CanvasGeometry Geometry_074()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2917,7 +3230,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_067()
+            CanvasGeometry Geometry_075()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2933,7 +3246,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_068()
+            CanvasGeometry Geometry_076()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2948,7 +3261,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_069()
+            CanvasGeometry Geometry_077()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2963,7 +3276,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_070()
+            CanvasGeometry Geometry_078()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2978,7 +3291,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_071()
+            CanvasGeometry Geometry_079()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2993,7 +3306,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_072()
+            CanvasGeometry Geometry_080()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3009,7 +3322,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_073()
+            CanvasGeometry Geometry_081()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3024,7 +3337,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_074()
+            CanvasGeometry Geometry_082()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3039,7 +3352,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_075()
+            CanvasGeometry Geometry_083()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3054,7 +3367,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_076()
+            CanvasGeometry Geometry_084()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3070,7 +3383,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_077()
+            CanvasGeometry Geometry_085()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3086,7 +3399,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_078()
+            CanvasGeometry Geometry_086()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3103,7 +3416,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_079()
+            CanvasGeometry Geometry_087()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3118,7 +3431,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_080()
+            CanvasGeometry Geometry_088()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3134,7 +3447,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_081()
+            CanvasGeometry Geometry_089()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3149,7 +3462,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_082()
+            CanvasGeometry Geometry_090()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3164,7 +3477,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_083()
+            CanvasGeometry Geometry_091()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3179,7 +3492,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_084()
+            CanvasGeometry Geometry_092()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3194,7 +3507,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_085()
+            CanvasGeometry Geometry_093()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3215,7 +3528,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_086()
+            CanvasGeometry Geometry_094()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3230,7 +3543,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_087()
+            CanvasGeometry Geometry_095()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3246,7 +3559,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_088()
+            CanvasGeometry Geometry_096()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3261,7 +3574,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_089()
+            CanvasGeometry Geometry_097()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3276,7 +3589,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_090()
+            CanvasGeometry Geometry_098()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3292,7 +3605,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_091()
+            CanvasGeometry Geometry_099()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3307,7 +3620,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_092()
+            CanvasGeometry Geometry_100()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3325,7 +3638,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_093()
+            CanvasGeometry Geometry_101()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3341,7 +3654,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_094()
+            CanvasGeometry Geometry_102()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3356,7 +3669,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_095()
+            CanvasGeometry Geometry_103()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3376,7 +3689,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_096()
+            CanvasGeometry Geometry_104()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3395,7 +3708,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_097()
+            CanvasGeometry Geometry_105()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3411,7 +3724,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_098()
+            CanvasGeometry Geometry_106()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3426,7 +3739,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_099()
+            CanvasGeometry Geometry_107()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3443,7 +3756,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_100()
+            CanvasGeometry Geometry_108()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3460,7 +3773,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_101()
+            CanvasGeometry Geometry_109()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3475,7 +3788,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_102()
+            CanvasGeometry Geometry_110()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3490,7 +3803,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_103()
+            CanvasGeometry Geometry_111()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3506,7 +3819,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_104()
+            CanvasGeometry Geometry_112()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3525,7 +3838,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_105()
+            CanvasGeometry Geometry_113()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3540,7 +3853,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_106()
+            CanvasGeometry Geometry_114()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3591,7 +3904,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_107()
+            CanvasGeometry Geometry_115()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3609,7 +3922,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_108()
+            CanvasGeometry Geometry_116()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3636,7 +3949,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_109()
+            CanvasGeometry Geometry_117()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3652,7 +3965,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_110()
+            CanvasGeometry Geometry_118()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3701,7 +4014,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_111()
+            CanvasGeometry Geometry_119()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3721,7 +4034,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_112()
+            CanvasGeometry Geometry_120()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3737,7 +4050,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_113()
+            CanvasGeometry Geometry_121()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3752,7 +4065,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_114()
+            CanvasGeometry Geometry_122()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3785,7 +4098,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_115()
+            CanvasGeometry Geometry_123()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3802,7 +4115,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_116()
+            CanvasGeometry Geometry_124()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3821,7 +4134,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_117()
+            CanvasGeometry Geometry_125()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3837,7 +4150,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_118()
+            CanvasGeometry Geometry_126()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3852,7 +4165,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_119()
+            CanvasGeometry Geometry_127()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3869,7 +4182,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_120()
+            CanvasGeometry Geometry_128()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3885,7 +4198,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_121()
+            CanvasGeometry Geometry_129()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3908,7 +4221,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_122()
+            CanvasGeometry Geometry_130()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3925,7 +4238,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_123()
+            CanvasGeometry Geometry_131()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3941,7 +4254,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_124()
+            CanvasGeometry Geometry_132()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3957,7 +4270,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_125()
+            CanvasGeometry Geometry_133()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3973,7 +4286,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_126()
+            CanvasGeometry Geometry_134()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3988,7 +4301,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_127()
+            CanvasGeometry Geometry_135()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4003,7 +4316,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_128()
+            CanvasGeometry Geometry_136()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4019,7 +4332,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_129()
+            CanvasGeometry Geometry_137()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4035,7 +4348,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_130()
+            CanvasGeometry Geometry_138()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4050,7 +4363,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_131()
+            CanvasGeometry Geometry_139()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4067,7 +4380,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_132()
+            CanvasGeometry Geometry_140()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4083,7 +4396,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_133()
+            CanvasGeometry Geometry_141()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4102,7 +4415,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_134()
+            CanvasGeometry Geometry_142()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4117,7 +4430,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_135()
+            CanvasGeometry Geometry_143()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4134,7 +4447,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_136()
+            CanvasGeometry Geometry_144()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4150,7 +4463,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_137()
+            CanvasGeometry Geometry_145()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4166,7 +4479,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_138()
+            CanvasGeometry Geometry_146()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4182,7 +4495,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_139()
+            CanvasGeometry Geometry_147()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4198,7 +4511,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_140()
+            CanvasGeometry Geometry_148()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4215,7 +4528,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_141()
+            CanvasGeometry Geometry_149()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4232,7 +4545,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_142()
+            CanvasGeometry Geometry_150()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4248,7 +4561,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_143()
+            CanvasGeometry Geometry_151()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4266,7 +4579,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_144()
+            CanvasGeometry Geometry_152()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4282,7 +4595,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_145()
+            CanvasGeometry Geometry_153()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4298,7 +4611,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_146()
+            CanvasGeometry Geometry_154()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4315,7 +4628,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_147()
+            CanvasGeometry Geometry_155()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4335,7 +4648,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_148()
+            CanvasGeometry Geometry_156()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4351,7 +4664,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_149()
+            CanvasGeometry Geometry_157()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4369,7 +4682,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_150()
+            CanvasGeometry Geometry_158()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4385,7 +4698,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_151()
+            CanvasGeometry Geometry_159()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4402,7 +4715,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_152()
+            CanvasGeometry Geometry_160()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4419,7 +4732,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_153()
+            CanvasGeometry Geometry_161()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4442,7 +4755,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_154()
+            CanvasGeometry Geometry_162()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4457,7 +4770,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_155()
+            CanvasGeometry Geometry_163()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4494,7 +4807,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_156()
+            CanvasGeometry Geometry_164()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4510,7 +4823,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_157()
+            CanvasGeometry Geometry_165()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4527,7 +4840,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_158()
+            CanvasGeometry Geometry_166()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4543,7 +4856,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_159()
+            CanvasGeometry Geometry_167()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4559,7 +4872,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_160()
+            CanvasGeometry Geometry_168()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4575,7 +4888,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_161()
+            CanvasGeometry Geometry_169()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4590,7 +4903,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_162()
+            CanvasGeometry Geometry_170()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4605,7 +4918,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_163()
+            CanvasGeometry Geometry_171()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4622,7 +4935,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_164()
+            CanvasGeometry Geometry_172()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4639,7 +4952,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_165()
+            CanvasGeometry Geometry_173()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4654,7 +4967,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_166()
+            CanvasGeometry Geometry_174()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4671,7 +4984,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_167()
+            CanvasGeometry Geometry_175()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4687,7 +5000,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_168()
+            CanvasGeometry Geometry_176()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4703,7 +5016,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_169()
+            CanvasGeometry Geometry_177()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4718,7 +5031,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_170()
+            CanvasGeometry Geometry_178()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4734,7 +5047,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_171()
+            CanvasGeometry Geometry_179()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4752,7 +5065,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_172()
+            CanvasGeometry Geometry_180()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4769,7 +5082,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_173()
+            CanvasGeometry Geometry_181()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4786,7 +5099,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_174()
+            CanvasGeometry Geometry_182()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4803,7 +5116,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_175()
+            CanvasGeometry Geometry_183()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4820,7 +5133,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_176()
+            CanvasGeometry Geometry_184()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4836,7 +5149,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_177()
+            CanvasGeometry Geometry_185()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4856,7 +5169,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_178()
+            CanvasGeometry Geometry_186()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4872,7 +5185,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_179()
+            CanvasGeometry Geometry_187()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4889,7 +5202,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_180()
+            CanvasGeometry Geometry_188()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4905,7 +5218,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_181()
+            CanvasGeometry Geometry_189()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4926,7 +5239,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_182()
+            CanvasGeometry Geometry_190()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4941,7 +5254,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_183()
+            CanvasGeometry Geometry_191()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4963,7 +5276,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_184()
+            CanvasGeometry Geometry_192()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4978,7 +5291,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_185()
+            CanvasGeometry Geometry_193()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -4999,7 +5312,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_186()
+            CanvasGeometry Geometry_194()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5031,7 +5344,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_187()
+            CanvasGeometry Geometry_195()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5053,7 +5366,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_188()
+            CanvasGeometry Geometry_196()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5068,7 +5381,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_189()
+            CanvasGeometry Geometry_197()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5085,7 +5398,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_190()
+            CanvasGeometry Geometry_198()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5104,7 +5417,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_191()
+            CanvasGeometry Geometry_199()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5119,7 +5432,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_192()
+            CanvasGeometry Geometry_200()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5134,7 +5447,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_193()
+            CanvasGeometry Geometry_201()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5151,7 +5464,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_194()
+            CanvasGeometry Geometry_202()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5172,7 +5485,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_195()
+            CanvasGeometry Geometry_203()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5190,7 +5503,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_196()
+            CanvasGeometry Geometry_204()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5209,7 +5522,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_197()
+            CanvasGeometry Geometry_205()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5224,7 +5537,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_198()
+            CanvasGeometry Geometry_206()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5241,7 +5554,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_199()
+            CanvasGeometry Geometry_207()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5263,7 +5576,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_200()
+            CanvasGeometry Geometry_208()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5279,7 +5592,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_201()
+            CanvasGeometry Geometry_209()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5301,7 +5614,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_202()
+            CanvasGeometry Geometry_210()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5317,7 +5630,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_203()
+            CanvasGeometry Geometry_211()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5333,7 +5646,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_204()
+            CanvasGeometry Geometry_212()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5348,7 +5661,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_205()
+            CanvasGeometry Geometry_213()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5363,7 +5676,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_206()
+            CanvasGeometry Geometry_214()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5380,7 +5693,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_207()
+            CanvasGeometry Geometry_215()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5396,7 +5709,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_208()
+            CanvasGeometry Geometry_216()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5412,7 +5725,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_209()
+            CanvasGeometry Geometry_217()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5428,7 +5741,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_210()
+            CanvasGeometry Geometry_218()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5445,7 +5758,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_211()
+            CanvasGeometry Geometry_219()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5462,7 +5775,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_212()
+            CanvasGeometry Geometry_220()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5479,7 +5792,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_213()
+            CanvasGeometry Geometry_221()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5496,7 +5809,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_214()
+            CanvasGeometry Geometry_222()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5511,7 +5824,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_215()
+            CanvasGeometry Geometry_223()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5527,7 +5840,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_216()
+            CanvasGeometry Geometry_224()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5546,7 +5859,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_217()
+            CanvasGeometry Geometry_225()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5565,7 +5878,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_218()
+            CanvasGeometry Geometry_226()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5581,7 +5894,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_219()
+            CanvasGeometry Geometry_227()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5596,7 +5909,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_220()
+            CanvasGeometry Geometry_228()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5611,7 +5924,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_221()
+            CanvasGeometry Geometry_229()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5626,7 +5939,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_222()
+            CanvasGeometry Geometry_230()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5641,7 +5954,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_223()
+            CanvasGeometry Geometry_231()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5656,7 +5969,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_224()
+            CanvasGeometry Geometry_232()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5675,7 +5988,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_225()
+            CanvasGeometry Geometry_233()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5690,7 +6003,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_226()
+            CanvasGeometry Geometry_234()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5705,7 +6018,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_227()
+            CanvasGeometry Geometry_235()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5722,7 +6035,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_228()
+            CanvasGeometry Geometry_236()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5739,7 +6052,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_229()
+            CanvasGeometry Geometry_237()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5755,7 +6068,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_230()
+            CanvasGeometry Geometry_238()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5772,7 +6085,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_231()
+            CanvasGeometry Geometry_239()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5789,7 +6102,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_232()
+            CanvasGeometry Geometry_240()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5804,7 +6117,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_233()
+            CanvasGeometry Geometry_241()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5820,7 +6133,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_234()
+            CanvasGeometry Geometry_242()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5840,7 +6153,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_235()
+            CanvasGeometry Geometry_243()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5855,7 +6168,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_236()
+            CanvasGeometry Geometry_244()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5870,7 +6183,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_237()
+            CanvasGeometry Geometry_245()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5886,7 +6199,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_238()
+            CanvasGeometry Geometry_246()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5901,7 +6214,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_239()
+            CanvasGeometry Geometry_247()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5916,7 +6229,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_240()
+            CanvasGeometry Geometry_248()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5932,7 +6245,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_241()
+            CanvasGeometry Geometry_249()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5947,7 +6260,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_242()
+            CanvasGeometry Geometry_250()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5963,7 +6276,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_243()
+            CanvasGeometry Geometry_251()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5978,7 +6291,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_244()
+            CanvasGeometry Geometry_252()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -5993,7 +6306,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_245()
+            CanvasGeometry Geometry_253()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6008,7 +6321,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_246()
+            CanvasGeometry Geometry_254()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6023,7 +6336,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_247()
+            CanvasGeometry Geometry_255()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6040,7 +6353,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_248()
+            CanvasGeometry Geometry_256()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6058,7 +6371,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_249()
+            CanvasGeometry Geometry_257()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6073,7 +6386,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_250()
+            CanvasGeometry Geometry_258()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6097,7 +6410,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_251()
+            CanvasGeometry Geometry_259()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6115,7 +6428,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_252()
+            CanvasGeometry Geometry_260()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6131,7 +6444,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_253()
+            CanvasGeometry Geometry_261()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6146,7 +6459,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_254()
+            CanvasGeometry Geometry_262()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6162,7 +6475,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_255()
+            CanvasGeometry Geometry_263()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6178,7 +6491,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_256()
+            CanvasGeometry Geometry_264()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6194,7 +6507,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_257()
+            CanvasGeometry Geometry_265()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6209,7 +6522,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_258()
+            CanvasGeometry Geometry_266()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6224,7 +6537,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_259()
+            CanvasGeometry Geometry_267()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6239,7 +6552,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_260()
+            CanvasGeometry Geometry_268()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6256,7 +6569,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_261()
+            CanvasGeometry Geometry_269()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6271,7 +6584,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_262()
+            CanvasGeometry Geometry_270()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6287,7 +6600,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_263()
+            CanvasGeometry Geometry_271()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6302,7 +6615,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_264()
+            CanvasGeometry Geometry_272()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6317,7 +6630,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_265()
+            CanvasGeometry Geometry_273()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6336,7 +6649,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_266()
+            CanvasGeometry Geometry_274()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6352,7 +6665,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_267()
+            CanvasGeometry Geometry_275()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6367,7 +6680,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_268()
+            CanvasGeometry Geometry_276()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6382,7 +6695,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_269()
+            CanvasGeometry Geometry_277()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6398,7 +6711,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_270()
+            CanvasGeometry Geometry_278()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6413,7 +6726,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_271()
+            CanvasGeometry Geometry_279()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6428,7 +6741,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_272()
+            CanvasGeometry Geometry_280()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6443,7 +6756,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_273()
+            CanvasGeometry Geometry_281()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6458,7 +6771,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_274()
+            CanvasGeometry Geometry_282()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6474,7 +6787,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_275()
+            CanvasGeometry Geometry_283()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6489,7 +6802,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_276()
+            CanvasGeometry Geometry_284()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6504,7 +6817,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_277()
+            CanvasGeometry Geometry_285()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6519,7 +6832,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_278()
+            CanvasGeometry Geometry_286()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6535,7 +6848,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_279()
+            CanvasGeometry Geometry_287()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6551,7 +6864,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_280()
+            CanvasGeometry Geometry_288()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6568,7 +6881,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_281()
+            CanvasGeometry Geometry_289()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6583,7 +6896,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_282()
+            CanvasGeometry Geometry_290()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6599,7 +6912,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_283()
+            CanvasGeometry Geometry_291()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6614,7 +6927,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_284()
+            CanvasGeometry Geometry_292()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6629,7 +6942,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_285()
+            CanvasGeometry Geometry_293()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6644,7 +6957,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_286()
+            CanvasGeometry Geometry_294()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6659,7 +6972,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_287()
+            CanvasGeometry Geometry_295()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6680,7 +6993,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_288()
+            CanvasGeometry Geometry_296()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6695,7 +7008,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_289()
+            CanvasGeometry Geometry_297()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6711,7 +7024,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_290()
+            CanvasGeometry Geometry_298()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6726,7 +7039,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_291()
+            CanvasGeometry Geometry_299()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6741,7 +7054,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_292()
+            CanvasGeometry Geometry_300()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6757,7 +7070,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_293()
+            CanvasGeometry Geometry_301()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6772,7 +7085,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_294()
+            CanvasGeometry Geometry_302()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6790,7 +7103,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_295()
+            CanvasGeometry Geometry_303()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6806,7 +7119,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_296()
+            CanvasGeometry Geometry_304()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6821,7 +7134,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_297()
+            CanvasGeometry Geometry_305()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6841,7 +7154,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_298()
+            CanvasGeometry Geometry_306()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6860,7 +7173,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_299()
+            CanvasGeometry Geometry_307()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6876,7 +7189,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_300()
+            CanvasGeometry Geometry_308()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6891,7 +7204,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_301()
+            CanvasGeometry Geometry_309()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6908,7 +7221,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_302()
+            CanvasGeometry Geometry_310()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6925,7 +7238,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_303()
+            CanvasGeometry Geometry_311()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6940,7 +7253,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_304()
+            CanvasGeometry Geometry_312()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6955,7 +7268,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_305()
+            CanvasGeometry Geometry_313()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6971,7 +7284,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_306()
+            CanvasGeometry Geometry_314()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -6990,7 +7303,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_307()
+            CanvasGeometry Geometry_315()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7005,7 +7318,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_308()
+            CanvasGeometry Geometry_316()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7056,7 +7369,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_309()
+            CanvasGeometry Geometry_317()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7074,7 +7387,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_310()
+            CanvasGeometry Geometry_318()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7101,7 +7414,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_311()
+            CanvasGeometry Geometry_319()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7117,7 +7430,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_312()
+            CanvasGeometry Geometry_320()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7166,7 +7479,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_313()
+            CanvasGeometry Geometry_321()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7186,7 +7499,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_314()
+            CanvasGeometry Geometry_322()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7202,7 +7515,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_315()
+            CanvasGeometry Geometry_323()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7217,7 +7530,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_316()
+            CanvasGeometry Geometry_324()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7250,7 +7563,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_317()
+            CanvasGeometry Geometry_325()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7267,7 +7580,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_318()
+            CanvasGeometry Geometry_326()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7286,7 +7599,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_319()
+            CanvasGeometry Geometry_327()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7302,7 +7615,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_320()
+            CanvasGeometry Geometry_328()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7317,7 +7630,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_321()
+            CanvasGeometry Geometry_329()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7334,7 +7647,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_322()
+            CanvasGeometry Geometry_330()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7350,7 +7663,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_323()
+            CanvasGeometry Geometry_331()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7373,7 +7686,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_324()
+            CanvasGeometry Geometry_332()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7390,7 +7703,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_325()
+            CanvasGeometry Geometry_333()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7406,7 +7719,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_326()
+            CanvasGeometry Geometry_334()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7422,7 +7735,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_327()
+            CanvasGeometry Geometry_335()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7438,7 +7751,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_328()
+            CanvasGeometry Geometry_336()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7453,7 +7766,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_329()
+            CanvasGeometry Geometry_337()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7468,7 +7781,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_330()
+            CanvasGeometry Geometry_338()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7484,7 +7797,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_331()
+            CanvasGeometry Geometry_339()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7500,7 +7813,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_332()
+            CanvasGeometry Geometry_340()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7515,7 +7828,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_333()
+            CanvasGeometry Geometry_341()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7532,7 +7845,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_334()
+            CanvasGeometry Geometry_342()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7548,7 +7861,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_335()
+            CanvasGeometry Geometry_343()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7567,7 +7880,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_336()
+            CanvasGeometry Geometry_344()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7582,7 +7895,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_337()
+            CanvasGeometry Geometry_345()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7599,7 +7912,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_338()
+            CanvasGeometry Geometry_346()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7615,7 +7928,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_339()
+            CanvasGeometry Geometry_347()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7631,7 +7944,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_340()
+            CanvasGeometry Geometry_348()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7647,7 +7960,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_341()
+            CanvasGeometry Geometry_349()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7663,7 +7976,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_342()
+            CanvasGeometry Geometry_350()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7680,7 +7993,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_343()
+            CanvasGeometry Geometry_351()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7697,7 +8010,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_344()
+            CanvasGeometry Geometry_352()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7713,7 +8026,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_345()
+            CanvasGeometry Geometry_353()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7731,7 +8044,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_346()
+            CanvasGeometry Geometry_354()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7747,7 +8060,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_347()
+            CanvasGeometry Geometry_355()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7763,7 +8076,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_348()
+            CanvasGeometry Geometry_356()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7780,7 +8093,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_349()
+            CanvasGeometry Geometry_357()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7800,7 +8113,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_350()
+            CanvasGeometry Geometry_358()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7816,7 +8129,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_351()
+            CanvasGeometry Geometry_359()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7834,7 +8147,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_352()
+            CanvasGeometry Geometry_360()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7850,7 +8163,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_353()
+            CanvasGeometry Geometry_361()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7867,7 +8180,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_354()
+            CanvasGeometry Geometry_362()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7884,7 +8197,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_355()
+            CanvasGeometry Geometry_363()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7907,7 +8220,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_356()
+            CanvasGeometry Geometry_364()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7922,7 +8235,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_357()
+            CanvasGeometry Geometry_365()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7959,7 +8272,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_358()
+            CanvasGeometry Geometry_366()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7975,7 +8288,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_359()
+            CanvasGeometry Geometry_367()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -7992,7 +8305,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_360()
+            CanvasGeometry Geometry_368()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8008,7 +8321,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_361()
+            CanvasGeometry Geometry_369()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8024,7 +8337,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_362()
+            CanvasGeometry Geometry_370()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8040,7 +8353,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_363()
+            CanvasGeometry Geometry_371()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8055,7 +8368,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_364()
+            CanvasGeometry Geometry_372()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8070,7 +8383,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_365()
+            CanvasGeometry Geometry_373()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8087,7 +8400,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_366()
+            CanvasGeometry Geometry_374()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8104,7 +8417,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_367()
+            CanvasGeometry Geometry_375()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8119,7 +8432,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_368()
+            CanvasGeometry Geometry_376()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8136,7 +8449,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_369()
+            CanvasGeometry Geometry_377()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8152,7 +8465,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_370()
+            CanvasGeometry Geometry_378()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8168,7 +8481,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_371()
+            CanvasGeometry Geometry_379()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8183,7 +8496,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_372()
+            CanvasGeometry Geometry_380()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8199,7 +8512,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_373()
+            CanvasGeometry Geometry_381()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8217,7 +8530,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_374()
+            CanvasGeometry Geometry_382()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8234,7 +8547,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_375()
+            CanvasGeometry Geometry_383()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8251,7 +8564,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_376()
+            CanvasGeometry Geometry_384()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8268,7 +8581,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_377()
+            CanvasGeometry Geometry_385()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8285,7 +8598,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_378()
+            CanvasGeometry Geometry_386()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8301,7 +8614,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_379()
+            CanvasGeometry Geometry_387()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8321,7 +8634,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_380()
+            CanvasGeometry Geometry_388()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8337,7 +8650,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_381()
+            CanvasGeometry Geometry_389()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8354,7 +8667,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_382()
+            CanvasGeometry Geometry_390()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8370,7 +8683,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_383()
+            CanvasGeometry Geometry_391()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8391,7 +8704,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_384()
+            CanvasGeometry Geometry_392()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8406,7 +8719,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_385()
+            CanvasGeometry Geometry_393()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8428,7 +8741,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_386()
+            CanvasGeometry Geometry_394()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8443,7 +8756,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_387()
+            CanvasGeometry Geometry_395()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8464,7 +8777,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_388()
+            CanvasGeometry Geometry_396()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8496,7 +8809,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_389()
+            CanvasGeometry Geometry_397()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8518,7 +8831,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_390()
+            CanvasGeometry Geometry_398()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8533,7 +8846,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_391()
+            CanvasGeometry Geometry_399()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8550,7 +8863,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_392()
+            CanvasGeometry Geometry_400()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8569,7 +8882,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_393()
+            CanvasGeometry Geometry_401()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8584,7 +8897,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_394()
+            CanvasGeometry Geometry_402()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8599,7 +8912,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_395()
+            CanvasGeometry Geometry_403()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8616,7 +8929,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_396()
+            CanvasGeometry Geometry_404()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8637,7 +8950,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_397()
+            CanvasGeometry Geometry_405()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8655,7 +8968,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_398()
+            CanvasGeometry Geometry_406()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8674,7 +8987,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_399()
+            CanvasGeometry Geometry_407()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8689,7 +9002,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_400()
+            CanvasGeometry Geometry_408()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8706,7 +9019,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_401()
+            CanvasGeometry Geometry_409()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8728,7 +9041,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_402()
+            CanvasGeometry Geometry_410()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8745,7 +9058,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_403()
+            CanvasGeometry Geometry_411()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8761,7 +9074,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_404()
+            CanvasGeometry Geometry_412()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8776,7 +9089,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_405()
+            CanvasGeometry Geometry_413()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8791,7 +9104,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_406()
+            CanvasGeometry Geometry_414()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8806,7 +9119,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_407()
+            CanvasGeometry Geometry_415()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8822,7 +9135,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_408()
+            CanvasGeometry Geometry_416()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8837,7 +9150,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_409()
+            CanvasGeometry Geometry_417()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8852,7 +9165,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_410()
+            CanvasGeometry Geometry_418()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8868,7 +9181,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_411()
+            CanvasGeometry Geometry_419()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8885,7 +9198,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_412()
+            CanvasGeometry Geometry_420()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8900,7 +9213,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_413()
+            CanvasGeometry Geometry_421()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8915,7 +9228,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_414()
+            CanvasGeometry Geometry_422()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8930,7 +9243,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_415()
+            CanvasGeometry Geometry_423()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8951,7 +9264,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_416()
+            CanvasGeometry Geometry_424()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8966,7 +9279,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_417()
+            CanvasGeometry Geometry_425()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8981,7 +9294,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_418()
+            CanvasGeometry Geometry_426()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -8997,7 +9310,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_419()
+            CanvasGeometry Geometry_427()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9012,7 +9325,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_420()
+            CanvasGeometry Geometry_428()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9039,7 +9352,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_421()
+            CanvasGeometry Geometry_429()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9088,7 +9401,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_422()
+            CanvasGeometry Geometry_430()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9104,7 +9417,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_423()
+            CanvasGeometry Geometry_431()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9119,7 +9432,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_424()
+            CanvasGeometry Geometry_432()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9152,7 +9465,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_425()
+            CanvasGeometry Geometry_433()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9169,7 +9482,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_426()
+            CanvasGeometry Geometry_434()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9185,7 +9498,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_427()
+            CanvasGeometry Geometry_435()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9202,7 +9515,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_428()
+            CanvasGeometry Geometry_436()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9218,7 +9531,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_429()
+            CanvasGeometry Geometry_437()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9241,7 +9554,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_430()
+            CanvasGeometry Geometry_438()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9257,7 +9570,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_431()
+            CanvasGeometry Geometry_439()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9273,7 +9586,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_432()
+            CanvasGeometry Geometry_440()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9288,7 +9601,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_433()
+            CanvasGeometry Geometry_441()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9303,7 +9616,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_434()
+            CanvasGeometry Geometry_442()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9319,7 +9632,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_435()
+            CanvasGeometry Geometry_443()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9334,7 +9647,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_436()
+            CanvasGeometry Geometry_444()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9351,7 +9664,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_437()
+            CanvasGeometry Geometry_445()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9370,7 +9683,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_438()
+            CanvasGeometry Geometry_446()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9387,7 +9700,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_439()
+            CanvasGeometry Geometry_447()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9408,7 +9721,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_440()
+            CanvasGeometry Geometry_448()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9423,7 +9736,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_441()
+            CanvasGeometry Geometry_449()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9445,7 +9758,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_442()
+            CanvasGeometry Geometry_450()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9460,7 +9773,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_443()
+            CanvasGeometry Geometry_451()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9477,7 +9790,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_444()
+            CanvasGeometry Geometry_452()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9495,7 +9808,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_445()
+            CanvasGeometry Geometry_453()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9517,7 +9830,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_446()
+            CanvasGeometry Geometry_454()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9533,7 +9846,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_447()
+            CanvasGeometry Geometry_455()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9549,7 +9862,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_448()
+            CanvasGeometry Geometry_456()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9564,7 +9877,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_449()
+            CanvasGeometry Geometry_457()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9581,7 +9894,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_450()
+            CanvasGeometry Geometry_458()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9597,7 +9910,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_451()
+            CanvasGeometry Geometry_459()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9614,7 +9927,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_452()
+            CanvasGeometry Geometry_460()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9631,7 +9944,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_453()
+            CanvasGeometry Geometry_461()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9648,7 +9961,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_454()
+            CanvasGeometry Geometry_462()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9663,7 +9976,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_455()
+            CanvasGeometry Geometry_463()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9678,7 +9991,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_456()
+            CanvasGeometry Geometry_464()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9693,7 +10006,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_457()
+            CanvasGeometry Geometry_465()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9712,7 +10025,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_458()
+            CanvasGeometry Geometry_466()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9727,7 +10040,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_459()
+            CanvasGeometry Geometry_467()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9742,7 +10055,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_460()
+            CanvasGeometry Geometry_468()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9759,7 +10072,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_461()
+            CanvasGeometry Geometry_469()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9776,7 +10089,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_462()
+            CanvasGeometry Geometry_470()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9793,7 +10106,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_463()
+            CanvasGeometry Geometry_471()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9809,7 +10122,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_464()
+            CanvasGeometry Geometry_472()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9829,7 +10142,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_465()
+            CanvasGeometry Geometry_473()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9844,7 +10157,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_466()
+            CanvasGeometry Geometry_474()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9859,7 +10172,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_467()
+            CanvasGeometry Geometry_475()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9875,7 +10188,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_468()
+            CanvasGeometry Geometry_476()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9890,7 +10203,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_469()
+            CanvasGeometry Geometry_477()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9905,7 +10218,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_470()
+            CanvasGeometry Geometry_478()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9920,7 +10233,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_471()
+            CanvasGeometry Geometry_479()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9935,7 +10248,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_472()
+            CanvasGeometry Geometry_480()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9953,7 +10266,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_473()
+            CanvasGeometry Geometry_481()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9969,7 +10282,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_474()
+            CanvasGeometry Geometry_482()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -9985,7 +10298,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_475()
+            CanvasGeometry Geometry_483()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10000,7 +10313,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_476()
+            CanvasGeometry Geometry_484()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10015,7 +10328,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_477()
+            CanvasGeometry Geometry_485()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10031,7 +10344,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_478()
+            CanvasGeometry Geometry_486()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10046,7 +10359,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_479()
+            CanvasGeometry Geometry_487()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10062,7 +10375,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_480()
+            CanvasGeometry Geometry_488()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10077,7 +10390,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_481()
+            CanvasGeometry Geometry_489()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10092,7 +10405,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_482()
+            CanvasGeometry Geometry_490()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10107,7 +10420,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_483()
+            CanvasGeometry Geometry_491()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10122,7 +10435,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_484()
+            CanvasGeometry Geometry_492()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10137,7 +10450,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_485()
+            CanvasGeometry Geometry_493()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10153,7 +10466,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_486()
+            CanvasGeometry Geometry_494()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10169,7 +10482,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_487()
+            CanvasGeometry Geometry_495()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10184,7 +10497,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_488()
+            CanvasGeometry Geometry_496()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10199,7 +10512,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_489()
+            CanvasGeometry Geometry_497()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10214,7 +10527,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_490()
+            CanvasGeometry Geometry_498()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10229,7 +10542,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_491()
+            CanvasGeometry Geometry_499()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10250,7 +10563,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_492()
+            CanvasGeometry Geometry_500()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10265,7 +10578,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_493()
+            CanvasGeometry Geometry_501()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10281,7 +10594,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_494()
+            CanvasGeometry Geometry_502()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10299,7 +10612,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_495()
+            CanvasGeometry Geometry_503()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10315,7 +10628,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_496()
+            CanvasGeometry Geometry_504()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10330,7 +10643,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_497()
+            CanvasGeometry Geometry_505()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10350,7 +10663,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_498()
+            CanvasGeometry Geometry_506()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10369,7 +10682,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_499()
+            CanvasGeometry Geometry_507()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10385,7 +10698,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_500()
+            CanvasGeometry Geometry_508()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10400,7 +10713,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_501()
+            CanvasGeometry Geometry_509()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10415,7 +10728,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_502()
+            CanvasGeometry Geometry_510()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10430,7 +10743,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_503()
+            CanvasGeometry Geometry_511()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10447,7 +10760,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_504()
+            CanvasGeometry Geometry_512()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10463,7 +10776,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_505()
+            CanvasGeometry Geometry_513()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10479,7 +10792,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_506()
+            CanvasGeometry Geometry_514()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10495,7 +10808,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_507()
+            CanvasGeometry Geometry_515()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10511,7 +10824,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_508()
+            CanvasGeometry Geometry_516()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10528,7 +10841,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_509()
+            CanvasGeometry Geometry_517()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10545,7 +10858,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_510()
+            CanvasGeometry Geometry_518()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10561,7 +10874,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_511()
+            CanvasGeometry Geometry_519()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10579,7 +10892,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_512()
+            CanvasGeometry Geometry_520()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10595,7 +10908,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_513()
+            CanvasGeometry Geometry_521()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10611,7 +10924,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_514()
+            CanvasGeometry Geometry_522()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10628,7 +10941,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_515()
+            CanvasGeometry Geometry_523()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10648,7 +10961,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_516()
+            CanvasGeometry Geometry_524()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10664,7 +10977,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_517()
+            CanvasGeometry Geometry_525()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10680,7 +10993,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_518()
+            CanvasGeometry Geometry_526()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10697,7 +11010,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_519()
+            CanvasGeometry Geometry_527()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10714,7 +11027,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_520()
+            CanvasGeometry Geometry_528()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10737,7 +11050,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_521()
+            CanvasGeometry Geometry_529()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10752,7 +11065,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_522()
+            CanvasGeometry Geometry_530()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10789,7 +11102,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_523()
+            CanvasGeometry Geometry_531()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10805,7 +11118,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_524()
+            CanvasGeometry Geometry_532()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10822,7 +11135,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_525()
+            CanvasGeometry Geometry_533()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10838,7 +11151,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_526()
+            CanvasGeometry Geometry_534()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10854,7 +11167,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_527()
+            CanvasGeometry Geometry_535()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10870,7 +11183,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_528()
+            CanvasGeometry Geometry_536()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10885,7 +11198,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_529()
+            CanvasGeometry Geometry_537()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10900,7 +11213,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_530()
+            CanvasGeometry Geometry_538()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10917,7 +11230,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_531()
+            CanvasGeometry Geometry_539()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10934,7 +11247,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_532()
+            CanvasGeometry Geometry_540()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10951,7 +11264,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_533()
+            CanvasGeometry Geometry_541()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10967,7 +11280,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_534()
+            CanvasGeometry Geometry_542()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10982,7 +11295,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_535()
+            CanvasGeometry Geometry_543()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -10999,7 +11312,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_536()
+            CanvasGeometry Geometry_544()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11016,7 +11329,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_537()
+            CanvasGeometry Geometry_545()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11032,7 +11345,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_538()
+            CanvasGeometry Geometry_546()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11052,7 +11365,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_539()
+            CanvasGeometry Geometry_547()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11069,7 +11382,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_540()
+            CanvasGeometry Geometry_548()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11090,7 +11403,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_541()
+            CanvasGeometry Geometry_549()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11122,7 +11435,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_542()
+            CanvasGeometry Geometry_550()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11139,7 +11452,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_543()
+            CanvasGeometry Geometry_551()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11158,7 +11471,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_544()
+            CanvasGeometry Geometry_552()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11173,7 +11486,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_545()
+            CanvasGeometry Geometry_553()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11190,7 +11503,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_546()
+            CanvasGeometry Geometry_554()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11211,7 +11524,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_547()
+            CanvasGeometry Geometry_555()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11229,7 +11542,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_548()
+            CanvasGeometry Geometry_556()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11246,7 +11559,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_549()
+            CanvasGeometry Geometry_557()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11268,7 +11581,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_550()
+            CanvasGeometry Geometry_558()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11284,7 +11597,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_551()
+            CanvasGeometry Geometry_559()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -11306,7 +11619,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_552()
+            CanvasGeometry Geometry_560()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13215,7 +13528,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_553()
+            CanvasGeometry Geometry_561()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13237,7 +13550,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_554()
+            CanvasGeometry Geometry_562()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13259,7 +13572,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_555()
+            CanvasGeometry Geometry_563()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13281,7 +13594,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_556()
+            CanvasGeometry Geometry_564()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13303,7 +13616,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_557()
+            CanvasGeometry Geometry_565()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13325,7 +13638,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_558()
+            CanvasGeometry Geometry_566()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13347,7 +13660,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_559()
+            CanvasGeometry Geometry_567()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13366,7 +13679,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_560()
+            CanvasGeometry Geometry_568()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13385,7 +13698,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_561()
+            CanvasGeometry Geometry_569()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13404,7 +13717,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_562()
+            CanvasGeometry Geometry_570()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13423,7 +13736,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_563()
+            CanvasGeometry Geometry_571()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13442,7 +13755,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_564()
+            CanvasGeometry Geometry_572()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13461,7 +13774,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_565()
+            CanvasGeometry Geometry_573()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13480,7 +13793,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_566()
+            CanvasGeometry Geometry_574()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13499,7 +13812,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_567()
+            CanvasGeometry Geometry_575()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13518,7 +13831,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_568()
+            CanvasGeometry Geometry_576()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13537,7 +13850,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_569()
+            CanvasGeometry Geometry_577()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13556,7 +13869,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_570()
+            CanvasGeometry Geometry_578()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13575,7 +13888,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_571()
+            CanvasGeometry Geometry_579()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13594,7 +13907,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_572()
+            CanvasGeometry Geometry_580()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13613,7 +13926,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_573()
+            CanvasGeometry Geometry_581()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13632,7 +13945,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_574()
+            CanvasGeometry Geometry_582()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13651,7 +13964,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_575()
+            CanvasGeometry Geometry_583()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13670,7 +13983,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_576()
+            CanvasGeometry Geometry_584()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13689,7 +14002,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_577()
+            CanvasGeometry Geometry_585()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13708,7 +14021,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_578()
+            CanvasGeometry Geometry_586()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13727,7 +14040,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_579()
+            CanvasGeometry Geometry_587()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13744,7 +14057,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_580()
+            CanvasGeometry Geometry_588()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13761,7 +14074,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_581()
+            CanvasGeometry Geometry_589()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13778,7 +14091,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_582()
+            CanvasGeometry Geometry_590()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13795,7 +14108,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_583()
+            CanvasGeometry Geometry_591()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13812,7 +14125,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_584()
+            CanvasGeometry Geometry_592()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13829,7 +14142,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_585()
+            CanvasGeometry Geometry_593()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13846,7 +14159,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_586()
+            CanvasGeometry Geometry_594()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13863,7 +14176,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_587()
+            CanvasGeometry Geometry_595()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13880,7 +14193,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_588()
+            CanvasGeometry Geometry_596()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13897,7 +14210,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_589()
+            CanvasGeometry Geometry_597()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13914,7 +14227,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_590()
+            CanvasGeometry Geometry_598()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13931,7 +14244,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_591()
+            CanvasGeometry Geometry_599()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13948,7 +14261,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_592()
+            CanvasGeometry Geometry_600()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13965,7 +14278,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_593()
+            CanvasGeometry Geometry_601()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13982,7 +14295,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_594()
+            CanvasGeometry Geometry_602()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -13999,7 +14312,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_595()
+            CanvasGeometry Geometry_603()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14016,7 +14329,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_596()
+            CanvasGeometry Geometry_604()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14033,7 +14346,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_597()
+            CanvasGeometry Geometry_605()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14052,7 +14365,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_598()
+            CanvasGeometry Geometry_606()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14071,7 +14384,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_599()
+            CanvasGeometry Geometry_607()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14090,7 +14403,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_600()
+            CanvasGeometry Geometry_608()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14109,7 +14422,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_601()
+            CanvasGeometry Geometry_609()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14128,7 +14441,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_602()
+            CanvasGeometry Geometry_610()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14146,7 +14459,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_603()
+            CanvasGeometry Geometry_611()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14163,7 +14476,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_604()
+            CanvasGeometry Geometry_612()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14180,7 +14493,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_605()
+            CanvasGeometry Geometry_613()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14199,7 +14512,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_606()
+            CanvasGeometry Geometry_614()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14216,7 +14529,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_607()
+            CanvasGeometry Geometry_615()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -14244,11 +14557,16 @@ namespace Compositions
                 return _linearEasingFunction = _c.CreateLinearEasingFunction();
             }
 
-            // Path 1
-            // Path 1.PathGeometry
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
+            //   Mask 1
+            // Mask 1.PathGeometry
             CompositionPathGeometry PathGeometry_000()
             {
                 var result = _c.CreatePathGeometry(new CompositionPath(Geometry_000()));
+                result.StartAnimation("Path", PathKeyFrameAnimation_0());
+                var controller = result.TryGetAnimationController("Path");
+                controller.Pause();
+                controller.StartAnimation("Progress", ScalarExpressionAnimation());
                 return result;
             }
 
@@ -14256,7 +14574,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_001()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_001()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_008()));
                 return result;
             }
 
@@ -14264,7 +14582,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_002()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_002()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_009()));
                 return result;
             }
 
@@ -14272,7 +14590,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_003()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_003()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_010()));
                 return result;
             }
 
@@ -14280,7 +14598,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_004()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_004()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_011()));
                 return result;
             }
 
@@ -14288,7 +14606,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_005()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_005()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_012()));
                 return result;
             }
 
@@ -14296,7 +14614,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_006()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_006()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_013()));
                 return result;
             }
 
@@ -14304,7 +14622,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_007()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_007()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_014()));
                 return result;
             }
 
@@ -14312,7 +14630,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_008()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_008()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_015()));
                 return result;
             }
 
@@ -14320,7 +14638,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_009()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_009()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_016()));
                 return result;
             }
 
@@ -14328,7 +14646,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_010()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_010()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_017()));
                 return result;
             }
 
@@ -14336,7 +14654,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_011()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_011()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_018()));
                 return result;
             }
 
@@ -14344,7 +14662,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_012()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_012()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_019()));
                 return result;
             }
 
@@ -14352,7 +14670,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_013()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_013()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_020()));
                 return result;
             }
 
@@ -14360,7 +14678,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_014()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_014()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_021()));
                 return result;
             }
 
@@ -14368,7 +14686,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_015()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_015()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_022()));
                 return result;
             }
 
@@ -14376,7 +14694,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_016()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_016()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_023()));
                 return result;
             }
 
@@ -14384,7 +14702,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_017()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_017()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_024()));
                 return result;
             }
 
@@ -14392,7 +14710,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_018()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_018()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_025()));
                 return result;
             }
 
@@ -14400,7 +14718,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_019()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_019()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_026()));
                 return result;
             }
 
@@ -14408,7 +14726,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_020()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_020()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_027()));
                 return result;
             }
 
@@ -14416,7 +14734,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_021()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_021()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_028()));
                 return result;
             }
 
@@ -14424,7 +14742,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_022()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_022()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_029()));
                 return result;
             }
 
@@ -14432,7 +14750,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_023()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_023()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_030()));
                 return result;
             }
 
@@ -14440,7 +14758,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_024()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_024()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_031()));
                 return result;
             }
 
@@ -14448,7 +14766,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_025()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_025()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_032()));
                 return result;
             }
 
@@ -14456,7 +14774,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_026()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_026()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_033()));
                 return result;
             }
 
@@ -14464,7 +14782,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_027()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_027()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_034()));
                 return result;
             }
 
@@ -14472,7 +14790,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_028()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_028()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_035()));
                 return result;
             }
 
@@ -14480,7 +14798,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_029()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_029()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_036()));
                 return result;
             }
 
@@ -14488,7 +14806,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_030()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_030()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_037()));
                 return result;
             }
 
@@ -14496,7 +14814,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_031()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_031()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_038()));
                 return result;
             }
 
@@ -14504,7 +14822,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_032()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_032()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_039()));
                 return result;
             }
 
@@ -14512,7 +14830,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_033()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_033()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_040()));
                 return result;
             }
 
@@ -14520,7 +14838,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_034()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_034()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_041()));
                 return result;
             }
 
@@ -14528,7 +14846,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_035()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_035()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_042()));
                 return result;
             }
 
@@ -14536,7 +14854,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_036()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_036()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_043()));
                 return result;
             }
 
@@ -14544,7 +14862,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_037()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_037()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_044()));
                 return result;
             }
 
@@ -14552,7 +14870,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_038()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_038()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_045()));
                 return result;
             }
 
@@ -14560,7 +14878,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_039()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_039()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_046()));
                 return result;
             }
 
@@ -14568,7 +14886,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_040()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_040()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_047()));
                 return result;
             }
 
@@ -14576,7 +14894,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_041()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_041()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_048()));
                 return result;
             }
 
@@ -14584,7 +14902,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_042()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_042()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_049()));
                 return result;
             }
 
@@ -14592,7 +14910,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_043()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_043()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_050()));
                 return result;
             }
 
@@ -14600,7 +14918,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_044()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_044()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_051()));
                 return result;
             }
 
@@ -14608,7 +14926,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_045()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_045()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_052()));
                 return result;
             }
 
@@ -14616,7 +14934,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_046()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_046()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_053()));
                 return result;
             }
 
@@ -14624,7 +14942,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_047()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_047()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_054()));
                 return result;
             }
 
@@ -14632,7 +14950,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_048()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_048()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_055()));
                 return result;
             }
 
@@ -14640,7 +14958,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_049()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_049()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_056()));
                 return result;
             }
 
@@ -14648,7 +14966,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_050()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_050()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_057()));
                 return result;
             }
 
@@ -14656,7 +14974,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_051()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_051()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_058()));
                 return result;
             }
 
@@ -14664,7 +14982,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_052()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_052()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_059()));
                 return result;
             }
 
@@ -14672,7 +14990,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_053()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_053()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_060()));
                 return result;
             }
 
@@ -14680,7 +14998,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_054()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_054()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_061()));
                 return result;
             }
 
@@ -14688,7 +15006,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_055()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_055()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_062()));
                 return result;
             }
 
@@ -14696,7 +15014,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_056()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_056()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_063()));
                 return result;
             }
 
@@ -14704,7 +15022,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_057()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_057()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_064()));
                 return result;
             }
 
@@ -14712,7 +15030,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_058()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_058()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_065()));
                 return result;
             }
 
@@ -14720,7 +15038,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_059()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_059()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_066()));
                 return result;
             }
 
@@ -14728,7 +15046,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_060()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_060()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_067()));
                 return result;
             }
 
@@ -14736,7 +15054,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_061()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_061()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_068()));
                 return result;
             }
 
@@ -14744,7 +15062,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_062()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_062()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_069()));
                 return result;
             }
 
@@ -14752,7 +15070,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_063()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_063()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_070()));
                 return result;
             }
 
@@ -14760,7 +15078,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_064()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_064()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_071()));
                 return result;
             }
 
@@ -14768,7 +15086,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_065()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_065()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_072()));
                 return result;
             }
 
@@ -14776,7 +15094,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_066()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_066()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_073()));
                 return result;
             }
 
@@ -14784,7 +15102,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_067()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_067()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_074()));
                 return result;
             }
 
@@ -14792,7 +15110,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_068()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_068()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_075()));
                 return result;
             }
 
@@ -14800,7 +15118,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_069()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_069()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_076()));
                 return result;
             }
 
@@ -14808,7 +15126,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_070()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_070()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_077()));
                 return result;
             }
 
@@ -14816,7 +15134,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_071()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_071()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_078()));
                 return result;
             }
 
@@ -14824,7 +15142,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_072()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_072()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_079()));
                 return result;
             }
 
@@ -14832,7 +15150,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_073()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_073()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_080()));
                 return result;
             }
 
@@ -14840,7 +15158,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_074()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_074()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_081()));
                 return result;
             }
 
@@ -14848,7 +15166,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_075()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_075()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_082()));
                 return result;
             }
 
@@ -14856,7 +15174,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_076()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_076()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_083()));
                 return result;
             }
 
@@ -14864,7 +15182,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_077()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_077()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_084()));
                 return result;
             }
 
@@ -14872,7 +15190,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_078()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_078()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_085()));
                 return result;
             }
 
@@ -14880,7 +15198,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_079()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_079()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_086()));
                 return result;
             }
 
@@ -14888,7 +15206,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_080()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_080()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_087()));
                 return result;
             }
 
@@ -14896,7 +15214,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_081()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_081()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_088()));
                 return result;
             }
 
@@ -14904,7 +15222,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_082()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_082()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_089()));
                 return result;
             }
 
@@ -14912,7 +15230,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_083()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_083()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_090()));
                 return result;
             }
 
@@ -14920,7 +15238,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_084()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_084()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_091()));
                 return result;
             }
 
@@ -14928,7 +15246,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_085()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_085()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_092()));
                 return result;
             }
 
@@ -14936,7 +15254,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_086()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_086()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_093()));
                 return result;
             }
 
@@ -14944,7 +15262,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_087()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_087()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_094()));
                 return result;
             }
 
@@ -14952,7 +15270,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_088()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_088()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_095()));
                 return result;
             }
 
@@ -14960,7 +15278,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_089()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_089()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_096()));
                 return result;
             }
 
@@ -14968,7 +15286,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_090()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_090()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_097()));
                 return result;
             }
 
@@ -14976,7 +15294,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_091()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_091()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_098()));
                 return result;
             }
 
@@ -14984,7 +15302,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_092()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_092()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_099()));
                 return result;
             }
 
@@ -14992,7 +15310,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_093()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_093()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_100()));
                 return result;
             }
 
@@ -15000,7 +15318,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_094()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_094()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_101()));
                 return result;
             }
 
@@ -15008,7 +15326,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_095()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_095()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_102()));
                 return result;
             }
 
@@ -15016,7 +15334,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_096()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_096()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_103()));
                 return result;
             }
 
@@ -15024,7 +15342,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_097()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_097()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_104()));
                 return result;
             }
 
@@ -15032,7 +15350,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_098()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_098()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_105()));
                 return result;
             }
 
@@ -15040,7 +15358,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_099()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_099()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_106()));
                 return result;
             }
 
@@ -15048,7 +15366,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_100()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_100()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_107()));
                 return result;
             }
 
@@ -15056,7 +15374,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_101()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_101()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_108()));
                 return result;
             }
 
@@ -15064,7 +15382,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_102()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_102()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_109()));
                 return result;
             }
 
@@ -15072,7 +15390,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_103()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_103()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_110()));
                 return result;
             }
 
@@ -15080,7 +15398,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_104()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_104()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_111()));
                 return result;
             }
 
@@ -15088,7 +15406,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_105()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_105()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_112()));
                 return result;
             }
 
@@ -15096,7 +15414,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_106()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_106()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_113()));
                 return result;
             }
 
@@ -15104,7 +15422,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_107()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_107()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_114()));
                 return result;
             }
 
@@ -15112,7 +15430,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_108()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_108()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_115()));
                 return result;
             }
 
@@ -15120,7 +15438,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_109()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_109()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_116()));
                 return result;
             }
 
@@ -15128,7 +15446,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_110()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_110()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_117()));
                 return result;
             }
 
@@ -15136,7 +15454,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_111()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_111()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_118()));
                 return result;
             }
 
@@ -15144,7 +15462,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_112()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_112()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_119()));
                 return result;
             }
 
@@ -15152,7 +15470,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_113()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_113()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_120()));
                 return result;
             }
 
@@ -15160,7 +15478,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_114()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_114()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_121()));
                 return result;
             }
 
@@ -15168,7 +15486,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_115()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_115()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_122()));
                 return result;
             }
 
@@ -15176,7 +15494,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_116()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_116()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_123()));
                 return result;
             }
 
@@ -15184,7 +15502,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_117()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_117()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_124()));
                 return result;
             }
 
@@ -15192,7 +15510,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_118()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_118()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_125()));
                 return result;
             }
 
@@ -15200,7 +15518,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_119()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_119()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_126()));
                 return result;
             }
 
@@ -15208,7 +15526,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_120()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_120()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_127()));
                 return result;
             }
 
@@ -15216,7 +15534,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_121()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_121()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_128()));
                 return result;
             }
 
@@ -15224,7 +15542,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_122()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_122()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_129()));
                 return result;
             }
 
@@ -15232,7 +15550,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_123()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_123()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_130()));
                 return result;
             }
 
@@ -15240,7 +15558,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_124()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_124()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_131()));
                 return result;
             }
 
@@ -15248,7 +15566,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_125()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_125()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_132()));
                 return result;
             }
 
@@ -15256,7 +15574,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_126()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_126()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_133()));
                 return result;
             }
 
@@ -15264,7 +15582,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_127()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_127()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_134()));
                 return result;
             }
 
@@ -15272,7 +15590,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_128()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_128()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_135()));
                 return result;
             }
 
@@ -15280,7 +15598,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_129()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_129()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_136()));
                 return result;
             }
 
@@ -15288,7 +15606,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_130()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_130()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_137()));
                 return result;
             }
 
@@ -15296,7 +15614,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_131()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_131()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_138()));
                 return result;
             }
 
@@ -15304,7 +15622,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_132()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_132()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_139()));
                 return result;
             }
 
@@ -15312,7 +15630,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_133()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_133()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_140()));
                 return result;
             }
 
@@ -15320,7 +15638,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_134()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_134()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_141()));
                 return result;
             }
 
@@ -15328,7 +15646,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_135()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_135()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_142()));
                 return result;
             }
 
@@ -15336,7 +15654,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_136()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_136()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_143()));
                 return result;
             }
 
@@ -15344,7 +15662,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_137()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_137()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_144()));
                 return result;
             }
 
@@ -15352,7 +15670,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_138()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_138()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_145()));
                 return result;
             }
 
@@ -15360,7 +15678,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_139()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_139()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_146()));
                 return result;
             }
 
@@ -15368,7 +15686,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_140()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_140()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_147()));
                 return result;
             }
 
@@ -15376,7 +15694,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_141()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_141()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_148()));
                 return result;
             }
 
@@ -15384,7 +15702,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_142()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_142()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_149()));
                 return result;
             }
 
@@ -15392,7 +15710,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_143()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_143()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_150()));
                 return result;
             }
 
@@ -15400,7 +15718,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_144()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_144()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_151()));
                 return result;
             }
 
@@ -15408,7 +15726,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_145()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_145()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_152()));
                 return result;
             }
 
@@ -15416,7 +15734,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_146()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_146()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_153()));
                 return result;
             }
 
@@ -15424,7 +15742,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_147()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_147()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_154()));
                 return result;
             }
 
@@ -15432,7 +15750,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_148()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_148()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_155()));
                 return result;
             }
 
@@ -15440,7 +15758,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_149()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_149()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_156()));
                 return result;
             }
 
@@ -15448,7 +15766,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_150()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_150()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_157()));
                 return result;
             }
 
@@ -15456,7 +15774,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_151()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_151()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_158()));
                 return result;
             }
 
@@ -15464,7 +15782,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_152()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_152()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_159()));
                 return result;
             }
 
@@ -15472,7 +15790,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_153()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_153()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_160()));
                 return result;
             }
 
@@ -15480,7 +15798,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_154()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_154()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_161()));
                 return result;
             }
 
@@ -15488,7 +15806,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_155()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_155()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_162()));
                 return result;
             }
 
@@ -15496,7 +15814,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_156()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_156()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_163()));
                 return result;
             }
 
@@ -15504,7 +15822,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_157()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_157()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_164()));
                 return result;
             }
 
@@ -15512,7 +15830,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_158()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_158()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_165()));
                 return result;
             }
 
@@ -15520,7 +15838,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_159()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_159()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_166()));
                 return result;
             }
 
@@ -15528,7 +15846,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_160()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_160()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_167()));
                 return result;
             }
 
@@ -15536,7 +15854,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_161()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_161()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_168()));
                 return result;
             }
 
@@ -15544,7 +15862,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_162()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_162()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_169()));
                 return result;
             }
 
@@ -15552,7 +15870,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_163()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_163()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_170()));
                 return result;
             }
 
@@ -15560,7 +15878,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_164()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_164()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_171()));
                 return result;
             }
 
@@ -15568,7 +15886,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_165()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_165()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_172()));
                 return result;
             }
 
@@ -15576,7 +15894,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_166()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_166()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_173()));
                 return result;
             }
 
@@ -15584,7 +15902,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_167()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_167()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_174()));
                 return result;
             }
 
@@ -15592,7 +15910,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_168()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_168()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_175()));
                 return result;
             }
 
@@ -15600,7 +15918,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_169()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_169()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_176()));
                 return result;
             }
 
@@ -15608,7 +15926,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_170()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_170()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_177()));
                 return result;
             }
 
@@ -15616,7 +15934,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_171()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_171()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_178()));
                 return result;
             }
 
@@ -15624,7 +15942,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_172()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_172()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_179()));
                 return result;
             }
 
@@ -15632,7 +15950,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_173()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_173()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_180()));
                 return result;
             }
 
@@ -15640,7 +15958,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_174()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_174()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_181()));
                 return result;
             }
 
@@ -15648,7 +15966,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_175()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_175()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_182()));
                 return result;
             }
 
@@ -15656,7 +15974,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_176()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_176()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_183()));
                 return result;
             }
 
@@ -15664,7 +15982,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_177()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_177()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_184()));
                 return result;
             }
 
@@ -15672,7 +15990,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_178()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_178()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_185()));
                 return result;
             }
 
@@ -15680,7 +15998,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_179()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_179()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_186()));
                 return result;
             }
 
@@ -15688,7 +16006,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_180()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_180()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_187()));
                 return result;
             }
 
@@ -15696,7 +16014,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_181()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_181()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_188()));
                 return result;
             }
 
@@ -15704,7 +16022,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_182()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_182()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_189()));
                 return result;
             }
 
@@ -15712,7 +16030,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_183()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_183()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_190()));
                 return result;
             }
 
@@ -15720,7 +16038,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_184()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_184()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_191()));
                 return result;
             }
 
@@ -15728,7 +16046,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_185()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_185()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_192()));
                 return result;
             }
 
@@ -15736,7 +16054,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_186()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_186()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_193()));
                 return result;
             }
 
@@ -15744,7 +16062,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_187()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_187()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_194()));
                 return result;
             }
 
@@ -15752,7 +16070,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_188()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_188()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_195()));
                 return result;
             }
 
@@ -15760,7 +16078,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_189()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_189()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_196()));
                 return result;
             }
 
@@ -15768,7 +16086,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_190()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_190()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_197()));
                 return result;
             }
 
@@ -15776,7 +16094,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_191()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_191()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_198()));
                 return result;
             }
 
@@ -15784,7 +16102,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_192()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_192()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_199()));
                 return result;
             }
 
@@ -15792,7 +16110,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_193()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_193()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_200()));
                 return result;
             }
 
@@ -15800,7 +16118,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_194()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_194()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_201()));
                 return result;
             }
 
@@ -15808,7 +16126,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_195()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_195()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_202()));
                 return result;
             }
 
@@ -15816,7 +16134,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_196()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_196()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_203()));
                 return result;
             }
 
@@ -15824,7 +16142,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_197()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_197()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_204()));
                 return result;
             }
 
@@ -15832,7 +16150,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_198()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_198()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_205()));
                 return result;
             }
 
@@ -15840,7 +16158,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_199()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_199()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_206()));
                 return result;
             }
 
@@ -15848,7 +16166,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_200()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_200()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_207()));
                 return result;
             }
 
@@ -15856,7 +16174,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_201()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_201()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_208()));
                 return result;
             }
 
@@ -15864,7 +16182,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_202()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_202()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_209()));
                 return result;
             }
 
@@ -15872,7 +16190,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_203()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_203()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_210()));
                 return result;
             }
 
@@ -15880,7 +16198,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_204()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_204()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_211()));
                 return result;
             }
 
@@ -15888,7 +16206,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_205()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_205()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_212()));
                 return result;
             }
 
@@ -15896,7 +16214,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_206()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_206()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_213()));
                 return result;
             }
 
@@ -15904,7 +16222,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_207()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_207()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_214()));
                 return result;
             }
 
@@ -15912,7 +16230,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_208()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_208()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_215()));
                 return result;
             }
 
@@ -15920,7 +16238,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_209()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_209()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_216()));
                 return result;
             }
 
@@ -15928,7 +16246,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_210()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_210()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_217()));
                 return result;
             }
 
@@ -15936,7 +16254,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_211()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_211()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_218()));
                 return result;
             }
 
@@ -15944,7 +16262,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_212()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_212()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_219()));
                 return result;
             }
 
@@ -15952,7 +16270,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_213()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_213()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_220()));
                 return result;
             }
 
@@ -15960,7 +16278,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_214()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_214()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_221()));
                 return result;
             }
 
@@ -15968,7 +16286,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_215()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_215()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_222()));
                 return result;
             }
 
@@ -15976,7 +16294,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_216()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_216()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_223()));
                 return result;
             }
 
@@ -15984,7 +16302,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_217()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_217()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_224()));
                 return result;
             }
 
@@ -15992,7 +16310,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_218()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_218()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_225()));
                 return result;
             }
 
@@ -16000,7 +16318,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_219()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_219()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_226()));
                 return result;
             }
 
@@ -16008,7 +16326,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_220()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_220()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_227()));
                 return result;
             }
 
@@ -16016,7 +16334,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_221()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_221()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_228()));
                 return result;
             }
 
@@ -16024,7 +16342,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_222()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_222()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_229()));
                 return result;
             }
 
@@ -16032,7 +16350,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_223()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_223()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_230()));
                 return result;
             }
 
@@ -16040,7 +16358,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_224()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_224()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_231()));
                 return result;
             }
 
@@ -16048,7 +16366,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_225()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_225()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_232()));
                 return result;
             }
 
@@ -16056,7 +16374,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_226()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_226()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_233()));
                 return result;
             }
 
@@ -16064,7 +16382,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_227()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_227()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_234()));
                 return result;
             }
 
@@ -16072,7 +16390,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_228()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_228()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_235()));
                 return result;
             }
 
@@ -16080,7 +16398,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_229()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_229()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_236()));
                 return result;
             }
 
@@ -16088,7 +16406,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_230()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_230()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_237()));
                 return result;
             }
 
@@ -16096,7 +16414,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_231()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_231()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_238()));
                 return result;
             }
 
@@ -16104,7 +16422,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_232()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_232()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_239()));
                 return result;
             }
 
@@ -16112,7 +16430,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_233()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_233()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_240()));
                 return result;
             }
 
@@ -16120,7 +16438,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_234()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_234()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_241()));
                 return result;
             }
 
@@ -16128,7 +16446,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_235()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_235()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_242()));
                 return result;
             }
 
@@ -16136,7 +16454,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_236()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_236()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_243()));
                 return result;
             }
 
@@ -16144,7 +16462,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_237()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_237()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_244()));
                 return result;
             }
 
@@ -16152,7 +16470,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_238()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_238()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_245()));
                 return result;
             }
 
@@ -16160,7 +16478,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_239()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_239()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_246()));
                 return result;
             }
 
@@ -16168,7 +16486,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_240()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_240()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_247()));
                 return result;
             }
 
@@ -16176,7 +16494,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_241()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_241()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_248()));
                 return result;
             }
 
@@ -16184,7 +16502,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_242()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_242()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_249()));
                 return result;
             }
 
@@ -16192,7 +16510,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_243()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_243()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_250()));
                 return result;
             }
 
@@ -16200,7 +16518,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_244()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_244()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_251()));
                 return result;
             }
 
@@ -16208,7 +16526,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_245()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_245()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_252()));
                 return result;
             }
 
@@ -16216,7 +16534,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_246()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_246()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_253()));
                 return result;
             }
 
@@ -16224,7 +16542,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_247()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_247()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_254()));
                 return result;
             }
 
@@ -16232,7 +16550,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_248()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_248()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_255()));
                 return result;
             }
 
@@ -16240,7 +16558,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_249()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_249()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_256()));
                 return result;
             }
 
@@ -16248,7 +16566,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_250()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_250()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_257()));
                 return result;
             }
 
@@ -16256,7 +16574,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_251()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_251()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_258()));
                 return result;
             }
 
@@ -16264,7 +16582,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_252()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_252()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_259()));
                 return result;
             }
 
@@ -16272,7 +16590,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_253()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_253()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_260()));
                 return result;
             }
 
@@ -16280,7 +16598,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_254()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_254()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_261()));
                 return result;
             }
 
@@ -16288,7 +16606,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_255()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_255()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_262()));
                 return result;
             }
 
@@ -16296,7 +16614,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_256()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_256()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_263()));
                 return result;
             }
 
@@ -16304,7 +16622,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_257()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_257()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_264()));
                 return result;
             }
 
@@ -16312,7 +16630,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_258()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_258()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_265()));
                 return result;
             }
 
@@ -16320,7 +16638,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_259()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_259()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_266()));
                 return result;
             }
 
@@ -16328,7 +16646,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_260()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_260()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_267()));
                 return result;
             }
 
@@ -16336,7 +16654,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_261()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_261()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_268()));
                 return result;
             }
 
@@ -16344,7 +16662,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_262()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_262()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_269()));
                 return result;
             }
 
@@ -16352,7 +16670,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_263()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_263()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_270()));
                 return result;
             }
 
@@ -16360,7 +16678,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_264()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_264()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_271()));
                 return result;
             }
 
@@ -16368,7 +16686,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_265()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_265()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_272()));
                 return result;
             }
 
@@ -16376,7 +16694,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_266()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_266()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_273()));
                 return result;
             }
 
@@ -16384,7 +16702,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_267()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_267()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_274()));
                 return result;
             }
 
@@ -16392,7 +16710,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_268()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_268()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_275()));
                 return result;
             }
 
@@ -16400,7 +16718,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_269()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_269()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_276()));
                 return result;
             }
 
@@ -16408,7 +16726,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_270()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_270()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_277()));
                 return result;
             }
 
@@ -16416,7 +16734,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_271()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_271()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_278()));
                 return result;
             }
 
@@ -16424,7 +16742,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_272()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_272()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_279()));
                 return result;
             }
 
@@ -16432,7 +16750,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_273()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_273()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_280()));
                 return result;
             }
 
@@ -16440,7 +16758,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_274()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_274()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_281()));
                 return result;
             }
 
@@ -16448,7 +16766,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_275()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_275()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_282()));
                 return result;
             }
 
@@ -16456,7 +16774,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_276()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_276()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_283()));
                 return result;
             }
 
@@ -16464,7 +16782,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_277()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_277()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_284()));
                 return result;
             }
 
@@ -16472,7 +16790,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_278()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_278()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_285()));
                 return result;
             }
 
@@ -16480,7 +16798,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_279()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_279()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_286()));
                 return result;
             }
 
@@ -16488,7 +16806,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_280()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_280()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_287()));
                 return result;
             }
 
@@ -16496,7 +16814,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_281()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_281()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_288()));
                 return result;
             }
 
@@ -16504,7 +16822,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_282()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_282()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_289()));
                 return result;
             }
 
@@ -16512,7 +16830,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_283()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_283()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_290()));
                 return result;
             }
 
@@ -16520,7 +16838,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_284()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_284()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_291()));
                 return result;
             }
 
@@ -16528,7 +16846,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_285()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_285()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_292()));
                 return result;
             }
 
@@ -16536,7 +16854,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_286()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_286()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_293()));
                 return result;
             }
 
@@ -16544,7 +16862,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_287()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_287()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_294()));
                 return result;
             }
 
@@ -16552,7 +16870,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_288()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_288()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_295()));
                 return result;
             }
 
@@ -16560,7 +16878,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_289()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_289()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_296()));
                 return result;
             }
 
@@ -16568,7 +16886,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_290()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_290()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_297()));
                 return result;
             }
 
@@ -16576,7 +16894,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_291()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_291()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_298()));
                 return result;
             }
 
@@ -16584,7 +16902,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_292()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_292()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_299()));
                 return result;
             }
 
@@ -16592,7 +16910,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_293()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_293()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_300()));
                 return result;
             }
 
@@ -16600,7 +16918,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_294()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_294()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_301()));
                 return result;
             }
 
@@ -16608,7 +16926,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_295()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_295()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_302()));
                 return result;
             }
 
@@ -16616,7 +16934,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_296()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_296()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_303()));
                 return result;
             }
 
@@ -16624,7 +16942,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_297()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_297()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_304()));
                 return result;
             }
 
@@ -16632,7 +16950,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_298()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_298()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_305()));
                 return result;
             }
 
@@ -16640,7 +16958,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_299()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_299()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_306()));
                 return result;
             }
 
@@ -16648,7 +16966,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_300()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_300()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_307()));
                 return result;
             }
 
@@ -16656,7 +16974,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_301()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_301()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_308()));
                 return result;
             }
 
@@ -16664,7 +16982,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_302()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_302()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_309()));
                 return result;
             }
 
@@ -16672,7 +16990,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_303()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_303()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_310()));
                 return result;
             }
 
@@ -16680,7 +16998,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_304()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_304()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_311()));
                 return result;
             }
 
@@ -16688,7 +17006,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_305()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_305()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_312()));
                 return result;
             }
 
@@ -16696,7 +17014,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_306()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_306()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_313()));
                 return result;
             }
 
@@ -16704,7 +17022,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_307()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_307()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_314()));
                 return result;
             }
 
@@ -16712,7 +17030,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_308()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_308()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_315()));
                 return result;
             }
 
@@ -16720,7 +17038,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_309()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_309()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_316()));
                 return result;
             }
 
@@ -16728,7 +17046,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_310()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_310()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_317()));
                 return result;
             }
 
@@ -16736,7 +17054,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_311()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_311()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_318()));
                 return result;
             }
 
@@ -16744,7 +17062,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_312()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_312()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_319()));
                 return result;
             }
 
@@ -16752,7 +17070,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_313()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_313()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_320()));
                 return result;
             }
 
@@ -16760,7 +17078,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_314()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_314()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_321()));
                 return result;
             }
 
@@ -16768,7 +17086,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_315()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_315()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_322()));
                 return result;
             }
 
@@ -16776,7 +17094,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_316()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_316()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_323()));
                 return result;
             }
 
@@ -16784,7 +17102,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_317()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_317()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_324()));
                 return result;
             }
 
@@ -16792,7 +17110,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_318()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_318()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_325()));
                 return result;
             }
 
@@ -16800,7 +17118,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_319()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_319()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_326()));
                 return result;
             }
 
@@ -16808,7 +17126,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_320()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_320()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_327()));
                 return result;
             }
 
@@ -16816,7 +17134,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_321()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_321()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_328()));
                 return result;
             }
 
@@ -16824,7 +17142,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_322()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_322()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_329()));
                 return result;
             }
 
@@ -16832,7 +17150,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_323()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_323()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_330()));
                 return result;
             }
 
@@ -16840,7 +17158,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_324()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_324()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_331()));
                 return result;
             }
 
@@ -16848,7 +17166,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_325()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_325()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_332()));
                 return result;
             }
 
@@ -16856,7 +17174,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_326()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_326()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_333()));
                 return result;
             }
 
@@ -16864,7 +17182,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_327()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_327()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_334()));
                 return result;
             }
 
@@ -16872,7 +17190,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_328()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_328()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_335()));
                 return result;
             }
 
@@ -16880,7 +17198,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_329()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_329()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_336()));
                 return result;
             }
 
@@ -16888,7 +17206,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_330()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_330()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_337()));
                 return result;
             }
 
@@ -16896,7 +17214,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_331()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_331()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_338()));
                 return result;
             }
 
@@ -16904,7 +17222,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_332()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_332()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_339()));
                 return result;
             }
 
@@ -16912,7 +17230,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_333()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_333()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_340()));
                 return result;
             }
 
@@ -16920,7 +17238,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_334()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_334()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_341()));
                 return result;
             }
 
@@ -16928,7 +17246,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_335()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_335()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_342()));
                 return result;
             }
 
@@ -16936,7 +17254,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_336()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_336()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_343()));
                 return result;
             }
 
@@ -16944,7 +17262,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_337()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_337()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_344()));
                 return result;
             }
 
@@ -16952,7 +17270,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_338()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_338()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_345()));
                 return result;
             }
 
@@ -16960,7 +17278,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_339()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_339()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_346()));
                 return result;
             }
 
@@ -16968,7 +17286,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_340()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_340()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_347()));
                 return result;
             }
 
@@ -16976,7 +17294,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_341()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_341()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_348()));
                 return result;
             }
 
@@ -16984,7 +17302,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_342()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_342()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_349()));
                 return result;
             }
 
@@ -16992,7 +17310,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_343()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_343()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_350()));
                 return result;
             }
 
@@ -17000,7 +17318,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_344()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_344()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_351()));
                 return result;
             }
 
@@ -17008,7 +17326,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_345()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_345()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_352()));
                 return result;
             }
 
@@ -17016,7 +17334,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_346()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_346()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_353()));
                 return result;
             }
 
@@ -17024,7 +17342,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_347()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_347()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_354()));
                 return result;
             }
 
@@ -17032,7 +17350,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_348()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_348()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_355()));
                 return result;
             }
 
@@ -17040,7 +17358,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_349()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_349()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_356()));
                 return result;
             }
 
@@ -17048,7 +17366,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_350()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_350()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_357()));
                 return result;
             }
 
@@ -17056,7 +17374,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_351()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_351()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_358()));
                 return result;
             }
 
@@ -17064,7 +17382,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_352()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_352()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_359()));
                 return result;
             }
 
@@ -17072,7 +17390,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_353()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_353()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_360()));
                 return result;
             }
 
@@ -17080,7 +17398,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_354()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_354()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_361()));
                 return result;
             }
 
@@ -17088,7 +17406,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_355()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_355()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_362()));
                 return result;
             }
 
@@ -17096,7 +17414,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_356()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_356()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_363()));
                 return result;
             }
 
@@ -17104,7 +17422,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_357()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_357()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_364()));
                 return result;
             }
 
@@ -17112,7 +17430,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_358()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_358()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_365()));
                 return result;
             }
 
@@ -17120,7 +17438,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_359()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_359()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_366()));
                 return result;
             }
 
@@ -17128,7 +17446,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_360()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_360()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_367()));
                 return result;
             }
 
@@ -17136,7 +17454,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_361()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_361()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_368()));
                 return result;
             }
 
@@ -17144,7 +17462,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_362()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_362()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_369()));
                 return result;
             }
 
@@ -17152,7 +17470,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_363()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_363()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_370()));
                 return result;
             }
 
@@ -17160,7 +17478,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_364()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_364()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_371()));
                 return result;
             }
 
@@ -17168,7 +17486,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_365()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_365()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_372()));
                 return result;
             }
 
@@ -17176,7 +17494,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_366()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_366()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_373()));
                 return result;
             }
 
@@ -17184,7 +17502,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_367()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_367()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_374()));
                 return result;
             }
 
@@ -17192,7 +17510,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_368()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_368()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_375()));
                 return result;
             }
 
@@ -17200,7 +17518,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_369()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_369()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_376()));
                 return result;
             }
 
@@ -17208,7 +17526,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_370()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_370()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_377()));
                 return result;
             }
 
@@ -17216,7 +17534,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_371()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_371()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_378()));
                 return result;
             }
 
@@ -17224,7 +17542,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_372()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_372()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_379()));
                 return result;
             }
 
@@ -17232,7 +17550,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_373()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_373()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_380()));
                 return result;
             }
 
@@ -17240,7 +17558,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_374()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_374()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_381()));
                 return result;
             }
 
@@ -17248,7 +17566,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_375()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_375()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_382()));
                 return result;
             }
 
@@ -17256,7 +17574,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_376()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_376()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_383()));
                 return result;
             }
 
@@ -17264,7 +17582,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_377()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_377()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_384()));
                 return result;
             }
 
@@ -17272,7 +17590,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_378()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_378()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_385()));
                 return result;
             }
 
@@ -17280,7 +17598,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_379()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_379()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_386()));
                 return result;
             }
 
@@ -17288,7 +17606,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_380()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_380()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_387()));
                 return result;
             }
 
@@ -17296,7 +17614,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_381()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_381()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_388()));
                 return result;
             }
 
@@ -17304,7 +17622,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_382()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_382()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_389()));
                 return result;
             }
 
@@ -17312,7 +17630,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_383()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_383()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_390()));
                 return result;
             }
 
@@ -17320,7 +17638,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_384()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_384()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_391()));
                 return result;
             }
 
@@ -17328,7 +17646,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_385()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_385()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_392()));
                 return result;
             }
 
@@ -17336,7 +17654,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_386()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_386()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_393()));
                 return result;
             }
 
@@ -17344,7 +17662,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_387()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_387()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_394()));
                 return result;
             }
 
@@ -17352,7 +17670,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_388()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_388()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_395()));
                 return result;
             }
 
@@ -17360,7 +17678,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_389()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_389()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_396()));
                 return result;
             }
 
@@ -17368,7 +17686,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_390()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_390()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_397()));
                 return result;
             }
 
@@ -17376,7 +17694,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_391()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_391()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_398()));
                 return result;
             }
 
@@ -17384,7 +17702,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_392()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_392()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_399()));
                 return result;
             }
 
@@ -17392,7 +17710,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_393()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_393()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_400()));
                 return result;
             }
 
@@ -17400,7 +17718,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_394()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_394()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_401()));
                 return result;
             }
 
@@ -17408,7 +17726,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_395()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_395()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_402()));
                 return result;
             }
 
@@ -17416,7 +17734,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_396()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_396()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_403()));
                 return result;
             }
 
@@ -17424,7 +17742,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_397()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_397()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_404()));
                 return result;
             }
 
@@ -17432,7 +17750,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_398()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_398()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_405()));
                 return result;
             }
 
@@ -17440,7 +17758,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_399()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_399()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_406()));
                 return result;
             }
 
@@ -17448,7 +17766,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_400()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_400()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_407()));
                 return result;
             }
 
@@ -17456,7 +17774,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_401()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_401()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_408()));
                 return result;
             }
 
@@ -17464,7 +17782,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_402()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_402()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_409()));
                 return result;
             }
 
@@ -17472,7 +17790,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_403()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_403()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_410()));
                 return result;
             }
 
@@ -17480,7 +17798,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_404()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_404()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_411()));
                 return result;
             }
 
@@ -17488,7 +17806,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_405()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_405()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_412()));
                 return result;
             }
 
@@ -17496,7 +17814,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_406()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_406()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_413()));
                 return result;
             }
 
@@ -17504,7 +17822,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_407()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_407()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_414()));
                 return result;
             }
 
@@ -17512,7 +17830,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_408()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_408()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_415()));
                 return result;
             }
 
@@ -17520,7 +17838,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_409()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_409()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_416()));
                 return result;
             }
 
@@ -17528,7 +17846,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_410()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_410()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_417()));
                 return result;
             }
 
@@ -17536,7 +17854,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_411()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_411()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_418()));
                 return result;
             }
 
@@ -17544,7 +17862,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_412()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_412()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_419()));
                 return result;
             }
 
@@ -17552,7 +17870,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_413()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_413()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_420()));
                 return result;
             }
 
@@ -17560,7 +17878,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_414()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_414()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_421()));
                 return result;
             }
 
@@ -17568,7 +17886,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_415()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_415()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_422()));
                 return result;
             }
 
@@ -17576,7 +17894,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_416()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_416()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_423()));
                 return result;
             }
 
@@ -17584,7 +17902,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_417()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_417()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_424()));
                 return result;
             }
 
@@ -17592,7 +17910,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_418()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_418()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_425()));
                 return result;
             }
 
@@ -17600,7 +17918,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_419()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_419()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_426()));
                 return result;
             }
 
@@ -17608,7 +17926,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_420()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_420()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_427()));
                 return result;
             }
 
@@ -17616,7 +17934,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_421()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_421()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_428()));
                 return result;
             }
 
@@ -17624,7 +17942,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_422()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_422()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_429()));
                 return result;
             }
 
@@ -17632,7 +17950,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_423()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_423()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_430()));
                 return result;
             }
 
@@ -17640,7 +17958,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_424()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_424()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_431()));
                 return result;
             }
 
@@ -17648,7 +17966,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_425()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_425()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_432()));
                 return result;
             }
 
@@ -17656,7 +17974,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_426()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_426()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_433()));
                 return result;
             }
 
@@ -17664,7 +17982,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_427()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_427()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_434()));
                 return result;
             }
 
@@ -17672,7 +17990,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_428()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_428()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_435()));
                 return result;
             }
 
@@ -17680,7 +17998,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_429()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_429()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_436()));
                 return result;
             }
 
@@ -17688,7 +18006,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_430()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_430()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_437()));
                 return result;
             }
 
@@ -17696,7 +18014,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_431()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_431()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_438()));
                 return result;
             }
 
@@ -17704,7 +18022,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_432()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_432()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_439()));
                 return result;
             }
 
@@ -17712,7 +18030,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_433()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_433()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_440()));
                 return result;
             }
 
@@ -17720,7 +18038,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_434()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_434()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_441()));
                 return result;
             }
 
@@ -17728,7 +18046,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_435()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_435()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_442()));
                 return result;
             }
 
@@ -17736,7 +18054,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_436()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_436()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_443()));
                 return result;
             }
 
@@ -17744,7 +18062,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_437()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_437()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_444()));
                 return result;
             }
 
@@ -17752,7 +18070,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_438()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_438()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_445()));
                 return result;
             }
 
@@ -17760,7 +18078,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_439()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_439()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_446()));
                 return result;
             }
 
@@ -17768,7 +18086,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_440()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_440()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_447()));
                 return result;
             }
 
@@ -17776,7 +18094,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_441()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_441()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_448()));
                 return result;
             }
 
@@ -17784,7 +18102,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_442()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_442()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_449()));
                 return result;
             }
 
@@ -17792,7 +18110,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_443()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_443()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_450()));
                 return result;
             }
 
@@ -17800,7 +18118,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_444()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_444()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_451()));
                 return result;
             }
 
@@ -17808,7 +18126,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_445()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_445()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_452()));
                 return result;
             }
 
@@ -17816,7 +18134,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_446()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_446()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_453()));
                 return result;
             }
 
@@ -17824,7 +18142,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_447()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_447()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_454()));
                 return result;
             }
 
@@ -17832,7 +18150,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_448()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_448()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_455()));
                 return result;
             }
 
@@ -17840,7 +18158,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_449()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_449()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_456()));
                 return result;
             }
 
@@ -17848,7 +18166,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_450()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_450()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_457()));
                 return result;
             }
 
@@ -17856,7 +18174,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_451()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_451()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_458()));
                 return result;
             }
 
@@ -17864,7 +18182,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_452()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_452()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_459()));
                 return result;
             }
 
@@ -17872,7 +18190,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_453()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_453()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_460()));
                 return result;
             }
 
@@ -17880,7 +18198,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_454()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_454()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_461()));
                 return result;
             }
 
@@ -17888,7 +18206,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_455()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_455()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_462()));
                 return result;
             }
 
@@ -17896,7 +18214,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_456()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_456()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_463()));
                 return result;
             }
 
@@ -17904,7 +18222,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_457()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_457()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_464()));
                 return result;
             }
 
@@ -17912,7 +18230,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_458()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_458()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_465()));
                 return result;
             }
 
@@ -17920,7 +18238,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_459()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_459()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_466()));
                 return result;
             }
 
@@ -17928,7 +18246,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_460()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_460()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_467()));
                 return result;
             }
 
@@ -17936,7 +18254,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_461()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_461()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_468()));
                 return result;
             }
 
@@ -17944,7 +18262,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_462()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_462()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_469()));
                 return result;
             }
 
@@ -17952,7 +18270,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_463()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_463()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_470()));
                 return result;
             }
 
@@ -17960,7 +18278,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_464()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_464()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_471()));
                 return result;
             }
 
@@ -17968,7 +18286,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_465()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_465()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_472()));
                 return result;
             }
 
@@ -17976,7 +18294,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_466()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_466()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_473()));
                 return result;
             }
 
@@ -17984,7 +18302,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_467()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_467()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_474()));
                 return result;
             }
 
@@ -17992,7 +18310,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_468()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_468()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_475()));
                 return result;
             }
 
@@ -18000,7 +18318,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_469()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_469()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_476()));
                 return result;
             }
 
@@ -18008,7 +18326,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_470()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_470()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_477()));
                 return result;
             }
 
@@ -18016,7 +18334,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_471()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_471()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_478()));
                 return result;
             }
 
@@ -18024,7 +18342,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_472()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_472()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_479()));
                 return result;
             }
 
@@ -18032,7 +18350,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_473()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_473()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_480()));
                 return result;
             }
 
@@ -18040,7 +18358,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_474()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_474()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_481()));
                 return result;
             }
 
@@ -18048,7 +18366,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_475()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_475()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_482()));
                 return result;
             }
 
@@ -18056,7 +18374,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_476()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_476()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_483()));
                 return result;
             }
 
@@ -18064,7 +18382,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_477()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_477()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_484()));
                 return result;
             }
 
@@ -18072,7 +18390,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_478()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_478()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_485()));
                 return result;
             }
 
@@ -18080,7 +18398,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_479()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_479()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_486()));
                 return result;
             }
 
@@ -18088,7 +18406,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_480()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_480()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_487()));
                 return result;
             }
 
@@ -18096,7 +18414,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_481()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_481()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_488()));
                 return result;
             }
 
@@ -18104,7 +18422,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_482()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_482()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_489()));
                 return result;
             }
 
@@ -18112,7 +18430,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_483()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_483()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_490()));
                 return result;
             }
 
@@ -18120,7 +18438,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_484()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_484()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_491()));
                 return result;
             }
 
@@ -18128,7 +18446,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_485()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_485()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_492()));
                 return result;
             }
 
@@ -18136,7 +18454,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_486()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_486()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_493()));
                 return result;
             }
 
@@ -18144,7 +18462,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_487()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_487()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_494()));
                 return result;
             }
 
@@ -18152,7 +18470,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_488()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_488()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_495()));
                 return result;
             }
 
@@ -18160,7 +18478,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_489()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_489()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_496()));
                 return result;
             }
 
@@ -18168,7 +18486,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_490()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_490()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_497()));
                 return result;
             }
 
@@ -18176,7 +18494,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_491()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_491()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_498()));
                 return result;
             }
 
@@ -18184,7 +18502,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_492()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_492()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_499()));
                 return result;
             }
 
@@ -18192,7 +18510,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_493()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_493()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_500()));
                 return result;
             }
 
@@ -18200,7 +18518,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_494()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_494()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_501()));
                 return result;
             }
 
@@ -18208,7 +18526,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_495()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_495()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_502()));
                 return result;
             }
 
@@ -18216,7 +18534,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_496()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_496()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_503()));
                 return result;
             }
 
@@ -18224,7 +18542,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_497()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_497()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_504()));
                 return result;
             }
 
@@ -18232,7 +18550,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_498()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_498()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_505()));
                 return result;
             }
 
@@ -18240,7 +18558,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_499()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_499()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_506()));
                 return result;
             }
 
@@ -18248,7 +18566,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_500()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_500()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_507()));
                 return result;
             }
 
@@ -18256,7 +18574,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_501()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_501()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_508()));
                 return result;
             }
 
@@ -18264,7 +18582,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_502()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_502()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_509()));
                 return result;
             }
 
@@ -18272,7 +18590,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_503()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_503()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_510()));
                 return result;
             }
 
@@ -18280,7 +18598,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_504()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_504()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_511()));
                 return result;
             }
 
@@ -18288,7 +18606,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_505()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_505()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_512()));
                 return result;
             }
 
@@ -18296,7 +18614,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_506()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_506()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_513()));
                 return result;
             }
 
@@ -18304,7 +18622,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_507()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_507()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_514()));
                 return result;
             }
 
@@ -18312,7 +18630,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_508()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_508()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_515()));
                 return result;
             }
 
@@ -18320,7 +18638,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_509()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_509()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_516()));
                 return result;
             }
 
@@ -18328,7 +18646,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_510()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_510()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_517()));
                 return result;
             }
 
@@ -18336,7 +18654,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_511()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_511()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_518()));
                 return result;
             }
 
@@ -18344,7 +18662,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_512()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_512()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_519()));
                 return result;
             }
 
@@ -18352,7 +18670,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_513()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_513()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_520()));
                 return result;
             }
 
@@ -18360,7 +18678,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_514()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_514()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_521()));
                 return result;
             }
 
@@ -18368,7 +18686,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_515()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_515()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_522()));
                 return result;
             }
 
@@ -18376,7 +18694,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_516()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_516()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_523()));
                 return result;
             }
 
@@ -18384,7 +18702,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_517()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_517()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_524()));
                 return result;
             }
 
@@ -18392,7 +18710,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_518()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_518()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_525()));
                 return result;
             }
 
@@ -18400,7 +18718,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_519()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_519()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_526()));
                 return result;
             }
 
@@ -18408,7 +18726,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_520()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_520()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_527()));
                 return result;
             }
 
@@ -18416,7 +18734,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_521()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_521()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_528()));
                 return result;
             }
 
@@ -18424,7 +18742,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_522()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_522()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_529()));
                 return result;
             }
 
@@ -18432,7 +18750,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_523()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_523()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_530()));
                 return result;
             }
 
@@ -18440,7 +18758,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_524()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_524()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_531()));
                 return result;
             }
 
@@ -18448,7 +18766,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_525()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_525()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_532()));
                 return result;
             }
 
@@ -18456,7 +18774,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_526()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_526()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_533()));
                 return result;
             }
 
@@ -18464,7 +18782,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_527()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_527()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_534()));
                 return result;
             }
 
@@ -18472,7 +18790,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_528()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_528()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_535()));
                 return result;
             }
 
@@ -18480,7 +18798,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_529()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_529()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_536()));
                 return result;
             }
 
@@ -18488,7 +18806,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_530()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_530()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_537()));
                 return result;
             }
 
@@ -18496,7 +18814,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_531()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_531()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_538()));
                 return result;
             }
 
@@ -18504,7 +18822,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_532()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_532()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_539()));
                 return result;
             }
 
@@ -18512,7 +18830,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_533()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_533()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_540()));
                 return result;
             }
 
@@ -18520,7 +18838,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_534()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_534()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_541()));
                 return result;
             }
 
@@ -18528,7 +18846,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_535()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_535()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_542()));
                 return result;
             }
 
@@ -18536,7 +18854,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_536()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_536()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_543()));
                 return result;
             }
 
@@ -18544,7 +18862,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_537()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_537()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_544()));
                 return result;
             }
 
@@ -18552,7 +18870,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_538()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_538()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_545()));
                 return result;
             }
 
@@ -18560,7 +18878,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_539()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_539()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_546()));
                 return result;
             }
 
@@ -18568,7 +18886,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_540()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_540()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_547()));
                 return result;
             }
 
@@ -18576,7 +18894,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_541()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_541()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_548()));
                 return result;
             }
 
@@ -18584,7 +18902,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_542()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_542()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_549()));
                 return result;
             }
 
@@ -18592,7 +18910,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_543()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_543()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_550()));
                 return result;
             }
 
@@ -18600,7 +18918,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_544()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_544()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_551()));
                 return result;
             }
 
@@ -18608,7 +18926,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_545()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_545()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_552()));
                 return result;
             }
 
@@ -18616,7 +18934,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_546()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_546()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_553()));
                 return result;
             }
 
@@ -18624,7 +18942,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_547()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_547()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_554()));
                 return result;
             }
 
@@ -18632,7 +18950,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_548()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_548()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_555()));
                 return result;
             }
 
@@ -18640,7 +18958,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_549()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_549()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_556()));
                 return result;
             }
 
@@ -18648,7 +18966,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_550()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_550()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_557()));
                 return result;
             }
 
@@ -18656,37 +18974,29 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_551()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_551()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_558()));
                 return result;
             }
 
+            // Path 1
+            // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_552()
             {
-                var result = _pathGeometry_552 = _c.CreatePathGeometry(new CompositionPath(Geometry_552()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_559()));
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
-            // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_553()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_553()));
-                result.StartAnimation("Path", PathKeyFrameAnimation_0());
-                var controller = result.TryGetAnimationController("Path");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                var result = _pathGeometry_553 = _c.CreatePathGeometry(new CompositionPath(Geometry_560()));
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_554()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_556()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_561()));
                 result.StartAnimation("Path", PathKeyFrameAnimation_1());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
@@ -18694,32 +19004,31 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_555()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_559()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_564()));
+                result.StartAnimation("Path", PathKeyFrameAnimation_2());
+                var controller = result.TryGetAnimationController("Path");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_556()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_560()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_567()));
                 return result;
             }
 
-            // Transforms: Layer 3 Outlines
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_557()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_561()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_568()));
                 return result;
             }
 
@@ -18728,16 +19037,16 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_558()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_562()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_569()));
                 return result;
             }
 
-            // Transforms: Layer 4 Outlines 2
+            // Transforms: Layer 3 Outlines
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_559()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_563()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_570()));
                 return result;
             }
 
@@ -18746,16 +19055,16 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_560()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_564()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_571()));
                 return result;
             }
 
-            // Transforms: Layer 5 Outlines
+            // Transforms: Layer 4 Outlines 2
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_561()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_565()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_572()));
                 return result;
             }
 
@@ -18764,16 +19073,16 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_562()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_566()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_573()));
                 return result;
             }
 
-            // Transforms: Layer 6 Outlines
+            // Transforms: Layer 5 Outlines
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_563()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_567()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_574()));
                 return result;
             }
 
@@ -18782,7 +19091,16 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_564()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_568()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_575()));
+                return result;
+            }
+
+            // Transforms: Layer 6 Outlines
+            //   Path 1
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_565()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_576()));
                 return result;
             }
 
@@ -18790,10 +19108,10 @@ namespace Compositions
             //   Transforms: Brush Tip
             //     Path 1
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_565()
+            CompositionPathGeometry PathGeometry_566()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_569()));
-                result.StartAnimation("Path", PathKeyFrameAnimation_2());
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_577()));
+                result.StartAnimation("Path", PathKeyFrameAnimation_3());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -18804,22 +19122,9 @@ namespace Compositions
             //   Transforms: Brush Tip 2
             //     Path 1
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_566()
-            {
-                var result = _c.CreatePathGeometry(CompositionPath_579());
-                result.StartAnimation("Path", PathKeyFrameAnimation_3());
-                var controller = result.TryGetAnimationController("Path");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Brush Tip
-            //   Path 1
-            // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_567()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_597()));
+                var result = _c.CreatePathGeometry(CompositionPath_587());
                 result.StartAnimation("Path", PathKeyFrameAnimation_4());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
@@ -18832,8 +19137,21 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_568()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_600()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_605()));
                 result.StartAnimation("Path", PathKeyFrameAnimation_5());
+                var controller = result.TryGetAnimationController("Path");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Brush Tip
+            //   Path 1
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_569()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_608()));
+                result.StartAnimation("Path", PathKeyFrameAnimation_6());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -18843,18 +19161,9 @@ namespace Compositions
             // Layer (Shape): Brush
             //   Path 1
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_569()
-            {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_602()));
-                return result;
-            }
-
-            // Layer (Shape): Brush
-            //   Path 1
-            // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_570()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_603()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_610()));
                 return result;
             }
 
@@ -18863,7 +19172,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_571()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_604()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_611()));
                 return result;
             }
 
@@ -18872,7 +19181,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_572()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_605()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_612()));
                 return result;
             }
 
@@ -18881,7 +19190,7 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_573()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_606()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_613()));
                 return result;
             }
 
@@ -18890,39 +19199,63 @@ namespace Compositions
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_574()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_607()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_614()));
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Layer (Shape): Brush
+            //   Path 1
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_575()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_615()));
+                return result;
+            }
+
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
+            //   Mask 1
+            //     Mask 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_0()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_554(), _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, CompositionPath_555(), _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.5F, CompositionPath_555(), _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, CompositionPath_554(), _cubicBezierEasingFunction_04);
+                result.InsertKeyFrame(0, CompositionPath_001(), LinearEasingFunction());
+                result.InsertKeyFrame(0.666666687F, CompositionPath_001(), LinearEasingFunction());
+                result.InsertKeyFrame(0.716666639F, new CompositionPath(Geometry_002()), CubicBezierEasingFunction_00());
+                result.InsertKeyFrame(0.733333349F, new CompositionPath(Geometry_003()), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_004()), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.766666651F, new CompositionPath(Geometry_005()), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.783333361F, new CompositionPath(Geometry_006()), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.800000012F, new CompositionPath(Geometry_007()), CubicBezierEasingFunction_01());
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_1()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_557(), _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, CompositionPath_558(), _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.5F, CompositionPath_558(), _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, CompositionPath_557(), _cubicBezierEasingFunction_04);
+                result.InsertKeyFrame(0, CompositionPath_562(), _linearEasingFunction);
+                result.InsertKeyFrame(0.166666672F, CompositionPath_563(), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, CompositionPath_563(), _linearEasingFunction);
+                result.InsertKeyFrame(0.983333349F, CompositionPath_562(), _cubicBezierEasingFunction_05);
+                return result;
+            }
+
+            // Path 1
+            //   Path 1.PathGeometry
+            // Path
+            PathKeyFrameAnimation PathKeyFrameAnimation_2()
+            {
+                var result = _c.CreatePathKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0, CompositionPath_565(), _linearEasingFunction);
+                result.InsertKeyFrame(0.166666672F, CompositionPath_566(), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, CompositionPath_566(), _linearEasingFunction);
+                result.InsertKeyFrame(0.983333349F, CompositionPath_565(), _cubicBezierEasingFunction_05);
                 return result;
             }
 
@@ -18931,20 +19264,20 @@ namespace Compositions
             //     Path 1
             //       Path 1.PathGeometry
             // Path
-            PathKeyFrameAnimation PathKeyFrameAnimation_2()
+            PathKeyFrameAnimation PathKeyFrameAnimation_3()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_570(), _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_571()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.200000003F, new CompositionPath(Geometry_572()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_573()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_574()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.400000006F, new CompositionPath(Geometry_575()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_576()), CubicBezierEasingFunction_08());
-                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_577()), CubicBezierEasingFunction_09());
-                result.InsertKeyFrame(0.733333349F, new CompositionPath(Geometry_578()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.983333349F, CompositionPath_570(), CubicBezierEasingFunction_10());
+                result.InsertKeyFrame(0, CompositionPath_578(), _linearEasingFunction);
+                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_579()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.200000003F, new CompositionPath(Geometry_580()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_581()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_582()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.400000006F, new CompositionPath(Geometry_583()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_584()), CubicBezierEasingFunction_09());
+                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_585()), CubicBezierEasingFunction_10());
+                result.InsertKeyFrame(0.733333349F, new CompositionPath(Geometry_586()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.983333349F, CompositionPath_578(), CubicBezierEasingFunction_11());
                 return result;
             }
 
@@ -18953,44 +19286,30 @@ namespace Compositions
             //     Path 1
             //       Path 1.PathGeometry
             // Path
-            PathKeyFrameAnimation PathKeyFrameAnimation_3()
-            {
-                var result = _c.CreatePathKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, _compositionPath_579, _linearEasingFunction);
-                result.InsertKeyFrame(0.200000003F, new CompositionPath(Geometry_580()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.216666669F, new CompositionPath(Geometry_581()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_582()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.266666681F, new CompositionPath(Geometry_583()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.300000012F, new CompositionPath(Geometry_584()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_585()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.349999994F, new CompositionPath(Geometry_586()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.366666675F, new CompositionPath(Geometry_587()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.400000006F, new CompositionPath(Geometry_588()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.433333337F, new CompositionPath(Geometry_589()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.449999988F, new CompositionPath(Geometry_590()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.466666669F, new CompositionPath(Geometry_591()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.483333319F, new CompositionPath(Geometry_592()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_593()), _cubicBezierEasingFunction_08);
-                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_594()), _cubicBezierEasingFunction_09);
-                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_595()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.733333349F, CompositionPath_596(), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.766666651F, CompositionPath_596(), _linearEasingFunction);
-                result.InsertKeyFrame(0.866666675F, _compositionPath_579, _cubicBezierEasingFunction_10);
-                return result;
-            }
-
-            // Transforms: Brush Tip
-            //   Path 1
-            //     Path 1.PathGeometry
-            // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_4()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_598(), _linearEasingFunction);
-                result.InsertKeyFrame(0.783333361F, CompositionPath_598(), _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, CompositionPath_599(), CubicBezierEasingFunction_22());
+                result.InsertKeyFrame(0, _compositionPath_587, _linearEasingFunction);
+                result.InsertKeyFrame(0.200000003F, new CompositionPath(Geometry_588()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.216666669F, new CompositionPath(Geometry_589()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_590()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.266666681F, new CompositionPath(Geometry_591()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.300000012F, new CompositionPath(Geometry_592()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_593()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.349999994F, new CompositionPath(Geometry_594()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.366666675F, new CompositionPath(Geometry_595()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.400000006F, new CompositionPath(Geometry_596()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.433333337F, new CompositionPath(Geometry_597()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.449999988F, new CompositionPath(Geometry_598()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.466666669F, new CompositionPath(Geometry_599()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.483333319F, new CompositionPath(Geometry_600()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_601()), _cubicBezierEasingFunction_09);
+                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_602()), _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_603()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.733333349F, CompositionPath_604(), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.766666651F, CompositionPath_604(), _linearEasingFunction);
+                result.InsertKeyFrame(0.866666675F, _compositionPath_587, _cubicBezierEasingFunction_11);
                 return result;
             }
 
@@ -19002,9 +19321,23 @@ namespace Compositions
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, _compositionPath_599, _linearEasingFunction);
-                result.InsertKeyFrame(0.0666666701F, new CompositionPath(Geometry_601()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.666666687F, _compositionPath_599, _cubicBezierEasingFunction_22);
+                result.InsertKeyFrame(0, CompositionPath_606(), _linearEasingFunction);
+                result.InsertKeyFrame(0.783333361F, CompositionPath_606(), _linearEasingFunction);
+                result.InsertKeyFrame(0.983333349F, CompositionPath_607(), CubicBezierEasingFunction_23());
+                return result;
+            }
+
+            // Transforms: Brush Tip
+            //   Path 1
+            //     Path 1.PathGeometry
+            // Path
+            PathKeyFrameAnimation PathKeyFrameAnimation_6()
+            {
+                var result = _c.CreatePathKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0, _compositionPath_607, _linearEasingFunction);
+                result.InsertKeyFrame(0.0666666701F, new CompositionPath(Geometry_609()), _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.666666687F, _compositionPath_607, _cubicBezierEasingFunction_23);
                 return result;
             }
 
@@ -19071,9 +19404,9 @@ namespace Compositions
                 var result = _scalarAnimation_0_to_0_0 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.333333343F, 19.5650005F, _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.5F, 21, CubicBezierEasingFunction_06());
-                result.InsertKeyFrame(0.983333349F, 0, _cubicBezierEasingFunction_04);
+                result.InsertKeyFrame(0.333333343F, 19.5650005F, _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, 21, CubicBezierEasingFunction_07());
+                result.InsertKeyFrame(0.983333349F, 0, _cubicBezierEasingFunction_05);
                 return result;
             }
 
@@ -19083,9 +19416,9 @@ namespace Compositions
                 var result = _scalarAnimation_0_to_0_1 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, -16.1000004F, _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.166666672F, -16.1000004F, _cubicBezierEasingFunction_03);
                 result.InsertKeyFrame(0.666666687F, -16.1000004F, _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, 0, _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.983333349F, 0, _cubicBezierEasingFunction_03);
                 return result;
             }
 
@@ -19095,13 +19428,13 @@ namespace Compositions
                 var result = _scalarAnimation_0_to_0_2 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, 11.3000002F, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.25F, -4.69999981F, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, 11.3000002F, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.166666672F, 11.3000002F, _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.25F, -4.69999981F, _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.333333343F, 11.3000002F, _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.5F, 11.3000002F, _linearEasingFunction);
-                result.InsertKeyFrame(0.666666687F, -4.4000001F, CubicBezierEasingFunction_11());
-                result.InsertKeyFrame(0.733333349F, 24.7059994F, CubicBezierEasingFunction_12());
-                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_13());
+                result.InsertKeyFrame(0.666666687F, -4.4000001F, CubicBezierEasingFunction_12());
+                result.InsertKeyFrame(0.733333349F, 24.7059994F, CubicBezierEasingFunction_13());
+                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_14());
                 return result;
             }
 
@@ -19111,13 +19444,13 @@ namespace Compositions
                 var result = _scalarAnimation_0_to_0_3 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, -24, _cubicBezierEasingFunction_14);
-                result.InsertKeyFrame(0.25F, -25, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, -10, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.400000006F, -54.0489998F, CubicBezierEasingFunction_18());
-                result.InsertKeyFrame(0.5F, -25, CubicBezierEasingFunction_19());
-                result.InsertKeyFrame(0.666666687F, -72.6330032F, CubicBezierEasingFunction_20());
-                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_21());
+                result.InsertKeyFrame(0.166666672F, -24, _cubicBezierEasingFunction_15);
+                result.InsertKeyFrame(0.25F, -25, _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.333333343F, -10, _cubicBezierEasingFunction_01);
+                result.InsertKeyFrame(0.400000006F, -54.0489998F, CubicBezierEasingFunction_19());
+                result.InsertKeyFrame(0.5F, -25, CubicBezierEasingFunction_20());
+                result.InsertKeyFrame(0.666666687F, -72.6330032F, CubicBezierEasingFunction_21());
+                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_22());
                 return result;
             }
 
@@ -19161,9 +19494,9 @@ namespace Compositions
             {
                 var result = _scalarAnimation_1_to_1_2 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.166666567F, 1, _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.166666567F, 1, _cubicBezierEasingFunction_03);
                 result.InsertKeyFrame(0.666666806F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.98333323F, 1, _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.98333323F, 1, _cubicBezierEasingFunction_03);
                 return result;
             }
 
@@ -19171,17 +19504,17 @@ namespace Compositions
             {
                 var result = _scalarAnimation_1_to_1_3 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.166666567F, 1, CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0.166666567F, 1, CubicBezierEasingFunction_24());
                 result.InsertKeyFrame(0.166666672F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.249999896F, 1, CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0.249999896F, 1, CubicBezierEasingFunction_24());
                 result.InsertKeyFrame(0.25F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.333333224F, 1, CubicBezierEasingFunction_24());
+                result.InsertKeyFrame(0.333333224F, 1, CubicBezierEasingFunction_25());
                 result.InsertKeyFrame(0.333333313F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.499999911F, 1, CubicBezierEasingFunction_25());
+                result.InsertKeyFrame(0.499999911F, 1, CubicBezierEasingFunction_26());
                 result.InsertKeyFrame(0.5F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.666666567F, 1, CubicBezierEasingFunction_26());
+                result.InsertKeyFrame(0.666666567F, 1, CubicBezierEasingFunction_27());
                 result.InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.98333323F, 1, CubicBezierEasingFunction_27());
+                result.InsertKeyFrame(0.98333323F, 1, CubicBezierEasingFunction_28());
                 return result;
             }
 
@@ -19193,6 +19526,7 @@ namespace Compositions
                 return result;
             }
 
+            // Transforms for Paintbrush_2_FinalStroke_Precomped
             ShapeVisual ShapeVisual_0()
             {
                 var result = _c.CreateShapeVisual();
@@ -19245,7 +19579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.639F, 47.1889992F);
                 result.FillBrush = ColorBrush_AlmostMediumOrchid_FFC338B3();
-                result.Geometry = PathGeometry_000();
+                result.Geometry = PathGeometry_001();
                 return result;
             }
 
@@ -19255,7 +19589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(148.626999F, 46.0639992F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_001();
+                result.Geometry = PathGeometry_002();
                 return result;
             }
 
@@ -19265,7 +19599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(181.639999F, 46.8370018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_002();
+                result.Geometry = PathGeometry_003();
                 return result;
             }
 
@@ -19275,7 +19609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(142.444F, 47.0690002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_003();
+                result.Geometry = PathGeometry_004();
                 return result;
             }
 
@@ -19285,7 +19619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(145.154007F, 47.2669983F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_004();
+                result.Geometry = PathGeometry_005();
                 return result;
             }
 
@@ -19295,7 +19629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(214.973999F, 50.0550003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_005();
+                result.Geometry = PathGeometry_006();
                 return result;
             }
 
@@ -19305,7 +19639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(232.386993F, 50.493F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_006();
+                result.Geometry = PathGeometry_007();
                 return result;
             }
 
@@ -19315,7 +19649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(90.1829987F, 49.012001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_007();
+                result.Geometry = PathGeometry_008();
                 return result;
             }
 
@@ -19325,7 +19659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(251.753998F, 49.8260002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_008();
+                result.Geometry = PathGeometry_009();
                 return result;
             }
 
@@ -19335,7 +19669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(158.229996F, 50.2480011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_009();
+                result.Geometry = PathGeometry_010();
                 return result;
             }
 
@@ -19345,7 +19679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(148.231003F, 51.0040016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_010();
+                result.Geometry = PathGeometry_011();
                 return result;
             }
 
@@ -19355,7 +19689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(143.186996F, 52.7410011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_011();
+                result.Geometry = PathGeometry_012();
                 return result;
             }
 
@@ -19365,7 +19699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(197.427994F, 52.6829987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_012();
+                result.Geometry = PathGeometry_013();
                 return result;
             }
 
@@ -19375,7 +19709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(253.330994F, 53.0530014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_013();
+                result.Geometry = PathGeometry_014();
                 return result;
             }
 
@@ -19385,7 +19719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(249.723007F, 54.2970009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_014();
+                result.Geometry = PathGeometry_015();
                 return result;
             }
 
@@ -19395,7 +19729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(26.9519997F, 54.4430008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_015();
+                result.Geometry = PathGeometry_016();
                 return result;
             }
 
@@ -19405,7 +19739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(255.794006F, 54.1389999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_016();
+                result.Geometry = PathGeometry_017();
                 return result;
             }
 
@@ -19415,7 +19749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(231.408997F, 54.3730011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_017();
+                result.Geometry = PathGeometry_018();
                 return result;
             }
 
@@ -19425,7 +19759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.9860001F, 56.8089981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_018();
+                result.Geometry = PathGeometry_019();
                 return result;
             }
 
@@ -19435,7 +19769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(152.675003F, 56.7000008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_019();
+                result.Geometry = PathGeometry_020();
                 return result;
             }
 
@@ -19445,7 +19779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(231.783005F, 57.2220001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_020();
+                result.Geometry = PathGeometry_021();
                 return result;
             }
 
@@ -19455,7 +19789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(141.917999F, 57.8359985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_021();
+                result.Geometry = PathGeometry_022();
                 return result;
             }
 
@@ -19465,7 +19799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.1959991F, 60.8330002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_022();
+                result.Geometry = PathGeometry_023();
                 return result;
             }
 
@@ -19475,7 +19809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.4710007F, 60.0009995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_023();
+                result.Geometry = PathGeometry_024();
                 return result;
             }
 
@@ -19485,7 +19819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(106.695F, 58.9490013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_024();
+                result.Geometry = PathGeometry_025();
                 return result;
             }
 
@@ -19495,7 +19829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(202.953995F, 60.8019981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_025();
+                result.Geometry = PathGeometry_026();
                 return result;
             }
 
@@ -19505,7 +19839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(104.011002F, 61.1839981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_026();
+                result.Geometry = PathGeometry_027();
                 return result;
             }
 
@@ -19515,7 +19849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(221.348007F, 60.9020004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_027();
+                result.Geometry = PathGeometry_028();
                 return result;
             }
 
@@ -19525,7 +19859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(138.490997F, 64.9120026F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_028();
+                result.Geometry = PathGeometry_029();
                 return result;
             }
 
@@ -19535,7 +19869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(103.904999F, 63.8240013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_029();
+                result.Geometry = PathGeometry_030();
                 return result;
             }
 
@@ -19545,7 +19879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(23.3330002F, 63.9529991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_030();
+                result.Geometry = PathGeometry_031();
                 return result;
             }
 
@@ -19555,7 +19889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(146.994995F, 63.7270012F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_031();
+                result.Geometry = PathGeometry_032();
                 return result;
             }
 
@@ -19565,7 +19899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(94.4550018F, 65.4140015F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_032();
+                result.Geometry = PathGeometry_033();
                 return result;
             }
 
@@ -19575,7 +19909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(215.845001F, 63.7249985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_033();
+                result.Geometry = PathGeometry_034();
                 return result;
             }
 
@@ -19585,7 +19919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(34.9640007F, 64.6179962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_034();
+                result.Geometry = PathGeometry_035();
                 return result;
             }
 
@@ -19595,7 +19929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(198.285004F, 64.2450027F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_035();
+                result.Geometry = PathGeometry_036();
                 return result;
             }
 
@@ -19605,7 +19939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.9889984F, 66.0009995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_036();
+                result.Geometry = PathGeometry_037();
                 return result;
             }
 
@@ -19615,7 +19949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(196.572006F, 68.2369995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_037();
+                result.Geometry = PathGeometry_038();
                 return result;
             }
 
@@ -19625,7 +19959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(199.136993F, 69.072998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_038();
+                result.Geometry = PathGeometry_039();
                 return result;
             }
 
@@ -19635,7 +19969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(87.3499985F, 69.2180023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_039();
+                result.Geometry = PathGeometry_040();
                 return result;
             }
 
@@ -19645,7 +19979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.7779999F, 69.947998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_040();
+                result.Geometry = PathGeometry_041();
                 return result;
             }
 
@@ -19655,7 +19989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.2229996F, 71.8509979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_041();
+                result.Geometry = PathGeometry_042();
                 return result;
             }
 
@@ -19665,7 +19999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(27.8299999F, 74.9209976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_042();
+                result.Geometry = PathGeometry_043();
                 return result;
             }
 
@@ -19675,7 +20009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.2730026F, 73.6490021F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_043();
+                result.Geometry = PathGeometry_044();
                 return result;
             }
 
@@ -19685,7 +20019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(81.6999969F, 76.5309982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_044();
+                result.Geometry = PathGeometry_045();
                 return result;
             }
 
@@ -19695,7 +20029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.003998F, 80.4800034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_045();
+                result.Geometry = PathGeometry_046();
                 return result;
             }
 
@@ -19705,7 +20039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(45.3720016F, 83.4980011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_046();
+                result.Geometry = PathGeometry_047();
                 return result;
             }
 
@@ -19715,7 +20049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.5189972F, 83.2289963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_047();
+                result.Geometry = PathGeometry_048();
                 return result;
             }
 
@@ -19725,7 +20059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(15.2019997F, 92.4759979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_048();
+                result.Geometry = PathGeometry_049();
                 return result;
             }
 
@@ -19735,7 +20069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.4059982F, 86.1699982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_049();
+                result.Geometry = PathGeometry_050();
                 return result;
             }
 
@@ -19745,7 +20079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(77.3960037F, 88.6080017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_050();
+                result.Geometry = PathGeometry_051();
                 return result;
             }
 
@@ -19755,7 +20089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(275.467987F, 91.3050003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_051();
+                result.Geometry = PathGeometry_052();
                 return result;
             }
 
@@ -19765,7 +20099,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(277.591003F, 90.3860016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_052();
+                result.Geometry = PathGeometry_053();
                 return result;
             }
 
@@ -19775,7 +20109,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(40.0149994F, 91.7429962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_053();
+                result.Geometry = PathGeometry_054();
                 return result;
             }
 
@@ -19785,7 +20119,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(124.932999F, 94.2310028F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_054();
+                result.Geometry = PathGeometry_055();
                 return result;
             }
 
@@ -19795,7 +20129,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.699997F, 98.7659988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_055();
+                result.Geometry = PathGeometry_056();
                 return result;
             }
 
@@ -19805,7 +20139,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(133.404999F, 97.5550003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_056();
+                result.Geometry = PathGeometry_057();
                 return result;
             }
 
@@ -19815,7 +20149,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(282.54599F, 104.177002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_057();
+                result.Geometry = PathGeometry_058();
                 return result;
             }
 
@@ -19825,7 +20159,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(22.5629997F, 105.800003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_058();
+                result.Geometry = PathGeometry_059();
                 return result;
             }
 
@@ -19835,7 +20169,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(27.1989994F, 109.004997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_059();
+                result.Geometry = PathGeometry_060();
                 return result;
             }
 
@@ -19845,7 +20179,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.3280029F, 108.630997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_060();
+                result.Geometry = PathGeometry_061();
                 return result;
             }
 
@@ -19855,7 +20189,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.931F, 108.857002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_061();
+                result.Geometry = PathGeometry_062();
                 return result;
             }
 
@@ -19865,7 +20199,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(194.401993F, 110.538002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_062();
+                result.Geometry = PathGeometry_063();
                 return result;
             }
 
@@ -19875,7 +20209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(29.7070007F, 110.918999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_063();
+                result.Geometry = PathGeometry_064();
                 return result;
             }
 
@@ -19885,7 +20219,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(201.414993F, 111.239998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_064();
+                result.Geometry = PathGeometry_065();
                 return result;
             }
 
@@ -19895,7 +20229,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(122.947998F, 113.684998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_065();
+                result.Geometry = PathGeometry_066();
                 return result;
             }
 
@@ -19905,7 +20239,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(35.6889992F, 113.831001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_066();
+                result.Geometry = PathGeometry_067();
                 return result;
             }
 
@@ -19915,7 +20249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(265.484985F, 115.412003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_067();
+                result.Geometry = PathGeometry_068();
                 return result;
             }
 
@@ -19925,7 +20259,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(238.848999F, 114.272003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_068();
+                result.Geometry = PathGeometry_069();
                 return result;
             }
 
@@ -19935,7 +20269,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(275.096985F, 116.318001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_069();
+                result.Geometry = PathGeometry_070();
                 return result;
             }
 
@@ -19945,7 +20279,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(109.689003F, 121.144997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_070();
+                result.Geometry = PathGeometry_071();
                 return result;
             }
 
@@ -19955,7 +20289,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(223.501999F, 117.195999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_071();
+                result.Geometry = PathGeometry_072();
                 return result;
             }
 
@@ -19965,7 +20299,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(277.345001F, 118.073997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_072();
+                result.Geometry = PathGeometry_073();
                 return result;
             }
 
@@ -19975,7 +20309,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.985001F, 118.219002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_073();
+                result.Geometry = PathGeometry_074();
                 return result;
             }
 
@@ -19985,7 +20319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.068001F, 117.635002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_074();
+                result.Geometry = PathGeometry_075();
                 return result;
             }
 
@@ -19995,7 +20329,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(97.5940018F, 117.841003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_075();
+                result.Geometry = PathGeometry_076();
                 return result;
             }
 
@@ -20005,7 +20339,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(159.697998F, 117.843002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_076();
+                result.Geometry = PathGeometry_077();
                 return result;
             }
 
@@ -20015,7 +20349,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.2210007F, 118.765999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_077();
+                result.Geometry = PathGeometry_078();
                 return result;
             }
 
@@ -20025,7 +20359,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(220.858002F, 122.068001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_078();
+                result.Geometry = PathGeometry_079();
                 return result;
             }
 
@@ -20035,7 +20369,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(195.951996F, 120.121002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_079();
+                result.Geometry = PathGeometry_080();
                 return result;
             }
 
@@ -20045,7 +20379,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(279.903015F, 122.460999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_080();
+                result.Geometry = PathGeometry_081();
                 return result;
             }
 
@@ -20055,7 +20389,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.367996F, 123.045998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_081();
+                result.Geometry = PathGeometry_082();
                 return result;
             }
 
@@ -20065,7 +20399,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(115.769997F, 129.044006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_082();
+                result.Geometry = PathGeometry_083();
                 return result;
             }
 
@@ -20075,7 +20409,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(185.932999F, 123.777F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_083();
+                result.Geometry = PathGeometry_084();
                 return result;
             }
 
@@ -20085,7 +20419,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(218.867996F, 126.264999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_084();
+                result.Geometry = PathGeometry_085();
                 return result;
             }
 
@@ -20095,7 +20429,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(186.246002F, 127.306999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_085();
+                result.Geometry = PathGeometry_086();
                 return result;
             }
 
@@ -20105,7 +20439,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(87.0970001F, 129.188004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_086();
+                result.Geometry = PathGeometry_087();
                 return result;
             }
 
@@ -20115,7 +20449,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.429001F, 132.115005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_087();
+                result.Geometry = PathGeometry_088();
                 return result;
             }
 
@@ -20125,7 +20459,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(214.712006F, 131.968994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_088();
+                result.Geometry = PathGeometry_089();
                 return result;
             }
 
@@ -20135,7 +20469,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(218.445007F, 135.479996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_089();
+                result.Geometry = PathGeometry_090();
                 return result;
             }
 
@@ -20145,7 +20479,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(216.154999F, 135.300003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_090();
+                result.Geometry = PathGeometry_091();
                 return result;
             }
 
@@ -20155,7 +20489,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(205.453003F, 109.224998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_091();
+                result.Geometry = PathGeometry_092();
                 return result;
             }
 
@@ -20165,7 +20499,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(160.334F, 59.2709999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_092();
+                result.Geometry = PathGeometry_093();
                 return result;
             }
 
@@ -20175,7 +20509,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(167.061005F, 46.0460014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_093();
+                result.Geometry = PathGeometry_094();
                 return result;
             }
 
@@ -20185,7 +20519,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(165.860001F, 49.4690018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_094();
+                result.Geometry = PathGeometry_095();
                 return result;
             }
 
@@ -20195,7 +20529,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(163.259003F, 52.4939995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_095();
+                result.Geometry = PathGeometry_096();
                 return result;
             }
 
@@ -20205,7 +20539,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(172.697998F, 52.7019997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_096();
+                result.Geometry = PathGeometry_097();
                 return result;
             }
 
@@ -20215,7 +20549,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(235.199997F, 55.2949982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_097();
+                result.Geometry = PathGeometry_098();
                 return result;
             }
 
@@ -20225,7 +20559,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(271.354004F, 58.5349998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_098();
+                result.Geometry = PathGeometry_099();
                 return result;
             }
 
@@ -20235,7 +20569,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(235.522003F, 62.6349983F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_099();
+                result.Geometry = PathGeometry_100();
                 return result;
             }
 
@@ -20245,7 +20579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(256.756989F, 64.4830017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_100();
+                result.Geometry = PathGeometry_101();
                 return result;
             }
 
@@ -20255,7 +20589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(188.610001F, 63.6590004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_101();
+                result.Geometry = PathGeometry_102();
                 return result;
             }
 
@@ -20265,7 +20599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(233.701996F, 65.6449966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_102();
+                result.Geometry = PathGeometry_103();
                 return result;
             }
 
@@ -20275,7 +20609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(234.796005F, 66.4400024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_103();
+                result.Geometry = PathGeometry_104();
                 return result;
             }
 
@@ -20285,7 +20619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.628006F, 67.9229965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_104();
+                result.Geometry = PathGeometry_105();
                 return result;
             }
 
@@ -20295,7 +20629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(187.647003F, 66.9629974F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_105();
+                result.Geometry = PathGeometry_106();
                 return result;
             }
 
@@ -20305,7 +20639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(251.675003F, 73.1159973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_106();
+                result.Geometry = PathGeometry_107();
                 return result;
             }
 
@@ -20315,7 +20649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.876007F, 69.9469986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_107();
+                result.Geometry = PathGeometry_108();
                 return result;
             }
 
@@ -20325,7 +20659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(230.979004F, 71.8509979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_108();
+                result.Geometry = PathGeometry_109();
                 return result;
             }
 
@@ -20335,7 +20669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(266.355988F, 69.776001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_109();
+                result.Geometry = PathGeometry_110();
                 return result;
             }
 
@@ -20345,7 +20679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(209.001999F, 75.6230011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_110();
+                result.Geometry = PathGeometry_111();
                 return result;
             }
 
@@ -20355,7 +20689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(265.575012F, 72.9029999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_111();
+                result.Geometry = PathGeometry_112();
                 return result;
             }
 
@@ -20365,7 +20699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(146.651001F, 74.8949966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_112();
+                result.Geometry = PathGeometry_113();
                 return result;
             }
 
@@ -20375,7 +20709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(154.248001F, 74.7480011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_113();
+                result.Geometry = PathGeometry_114();
                 return result;
             }
 
@@ -20385,7 +20719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(201.054993F, 79.935997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_114();
+                result.Geometry = PathGeometry_115();
                 return result;
             }
 
@@ -20395,7 +20729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(217.548004F, 74.8280029F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_115();
+                result.Geometry = PathGeometry_116();
                 return result;
             }
 
@@ -20405,7 +20739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(264.166992F, 77.1179962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_116();
+                result.Geometry = PathGeometry_117();
                 return result;
             }
 
@@ -20415,7 +20749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(197.451004F, 76.822998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_117();
+                result.Geometry = PathGeometry_118();
                 return result;
             }
 
@@ -20425,7 +20759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(283.256012F, 78.1399994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_118();
+                result.Geometry = PathGeometry_119();
                 return result;
             }
 
@@ -20435,7 +20769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(215.054993F, 78.3460007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_119();
+                result.Geometry = PathGeometry_120();
                 return result;
             }
 
@@ -20445,7 +20779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(212.699005F, 79.7009964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_120();
+                result.Geometry = PathGeometry_121();
                 return result;
             }
 
@@ -20455,7 +20789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(209.158005F, 82.564003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_121();
+                result.Geometry = PathGeometry_122();
                 return result;
             }
 
@@ -20465,7 +20799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(278.710999F, 82.1340027F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_122();
+                result.Geometry = PathGeometry_123();
                 return result;
             }
 
@@ -20475,7 +20809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.744995F, 82.1949997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_123();
+                result.Geometry = PathGeometry_124();
                 return result;
             }
 
@@ -20485,7 +20819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.257004F, 84.7229996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_124();
+                result.Geometry = PathGeometry_125();
                 return result;
             }
 
@@ -20495,7 +20829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(274.42099F, 85.8929977F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_125();
+                result.Geometry = PathGeometry_126();
                 return result;
             }
 
@@ -20505,7 +20839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(198.352997F, 89.6959991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_126();
+                result.Geometry = PathGeometry_127();
                 return result;
             }
 
@@ -20515,7 +20849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(131.557007F, 90.7210007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_127();
+                result.Geometry = PathGeometry_128();
                 return result;
             }
 
@@ -20525,7 +20859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(270.713989F, 91.6589966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_128();
+                result.Geometry = PathGeometry_129();
                 return result;
             }
 
@@ -20535,7 +20869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(208.216003F, 92.2750015F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_129();
+                result.Geometry = PathGeometry_130();
                 return result;
             }
 
@@ -20545,7 +20879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.856003F, 92.6549988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_130();
+                result.Geometry = PathGeometry_131();
                 return result;
             }
 
@@ -20555,7 +20889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(206.082993F, 94.961998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_131();
+                result.Geometry = PathGeometry_132();
                 return result;
             }
 
@@ -20565,7 +20899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(279.674988F, 95.9290009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_132();
+                result.Geometry = PathGeometry_133();
                 return result;
             }
 
@@ -20575,7 +20909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(238.996002F, 99.4660034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_133();
+                result.Geometry = PathGeometry_134();
                 return result;
             }
 
@@ -20585,7 +20919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(279.923004F, 102.420998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_134();
+                result.Geometry = PathGeometry_135();
                 return result;
             }
 
@@ -20595,7 +20929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(139.177994F, 104.693001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_135();
+                result.Geometry = PathGeometry_136();
                 return result;
             }
 
@@ -20605,7 +20939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(49.0279999F, 57.8339996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_136();
+                result.Geometry = PathGeometry_137();
                 return result;
             }
 
@@ -20615,7 +20949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(124.553001F, 51.3720016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_137();
+                result.Geometry = PathGeometry_138();
                 return result;
             }
 
@@ -20625,7 +20959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(57.7159996F, 52.4650002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_138();
+                result.Geometry = PathGeometry_139();
                 return result;
             }
 
@@ -20635,7 +20969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.563004F, 54.4430008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_139();
+                result.Geometry = PathGeometry_140();
                 return result;
             }
 
@@ -20645,7 +20979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(128.369003F, 55.3209991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_140();
+                result.Geometry = PathGeometry_141();
                 return result;
             }
 
@@ -20655,7 +20989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(131.126999F, 61.7579994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_141();
+                result.Geometry = PathGeometry_142();
                 return result;
             }
 
@@ -20665,7 +20999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(127.015999F, 62.9280014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_142();
+                result.Geometry = PathGeometry_143();
                 return result;
             }
 
@@ -20675,7 +21009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(111.269997F, 65.2720032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_143();
+                result.Geometry = PathGeometry_144();
                 return result;
             }
 
@@ -20685,7 +21019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(69.3769989F, 66.4120026F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_144();
+                result.Geometry = PathGeometry_145();
                 return result;
             }
 
@@ -20695,7 +21029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(79.8690033F, 73.2979965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_145();
+                result.Geometry = PathGeometry_146();
                 return result;
             }
 
@@ -20705,7 +21039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(63.9539986F, 75.6539993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_146();
+                result.Geometry = PathGeometry_147();
                 return result;
             }
 
@@ -20715,7 +21049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(109.602997F, 70.9400024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_147();
+                result.Geometry = PathGeometry_148();
                 return result;
             }
 
@@ -20725,7 +21059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.487F, 71.1679993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_148();
+                result.Geometry = PathGeometry_149();
                 return result;
             }
 
@@ -20735,7 +21069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(52.8800011F, 74.1910019F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_149();
+                result.Geometry = PathGeometry_150();
                 return result;
             }
 
@@ -20745,7 +21079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(106.665001F, 72.3089981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_150();
+                result.Geometry = PathGeometry_151();
                 return result;
             }
 
@@ -20755,7 +21089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(103.904999F, 75.0439987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_151();
+                result.Geometry = PathGeometry_152();
                 return result;
             }
 
@@ -20765,7 +21099,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(111.137001F, 74.1330032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_152();
+                result.Geometry = PathGeometry_153();
                 return result;
             }
 
@@ -20775,7 +21109,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(101.101997F, 78.6660004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_153();
+                result.Geometry = PathGeometry_154();
                 return result;
             }
 
@@ -20785,7 +21119,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(122.802002F, 79.1119995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_154();
+                result.Geometry = PathGeometry_155();
                 return result;
             }
 
@@ -20795,7 +21129,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(75.7919998F, 90.1039963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_155();
+                result.Geometry = PathGeometry_156();
                 return result;
             }
 
@@ -20805,7 +21139,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.7770004F, 83.2180023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_156();
+                result.Geometry = PathGeometry_157();
                 return result;
             }
 
@@ -20815,7 +21149,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(89.151001F, 86.0950012F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_157();
+                result.Geometry = PathGeometry_158();
                 return result;
             }
 
@@ -20825,7 +21159,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(90.0319977F, 88.9649963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_158();
+                result.Geometry = PathGeometry_159();
                 return result;
             }
 
@@ -20835,7 +21169,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(75.4349976F, 97.887001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_159();
+                result.Geometry = PathGeometry_160();
                 return result;
             }
 
@@ -20845,7 +21179,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(103.689003F, 98.6869965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_160();
+                result.Geometry = PathGeometry_161();
                 return result;
             }
 
@@ -20855,7 +21189,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(83.6610031F, 116.903F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_161();
+                result.Geometry = PathGeometry_162();
                 return result;
             }
 
@@ -20865,7 +21199,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(85.9410019F, 128.020996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_162();
+                result.Geometry = PathGeometry_163();
                 return result;
             }
 
@@ -20875,7 +21209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(117.115997F, 49.0309982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_163();
+                result.Geometry = PathGeometry_164();
                 return result;
             }
 
@@ -20885,7 +21219,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(112.717003F, 50.1930008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_164();
+                result.Geometry = PathGeometry_165();
                 return result;
             }
 
@@ -20895,7 +21229,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(194.710999F, 50.2680016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_165();
+                result.Geometry = PathGeometry_166();
                 return result;
             }
 
@@ -20905,7 +21239,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(94.3960037F, 51.5639992F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_166();
+                result.Geometry = PathGeometry_167();
                 return result;
             }
 
@@ -20915,7 +21249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(102.892998F, 51.9309998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_167();
+                result.Geometry = PathGeometry_168();
                 return result;
             }
 
@@ -20925,7 +21259,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(232.886993F, 54.4430008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_168();
+                result.Geometry = PathGeometry_169();
                 return result;
             }
 
@@ -20935,7 +21269,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.3799973F, 55.612999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_169();
+                result.Geometry = PathGeometry_170();
                 return result;
             }
 
@@ -20945,7 +21279,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(204.399002F, 56.5410004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_170();
+                result.Geometry = PathGeometry_171();
                 return result;
             }
 
@@ -20955,7 +21289,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(287.049011F, 62.8959999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_171();
+                result.Geometry = PathGeometry_172();
                 return result;
             }
 
@@ -20965,7 +21299,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.3860016F, 63.4529991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_172();
+                result.Geometry = PathGeometry_173();
                 return result;
             }
 
@@ -20975,7 +21309,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(99.5619965F, 64.1340027F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_173();
+                result.Geometry = PathGeometry_174();
                 return result;
             }
 
@@ -20985,7 +21319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(32.4129982F, 67.9830017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_174();
+                result.Geometry = PathGeometry_175();
                 return result;
             }
 
@@ -20995,7 +21329,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(19.4559994F, 67.3740005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_175();
+                result.Geometry = PathGeometry_176();
                 return result;
             }
 
@@ -21005,7 +21339,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(85.3860016F, 69.9489975F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_176();
+                result.Geometry = PathGeometry_177();
                 return result;
             }
 
@@ -21015,7 +21349,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.927002F, 71.5579987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_177();
+                result.Geometry = PathGeometry_178();
                 return result;
             }
 
@@ -21025,7 +21359,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(30.8840008F, 71.7040024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_178();
+                result.Geometry = PathGeometry_179();
                 return result;
             }
 
@@ -21035,7 +21369,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(83.0319977F, 74.6289978F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_179();
+                result.Geometry = PathGeometry_180();
                 return result;
             }
 
@@ -21045,7 +21379,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(33.3110008F, 78.8710022F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_180();
+                result.Geometry = PathGeometry_181();
                 return result;
             }
 
@@ -21055,7 +21389,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.589005F, 88.5270004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_181();
+                result.Geometry = PathGeometry_182();
                 return result;
             }
 
@@ -21065,7 +21399,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(35.4039993F, 85.9970016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_182();
+                result.Geometry = PathGeometry_183();
                 return result;
             }
 
@@ -21075,7 +21409,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(40.1839981F, 88.7070007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_183();
+                result.Geometry = PathGeometry_184();
                 return result;
             }
 
@@ -21085,7 +21419,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(234.574005F, 93.0449982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_184();
+                result.Geometry = PathGeometry_185();
                 return result;
             }
 
@@ -21095,7 +21429,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.289001F, 101.397003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_185();
+                result.Geometry = PathGeometry_186();
                 return result;
             }
 
@@ -21105,7 +21439,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(98.7180023F, 104.933998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_186();
+                result.Geometry = PathGeometry_187();
                 return result;
             }
 
@@ -21115,7 +21449,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(201.216995F, 103.300003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_187();
+                result.Geometry = PathGeometry_188();
                 return result;
             }
 
@@ -21125,7 +21459,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(206.444F, 101.950996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_188();
+                result.Geometry = PathGeometry_189();
                 return result;
             }
 
@@ -21135,7 +21469,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.155998F, 105.070999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_189();
+                result.Geometry = PathGeometry_190();
                 return result;
             }
 
@@ -21145,7 +21479,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.425003F, 110.028999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_190();
+                result.Geometry = PathGeometry_191();
                 return result;
             }
 
@@ -21155,7 +21489,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(101.536003F, 107.393997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_191();
+                result.Geometry = PathGeometry_192();
                 return result;
             }
 
@@ -21165,7 +21499,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(274.660004F, 109.588997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_192();
+                result.Geometry = PathGeometry_193();
                 return result;
             }
 
@@ -21175,7 +21509,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(197.729996F, 109.199997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_193();
+                result.Geometry = PathGeometry_194();
                 return result;
             }
 
@@ -21185,7 +21519,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(100.945F, 117.049004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_194();
+                result.Geometry = PathGeometry_195();
                 return result;
             }
 
@@ -21195,7 +21529,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(203.619995F, 114.107002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_195();
+                result.Geometry = PathGeometry_196();
                 return result;
             }
 
@@ -21205,7 +21539,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(29.5359993F, 116.319F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_196();
+                result.Geometry = PathGeometry_197();
                 return result;
             }
 
@@ -21215,7 +21549,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(33.4210014F, 119.389999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_197();
+                result.Geometry = PathGeometry_198();
                 return result;
             }
 
@@ -21225,7 +21559,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(105.389F, 122.400002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_198();
+                result.Geometry = PathGeometry_199();
                 return result;
             }
 
@@ -21235,7 +21569,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(213.115997F, 134.921005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_199();
+                result.Geometry = PathGeometry_200();
                 return result;
             }
 
@@ -21245,7 +21579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(24.9790001F, 73.0220032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_200();
+                result.Geometry = PathGeometry_201();
                 return result;
             }
 
@@ -21255,7 +21589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(20.632F, 113.425003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_201();
+                result.Geometry = PathGeometry_202();
                 return result;
             }
 
@@ -21265,7 +21599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(182.072998F, 237.167007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_202();
+                result.Geometry = PathGeometry_203();
                 return result;
             }
 
@@ -21275,7 +21609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(149.520996F, 222.207001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_203();
+                result.Geometry = PathGeometry_204();
                 return result;
             }
 
@@ -21285,7 +21619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.602997F, 206.287994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_204();
+                result.Geometry = PathGeometry_205();
                 return result;
             }
 
@@ -21295,7 +21629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(155.320999F, 223.792007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_205();
+                result.Geometry = PathGeometry_206();
                 return result;
             }
 
@@ -21305,7 +21639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(153.141006F, 222.552994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_206();
+                result.Geometry = PathGeometry_207();
                 return result;
             }
 
@@ -21315,7 +21649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(90.4970016F, 188.220001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_207();
+                result.Geometry = PathGeometry_208();
                 return result;
             }
 
@@ -21325,7 +21659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(74.9049988F, 179.835999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_208();
+                result.Geometry = PathGeometry_209();
                 return result;
             }
 
@@ -21335,7 +21669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(203.764999F, 245.979996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_209();
+                result.Geometry = PathGeometry_210();
                 return result;
             }
 
@@ -21345,7 +21679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(56.7799988F, 171.600006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_210();
+                result.Geometry = PathGeometry_211();
                 return result;
             }
 
@@ -21355,7 +21689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(142.167999F, 213.813995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_211();
+                result.Geometry = PathGeometry_212();
                 return result;
             }
 
@@ -21365,7 +21699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(151.718002F, 217.641998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_212();
+                result.Geometry = PathGeometry_213();
                 return result;
             }
 
@@ -21375,7 +21709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(156.759003F, 218.453003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_213();
+                result.Geometry = PathGeometry_214();
                 return result;
             }
 
@@ -21385,7 +21719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(107.397003F, 194.078995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_214();
+                result.Geometry = PathGeometry_215();
                 return result;
             }
 
@@ -21395,7 +21729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(56.387001F, 167.647995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_215();
+                result.Geometry = PathGeometry_216();
                 return result;
             }
 
@@ -21405,7 +21739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(60.2220001F, 168.121002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_216();
+                result.Geometry = PathGeometry_217();
                 return result;
             }
 
@@ -21415,7 +21749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(263.60199F, 270.502991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_217();
+                result.Geometry = PathGeometry_218();
                 return result;
             }
 
@@ -21425,7 +21759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(54.6580009F, 165.863998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_218();
+                result.Geometry = PathGeometry_219();
                 return result;
             }
 
@@ -21435,7 +21769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(76.9260025F, 176.692993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_219();
+                result.Geometry = PathGeometry_220();
                 return result;
             }
 
@@ -21445,7 +21779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(204.190002F, 237.688995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_220();
+                result.Geometry = PathGeometry_221();
                 return result;
             }
 
@@ -21455,7 +21789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(149.843002F, 210.404007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_221();
+                result.Geometry = PathGeometry_222();
                 return result;
             }
 
@@ -21465,7 +21799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(77.7050018F, 174);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_222();
+                result.Geometry = PathGeometry_223();
                 return result;
             }
 
@@ -21475,7 +21809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(159.850006F, 214.654999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_223();
+                result.Geometry = PathGeometry_224();
                 return result;
             }
 
@@ -21485,7 +21819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(206.173004F, 234.436996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_224();
+                result.Geometry = PathGeometry_225();
                 return result;
             }
 
@@ -21495,7 +21829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(202.444F, 233.134995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_225();
+                result.Geometry = PathGeometry_226();
                 return result;
             }
 
@@ -21505,7 +21839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(192.393005F, 229.464996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_226();
+                result.Geometry = PathGeometry_227();
                 return result;
             }
 
@@ -21515,7 +21849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(105.136002F, 184.003006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_227();
+                result.Geometry = PathGeometry_228();
                 return result;
             }
 
@@ -21525,7 +21859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(195.528F, 228.380005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_228();
+                result.Geometry = PathGeometry_229();
                 return result;
             }
 
@@ -21535,7 +21869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.7429962F, 175.636993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_229();
+                result.Geometry = PathGeometry_230();
                 return result;
             }
 
@@ -21545,7 +21879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(165.371994F, 209.947998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_230();
+                result.Geometry = PathGeometry_231();
                 return result;
             }
 
@@ -21555,7 +21889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(196.619003F, 226.175003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_231();
+                result.Geometry = PathGeometry_232();
                 return result;
             }
 
@@ -21565,7 +21899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(270.256989F, 262.980011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_232();
+                result.Geometry = PathGeometry_233();
                 return result;
             }
 
@@ -21575,7 +21909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(157.548004F, 206.707993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_233();
+                result.Geometry = PathGeometry_234();
                 return result;
             }
 
@@ -21585,7 +21919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(205.873001F, 229.160004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_234();
+                result.Geometry = PathGeometry_235();
                 return result;
             }
 
@@ -21595,7 +21929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(94.6539993F, 175.244003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_235();
+                result.Geometry = PathGeometry_236();
                 return result;
             }
 
@@ -21605,7 +21939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(259.869995F, 257.178986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_236();
+                result.Geometry = PathGeometry_237();
                 return result;
             }
 
@@ -21615,7 +21949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(110.917F, 182.901993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_237();
+                result.Geometry = PathGeometry_238();
                 return result;
             }
 
@@ -21625,7 +21959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(204.013F, 227.425995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_238();
+                result.Geometry = PathGeometry_239();
                 return result;
             }
 
@@ -21635,7 +21969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.897003F, 180.014008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_239();
+                result.Geometry = PathGeometry_240();
                 return result;
             }
 
@@ -21645,7 +21979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(111.778999F, 177.966003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_240();
+                result.Geometry = PathGeometry_241();
                 return result;
             }
 
@@ -21655,7 +21989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(213.837997F, 228.841003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_241();
+                result.Geometry = PathGeometry_242();
                 return result;
             }
 
@@ -21665,7 +21999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(212.787994F, 227.477997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_242();
+                result.Geometry = PathGeometry_243();
                 return result;
             }
 
@@ -21675,7 +22009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(214.009003F, 226.113998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_243();
+                result.Geometry = PathGeometry_244();
                 return result;
             }
 
@@ -21685,7 +22019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(270.233002F, 251.117004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_244();
+                result.Geometry = PathGeometry_245();
                 return result;
             }
 
@@ -21695,7 +22029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(207.522003F, 220.740005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_245();
+                result.Geometry = PathGeometry_246();
                 return result;
             }
 
@@ -21705,7 +22039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(221.815002F, 224.945007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_246();
+                result.Geometry = PathGeometry_247();
                 return result;
             }
 
@@ -21715,7 +22049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(82.5400009F, 150.815994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_247();
+                result.Geometry = PathGeometry_248();
                 return result;
             }
 
@@ -21725,7 +22059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(257.412994F, 235.199997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_248();
+                result.Geometry = PathGeometry_249();
                 return result;
             }
 
@@ -21735,7 +22069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(210.639008F, 211.858002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_249();
+                result.Geometry = PathGeometry_250();
                 return result;
             }
 
@@ -21745,7 +22079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(287.225006F, 240.513F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_250();
+                result.Geometry = PathGeometry_251();
                 return result;
             }
 
@@ -21755,7 +22089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(211.860992F, 209.406998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_251();
+                result.Geometry = PathGeometry_252();
                 return result;
             }
 
@@ -21765,7 +22099,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(229.994995F, 215.442001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_252();
+                result.Geometry = PathGeometry_253();
                 return result;
             }
 
@@ -21775,7 +22109,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(50.4399986F, 123.043999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_253();
+                result.Geometry = PathGeometry_254();
                 return result;
             }
 
@@ -21785,7 +22119,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(47.9869995F, 122.765999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_254();
+                result.Geometry = PathGeometry_255();
                 return result;
             }
 
@@ -21795,7 +22129,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(265.431F, 229.951996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_255();
+                result.Geometry = PathGeometry_256();
                 return result;
             }
 
@@ -21805,7 +22139,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(188.806F, 189.013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_256();
+                result.Geometry = PathGeometry_257();
                 return result;
             }
 
@@ -21815,7 +22149,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(196.173004F, 187.820007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_257();
+                result.Geometry = PathGeometry_258();
                 return result;
             }
 
@@ -21825,7 +22159,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(182.287003F, 182.042007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_258();
+                result.Geometry = PathGeometry_259();
                 return result;
             }
 
@@ -21835,7 +22169,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.6539993F, 107.754997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_259();
+                result.Geometry = PathGeometry_260();
                 return result;
             }
 
@@ -21845,7 +22179,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(286.333008F, 225.013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_260();
+                result.Geometry = PathGeometry_261();
                 return result;
             }
 
@@ -21855,7 +22189,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(283.455994F, 219.858002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_261();
+                result.Geometry = PathGeometry_262();
                 return result;
             }
 
@@ -21865,7 +22199,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(222.809006F, 190.220001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_262();
+                result.Geometry = PathGeometry_263();
                 return result;
             }
 
@@ -21875,7 +22209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(91.9929962F, 124.393997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_263();
+                result.Geometry = PathGeometry_264();
                 return result;
             }
 
@@ -21885,7 +22219,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(131.378006F, 142.509003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_264();
+                result.Geometry = PathGeometry_265();
                 return result;
             }
 
@@ -21895,7 +22229,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(281.897003F, 217.214996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_265();
+                result.Geometry = PathGeometry_266();
                 return result;
             }
 
@@ -21905,7 +22239,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(125.452003F, 138.623001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_266();
+                result.Geometry = PathGeometry_267();
                 return result;
             }
 
@@ -21915,7 +22249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(197.977005F, 172.233002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_267();
+                result.Geometry = PathGeometry_268();
                 return result;
             }
 
@@ -21925,7 +22259,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(277.808014F, 212.033997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_268();
+                result.Geometry = PathGeometry_269();
                 return result;
             }
 
@@ -21935,7 +22269,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(68.1419983F, 105.003998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_269();
+                result.Geometry = PathGeometry_270();
                 return result;
             }
 
@@ -21945,7 +22279,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.1800003F, 118.473F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_270();
+                result.Geometry = PathGeometry_271();
                 return result;
             }
 
@@ -21955,7 +22289,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(60.2179985F, 100.236F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_271();
+                result.Geometry = PathGeometry_272();
                 return result;
             }
 
@@ -21965,7 +22299,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(212.158997F, 171.378006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_272();
+                result.Geometry = PathGeometry_273();
                 return result;
             }
 
@@ -21975,7 +22309,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(107.578003F, 123.276001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_273();
+                result.Geometry = PathGeometry_274();
                 return result;
             }
 
@@ -21985,7 +22319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(58.5340004F, 97.8249969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_274();
+                result.Geometry = PathGeometry_275();
                 return result;
             }
 
@@ -21995,7 +22329,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(203.638F, 169.839996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_275();
+                result.Geometry = PathGeometry_276();
                 return result;
             }
 
@@ -22005,7 +22339,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(201.919998F, 169.832993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_276();
+                result.Geometry = PathGeometry_277();
                 return result;
             }
 
@@ -22015,7 +22349,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(222.490005F, 179.871994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_277();
+                result.Geometry = PathGeometry_278();
                 return result;
             }
 
@@ -22025,7 +22359,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(165.945999F, 151.460007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_278();
+                result.Geometry = PathGeometry_279();
                 return result;
             }
 
@@ -22035,7 +22369,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(226.895004F, 181.076004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_279();
+                result.Geometry = PathGeometry_280();
                 return result;
             }
 
@@ -22045,7 +22379,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(111.634003F, 119.896004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_280();
+                result.Geometry = PathGeometry_281();
                 return result;
             }
 
@@ -22055,7 +22389,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(133.686005F, 132.977997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_281();
+                result.Geometry = PathGeometry_282();
                 return result;
             }
 
@@ -22065,7 +22399,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(57.7089996F, 92.5339966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_282();
+                result.Geometry = PathGeometry_283();
                 return result;
             }
 
@@ -22075,7 +22409,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(207.190002F, 166.520996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_283();
+                result.Geometry = PathGeometry_284();
                 return result;
             }
 
@@ -22085,7 +22419,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(210.496002F, 161.651993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_284();
+                result.Geometry = PathGeometry_285();
                 return result;
             }
 
@@ -22095,7 +22429,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(144.037003F, 134.326996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_285();
+                result.Geometry = PathGeometry_286();
                 return result;
             }
 
@@ -22105,7 +22439,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(114.954002F, 116.866997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_286();
+                result.Geometry = PathGeometry_287();
                 return result;
             }
 
@@ -22115,7 +22449,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(145.360992F, 130.828995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_287();
+                result.Geometry = PathGeometry_288();
                 return result;
             }
 
@@ -22125,7 +22459,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.151993F, 174.371994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_288();
+                result.Geometry = PathGeometry_289();
                 return result;
             }
 
@@ -22135,7 +22469,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(213.274002F, 159.813004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_289();
+                result.Geometry = PathGeometry_290();
                 return result;
             }
 
@@ -22145,7 +22479,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.857002F, 113.528F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_290();
+                result.Geometry = PathGeometry_291();
                 return result;
             }
 
@@ -22155,7 +22489,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.765999F, 108.704002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_291();
+                result.Geometry = PathGeometry_292();
                 return result;
             }
 
@@ -22165,7 +22499,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.674004F, 109.903999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_292();
+                result.Geometry = PathGeometry_293();
                 return result;
             }
 
@@ -22175,7 +22509,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.924004F, 138.5F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_293();
+                result.Geometry = PathGeometry_294();
                 return result;
             }
 
@@ -22185,7 +22519,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(143.597F, 204.376999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_294();
+                result.Geometry = PathGeometry_295();
                 return result;
             }
 
@@ -22195,7 +22529,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(132.613998F, 213.628006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_295();
+                result.Geometry = PathGeometry_296();
                 return result;
             }
 
@@ -22205,7 +22539,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(134.570007F, 211.093002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_296();
+                result.Geometry = PathGeometry_297();
                 return result;
             }
 
@@ -22215,7 +22549,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(138.149002F, 209.567993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_297();
+                result.Geometry = PathGeometry_298();
                 return result;
             }
 
@@ -22225,7 +22559,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(129.947006F, 205.373001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_298();
+                result.Geometry = PathGeometry_299();
                 return result;
             }
 
@@ -22235,7 +22569,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(73.9449997F, 174.085999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_299();
+                result.Geometry = PathGeometry_300();
                 return result;
             }
 
@@ -22245,7 +22579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(41.9679985F, 154.811996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_300();
+                result.Geometry = PathGeometry_301();
                 return result;
             }
 
@@ -22255,7 +22589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(76.1240005F, 167.117004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_301();
+                result.Geometry = PathGeometry_302();
                 return result;
             }
 
@@ -22265,7 +22599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(57.6759987F, 155.597F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_302();
+                result.Geometry = PathGeometry_303();
                 return result;
             }
 
@@ -22275,7 +22609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.358002F, 187.886993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_303();
+                result.Geometry = PathGeometry_304();
                 return result;
             }
 
@@ -22285,7 +22619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(79.052002F, 165.279999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_304();
+                result.Geometry = PathGeometry_305();
                 return result;
             }
 
@@ -22295,7 +22629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(78.5400009F, 164.294006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_305();
+                result.Geometry = PathGeometry_306();
                 return result;
             }
 
@@ -22305,7 +22639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(77.1610031F, 161.587006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_306();
+                result.Geometry = PathGeometry_307();
                 return result;
             }
 
@@ -22315,7 +22649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(121.591003F, 185.173996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_307();
+                result.Geometry = PathGeometry_308();
                 return result;
             }
 
@@ -22325,7 +22659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(65.1320038F, 151.035004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_308();
+                result.Geometry = PathGeometry_309();
                 return result;
             }
 
@@ -22335,7 +22669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(117.074997F, 179.931F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_309();
+                result.Geometry = PathGeometry_310();
                 return result;
             }
 
@@ -22345,7 +22679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(83.7740021F, 161.156006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_310();
+                result.Geometry = PathGeometry_311();
                 return result;
             }
 
@@ -22355,7 +22689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(50.5810013F, 146.348999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_311();
+                result.Geometry = PathGeometry_312();
                 return result;
             }
 
@@ -22365,7 +22699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(105.028999F, 168.425003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_312();
+                result.Geometry = PathGeometry_313();
                 return result;
             }
 
@@ -22375,7 +22709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(52.6640015F, 144.156006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_313();
+                result.Geometry = PathGeometry_314();
                 return result;
             }
 
@@ -22385,7 +22719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(161.623001F, 196.753006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_314();
+                result.Geometry = PathGeometry_315();
                 return result;
             }
 
@@ -22395,7 +22729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(154.955994F, 193.292999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_315();
+                result.Geometry = PathGeometry_316();
                 return result;
             }
 
@@ -22405,7 +22739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(114.747002F, 166.912003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_316();
+                result.Geometry = PathGeometry_317();
                 return result;
             }
 
@@ -22415,7 +22749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(97.1989975F, 164.328995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_317();
+                result.Geometry = PathGeometry_318();
                 return result;
             }
 
@@ -22425,7 +22759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(55.6529999F, 141.580994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_318();
+                result.Geometry = PathGeometry_319();
                 return result;
             }
 
@@ -22435,7 +22769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.306F, 171.707993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_319();
+                result.Geometry = PathGeometry_320();
                 return result;
             }
 
@@ -22445,7 +22779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(38.480999F, 131.447006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_320();
+                result.Geometry = PathGeometry_321();
                 return result;
             }
 
@@ -22455,7 +22789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(100.912003F, 162.210999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_321();
+                result.Geometry = PathGeometry_322();
                 return result;
             }
 
@@ -22465,7 +22799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(103.551003F, 161.895004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_322();
+                result.Geometry = PathGeometry_323();
                 return result;
             }
 
@@ -22475,7 +22809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(107.646004F, 161.162003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_323();
+                result.Geometry = PathGeometry_324();
                 return result;
             }
 
@@ -22485,7 +22819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(44.3050003F, 129.888F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_324();
+                result.Geometry = PathGeometry_325();
                 return result;
             }
 
@@ -22495,7 +22829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(121.717003F, 168.604004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_325();
+                result.Geometry = PathGeometry_326();
                 return result;
             }
 
@@ -22505,7 +22839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.122002F, 166.578003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_326();
+                result.Geometry = PathGeometry_327();
                 return result;
             }
 
@@ -22515,7 +22849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(49.3190002F, 128.339996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_327();
+                result.Geometry = PathGeometry_328();
                 return result;
             }
 
@@ -22525,7 +22859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(120.072998F, 159.699997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_328();
+                result.Geometry = PathGeometry_329();
                 return result;
             }
 
@@ -22535,7 +22869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(181.417999F, 189.210999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_329();
+                result.Geometry = PathGeometry_330();
                 return result;
             }
 
@@ -22545,7 +22879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(54.6450005F, 124.683998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_330();
+                result.Geometry = PathGeometry_331();
                 return result;
             }
 
@@ -22555,7 +22889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(112.228996F, 152.824997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_331();
+                result.Geometry = PathGeometry_332();
                 return result;
             }
 
@@ -22565,7 +22899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(125.348F, 158.843994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_332();
+                result.Geometry = PathGeometry_333();
                 return result;
             }
 
@@ -22575,7 +22909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(114.780998F, 151.296005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_333();
+                result.Geometry = PathGeometry_334();
                 return result;
             }
 
@@ -22585,7 +22919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.1360016F, 116.677002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_334();
+                result.Geometry = PathGeometry_335();
                 return result;
             }
 
@@ -22595,7 +22929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(86.3960037F, 132.188995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_335();
+                result.Geometry = PathGeometry_336();
                 return result;
             }
 
@@ -22605,7 +22939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(50.3250008F, 110.626999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_336();
+                result.Geometry = PathGeometry_337();
                 return result;
             }
 
@@ -22615,7 +22949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(179.582993F, 172.925995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_337();
+                result.Geometry = PathGeometry_338();
                 return result;
             }
 
@@ -22625,7 +22959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(244.509003F, 256.859009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_338();
+                result.Geometry = PathGeometry_339();
                 return result;
             }
 
@@ -22635,7 +22969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(173.281006F, 227.981995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_339();
+                result.Geometry = PathGeometry_340();
                 return result;
             }
 
@@ -22645,7 +22979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(234.617004F, 257.798004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_340();
+                result.Geometry = PathGeometry_341();
                 return result;
             }
 
@@ -22655,7 +22989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(178.216995F, 227.561996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_341();
+                result.Geometry = PathGeometry_342();
                 return result;
             }
 
@@ -22665,7 +22999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(171.516006F, 223.052002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_342();
+                result.Geometry = PathGeometry_343();
                 return result;
             }
 
@@ -22675,7 +23009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(171.242004F, 216.057999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_343();
+                result.Geometry = PathGeometry_344();
                 return result;
             }
 
@@ -22685,7 +23019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(175.311005F, 216.639999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_344();
+                result.Geometry = PathGeometry_345();
                 return result;
             }
 
@@ -22695,7 +23029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(190.875F, 221.735001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_345();
+                result.Geometry = PathGeometry_346();
                 return result;
             }
 
@@ -22705,7 +23039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(229.774994F, 239.589996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_346();
+                result.Geometry = PathGeometry_347();
                 return result;
             }
 
@@ -22715,7 +23049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(222.289001F, 228.895996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_347();
+                result.Geometry = PathGeometry_348();
                 return result;
             }
 
@@ -22725,7 +23059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.847F, 233.395004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_348();
+                result.Geometry = PathGeometry_349();
                 return result;
             }
 
@@ -22735,7 +23069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(194.128998F, 217.686005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_349();
+                result.Geometry = PathGeometry_350();
                 return result;
             }
 
@@ -22745,7 +23079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(178.768997F, 209.203995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_350();
+                result.Geometry = PathGeometry_351();
                 return result;
             }
 
@@ -22755,7 +23089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(247.483994F, 240.296005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_351();
+                result.Geometry = PathGeometry_352();
                 return result;
             }
 
@@ -22765,7 +23099,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(197.395996F, 217.223999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_352();
+                result.Geometry = PathGeometry_353();
                 return result;
             }
 
@@ -22775,7 +23109,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(200.884003F, 216);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_353();
+                result.Geometry = PathGeometry_354();
                 return result;
             }
 
@@ -22785,7 +23119,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.966003F, 213.505997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_354();
+                result.Geometry = PathGeometry_355();
                 return result;
             }
 
@@ -22795,7 +23129,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(204.496994F, 215.134003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_355();
+                result.Geometry = PathGeometry_356();
                 return result;
             }
 
@@ -22805,7 +23139,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(185.291F, 203.554001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_356();
+                result.Geometry = PathGeometry_357();
                 return result;
             }
 
@@ -22815,7 +23149,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(231.641998F, 216.488007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_357();
+                result.Geometry = PathGeometry_358();
                 return result;
             }
 
@@ -22825,7 +23159,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(217.554001F, 215.389999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_358();
+                result.Geometry = PathGeometry_359();
                 return result;
             }
 
@@ -22835,7 +23169,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(218.488007F, 212.781998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_359();
+                result.Geometry = PathGeometry_360();
                 return result;
             }
 
@@ -22845,7 +23179,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(218.565994F, 209.727005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_360();
+                result.Geometry = PathGeometry_361();
                 return result;
             }
 
@@ -22855,7 +23189,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(235.098007F, 208.195007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_361();
+                result.Geometry = PathGeometry_362();
                 return result;
             }
 
@@ -22865,7 +23199,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(209.681F, 194.548996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_362();
+                result.Geometry = PathGeometry_363();
                 return result;
             }
 
@@ -22875,7 +23209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(234.854004F, 187.194F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_363();
+                result.Geometry = PathGeometry_364();
                 return result;
             }
 
@@ -22885,7 +23219,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(236.781998F, 175.916F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_364();
+                result.Geometry = PathGeometry_365();
                 return result;
             }
 
@@ -22895,7 +23229,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(179.369003F, 233.792007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_365();
+                result.Geometry = PathGeometry_366();
                 return result;
             }
 
@@ -22905,7 +23239,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(183.453003F, 234.787994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_366();
+                result.Geometry = PathGeometry_367();
                 return result;
             }
 
@@ -22915,7 +23249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(108.878998F, 197.393005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_367();
+                result.Geometry = PathGeometry_368();
                 return result;
             }
 
@@ -22925,7 +23259,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(201.093994F, 241.796997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_368();
+                result.Geometry = PathGeometry_369();
                 return result;
             }
 
@@ -22935,7 +23269,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(193.313995F, 237.399994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_369();
+                result.Geometry = PathGeometry_370();
                 return result;
             }
 
@@ -22945,7 +23279,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(75.7040024F, 176.026993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_370();
+                result.Geometry = PathGeometry_371();
                 return result;
             }
 
@@ -22955,7 +23289,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(203.136993F, 238.578995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_371();
+                result.Geometry = PathGeometry_372();
                 return result;
             }
 
@@ -22965,7 +23299,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(102.228996F, 187.123993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_372();
+                result.Geometry = PathGeometry_373();
                 return result;
             }
 
@@ -22975,7 +23309,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(29.3910007F, 143.636002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_373();
+                result.Geometry = PathGeometry_374();
                 return result;
             }
 
@@ -22985,7 +23319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(203.686005F, 230.093002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_374();
+                result.Geometry = PathGeometry_375();
                 return result;
             }
 
@@ -22995,7 +23329,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(200.787994F, 228.156006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_375();
+                result.Geometry = PathGeometry_376();
                 return result;
             }
 
@@ -23005,7 +23339,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(263.355988F, 255.042007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_376();
+                result.Geometry = PathGeometry_377();
                 return result;
             }
 
@@ -23015,7 +23349,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(274.960999F, 261.516998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_377();
+                result.Geometry = PathGeometry_378();
                 return result;
             }
 
@@ -23025,7 +23359,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(215.830994F, 228.807999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_378();
+                result.Geometry = PathGeometry_379();
                 return result;
             }
 
@@ -23035,7 +23369,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(206.087006F, 222.356995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_379();
+                result.Geometry = PathGeometry_380();
                 return result;
             }
 
@@ -23045,7 +23379,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(266.256012F, 252.416F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_380();
+                result.Geometry = PathGeometry_381();
                 return result;
             }
 
@@ -23055,7 +23389,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(219.675995F, 226.065994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_381();
+                result.Geometry = PathGeometry_382();
                 return result;
             }
 
@@ -23065,7 +23399,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(266.821991F, 244.811996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_382();
+                result.Geometry = PathGeometry_383();
                 return result;
             }
 
@@ -23075,7 +23409,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(84.7990036F, 143.233002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_383();
+                result.Geometry = PathGeometry_384();
                 return result;
             }
 
@@ -23085,7 +23419,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(267.229004F, 237.151993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_384();
+                result.Geometry = PathGeometry_385();
                 return result;
             }
 
@@ -23095,7 +23429,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(264.244995F, 232.979996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_385();
+                result.Geometry = PathGeometry_386();
                 return result;
             }
 
@@ -23105,7 +23439,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.4980011F, 140.244995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_386();
+                result.Geometry = PathGeometry_387();
                 return result;
             }
 
@@ -23115,7 +23449,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(199.457993F, 186.177994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_387();
+                result.Geometry = PathGeometry_388();
                 return result;
             }
 
@@ -23125,7 +23459,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(216.643997F, 190.662994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_388();
+                result.Geometry = PathGeometry_389();
                 return result;
             }
 
@@ -23135,7 +23469,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(122.549004F, 146.154007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_389();
+                result.Geometry = PathGeometry_390();
                 return result;
             }
 
@@ -23145,7 +23479,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(117.307999F, 144.707993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_390();
+                result.Geometry = PathGeometry_391();
                 return result;
             }
 
@@ -23155,7 +23489,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(200.949997F, 183.082001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_391();
+                result.Geometry = PathGeometry_392();
                 return result;
             }
 
@@ -23165,7 +23499,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(199.830994F, 177.009995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_392();
+                result.Geometry = PathGeometry_393();
                 return result;
             }
 
@@ -23175,7 +23509,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(215.039001F, 187.639008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_393();
+                result.Geometry = PathGeometry_394();
                 return result;
             }
 
@@ -23185,7 +23519,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(57.9420013F, 106.612999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_394();
+                result.Geometry = PathGeometry_395();
                 return result;
             }
 
@@ -23195,7 +23529,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(128.302994F, 141.841003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_395();
+                result.Geometry = PathGeometry_396();
                 return result;
             }
 
@@ -23205,7 +23539,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(219.035004F, 178.774002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_396();
+                result.Geometry = PathGeometry_397();
                 return result;
             }
 
@@ -23215,7 +23549,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(124.362F, 135.179001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_397();
+                result.Geometry = PathGeometry_398();
                 return result;
             }
 
@@ -23225,7 +23559,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(283.636993F, 212.214005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_398();
+                result.Geometry = PathGeometry_399();
                 return result;
             }
 
@@ -23235,7 +23569,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(281.432007F, 207.686005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_399();
+                result.Geometry = PathGeometry_400();
                 return result;
             }
 
@@ -23245,7 +23579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(217.098007F, 172.261993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_400();
+                result.Geometry = PathGeometry_401();
                 return result;
             }
 
@@ -23255,7 +23589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.486F, 111.727997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_401();
+                result.Geometry = PathGeometry_402();
                 return result;
             }
 
@@ -23265,7 +23599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(171.113998F, 42.7200012F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_402();
+                result.Geometry = PathGeometry_403();
                 return result;
             }
 
@@ -23275,7 +23609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(19.0249996F, 61.5480003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_403();
+                result.Geometry = PathGeometry_404();
                 return result;
             }
 
@@ -23285,7 +23619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(30.625F, 66.0999985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_404();
+                result.Geometry = PathGeometry_405();
                 return result;
             }
 
@@ -23295,7 +23629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(172.382996F, 81.5759964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_405();
+                result.Geometry = PathGeometry_406();
                 return result;
             }
 
@@ -23305,7 +23639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(114.149002F, 83.8769989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_406();
+                result.Geometry = PathGeometry_407();
                 return result;
             }
 
@@ -23315,7 +23649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.750999F, 84.836998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_407();
+                result.Geometry = PathGeometry_408();
                 return result;
             }
 
@@ -23325,7 +23659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(175.009003F, 88.9899979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_408();
+                result.Geometry = PathGeometry_409();
                 return result;
             }
 
@@ -23335,7 +23669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(153.994003F, 92.9940033F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_409();
+                result.Geometry = PathGeometry_410();
                 return result;
             }
 
@@ -23345,7 +23679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(66.6289978F, 93.8789978F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_410();
+                result.Geometry = PathGeometry_411();
                 return result;
             }
 
@@ -23355,7 +23689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(150.376007F, 99.6650009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_411();
+                result.Geometry = PathGeometry_412();
                 return result;
             }
 
@@ -23365,7 +23699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.269997F, 96.9990005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_412();
+                result.Geometry = PathGeometry_413();
                 return result;
             }
 
@@ -23375,7 +23709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(102.552002F, 102.004997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_413();
+                result.Geometry = PathGeometry_414();
                 return result;
             }
 
@@ -23385,7 +23719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(147.651001F, 105.412003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_414();
+                result.Geometry = PathGeometry_415();
                 return result;
             }
 
@@ -23395,7 +23729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(102.981003F, 106.838997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_415();
+                result.Geometry = PathGeometry_416();
                 return result;
             }
 
@@ -23405,7 +23739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(141.959F, 113.222F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_416();
+                result.Geometry = PathGeometry_417();
                 return result;
             }
 
@@ -23415,7 +23749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(147.070007F, 118.030998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_417();
+                result.Geometry = PathGeometry_418();
                 return result;
             }
 
@@ -23425,7 +23759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(143.936005F, 117.783997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_418();
+                result.Geometry = PathGeometry_419();
                 return result;
             }
 
@@ -23435,7 +23769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(129.279999F, 82.0800018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_419();
+                result.Geometry = PathGeometry_420();
                 return result;
             }
 
@@ -23445,7 +23779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(164.233002F, 30.9029999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_420();
+                result.Geometry = PathGeometry_421();
                 return result;
             }
 
@@ -23455,7 +23789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(134.139999F, 36.0680008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_421();
+                result.Geometry = PathGeometry_422();
                 return result;
             }
 
@@ -23465,7 +23799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.7630005F, 35.0719986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_422();
+                result.Geometry = PathGeometry_423();
                 return result;
             }
 
@@ -23475,7 +23809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(59.1669998F, 34.8709984F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_423();
+                result.Geometry = PathGeometry_424();
                 return result;
             }
 
@@ -23485,7 +23819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.260002F, 41.9729996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_424();
+                result.Geometry = PathGeometry_425();
                 return result;
             }
 
@@ -23495,7 +23829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(145.841003F, 34.9799995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_425();
+                result.Geometry = PathGeometry_426();
                 return result;
             }
 
@@ -23505,7 +23839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.323997F, 37.7120018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_426();
+                result.Geometry = PathGeometry_427();
                 return result;
             }
 
@@ -23515,7 +23849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(142.427994F, 39.7960014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_427();
+                result.Geometry = PathGeometry_428();
                 return result;
             }
 
@@ -23525,7 +23859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(139.203003F, 41.6520004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_428();
+                result.Geometry = PathGeometry_429();
                 return result;
             }
 
@@ -23535,7 +23869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(134.352997F, 45.5730019F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_429();
+                result.Geometry = PathGeometry_430();
                 return result;
             }
 
@@ -23545,7 +23879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.249001F, 45.0660019F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_430();
+                result.Geometry = PathGeometry_431();
                 return result;
             }
 
@@ -23555,7 +23889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(112.582001F, 48.5279999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_431();
+                result.Geometry = PathGeometry_432();
                 return result;
             }
 
@@ -23565,7 +23899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.557999F, 55.3390007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_432();
+                result.Geometry = PathGeometry_433();
                 return result;
             }
 
@@ -23575,7 +23909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(28.0960007F, 56.7420006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_433();
+                result.Geometry = PathGeometry_434();
                 return result;
             }
 
@@ -23585,7 +23919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(133.063995F, 58.8689995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_434();
+                result.Geometry = PathGeometry_435();
                 return result;
             }
 
@@ -23595,7 +23929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.401001F, 59.3899994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_435();
+                result.Geometry = PathGeometry_436();
                 return result;
             }
 
@@ -23605,7 +23939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(130.143005F, 62.5489998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_436();
+                result.Geometry = PathGeometry_437();
                 return result;
             }
 
@@ -23615,7 +23949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(175.210007F, 68.7160034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_437();
+                result.Geometry = PathGeometry_438();
                 return result;
             }
 
@@ -23625,7 +23959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(38.5320015F, 75.8730011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_438();
+                result.Geometry = PathGeometry_439();
                 return result;
             }
 
@@ -23635,7 +23969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(171.914993F, 53.7369995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_439();
+                result.Geometry = PathGeometry_440();
                 return result;
             }
 
@@ -23645,7 +23979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(169.154999F, 59.9239998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_440();
+                result.Geometry = PathGeometry_441();
                 return result;
             }
 
@@ -23655,7 +23989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.480003F, 73.9660034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_441();
+                result.Geometry = PathGeometry_442();
                 return result;
             }
 
@@ -23665,7 +23999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(130.639008F, 72.1190033F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_442();
+                result.Geometry = PathGeometry_443();
                 return result;
             }
 
@@ -23675,7 +24009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.705002F, 82.0449982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_443();
+                result.Geometry = PathGeometry_444();
                 return result;
             }
 
@@ -23685,7 +24019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.771004F, 88.7649994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_444();
+                result.Geometry = PathGeometry_445();
                 return result;
             }
 
@@ -23695,7 +24029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(139.772995F, 117.264F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_445();
+                result.Geometry = PathGeometry_446();
                 return result;
             }
 
@@ -23705,7 +24039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(97.2669983F, 257.269989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_446();
+                result.Geometry = PathGeometry_447();
                 return result;
             }
 
@@ -23715,7 +24049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(52.6940002F, 236.785004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_447();
+                result.Geometry = PathGeometry_448();
                 return result;
             }
 
@@ -23725,7 +24059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(60.6349983F, 238.955002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_448();
+                result.Geometry = PathGeometry_449();
                 return result;
             }
 
@@ -23735,7 +24069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(57.6500015F, 237.259003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_449();
+                result.Geometry = PathGeometry_450();
                 return result;
             }
 
@@ -23745,7 +24079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.970001F, 269.338013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_450();
+                result.Geometry = PathGeometry_451();
                 return result;
             }
 
@@ -23755,7 +24089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(42.625F, 225.292007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_451();
+                result.Geometry = PathGeometry_452();
                 return result;
             }
 
@@ -23765,7 +24099,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(55.7019997F, 230.533997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_452();
+                result.Geometry = PathGeometry_453();
                 return result;
             }
 
@@ -23775,7 +24109,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(62.6049995F, 231.645004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_453();
+                result.Geometry = PathGeometry_454();
                 return result;
             }
 
@@ -23785,7 +24119,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(127.552002F, 257.981995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_454();
+                result.Geometry = PathGeometry_455();
                 return result;
             }
 
@@ -23795,7 +24129,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(53.1349983F, 220.621994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_455();
+                result.Geometry = PathGeometry_456();
                 return result;
             }
 
@@ -23805,7 +24139,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(66.8379974F, 226.442993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_456();
+                result.Geometry = PathGeometry_457();
                 return result;
             }
 
@@ -23815,7 +24149,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(130.266998F, 253.529007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_457();
+                result.Geometry = PathGeometry_458();
                 return result;
             }
 
@@ -23825,7 +24159,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(125.160004F, 251.748001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_458();
+                result.Geometry = PathGeometry_459();
                 return result;
             }
 
@@ -23835,7 +24169,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(111.399002F, 246.722F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_459();
+                result.Geometry = PathGeometry_460();
                 return result;
             }
 
@@ -23845,7 +24179,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(115.691002F, 245.238007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_460();
+                result.Geometry = PathGeometry_461();
                 return result;
             }
 
@@ -23855,7 +24189,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(74.3990021F, 219.998001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_461();
+                result.Geometry = PathGeometry_462();
                 return result;
             }
 
@@ -23865,7 +24199,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(117.183998F, 242.216995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_462();
+                result.Geometry = PathGeometry_463();
                 return result;
             }
 
@@ -23875,7 +24209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(63.6839981F, 215.561005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_463();
+                result.Geometry = PathGeometry_464();
                 return result;
             }
 
@@ -23885,7 +24219,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(129.856003F, 246.304993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_464();
+                result.Geometry = PathGeometry_465();
                 return result;
             }
 
@@ -23895,7 +24229,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(127.309998F, 243.929993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_465();
+                result.Geometry = PathGeometry_466();
                 return result;
             }
 
@@ -23905,7 +24239,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(140.761993F, 245.867996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_466();
+                result.Geometry = PathGeometry_467();
                 return result;
             }
 
@@ -23915,7 +24249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(139.324005F, 244.001999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_467();
+                result.Geometry = PathGeometry_468();
                 return result;
             }
 
@@ -23925,7 +24259,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(140.996002F, 242.134003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_468();
+                result.Geometry = PathGeometry_469();
                 return result;
             }
 
@@ -23935,7 +24269,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(132.113007F, 234.774994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_469();
+                result.Geometry = PathGeometry_470();
                 return result;
             }
 
@@ -23945,7 +24279,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(151.684998F, 240.533997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_470();
+                result.Geometry = PathGeometry_471();
                 return result;
             }
 
@@ -23955,7 +24289,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(136.380997F, 222.613998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_471();
+                result.Geometry = PathGeometry_472();
                 return result;
             }
 
@@ -23965,7 +24299,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(138.054993F, 219.257004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_472();
+                result.Geometry = PathGeometry_473();
                 return result;
             }
 
@@ -23975,7 +24309,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(162.886002F, 227.520996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_473();
+                result.Geometry = PathGeometry_474();
                 return result;
             }
 
@@ -23985,7 +24319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(106.486F, 191.332001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_474();
+                result.Geometry = PathGeometry_475();
                 return result;
             }
 
@@ -23995,7 +24329,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(116.572998F, 189.697998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_475();
+                result.Geometry = PathGeometry_476();
                 return result;
             }
 
@@ -24005,7 +24339,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(97.5589981F, 181.787994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_476();
+                result.Geometry = PathGeometry_477();
                 return result;
             }
 
@@ -24015,7 +24349,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(153.046005F, 192.983994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_477();
+                result.Geometry = PathGeometry_478();
                 return result;
             }
 
@@ -24025,7 +24359,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(27.8500004F, 127.653999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_478();
+                result.Geometry = PathGeometry_479();
                 return result;
             }
 
@@ -24035,7 +24369,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(19.7360001F, 122.334F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_479();
+                result.Geometry = PathGeometry_480();
                 return result;
             }
 
@@ -24045,7 +24379,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.043999F, 168.356003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_480();
+                result.Geometry = PathGeometry_481();
                 return result;
             }
 
@@ -24055,7 +24389,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(138.462006F, 167.184006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_481();
+                result.Geometry = PathGeometry_482();
                 return result;
             }
 
@@ -24065,7 +24399,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.794998F, 165.078995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_482();
+                result.Geometry = PathGeometry_483();
                 return result;
             }
 
@@ -24075,7 +24409,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(124.443001F, 165.069F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_483();
+                result.Geometry = PathGeometry_484();
                 return result;
             }
 
@@ -24085,7 +24419,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(152.608994F, 178.813995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_484();
+                result.Geometry = PathGeometry_485();
                 return result;
             }
 
@@ -24095,7 +24429,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(75.1839981F, 139.910995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_485();
+                result.Geometry = PathGeometry_486();
                 return result;
             }
 
@@ -24105,7 +24439,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(158.641006F, 180.464996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_486();
+                result.Geometry = PathGeometry_487();
                 return result;
             }
 
@@ -24115,7 +24449,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(31.0109997F, 114.603996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_487();
+                result.Geometry = PathGeometry_488();
                 return result;
             }
 
@@ -24125,7 +24459,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(131.660004F, 160.533997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_488();
+                result.Geometry = PathGeometry_489();
                 return result;
             }
 
@@ -24135,7 +24469,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(136.184998F, 153.867004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_489();
+                result.Geometry = PathGeometry_490();
                 return result;
             }
 
@@ -24145,7 +24479,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(45.1850014F, 116.450996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_490();
+                result.Geometry = PathGeometry_491();
                 return result;
             }
 
@@ -24155,7 +24489,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(46.9959984F, 111.661003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_491();
+                result.Geometry = PathGeometry_492();
                 return result;
             }
 
@@ -24165,7 +24499,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(171.315994F, 171.283997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_492();
+                result.Geometry = PathGeometry_493();
                 return result;
             }
 
@@ -24175,7 +24509,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(139.990997F, 151.348007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_493();
+                result.Geometry = PathGeometry_494();
                 return result;
             }
 
@@ -24185,7 +24519,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(44.5830002F, 212.369003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_494();
+                result.Geometry = PathGeometry_495();
                 return result;
             }
 
@@ -24195,7 +24529,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(29.5419998F, 225.037003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_495();
+                result.Geometry = PathGeometry_496();
                 return result;
             }
 
@@ -24205,7 +24539,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(32.2210007F, 221.565994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_496();
+                result.Geometry = PathGeometry_497();
                 return result;
             }
 
@@ -24215,7 +24549,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(37.1220016F, 219.477997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_497();
+                result.Geometry = PathGeometry_498();
                 return result;
             }
 
@@ -24225,7 +24559,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(25.8920002F, 213.733994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_498();
+                result.Geometry = PathGeometry_499();
                 return result;
             }
 
@@ -24235,7 +24569,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(69.2639999F, 201.931F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_499();
+                result.Geometry = PathGeometry_500();
                 return result;
             }
 
@@ -24245,7 +24579,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(60.1349983F, 197.192001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_500();
+                result.Geometry = PathGeometry_501();
                 return result;
             }
 
@@ -24255,7 +24589,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(96.3700027F, 191.602997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_501();
+                result.Geometry = PathGeometry_502();
                 return result;
             }
 
@@ -24265,7 +24599,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(19.5939999F, 150.022003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_502();
+                result.Geometry = PathGeometry_503();
                 return result;
             }
 
@@ -24275,7 +24609,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.8570023F, 169.304001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_503();
+                result.Geometry = PathGeometry_504();
                 return result;
             }
 
@@ -24285,7 +24619,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(182.759995F, 284.234009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_504();
+                result.Geometry = PathGeometry_505();
                 return result;
             }
 
@@ -24295,7 +24629,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(85.2289963F, 244.690994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_505();
+                result.Geometry = PathGeometry_506();
                 return result;
             }
 
@@ -24305,7 +24639,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(169.216003F, 285.518005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_506();
+                result.Geometry = PathGeometry_507();
                 return result;
             }
 
@@ -24315,7 +24649,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(91.9869995F, 244.117996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_507();
+                result.Geometry = PathGeometry_508();
                 return result;
             }
 
@@ -24325,7 +24659,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(82.8119965F, 237.940994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_508();
+                result.Geometry = PathGeometry_509();
                 return result;
             }
 
@@ -24335,7 +24669,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(82.435997F, 228.363998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_509();
+                result.Geometry = PathGeometry_510();
                 return result;
             }
 
@@ -24345,7 +24679,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(88.0080032F, 229.162003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_510();
+                result.Geometry = PathGeometry_511();
                 return result;
             }
 
@@ -24355,7 +24689,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(109.32F, 236.138F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_511();
+                result.Geometry = PathGeometry_512();
                 return result;
             }
 
@@ -24365,7 +24699,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(162.585007F, 260.584991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_512();
+                result.Geometry = PathGeometry_513();
                 return result;
             }
 
@@ -24375,7 +24709,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(152.335007F, 245.944F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_513();
+                result.Geometry = PathGeometry_514();
                 return result;
             }
 
@@ -24385,7 +24719,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(172.266998F, 252.104004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_514();
+                result.Geometry = PathGeometry_515();
                 return result;
             }
 
@@ -24395,7 +24729,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.774002F, 230.593002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_515();
+                result.Geometry = PathGeometry_516();
                 return result;
             }
 
@@ -24405,7 +24739,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.7419968F, 218.979004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_516();
+                result.Geometry = PathGeometry_517();
                 return result;
             }
 
@@ -24415,7 +24749,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(118.247002F, 229.960999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_517();
+                result.Geometry = PathGeometry_518();
                 return result;
             }
 
@@ -24425,7 +24759,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.025002F, 228.283997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_518();
+                result.Geometry = PathGeometry_519();
                 return result;
             }
 
@@ -24435,7 +24769,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(113.552002F, 224.869995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_519();
+                result.Geometry = PathGeometry_520();
                 return result;
             }
 
@@ -24445,7 +24779,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(127.971001F, 227.100006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_520();
+                result.Geometry = PathGeometry_521();
                 return result;
             }
 
@@ -24455,7 +24789,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(101.672997F, 211.242004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_521();
+                result.Geometry = PathGeometry_522();
                 return result;
             }
 
@@ -24465,7 +24799,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(165.141998F, 228.953003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_522();
+                result.Geometry = PathGeometry_523();
                 return result;
             }
 
@@ -24475,7 +24809,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(145.850006F, 227.449997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_523();
+                result.Geometry = PathGeometry_524();
                 return result;
             }
 
@@ -24485,7 +24819,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(147.130005F, 223.880005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_524();
+                result.Geometry = PathGeometry_525();
                 return result;
             }
 
@@ -24495,7 +24829,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(147.235992F, 219.695007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_525();
+                result.Geometry = PathGeometry_526();
                 return result;
             }
 
@@ -24505,7 +24839,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(169.871994F, 217.598007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_526();
+                result.Geometry = PathGeometry_527();
                 return result;
             }
 
@@ -24515,7 +24849,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(135.070007F, 198.912994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_527();
+                result.Geometry = PathGeometry_528();
                 return result;
             }
 
@@ -24525,7 +24859,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(169.539001F, 188.841995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_528();
+                result.Geometry = PathGeometry_529();
                 return result;
             }
 
@@ -24535,7 +24869,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(172.179993F, 173.397995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_529();
+                result.Geometry = PathGeometry_530();
                 return result;
             }
 
@@ -24545,7 +24879,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.564003F, 252.647995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_530();
+                result.Geometry = PathGeometry_531();
                 return result;
             }
 
@@ -24555,7 +24889,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(99.1579971F, 254.011002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_531();
+                result.Geometry = PathGeometry_532();
                 return result;
             }
 
@@ -24565,7 +24899,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.310997F, 263.609009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_532();
+                result.Geometry = PathGeometry_533();
                 return result;
             }
 
@@ -24575,7 +24909,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(112.658997F, 257.587006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_533();
+                result.Geometry = PathGeometry_534();
                 return result;
             }
 
@@ -24585,7 +24919,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.110001F, 259.201996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_534();
+                result.Geometry = PathGeometry_535();
                 return result;
             }
 
@@ -24595,7 +24929,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(126.861F, 247.582001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_535();
+                result.Geometry = PathGeometry_536();
                 return result;
             }
 
@@ -24605,7 +24939,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(122.892998F, 244.929993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_536();
+                result.Geometry = PathGeometry_537();
                 return result;
             }
 
@@ -24615,7 +24949,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(143.492996F, 245.822998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_537();
+                result.Geometry = PathGeometry_538();
                 return result;
             }
 
@@ -24625,7 +24959,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(130.149002F, 236.988998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_538();
+                result.Geometry = PathGeometry_539();
                 return result;
             }
 
@@ -24635,7 +24969,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(148.755997F, 242.070007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_539();
+                result.Geometry = PathGeometry_540();
                 return result;
             }
 
@@ -24645,7 +24979,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(121.072998F, 187.449997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_540();
+                result.Geometry = PathGeometry_541();
                 return result;
             }
 
@@ -24655,7 +24989,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(144.604996F, 193.591995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_541();
+                result.Geometry = PathGeometry_542();
                 return result;
             }
 
@@ -24665,7 +24999,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(123.115997F, 183.210999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_542();
+                result.Geometry = PathGeometry_543();
                 return result;
             }
 
@@ -24675,7 +25009,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(121.583F, 174.895996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_543();
+                result.Geometry = PathGeometry_544();
                 return result;
             }
 
@@ -24685,7 +25019,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(142.406006F, 189.449997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_544();
+                result.Geometry = PathGeometry_545();
                 return result;
             }
 
@@ -24695,7 +25029,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(23.6389999F, 126.740997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_545();
+                result.Geometry = PathGeometry_546();
                 return result;
             }
 
@@ -24705,7 +25039,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(147.878006F, 177.313004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_546();
+                result.Geometry = PathGeometry_547();
                 return result;
             }
 
@@ -24715,7 +25049,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(18.2439995F, 117.617996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_547();
+                result.Geometry = PathGeometry_548();
                 return result;
             }
 
@@ -24725,7 +25059,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(145.225998F, 168.393997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_548();
+                result.Geometry = PathGeometry_549();
                 return result;
             }
 
@@ -24735,7 +25069,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(17.0440006F, 85.5059967F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_549();
+                result.Geometry = PathGeometry_550();
                 return result;
             }
 
@@ -24745,7 +25079,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(272.42099F, 254.110001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_550();
+                result.Geometry = PathGeometry_551();
                 return result;
             }
 
@@ -24755,7 +25089,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(290.53299F, 218.684998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
-                result.Geometry = PathGeometry_551();
+                result.Geometry = PathGeometry_552();
                 return result;
             }
 
@@ -24764,7 +25098,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.8649979F, 18.0030003F);
                 result.FillBrush = ColorBrush_AlmostDarkMagenta_FF992B9A();
-                result.Geometry = PathGeometry_552();
+                result.Geometry = PathGeometry_553();
                 return result;
             }
 
@@ -24773,7 +25107,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.8649979F, 18.0030003F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
-                result.Geometry = _pathGeometry_552;
+                result.Geometry = _pathGeometry_553;
                 return result;
             }
 
@@ -24782,7 +25116,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.8649979F, 18.0030003F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
-                result.Geometry = _pathGeometry_552;
+                result.Geometry = _pathGeometry_553;
                 return result;
             }
 
@@ -24791,55 +25125,47 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(92.8649979F, 18.0030003F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
-                result.Geometry = _pathGeometry_552;
+                result.Geometry = _pathGeometry_553;
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_556()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(103.086998F, 103.945999F);
                 result.FillBrush = ColorBrush_AlmostGainsboro_FFE4E4E4();
-                result.Geometry = PathGeometry_553();
+                result.Geometry = PathGeometry_554();
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_557()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(98.0400009F, 98.0410004F);
                 result.FillBrush = ColorBrush_AlmostWhiteSmoke_FFF1F1F1();
-                result.Geometry = PathGeometry_554();
+                result.Geometry = PathGeometry_555();
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_558()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(160.029999F, 83.586998F);
                 result.FillBrush = _colorBrush_AlmostGainsboro_FFE4E4E4;
-                result.Geometry = PathGeometry_555();
+                result.Geometry = PathGeometry_556();
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            //   Transforms: Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_559()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(162.625F, 85.5289993F);
                 result.FillBrush = ColorBrush_White();
-                result.Geometry = PathGeometry_556();
+                result.Geometry = PathGeometry_557();
                 return result;
             }
 
@@ -24850,7 +25176,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(20.8220005F, 18.8449993F);
                 result.FillBrush = ColorBrush_AlmostForestGreen_FF10873D();
-                result.Geometry = PathGeometry_557();
+                result.Geometry = PathGeometry_558();
                 return result;
             }
 
@@ -24861,7 +25187,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostSpringGreen_FF01CC69();
-                result.Geometry = PathGeometry_558();
+                result.Geometry = PathGeometry_559();
                 return result;
             }
 
@@ -24872,7 +25198,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(20.8220005F, 18.8460007F);
                 result.FillBrush = ColorBrush_AlmostCrimson_FFD03438();
-                result.Geometry = PathGeometry_559();
+                result.Geometry = PathGeometry_560();
                 return result;
             }
 
@@ -24883,7 +25209,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(15.3620005F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostTomato_FFFD4342();
-                result.Geometry = PathGeometry_560();
+                result.Geometry = PathGeometry_561();
                 return result;
             }
 
@@ -24894,7 +25220,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(20.8209991F, 18.8449993F);
                 result.FillBrush = ColorBrush_AlmostDarkOrange_FFFD8B00();
-                result.Geometry = PathGeometry_561();
+                result.Geometry = PathGeometry_562();
                 return result;
             }
 
@@ -24905,7 +25231,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostOrange_FFFFB902();
-                result.Geometry = PathGeometry_562();
+                result.Geometry = PathGeometry_563();
                 return result;
             }
 
@@ -24916,7 +25242,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(20.8220005F, 18.8439999F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF0062B0();
-                result.Geometry = PathGeometry_563();
+                result.Geometry = PathGeometry_564();
                 return result;
             }
 
@@ -24927,7 +25253,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostDodgerBlue_FF0278D9();
-                result.Geometry = PathGeometry_564();
+                result.Geometry = PathGeometry_565();
                 return result;
             }
 
@@ -24938,7 +25264,7 @@ namespace Compositions
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = ColorBrush_AlmostOrange_FFFFBA01();
-                result.Geometry = PathGeometry_565();
+                result.Geometry = PathGeometry_566();
                 return result;
             }
 
@@ -24949,7 +25275,7 @@ namespace Compositions
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = AnimatedColorBrush_AlmostOrange_FFFFBA01_to_AlmostDarkMagenta_FF9A008A();
-                result.Geometry = PathGeometry_566();
+                result.Geometry = PathGeometry_567();
                 return result;
             }
 
@@ -24960,7 +25286,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(-26.7699986F, 100.078003F);
                 result.FillBrush = _colorBrush_AlmostDarkOrange_FFFD8B00;
-                result.Geometry = PathGeometry_567();
+                result.Geometry = PathGeometry_568();
                 return result;
             }
 
@@ -24971,7 +25297,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(-26.7699986F, 100.078003F);
                 result.FillBrush = _colorBrush_AlmostDarkOrange_FFFD8B00;
-                result.Geometry = PathGeometry_568();
+                result.Geometry = PathGeometry_569();
                 return result;
             }
 
@@ -24982,7 +25308,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(133.901993F, 69.6750031F);
                 result.FillBrush = ColorBrush_AlmostChocolate_FFC85011();
-                result.Geometry = PathGeometry_569();
+                result.Geometry = PathGeometry_570();
                 return result;
             }
 
@@ -24993,7 +25319,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(71.2809982F, 127.908997F);
                 result.FillBrush = ColorBrush_AlmostSlateGray_FF69797D();
-                result.Geometry = PathGeometry_570();
+                result.Geometry = PathGeometry_571();
                 return result;
             }
 
@@ -25004,7 +25330,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(93.9560013F, 108.473F);
                 result.FillBrush = ColorBrush_AlmostLightGray_FFCCCCCC();
-                result.Geometry = PathGeometry_571();
+                result.Geometry = PathGeometry_572();
                 return result;
             }
 
@@ -25015,7 +25341,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(119.796997F, 49.7350006F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFF6610E();
-                result.Geometry = PathGeometry_572();
+                result.Geometry = PathGeometry_573();
                 return result;
             }
 
@@ -25026,7 +25352,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(61.5620003F, 118.191002F);
                 result.FillBrush = ColorBrush_AlmostLightSlateGray_FF859499();
-                result.Geometry = PathGeometry_573();
+                result.Geometry = PathGeometry_574();
                 return result;
             }
 
@@ -25037,7 +25363,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(80.9990005F, 95.5149994F);
                 result.FillBrush = _colorBrush_AlmostGainsboro_FFE4E4E4;
-                result.Geometry = PathGeometry_574();
+                result.Geometry = PathGeometry_575();
                 return result;
             }
 
@@ -25061,9 +25387,9 @@ namespace Compositions
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-16.0699997F, -44.3889999F), LinearEasingFunction());
-                result.InsertKeyFrame(0.666666687F, new Vector2(-16.0699997F, -44.3889999F), LinearEasingFunction());
-                result.InsertKeyFrame(0.983333349F, new Vector2(-16.0699997F, -74.3889999F), CubicBezierEasingFunction_00());
+                result.InsertKeyFrame(0, new Vector2(-16.0699997F, -44.3889999F), _linearEasingFunction);
+                result.InsertKeyFrame(0.666666687F, new Vector2(-16.0699997F, -44.3889999F), _linearEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(-16.0699997F, -74.3889999F), _cubicBezierEasingFunction_01);
                 return result;
             }
 
@@ -25073,9 +25399,9 @@ namespace Compositions
                 var result = _vector2Animation_01 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(150, 150), _linearEasingFunction);
-                result.InsertKeyFrame(0.333333343F, new Vector2(150, 220), CubicBezierEasingFunction_02());
-                result.InsertKeyFrame(0.5F, new Vector2(150, 220), CubicBezierEasingFunction_03());
-                result.InsertKeyFrame(0.983333349F, new Vector2(150, 150), CubicBezierEasingFunction_04());
+                result.InsertKeyFrame(0.333333343F, new Vector2(150, 220), CubicBezierEasingFunction_03());
+                result.InsertKeyFrame(0.5F, new Vector2(150, 220), CubicBezierEasingFunction_04());
+                result.InsertKeyFrame(0.983333349F, new Vector2(150, 150), CubicBezierEasingFunction_05());
                 return result;
             }
 
@@ -25085,9 +25411,9 @@ namespace Compositions
                 var result = _vector2Animation_02 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.333333343F, new Vector2(0.699999988F, 0.699999988F), _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.333333343F, new Vector2(0.699999988F, 0.699999988F), _cubicBezierEasingFunction_03);
                 result.InsertKeyFrame(0.5F, new Vector2(0.699999988F, 0.699999988F), _stepEasingFunction_0);
-                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_06);
                 return result;
             }
 
@@ -25101,7 +25427,7 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(66.6080017F, 150.429001F), _linearEasingFunction);
                 result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t3, 3) * Vector2(66.608,150.429)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(66.95261,151.5166)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(68.3314,155.8674)) + (Pow(_.t3, 3) * Vector2(68.676,156.955))", StepEasingFunction_1());
                 result.InsertKeyFrame(0.166666672F, new Vector2(68.6760025F, 156.955002F), StepEasingFunction_1());
-                result.InsertKeyFrame(0.666666687F, new Vector2(68.6760025F, 156.955002F), CubicBezierEasingFunction_07());
+                result.InsertKeyFrame(0.666666687F, new Vector2(68.6760025F, 156.955002F), CubicBezierEasingFunction_08());
                 result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t3, 3) * Vector2(68.676,156.955)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(68.3314,155.8674)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(66.95261,151.5166)) + (Pow(_.t3, 3) * Vector2(66.608,150.429))", StepEasingFunction_1());
                 result.InsertKeyFrame(0.983333349F, new Vector2(66.6080017F, 150.429001F), StepEasingFunction_1());
                 return result;
@@ -25117,7 +25443,7 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(39.7260017F, 98.1959991F), _linearEasingFunction);
                 result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t5, 3) * Vector2(39.726,98.196)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(40.0706,99.28359)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(41.4484,103.6344)) + (Pow(_.t5, 3) * Vector2(41.793,104.722))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.166666672F, new Vector2(41.7929993F, 104.722F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.666666687F, new Vector2(41.7929993F, 104.722F), _cubicBezierEasingFunction_07);
+                result.InsertKeyFrame(0.666666687F, new Vector2(41.7929993F, 104.722F), _cubicBezierEasingFunction_08);
                 result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t5, 3) * Vector2(41.793,104.722)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(41.4484,103.6344)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(40.0706,99.28359)) + (Pow(_.t5, 3) * Vector2(39.726,98.196))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.983333349F, new Vector2(39.7260017F, 98.1959991F), _stepEasingFunction_1);
                 return result;
@@ -25129,9 +25455,9 @@ namespace Compositions
                 var result = _vector2Animation_05 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.5F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_02);
-                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.166666672F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_03);
                 return result;
             }
 
@@ -25145,7 +25471,7 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(74.052002F, 46.5970001F), _linearEasingFunction);
                 result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t7, 3) * Vector2(74.052,46.597)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(74.39661,47.6846)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(75.7754,52.0354)) + (Pow(_.t7, 3) * Vector2(76.12,53.123))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.166666672F, new Vector2(76.1200027F, 53.1230011F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.666666687F, new Vector2(76.1200027F, 53.1230011F), _cubicBezierEasingFunction_07);
+                result.InsertKeyFrame(0.666666687F, new Vector2(76.1200027F, 53.1230011F), _cubicBezierEasingFunction_08);
                 result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t7, 3) * Vector2(76.12,53.123)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(75.7754,52.0354)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(74.39661,47.6846)) + (Pow(_.t7, 3) * Vector2(74.052,46.597))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.983333349F, new Vector2(74.052002F, 46.5970001F), _stepEasingFunction_1);
                 return result;
@@ -25161,7 +25487,7 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(129.477005F, 52.6360016F), _linearEasingFunction);
                 result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t9, 3) * Vector2(129.477,52.636)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(129.8216,53.7236)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(131.1994,58.0734)) + (Pow(_.t9, 3) * Vector2(131.544,59.161))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.166666672F, new Vector2(131.544006F, 59.1609993F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.666666687F, new Vector2(131.544006F, 59.1609993F), _cubicBezierEasingFunction_07);
+                result.InsertKeyFrame(0.666666687F, new Vector2(131.544006F, 59.1609993F), _cubicBezierEasingFunction_08);
                 result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t9, 3) * Vector2(131.544,59.161)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(131.1994,58.0734)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(129.8216,53.7236)) + (Pow(_.t9, 3) * Vector2(129.477,52.636))", _stepEasingFunction_1);
                 result.InsertKeyFrame(0.983333349F, new Vector2(129.477005F, 52.6360016F), _stepEasingFunction_1);
                 return result;
@@ -25191,10 +25517,10 @@ namespace Compositions
                 var result = _vector2Animation_09 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_14());
-                result.InsertKeyFrame(0.5F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_15());
-                result.InsertKeyFrame(0.666666687F, new Vector2(0.300000012F, 0.300000012F), CubicBezierEasingFunction_16());
-                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), CubicBezierEasingFunction_17());
+                result.InsertKeyFrame(0.166666672F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_15());
+                result.InsertKeyFrame(0.5F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_16());
+                result.InsertKeyFrame(0.666666687F, new Vector2(0.300000012F, 0.300000012F), CubicBezierEasingFunction_17());
+                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), CubicBezierEasingFunction_18());
                 return result;
             }
 
@@ -25275,7 +25601,7 @@ namespace Compositions
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector3(1, 1, 1), _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, new Vector3(1, 1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, new Vector3(1.38999999F, 1.38999999F, 1), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.983333349F, new Vector3(1.38999999F, 1.38999999F, 1), CubicBezierEasingFunction_02());
                 return result;
             }
 
@@ -25286,9 +25612,9 @@ namespace Compositions
                 var result = _c.CreateVector3KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector3(1, 1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.333333343F, new Vector3(0.699999988F, 0.699999988F, 1), _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.333333343F, new Vector3(0.699999988F, 0.699999988F, 1), _cubicBezierEasingFunction_03);
                 result.InsertKeyFrame(0.5F, new Vector3(0.699999988F, 0.699999988F, 1), _stepEasingFunction_0);
-                result.InsertKeyFrame(0.983333349F, new Vector3(1, 1, 1), CubicBezierEasingFunction_05());
+                result.InsertKeyFrame(0.983333349F, new Vector3(1, 1, 1), CubicBezierEasingFunction_06());
                 return result;
             }
 
