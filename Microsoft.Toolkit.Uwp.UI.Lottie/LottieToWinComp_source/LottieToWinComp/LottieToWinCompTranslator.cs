@@ -1,7 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-
+// Enable workaround for RS5 prerelease where rotated rectangles were not drawn correctly.
 #define WorkAroundRectangleGeometryHalfDrawn
 // Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
 // for multiple trim paths, so it's possible this is actually the most correct.
@@ -1443,7 +1443,14 @@ namespace LottieToWinComp
             if (shapeContent.CornerRadius.AlwaysEquals(0) && shapeContext.RoundedCorner == null)
             {
                 // Use a non-rounded rectangle geometry.
+#if WorkAroundRectangleGeometryHalfDrawn
+                // Rounded rectangles do not have a problem, so create a rounded rectangle with a tiny corner
+                // radius to work around the bug.
+                var geometry = CreateRoundedRectangleGeometry();
+                geometry.CornerRadius = new WinCompData.Sn.Vector2(0.000001F, 0.000001F);
+#else
                 var geometry = CreateRectangleGeometry();
+#endif
                 compositionRectangle.Geometry = geometry;
 
                 // Convert size and position into offset. This is necessary because a geometry's offset is for
