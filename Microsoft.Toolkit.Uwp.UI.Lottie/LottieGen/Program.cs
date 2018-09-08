@@ -17,12 +17,6 @@ using WinCompData;
 using WinCompData.CodeGen;
 using WinCompData.Tools;
 
-[assembly: AssemblyVersion("0.1.0.2")]
-[assembly: AssemblyFileVersion("0.1.0.2")]
-[assembly: AssemblyProduct("Lottie Windows")]
-[assembly: AssemblyCopyright("Microsoft 2018")]
-[assembly: AssemblyDescription("Command line Lottie code generator tool")]
-
 sealed class Program
 {
     static readonly Assembly s_thisAssembly = Assembly.GetExecutingAssembly();
