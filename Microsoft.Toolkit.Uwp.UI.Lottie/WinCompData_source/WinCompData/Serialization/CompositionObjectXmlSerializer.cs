@@ -223,6 +223,10 @@ namespace WinCompData.Tools
                 {
                     yield return item;
                 }
+                if (obj.Offset != null)
+                {
+                    yield return FromVector2(nameof(obj.Offset), obj.Offset.Value);
+                }
                 yield return FromVector2(nameof(obj.Size), obj.Size);
             }
         }
@@ -237,6 +241,10 @@ namespace WinCompData.Tools
                     yield return item;
                 }
 
+                if (obj.Offset != null)
+                {
+                    yield return FromVector2(nameof(obj.Offset), obj.Offset.Value);
+                }
                 yield return FromVector2(nameof(obj.Size), obj.Size);
                 yield return FromVector2(nameof(obj.CornerRadius), obj.CornerRadius);
             }

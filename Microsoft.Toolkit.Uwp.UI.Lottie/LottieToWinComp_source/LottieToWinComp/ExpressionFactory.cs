@@ -18,15 +18,12 @@ namespace LottieToWinComp
         internal static readonly Expression RootProgress = Scalar($"{c_rootName}.{LottieToWinCompTranslator.ProgressPropertyName}");
         internal static readonly Expression MaxTStartTEnd = Max(s_myTStart, s_myTEnd);
         internal static readonly Expression MinTStartTEnd = Min(s_myTStart, s_myTEnd);
-        internal static readonly Expression OffsetExpression =
-            Vector2(
-                Subtract(Scalar("my.Position.X"),
-                        Divide(Scalar("my.Size.X"), Scalar(2))),
-                Subtract(Scalar("my.Position.Y"),
-                        Divide(Scalar("my.Size.Y"), Scalar(2))));
+        internal static readonly Expression MyPosition2 = Vector2("my.Position");
+        internal static readonly Expression HalfSize2 = Divide(Vector2("my.Size"), Vector2(2, 2));
+        // Depends on MyPosition2 and HalfSize2 so must be declared after them.
+        internal static readonly Expression PositionAndSizeToOffsetExpression = Subtract(MyPosition2, HalfSize2);
         internal static readonly Expression TransformMatrixM11Expression = Scalar("my.TransformMatrix._11");
         internal static readonly Expression MyAnchor2 = Vector2("my.Anchor");
-        internal static readonly Expression MyPosition2 = Vector2("my.Position");
         internal static readonly Expression PositionMinusAnchor = Subtract(MyPosition2, MyAnchor2);
         internal static readonly Expression MyAnchor3 = Vector3(Scalar("my.Anchor.X"), Scalar("my.Anchor.Y"));
         internal static readonly Expression PositionMinusAnchor3 = Vector3(
@@ -34,6 +31,8 @@ namespace LottieToWinComp
                                                                         Subtract(Scalar("my.Position.Y"), Scalar("my.Anchor.Y")),
                                                                         Scalar(0));
 
+        internal static Expression PositionToOffsetExpression(WinCompData.Sn.Vector2 position) => Subtract(Vector2(position), HalfSize2);
+        internal static Expression HalfSizeToOffsetExpression(WinCompData.Sn.Vector2 halfSize) => Subtract(MyPosition2, Vector2(halfSize));
         internal static Expression ScaledAndOffsetRootProgress(double scale, double offset)
         {
             var result = RootProgress;

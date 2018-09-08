@@ -12,6 +12,8 @@ namespace WinCompData
     {
         public Vector2 CornerRadius { get; set; }
 
+        public Vector2? Offset { get; set; }
+
         public Vector2 Size { get; set; }
 
         public override CompositionObjectType Type => CompositionObjectType.CompositionRoundedRectangleGeometry;

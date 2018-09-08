@@ -894,6 +894,10 @@ namespace WinCompData.CodeGen
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRectangleGeometry());
+            if (obj.Offset != null)
+            {
+                result.Offset = obj.Offset;
+            }
             result.Size = obj.Size;
             StartAnimationsAndFreeze(obj, result);
             return result;
@@ -906,6 +910,10 @@ namespace WinCompData.CodeGen
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRoundedRectangleGeometry());
+            if (obj.Offset != null)
+            {
+                result.Offset = obj.Offset;
+            }
             result.Size = obj.Size;
             result.CornerRadius = obj.CornerRadius;
             StartAnimationsAndFreeze(obj, result);

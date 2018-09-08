@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 
+#define WorkAroundRectangleGeometryHalfDrawn
 // Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
 // for multiple trim paths, so it's possible this is actually the most correct.
 #define SimpleTrimPathCombining
@@ -1445,20 +1446,41 @@ namespace LottieToWinComp
                 var geometry = CreateRectangleGeometry();
                 compositionRectangle.Geometry = geometry;
 
-                // Map Rectangle's position to RoundedRectangleGeometry.Offset by using custom property, Position, and an ExpressionAnimation
-                geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
+                // Convert size and position into offset. This is necessary because a geometry's offset is for
+                // its top left corner, wherease a Lottie position is for its centerpoint.
+                geometry.Offset = Vector2(shapeContent.Position.InitialValue - (shapeContent.Size.InitialValue / 2));
 
-                // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
-                compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
+                if (shapeContent.Position.IsAnimated || shapeContent.Size.IsAnimated)
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size));
 
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
+                    Expr offsetExpression;
+                    if (shapeContent.Position.IsAnimated)
+                    {
+                        geometry.Properties.InsertVector2(nameof(Rectangle.Position), Vector2(shapeContent.Position.InitialValue));
+                        if (shapeContent.Size.IsAnimated)
+                        {
+                            // Size AND position are animated.
+                            offsetExpression = ExpressionFactory.PositionAndSizeToOffsetExpression;
+                        }
+                        else
+                        {
+                            // Only Position is animated
+                            offsetExpression = ExpressionFactory.HalfSizeToOffsetExpression(Vector2(shapeContent.Size.InitialValue / 2));
+                        }
+                    }
+                    else
+                    {
+                        // Only Size is animated.
+                        offsetExpression = ExpressionFactory.PositionToOffsetExpression(Vector2(shapeContent.Position.InitialValue));
+                    }
 
-                // Map Rectangle's size to RoundedRectangleGeometry.Size
+                    var offsetExpressionAnimation = CreateExpressionAnimation(offsetExpression);
+                    offsetExpressionAnimation.SetReferenceParameter("my", geometry);
+                    StartExpressionAnimation(geometry, nameof(geometry.Offset), offsetExpressionAnimation);
+                }
                 geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size));
-
             }
             else
             {
@@ -1466,21 +1488,6 @@ namespace LottieToWinComp
                 var geometry = CreateRoundedRectangleGeometry();
                 compositionRectangle.Geometry = geometry;
 
-                // Map Rectangle's position to RoundedRectangleGeometry.Offset by using custom property, Position, and an ExpressionAnimation
-                geometry.Properties.InsertVector2("Position", Vector2(shapeContent.Position.InitialValue));
-
-                // ExpressionAnimation to compensate for default centerpoint being top-left vs geometric center
-                var compositionOffsetExpression = CreateExpressionAnimation(ExpressionFactory.OffsetExpression);
-                compositionOffsetExpression.SetReferenceParameter("my", geometry);
-                StartExpressionAnimation(geometry, "Offset", compositionOffsetExpression);
-
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, "Position");
-
-                // Map Rectangle's size to RoundedRectangleGeometry.Size
-                geometry.Size = Vector2(shapeContent.Size.InitialValue);
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(geometry.Size));
-
-                // Map Rectangle's size to RoundedRectangleGeometry.CornerRadius
                 // If a RoundedRectangle is in the context, use it to override the corner radius.
                 var cornerRadius = shapeContext.RoundedCorner != null ? shapeContext.RoundedCorner.Radius : shapeContent.CornerRadius;
                 if (cornerRadius.IsAnimated || cornerRadius.InitialValue != 0)
@@ -1489,10 +1496,47 @@ namespace LottieToWinComp
                     ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.X");
                     ApplyScalarKeyFrameAnimation(context, cornerRadius, geometry, "CornerRadius.Y");
                 }
+
+                // Convert size and position into offset. This is necessary because a geometry's offset is for
+                // its top left corner, wherease a Lottie position is for its centerpoint.
+                geometry.Offset = Vector2(shapeContent.Position.InitialValue - (shapeContent.Size.InitialValue / 2));
+
+                if (shapeContent.Position.IsAnimated || shapeContent.Size.IsAnimated)
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Position, geometry, nameof(Rectangle.Position));
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)shapeContent.Size, geometry, nameof(Rectangle.Size));
+
+                    Expr offsetExpression;
+                    if (shapeContent.Position.IsAnimated)
+                    {
+                        geometry.Properties.InsertVector2(nameof(Rectangle.Position), Vector2(shapeContent.Position.InitialValue));
+                        if (shapeContent.Size.IsAnimated)
+                        {
+                            // Size AND position are animated.
+                            offsetExpression = ExpressionFactory.PositionAndSizeToOffsetExpression;
+                        }
+                        else
+                        {
+                            // Only Position is animated
+                            offsetExpression = ExpressionFactory.HalfSizeToOffsetExpression(Vector2(shapeContent.Size.InitialValue / 2));
+                        }
+                    }
+                    else
+                    {
+                        // Only Size is animated.
+                        offsetExpression = ExpressionFactory.PositionToOffsetExpression(Vector2(shapeContent.Position.InitialValue));
+                    }
+
+                    var offsetExpressionAnimation = CreateExpressionAnimation(offsetExpression);
+                    offsetExpressionAnimation.SetReferenceParameter("my", geometry);
+                    StartExpressionAnimation(geometry, nameof(geometry.Offset), offsetExpressionAnimation);
+                }
+                geometry.Size = Vector2(shapeContent.Size.InitialValue);
             }
 
             // Lottie rectangles have 0,0 at top right. That causes problems for TrimPath which expects 0,0 to be top left.
-            // Add an offset.
+            // Add an offset to the trim path.
+
             // TODO - this only works correctly if Size and TrimOffset are not animated. A complete solution requires
             //        adding another property. 
             var isPartialTrimPath = shapeContext.TrimPath != null &&
@@ -1504,6 +1548,7 @@ namespace LottieToWinComp
                 // Warn that we might be getting things wrong
                 _unsupported.AnimatedRectangleWithTrimPath();
             }
+
             var width = shapeContent.Size.InitialValue.X;
             var height = shapeContent.Size.InitialValue.Y;
             var trimOffsetDegrees = (width / (2 * (width + height))) * 360;

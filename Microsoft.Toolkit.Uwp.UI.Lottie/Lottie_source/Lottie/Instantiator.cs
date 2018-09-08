@@ -856,6 +856,10 @@ namespace Lottie
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRectangleGeometry());
+            if (obj.Offset != null)
+            {
+                result.Offset = Vector2(obj.Offset);
+            }
             result.Size = Vector2(obj.Size);
             StartAnimations(obj, result);
             return result;
@@ -868,6 +872,10 @@ namespace Lottie
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRoundedRectangleGeometry());
+            if (obj.Offset != null)
+            {
+                result.Offset = Vector2(obj.Offset);
+            }
             result.Size = Vector2(obj.Size);
             result.CornerRadius = Vector2(obj.CornerRadius);
             StartAnimations(obj, result);

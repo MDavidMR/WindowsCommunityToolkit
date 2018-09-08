@@ -37,7 +37,9 @@ namespace WinCompData.Expressions
             =>$"{Parenthesize(Left.Simplified)} - {Parenthesize(Right.Simplified)}";
 
         public override ExpressionType InferredType =>
-            ExpressionType.ConstrainToTypes(TypeConstraint.Scalar, Left.InferredType, Right.InferredType);
+            ExpressionType.ConstrainToTypes(
+                TypeConstraint.Scalar | TypeConstraint.Vector2 | TypeConstraint.Vector3 | TypeConstraint.Vector4, 
+                Left.InferredType, Right.InferredType);
 
 
     }

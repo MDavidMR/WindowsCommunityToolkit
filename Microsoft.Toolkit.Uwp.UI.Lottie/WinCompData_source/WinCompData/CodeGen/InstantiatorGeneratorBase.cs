@@ -1082,6 +1082,10 @@ namespace WinCompData.CodeGen
             WriteObjectFactoryStart(builder, node);
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateRectangleGeometry()");
             InitializeCompositionGeometry(builder, obj, node);
+            if (obj.Offset != null)
+            {
+                builder.WriteLine($"result{Deref}Offset = {Vector2(obj.Offset.Value)};");
+            }
             builder.WriteLine($"result{Deref}Size = {Vector2(obj.Size)};");
             StartAnimations(builder, obj, node);
             WriteObjectFactoryEnd(builder);
@@ -1094,6 +1098,10 @@ namespace WinCompData.CodeGen
             WriteCreateAssignment(builder, node, $"_c{Deref}CreateRoundedRectangleGeometry()");
             InitializeCompositionGeometry(builder, obj, node);
             builder.WriteLine($"result{Deref}CornerRadius = {Vector2(obj.CornerRadius)};");
+            if (obj.Offset != null)
+            {
+                builder.WriteLine($"result{Deref}Offset = {Vector2(obj.Offset.Value)};");
+            }
             builder.WriteLine($"result{Deref}Size = {Vector2(obj.Size)};");
             StartAnimations(builder, obj, node);
             WriteObjectFactoryEnd(builder);
