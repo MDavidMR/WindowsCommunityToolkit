@@ -6,8 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System;
 using System.Numerics;
 using Windows.UI;
@@ -15,26 +15,30 @@ using Windows.UI.Composition;
 
 namespace Compositions
 {
-    sealed class LottieLogo2 : Host.ICompositionSource
+    sealed class LottieLogo2 : ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(281, 500);
-            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
+            if (!IsRuntimeCompatible())
+            {
+                return null;
+            }
+            return new Composition(compositor);
+        }
+
+        static bool IsRuntimeCompatible()
+        {
+            if (!Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
             return true;
         }
 
-        const long c_durationTicks = 126000000;
-
-        sealed class Instantiator
+        sealed class Composition : IComposition
         {
+            const long c_durationTicks = 126000000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
@@ -4664,6 +4668,7 @@ namespace Compositions
             CompositionPathGeometry PathGeometry_22()
             {
                 var result = _pathGeometry_22 = _c.CreatePathGeometry(CompositionPath_15());
+                result.TrimEnd = 0.316000015F;
                 return result;
             }
 
@@ -4966,6 +4971,11 @@ namespace Compositions
             CompositionPathGeometry PathGeometry_39()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_07);
+                result.TrimEnd = 0.790000021F;
+                result.StartAnimation("TrimEnd", ScalarAnimation_0p79_to_1());
+                var controller = result.TryGetAnimationController("TrimEnd");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
@@ -5050,19 +5060,19 @@ namespace Compositions
                 controller = result.TryGetAnimationController("t1");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t2", ScalarAnimation_0_to_1_2());
+                result.StartAnimation("t2", _scalarAnimation_0_to_1_2);
                 controller = result.TryGetAnimationController("t2");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t3", ScalarAnimation_0_to_1_2());
+                result.StartAnimation("t3", _scalarAnimation_0_to_1_2);
                 controller = result.TryGetAnimationController("t3");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t4", ScalarAnimation_0_to_1_2());
+                result.StartAnimation("t4", _scalarAnimation_0_to_1_2);
                 controller = result.TryGetAnimationController("t4");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t5", ScalarAnimation_0_to_1_2());
+                result.StartAnimation("t5", _scalarAnimation_0_to_1_2);
                 controller = result.TryGetAnimationController("t5");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -5078,39 +5088,39 @@ namespace Compositions
                 controller = result.TryGetAnimationController("t8");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t9", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t9", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t9");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t10", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t10", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t10");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t11", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t11", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t12", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t12", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t12");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t13", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t13", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t13");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t14", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t14", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t14");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t15", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t15", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t15");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t16", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t16", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t16");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t17", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t17", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t17");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -5118,7 +5128,7 @@ namespace Compositions
                 controller = result.TryGetAnimationController("t18");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t19", ScalarAnimation_0_to_1_5());
+                result.StartAnimation("t19", _scalarAnimation_0_to_1_5);
                 controller = result.TryGetAnimationController("t19");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -5700,6 +5710,20 @@ namespace Compositions
                 result.InsertKeyFrame(0.465608478F, 0.786000013F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.519999981F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
+                return result;
+            }
+
+            // Transforms: T-LB
+            //   Path 1
+            //     Path 1.PathGeometry
+            // TrimEnd
+            ScalarKeyFrameAnimation ScalarAnimation_0p79_to_1()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0, 0.790000021F, _linearEasingFunction);
+                result.InsertKeyFrame(0.46825397F, 0.790000021F, _linearEasingFunction);
+                result.InsertKeyFrame(0.624338627F, 1, _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7318,7 +7342,7 @@ namespace Compositions
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(28.1170006F, 42.0169983F), LinearEasingFunction());
-                result.InsertKeyFrame(0.0449735448F, new Vector2(28.1170006F, 42.0169983F), LinearEasingFunction());
+                result.InsertKeyFrame(0.0449735448F, new Vector2(28.1170006F, 42.0169983F), _linearEasingFunction);
                 result.InsertKeyFrame(0.0502645485F, new Vector2(28.1170006F, 28.1170006F), CubicBezierEasingFunction_00());
                 return result;
             }
@@ -7332,9 +7356,9 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(40, -210), _linearEasingFunction);
                 result.InsertKeyFrame(0.0449735448F, new Vector2(40, -210), _linearEasingFunction);
                 result.InsertKeyFrame(0.0582010597F, new Vector2(49.5999985F, -210), CubicBezierEasingFunction_01());
-                result.InsertKeyFrame(0.0846560821F, new Vector2(40, -210), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.0846560821F, new Vector2(40, -210), _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.113756612F, new Vector2(40, -210), CubicBezierEasingFunction_02());
-                result.InsertKeyFrame(0.126984134F, new Vector2(52.2000008F, -164.300003F), CubicBezierEasingFunction_01());
+                result.InsertKeyFrame(0.126984134F, new Vector2(52.2000008F, -164.300003F), _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.140211642F, new Vector2(52.2000008F, -210), CubicBezierEasingFunction_03());
                 return result;
             }
@@ -7349,12 +7373,12 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(151.039001F, 86.2699966F), _linearEasingFunction);
                 result.InsertKeyFrame(0.0476190485F, new Vector2(151.182999F, 215.664993F), CubicBezierEasingFunction_04());
                 result.InsertExpressionKeyFrame(0.0622723885F, "(Pow(1 - _.t0, 3) * Vector2(151.183,215.665)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(151.183,215.665)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(152.3022,218.2585)) + (Pow(_.t0, 3) * Vector2(149.526,243.382))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.0855131298F, "(Pow(1 - _.t0, 3) * Vector2(149.526,243.382)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(146.7498,268.5056)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(141.351,286.676)) + (Pow(_.t0, 3) * Vector2(141.351,286.676))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.101039581F, "(Pow(1 - _.t0, 3) * Vector2(141.351,286.676)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(141.351,286.676)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(129.0357,310.2725)) + (Pow(_.t0, 3) * Vector2(120.158,294.548))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.117788263F, "(Pow(1 - _.t0, 3) * Vector2(120.158,294.548)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(111.2803,278.8235)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(123.8171,271.5963)) + (Pow(_.t0, 3) * Vector2(131.663,272.749))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.140772387F, "(Pow(1 - _.t0, 3) * Vector2(131.663,272.749)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(142.31,274.3133)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(153.6631,286.6255)) + (Pow(_.t0, 3) * Vector2(167.691,296.667))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t0, 3) * Vector2(167.691,296.667)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(181.7189,306.7085)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(193.2231,310.7192)) + (Pow(_.t0, 3) * Vector2(208.564,311.2))", StepEasingFunction_0());
-                result.InsertKeyFrame(0.164021164F, new Vector2(208.563995F, 311.200012F), StepEasingFunction_0());
+                result.InsertExpressionKeyFrame(0.0855131298F, "(Pow(1 - _.t0, 3) * Vector2(149.526,243.382)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(146.7498,268.5056)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(141.351,286.676)) + (Pow(_.t0, 3) * Vector2(141.351,286.676))", _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.101039581F, "(Pow(1 - _.t0, 3) * Vector2(141.351,286.676)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(141.351,286.676)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(129.0357,310.2725)) + (Pow(_.t0, 3) * Vector2(120.158,294.548))", _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.117788263F, "(Pow(1 - _.t0, 3) * Vector2(120.158,294.548)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(111.2803,278.8235)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(123.8171,271.5963)) + (Pow(_.t0, 3) * Vector2(131.663,272.749))", _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.140772387F, "(Pow(1 - _.t0, 3) * Vector2(131.663,272.749)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(142.31,274.3133)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(153.6631,286.6255)) + (Pow(_.t0, 3) * Vector2(167.691,296.667))", _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t0, 3) * Vector2(167.691,296.667)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(181.7189,306.7085)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(193.2231,310.7192)) + (Pow(_.t0, 3) * Vector2(208.564,311.2))", _stepEasingFunction_0);
+                result.InsertKeyFrame(0.164021164F, new Vector2(208.563995F, 311.200012F), _stepEasingFunction_0);
                 return result;
             }
 
@@ -7847,9 +7871,9 @@ namespace Compositions
                 result.InsertKeyFrame(0.439153433F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_20());
                 result.InsertKeyFrame(0.465608478F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.481481493F, new Vector2(127.278F, 51.723999F), _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.494708985F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_20());
+                result.InsertKeyFrame(0.494708985F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_20);
                 result.InsertKeyFrame(0.505290985F, new Vector2(127.278F, 58.3349991F), _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.515873015F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_20());
+                result.InsertKeyFrame(0.515873015F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_20);
                 result.InsertKeyFrame(0.526455045F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.544973552F, new Vector2(127.278F, 57.3440018F), CubicBezierEasingFunction_21());
                 result.InsertKeyFrame(0.568783045F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_22());
@@ -7899,14 +7923,16 @@ namespace Compositions
                 return result;
             }
 
-            Instantiator(Compositor compositor)
+            internal Composition(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();
+                Root();
             }
 
-            public static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).Root();
+            Visual IComposition.RootVisual => _root;
+            TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
+            Vector2 IComposition.Size => new Vector2(281, 500);
         }
     }
 }

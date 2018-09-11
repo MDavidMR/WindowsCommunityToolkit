@@ -10,14 +10,11 @@
 
 namespace Compositions
 {
-	ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::ICompositionSource
-	{
-	public:
-		virtual bool TryCreateInstance(
-			Windows::UI::Composition::Compositor^ compositor,
-			Windows::UI::Composition::Visual^* rootVisual,
-			Windows::Foundation::Numerics::float2* size,
-			Windows::Foundation::TimeSpan* duration,
-			Platform::Object^* diagnostics);
-	};
+    ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::ICompositionSource
+    {
+    public:
+        virtual Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ TryCreateInstance(
+            Windows::UI::Composition::Compositor^ compositor,
+            Platform::Object^* diagnostics);
+    };
 }

@@ -6,8 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System;
 using System.Numerics;
 using Windows.UI;
@@ -15,26 +15,30 @@ using Windows.UI.Composition;
 
 namespace Compositions
 {
-    sealed class BirthdayCake : Host.ICompositionSource
+    sealed class BirthdayCake : ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(300, 300);
-            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
+            if (!IsRuntimeCompatible())
+            {
+                return null;
+            }
+            return new Composition(compositor);
+        }
+
+        static bool IsRuntimeCompatible()
+        {
+            if (!Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
             return true;
         }
 
-        const long c_durationTicks = 20000000;
-
-        sealed class Instantiator
+        sealed class Composition : IComposition
         {
+            const long c_durationTicks = 20000000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _colorBrush_AlmostDarkCyan_FF0063B0;
@@ -57,8 +61,8 @@ namespace Compositions
             CompositionPath _compositionPath_09;
             CompositionPath _compositionPath_10;
             CompositionPath _compositionPath_11;
-            CompositionPath _compositionPath_16;
-            CompositionPath _compositionPath_44;
+            CompositionPath _compositionPath_17;
+            CompositionPath _compositionPath_45;
             CubicBezierEasingFunction _cubicBezierEasingFunction_00;
             CubicBezierEasingFunction _cubicBezierEasingFunction_01;
             CubicBezierEasingFunction _cubicBezierEasingFunction_02;
@@ -70,15 +74,15 @@ namespace Compositions
             CubicBezierEasingFunction _cubicBezierEasingFunction_11;
             InsetClip _insetClip;
             LinearEasingFunction _linearEasingFunction;
-            CompositionPathGeometry _pathGeometry_45;
             CompositionPathGeometry _pathGeometry_46;
             CompositionPathGeometry _pathGeometry_47;
-            CompositionPathGeometry _pathGeometry_50;
+            CompositionPathGeometry _pathGeometry_48;
             CompositionPathGeometry _pathGeometry_51;
-            CompositionPathGeometry _pathGeometry_53;
+            CompositionPathGeometry _pathGeometry_52;
             CompositionPathGeometry _pathGeometry_54;
             CompositionPathGeometry _pathGeometry_55;
-            CompositionPathGeometry _pathGeometry_59;
+            CompositionPathGeometry _pathGeometry_56;
+            CompositionPathGeometry _pathGeometry_60;
             ContainerVisual _root;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_30;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_31;
@@ -100,9 +104,7 @@ namespace Compositions
                 return _colorBrush_AlmostDarkCyan_FF0063B0 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0x00, 0x63, 0xB0));
             }
 
-            // Layer (Shape): Cake
-            //   Transforms: Cake
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostDarkKhaki_FFB88F66()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xB8, 0x8F, 0x66));
@@ -118,9 +120,7 @@ namespace Compositions
                 return _colorBrush_AlmostDodgerBlue_FF0177D9 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0x01, 0x77, 0xD9));
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostKhaki_FFFFD579()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xD5, 0x79));
@@ -131,9 +131,7 @@ namespace Compositions
                 return _colorBrush_AlmostLightGray_FFCCCCCC = _c.CreateColorBrush(Color.FromArgb(0xFF, 0xCC, 0xCC, 0xCC));
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostOlive_FF7EBA00()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0x7E, 0xBA, 0x00));
@@ -144,25 +142,19 @@ namespace Compositions
                 return _colorBrush_AlmostOrange_FFFFB901 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xB9, 0x01));
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostOrange_FFFFBA01()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01));
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostOrangeRed_FFDA4100()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xDA, 0x41, 0x00));
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
+            // Path 1
             CompositionColorBrush ColorBrush_AlmostOrangeRed_FFF7630B()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xF7, 0x63, 0x0B));
@@ -255,15 +247,15 @@ namespace Compositions
                 return result;
             }
 
-            CompositionPath CompositionPath_16()
+            CompositionPath CompositionPath_17()
             {
-                var result = _compositionPath_16 = new CompositionPath(Geometry_16());
+                var result = _compositionPath_17 = new CompositionPath(Geometry_17());
                 return result;
             }
 
-            CompositionPath CompositionPath_44()
+            CompositionPath CompositionPath_45()
             {
-                var result = _compositionPath_44 = new CompositionPath(Geometry_44());
+                var result = _compositionPath_45 = new CompositionPath(Geometry_45());
                 return result;
             }
 
@@ -286,7 +278,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 8
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_001()
             {
                 var result = _c.CreateContainerShape();
@@ -315,7 +306,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 7
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_003()
             {
                 var result = _c.CreateContainerShape();
@@ -355,7 +345,6 @@ namespace Compositions
                 return result;
             }
 
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_006()
             {
                 var result = _c.CreateContainerShape();
@@ -384,7 +373,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 11
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_008()
             {
                 var result = _c.CreateContainerShape();
@@ -413,7 +401,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 2
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_010()
             {
                 var result = _c.CreateContainerShape();
@@ -442,7 +429,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 1
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_012()
             {
                 var result = _c.CreateContainerShape();
@@ -471,7 +457,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 9
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_014()
             {
                 var result = _c.CreateContainerShape();
@@ -500,7 +485,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 8
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_016()
             {
                 var result = _c.CreateContainerShape();
@@ -529,7 +513,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 7
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_018()
             {
                 var result = _c.CreateContainerShape();
@@ -558,7 +541,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 6
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_020()
             {
                 var result = _c.CreateContainerShape();
@@ -587,7 +569,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 5
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_022()
             {
                 var result = _c.CreateContainerShape();
@@ -616,7 +597,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 4
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_024()
             {
                 var result = _c.CreateContainerShape();
@@ -645,7 +625,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 12
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_026()
             {
                 var result = _c.CreateContainerShape();
@@ -674,7 +653,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 11
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_028()
             {
                 var result = _c.CreateContainerShape();
@@ -703,7 +681,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 10
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_030()
             {
                 var result = _c.CreateContainerShape();
@@ -732,7 +709,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 3
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_032()
             {
                 var result = _c.CreateContainerShape();
@@ -762,7 +738,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 2
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_034()
             {
                 var result = _c.CreateContainerShape();
@@ -791,7 +766,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 1
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_036()
             {
                 var result = _c.CreateContainerShape();
@@ -820,7 +794,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 9
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_038()
             {
                 var result = _c.CreateContainerShape();
@@ -849,7 +822,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 8
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_040()
             {
                 var result = _c.CreateContainerShape();
@@ -878,7 +850,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 7
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_042()
             {
                 var result = _c.CreateContainerShape();
@@ -907,7 +878,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 6
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_044()
             {
                 var result = _c.CreateContainerShape();
@@ -936,7 +906,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 5
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_046()
             {
                 var result = _c.CreateContainerShape();
@@ -965,7 +934,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 4
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_048()
             {
                 var result = _c.CreateContainerShape();
@@ -994,7 +962,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 12
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_050()
             {
                 var result = _c.CreateContainerShape();
@@ -1023,7 +990,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 11
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_052()
             {
                 var result = _c.CreateContainerShape();
@@ -1052,7 +1018,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 10
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_054()
             {
                 var result = _c.CreateContainerShape();
@@ -1081,7 +1046,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 3
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_056()
             {
                 var result = _c.CreateContainerShape();
@@ -1111,7 +1075,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 2
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_058()
             {
                 var result = _c.CreateContainerShape();
@@ -1140,7 +1103,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 1
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_060()
             {
                 var result = _c.CreateContainerShape();
@@ -1169,7 +1131,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 9
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_062()
             {
                 var result = _c.CreateContainerShape();
@@ -1198,7 +1159,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 8
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_064()
             {
                 var result = _c.CreateContainerShape();
@@ -1227,7 +1187,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 7
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_066()
             {
                 var result = _c.CreateContainerShape();
@@ -1256,7 +1215,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 6
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_068()
             {
                 var result = _c.CreateContainerShape();
@@ -1285,7 +1243,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 5
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_070()
             {
                 var result = _c.CreateContainerShape();
@@ -1314,7 +1271,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 4
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_072()
             {
                 var result = _c.CreateContainerShape();
@@ -1343,7 +1299,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 12
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_074()
             {
                 var result = _c.CreateContainerShape();
@@ -1372,7 +1327,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 11
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_076()
             {
                 var result = _c.CreateContainerShape();
@@ -1401,7 +1355,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 10
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_078()
             {
                 var result = _c.CreateContainerShape();
@@ -1430,7 +1383,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 3
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_080()
             {
                 var result = _c.CreateContainerShape();
@@ -1460,7 +1412,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 2
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_082()
             {
                 var result = _c.CreateContainerShape();
@@ -1489,7 +1440,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Shape Layer 1
-            // ShapeGroup: Shape 1
             CompositionContainerShape ContainerShape_084()
             {
                 var result = _c.CreateContainerShape();
@@ -1515,7 +1465,6 @@ namespace Compositions
             }
 
             // Layer (Shape): Cake
-            // Transforms for Cake
             CompositionContainerShape ContainerShape_086()
             {
                 var result = _c.CreateContainerShape();
@@ -1524,342 +1473,199 @@ namespace Compositions
                 shapes.Add(SpriteShape_45());
                 shapes.Add(SpriteShape_46());
                 shapes.Add(SpriteShape_47());
-                return result;
-            }
-
-            // Layer (Shape): Cake 2
-            CompositionContainerShape ContainerShape_087()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_087());
                 shapes.Add(ContainerShape_088());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Cake 2
-            // Transforms for Cake 2
-            CompositionContainerShape ContainerShape_088()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-48.5F, -91.25F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_48());
-                shapes.Add(SpriteShape_49());
-                shapes.Add(SpriteShape_50());
-                shapes.Add(SpriteShape_51());
-                shapes.Add(SpriteShape_52());
                 shapes.Add(ContainerShape_089());
                 shapes.Add(ContainerShape_090());
                 shapes.Add(ContainerShape_091());
                 shapes.Add(ContainerShape_092());
                 shapes.Add(ContainerShape_093());
                 shapes.Add(ContainerShape_094());
-                shapes.Add(ContainerShape_095());
+                shapes.Add(ContainerShape_096());
+                shapes.Add(ContainerShape_098());
+                shapes.Add(ContainerShape_100());
+                shapes.Add(ContainerShape_102());
+                shapes.Add(ContainerShape_104());
+                shapes.Add(ContainerShape_106());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_087()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_088()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_089()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_090()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_091()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_092()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_093()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_094()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.0209999F, 54.762001F);
                 result.Scale = new Vector2(0.873979986F, 0.873979986F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_53());
+                shapes.Add(ContainerShape_095());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_095()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_090()
+            CompositionContainerShape ContainerShape_096()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(64.7710037F, 48.882F);
                 result.Scale = new Vector2(0.867699981F, 0.867699981F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_54());
+                shapes.Add(ContainerShape_097());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 6
+            CompositionContainerShape ContainerShape_097()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_091()
+            CompositionContainerShape ContainerShape_098()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(77.4079971F, 34.1889992F);
                 result.Scale = new Vector2(0.880330026F, 0.880330026F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_55());
+                shapes.Add(ContainerShape_099());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 5
+            CompositionContainerShape ContainerShape_099()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_092()
+            CompositionContainerShape ContainerShape_100()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(61.8320007F, 24.3320007F);
                 result.Scale = new Vector2(0.85777998F, 0.85777998F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_56());
+                shapes.Add(ContainerShape_101());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 4
+            CompositionContainerShape ContainerShape_101()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_093()
+            CompositionContainerShape ContainerShape_102()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(28.0359993F, 48.3930016F);
                 result.Scale = new Vector2(0.827109993F, 0.827109993F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_57());
+                shapes.Add(ContainerShape_103());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 3
+            CompositionContainerShape ContainerShape_103()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_094()
+            CompositionContainerShape ContainerShape_104()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(14.224F, 34.6780014F);
                 result.Scale = new Vector2(0.850629985F, 0.850629985F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_58());
+                shapes.Add(ContainerShape_105());
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
+            // ShapeGroup: Group 2
+            CompositionContainerShape ContainerShape_105()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
             // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_095()
+            CompositionContainerShape ContainerShape_106()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(34.8930016F, 23.9029999F);
                 result.Scale = new Vector2(0.865750015F, 0.865750015F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_59());
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 2
-            CompositionContainerShape ContainerShape_096()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_097());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Sprinkles 2
-            CompositionContainerShape ContainerShape_097()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(13.2340002F, -66.8209991F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_60());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(61.734,24.429)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_1());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 3
-            CompositionContainerShape ContainerShape_098()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_099());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Sprinkles 3
-            CompositionContainerShape ContainerShape_099()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(28.9080009F, -56.9640007F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_61());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(77.408,34.286)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_2());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 4
-            CompositionContainerShape ContainerShape_100()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_101());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Sprinkles 4
-            CompositionContainerShape ContainerShape_101()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(16.1739998F, -42.2700005F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_62());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(64.674,48.98)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_3());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 5
-            CompositionContainerShape ContainerShape_102()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_103());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Sprinkles 5
-            CompositionContainerShape ContainerShape_103()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-0.477999985F, -36.3909988F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_63());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(48.022,54.859)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_4());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 6
-            CompositionContainerShape ContainerShape_104()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_105());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Sprinkles 6
-            CompositionContainerShape ContainerShape_105()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-20.5620003F, -42.7589989F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_64());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(27.938,48.491)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_5());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Sprinkles 7
-            CompositionContainerShape ContainerShape_106()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
                 shapes.Add(ContainerShape_107());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Sprinkles 7
+            // ShapeGroup: Group 1
             CompositionContainerShape ContainerShape_107()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-34.276001F, -56.473999F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_65());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(14.224,34.776)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_6());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Sprinkles 8
+            // Layer (Shape): Cake 2
             CompositionContainerShape ContainerShape_108()
             {
                 var result = _c.CreateContainerShape();
@@ -1874,13 +1680,1250 @@ namespace Compositions
                 return result;
             }
 
-            // Transforms for Sprinkles 8
+            // Layer (Shape): Cake 2
             CompositionContainerShape ContainerShape_109()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(-48.5F, -91.25F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_48());
+                shapes.Add(SpriteShape_49());
+                shapes.Add(SpriteShape_50());
+                shapes.Add(SpriteShape_51());
+                shapes.Add(SpriteShape_52());
+                shapes.Add(ContainerShape_110());
+                shapes.Add(ContainerShape_111());
+                shapes.Add(ContainerShape_112());
+                shapes.Add(ContainerShape_113());
+                shapes.Add(ContainerShape_114());
+                shapes.Add(ContainerShape_115());
+                shapes.Add(ContainerShape_116());
+                shapes.Add(ContainerShape_117());
+                shapes.Add(ContainerShape_118());
+                shapes.Add(ContainerShape_119());
+                shapes.Add(ContainerShape_120());
+                shapes.Add(ContainerShape_121());
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_110()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_111()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_112()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_113()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_114()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_115()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                result.Scale = new Vector2(0.873979986F, 0.873979986F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_53());
+                return result;
+            }
+
+            // ShapeGroup: Group 6
+            CompositionContainerShape ContainerShape_116()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                result.Scale = new Vector2(0.867699981F, 0.867699981F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_54());
+                return result;
+            }
+
+            // ShapeGroup: Group 5
+            CompositionContainerShape ContainerShape_117()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                result.Scale = new Vector2(0.880330026F, 0.880330026F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_55());
+                return result;
+            }
+
+            // ShapeGroup: Group 4
+            CompositionContainerShape ContainerShape_118()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                result.Scale = new Vector2(0.85777998F, 0.85777998F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_56());
+                return result;
+            }
+
+            // ShapeGroup: Group 3
+            CompositionContainerShape ContainerShape_119()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                result.Scale = new Vector2(0.827109993F, 0.827109993F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_57());
+                return result;
+            }
+
+            // ShapeGroup: Group 2
+            CompositionContainerShape ContainerShape_120()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                result.Scale = new Vector2(0.850629985F, 0.850629985F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_58());
+                return result;
+            }
+
+            // ShapeGroup: Group 1
+            CompositionContainerShape ContainerShape_121()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                result.Scale = new Vector2(0.865750015F, 0.865750015F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_59());
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 2
+            CompositionContainerShape ContainerShape_122()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_123());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 2
+            CompositionContainerShape ContainerShape_123()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(13.2340002F, -66.8209991F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_124());
+                shapes.Add(ContainerShape_125());
+                shapes.Add(ContainerShape_126());
+                shapes.Add(ContainerShape_127());
+                shapes.Add(ContainerShape_128());
+                shapes.Add(ContainerShape_129());
+                shapes.Add(ContainerShape_130());
+                shapes.Add(ContainerShape_131());
+                shapes.Add(ContainerShape_132());
+                shapes.Add(ContainerShape_133());
+                shapes.Add(ContainerShape_134());
+                shapes.Add(ContainerShape_135());
+                shapes.Add(ContainerShape_136());
+                shapes.Add(SpriteShape_60());
+                shapes.Add(ContainerShape_137());
+                shapes.Add(ContainerShape_138());
+                shapes.Add(ContainerShape_139());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(61.734,24.429)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_1());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_124()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_125()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_126()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_127()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_128()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_129()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_130()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_131()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_132()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_133()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_134()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_135()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_136()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_137()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_138()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 2
+            CompositionContainerShape ContainerShape_139()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 3
+            CompositionContainerShape ContainerShape_140()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_141());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 3
+            CompositionContainerShape ContainerShape_141()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(28.9080009F, -56.9640007F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_142());
+                shapes.Add(ContainerShape_143());
+                shapes.Add(ContainerShape_144());
+                shapes.Add(ContainerShape_145());
+                shapes.Add(ContainerShape_146());
+                shapes.Add(ContainerShape_147());
+                shapes.Add(ContainerShape_148());
+                shapes.Add(ContainerShape_149());
+                shapes.Add(ContainerShape_150());
+                shapes.Add(ContainerShape_151());
+                shapes.Add(ContainerShape_152());
+                shapes.Add(ContainerShape_153());
+                shapes.Add(SpriteShape_61());
+                shapes.Add(ContainerShape_154());
+                shapes.Add(ContainerShape_155());
+                shapes.Add(ContainerShape_156());
+                shapes.Add(ContainerShape_157());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(77.408,34.286)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_2());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_142()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_143()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_144()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_145()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_146()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_147()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_148()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_149()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_150()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_151()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_152()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_153()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_154()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_155()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_156()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 3
+            CompositionContainerShape ContainerShape_157()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 4
+            CompositionContainerShape ContainerShape_158()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_159());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 4
+            CompositionContainerShape ContainerShape_159()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(16.1739998F, -42.2700005F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_160());
+                shapes.Add(ContainerShape_161());
+                shapes.Add(ContainerShape_162());
+                shapes.Add(ContainerShape_163());
+                shapes.Add(ContainerShape_164());
+                shapes.Add(ContainerShape_165());
+                shapes.Add(ContainerShape_166());
+                shapes.Add(ContainerShape_167());
+                shapes.Add(ContainerShape_168());
+                shapes.Add(ContainerShape_169());
+                shapes.Add(ContainerShape_170());
+                shapes.Add(SpriteShape_62());
+                shapes.Add(ContainerShape_171());
+                shapes.Add(ContainerShape_172());
+                shapes.Add(ContainerShape_173());
+                shapes.Add(ContainerShape_174());
+                shapes.Add(ContainerShape_175());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(64.674,48.98)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_3());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_160()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_161()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_162()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_163()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_164()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_165()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_166()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_167()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_168()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_169()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_170()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_171()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_172()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_173()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_174()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 4
+            CompositionContainerShape ContainerShape_175()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 5
+            CompositionContainerShape ContainerShape_176()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_177());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 5
+            CompositionContainerShape ContainerShape_177()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-0.477999985F, -36.3909988F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_178());
+                shapes.Add(ContainerShape_179());
+                shapes.Add(ContainerShape_180());
+                shapes.Add(ContainerShape_181());
+                shapes.Add(ContainerShape_182());
+                shapes.Add(ContainerShape_183());
+                shapes.Add(ContainerShape_184());
+                shapes.Add(ContainerShape_185());
+                shapes.Add(ContainerShape_186());
+                shapes.Add(ContainerShape_187());
+                shapes.Add(SpriteShape_63());
+                shapes.Add(ContainerShape_188());
+                shapes.Add(ContainerShape_189());
+                shapes.Add(ContainerShape_190());
+                shapes.Add(ContainerShape_191());
+                shapes.Add(ContainerShape_192());
+                shapes.Add(ContainerShape_193());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(48.022,54.859)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_4());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_178()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_179()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_180()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_181()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_182()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_183()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_184()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_185()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_186()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_187()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_188()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_189()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_190()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_191()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_192()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 5
+            CompositionContainerShape ContainerShape_193()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 6
+            CompositionContainerShape ContainerShape_194()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_195());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 6
+            CompositionContainerShape ContainerShape_195()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-20.5620003F, -42.7589989F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_196());
+                shapes.Add(ContainerShape_197());
+                shapes.Add(ContainerShape_198());
+                shapes.Add(ContainerShape_199());
+                shapes.Add(ContainerShape_200());
+                shapes.Add(ContainerShape_201());
+                shapes.Add(ContainerShape_202());
+                shapes.Add(ContainerShape_203());
+                shapes.Add(ContainerShape_204());
+                shapes.Add(ContainerShape_205());
+                shapes.Add(ContainerShape_206());
+                shapes.Add(ContainerShape_207());
+                shapes.Add(ContainerShape_208());
+                shapes.Add(ContainerShape_209());
+                shapes.Add(SpriteShape_64());
+                shapes.Add(ContainerShape_210());
+                shapes.Add(ContainerShape_211());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(27.938,48.491)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_5());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_196()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_197()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_198()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_199()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_200()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_201()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_202()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_203()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_204()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_205()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_206()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_207()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_208()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_209()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_210()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 6
+            CompositionContainerShape ContainerShape_211()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 7
+            CompositionContainerShape ContainerShape_212()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_213());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 7
+            CompositionContainerShape ContainerShape_213()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-34.276001F, -56.473999F));
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_214());
+                shapes.Add(ContainerShape_215());
+                shapes.Add(ContainerShape_216());
+                shapes.Add(ContainerShape_217());
+                shapes.Add(ContainerShape_218());
+                shapes.Add(ContainerShape_219());
+                shapes.Add(ContainerShape_220());
+                shapes.Add(ContainerShape_221());
+                shapes.Add(ContainerShape_222());
+                shapes.Add(ContainerShape_223());
+                shapes.Add(ContainerShape_224());
+                shapes.Add(ContainerShape_225());
+                shapes.Add(ContainerShape_226());
+                shapes.Add(ContainerShape_227());
+                shapes.Add(ContainerShape_228());
+                shapes.Add(SpriteShape_65());
+                shapes.Add(ContainerShape_229());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(14.224,34.776)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Position", Vector2Animation_6());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_214()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_215()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_216()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_217()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_218()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_219()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_220()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_221()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_222()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_223()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_224()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_225()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_226()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_227()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_228()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 7
+            CompositionContainerShape ContainerShape_229()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                return result;
+            }
+
+            // Layer (Shape): Sprinkles 8
+            CompositionContainerShape ContainerShape_230()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_231());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Sprinkles 8
+            CompositionContainerShape ContainerShape_231()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(-13.7040005F, -67.25F));
                 var shapes = result.Shapes;
+                shapes.Add(ContainerShape_232());
+                shapes.Add(ContainerShape_233());
+                shapes.Add(ContainerShape_234());
+                shapes.Add(ContainerShape_235());
+                shapes.Add(ContainerShape_236());
+                shapes.Add(ContainerShape_237());
+                shapes.Add(ContainerShape_238());
+                shapes.Add(ContainerShape_239());
+                shapes.Add(ContainerShape_240());
+                shapes.Add(ContainerShape_241());
+                shapes.Add(ContainerShape_242());
+                shapes.Add(ContainerShape_243());
+                shapes.Add(ContainerShape_244());
+                shapes.Add(ContainerShape_245());
+                shapes.Add(ContainerShape_246());
+                shapes.Add(ContainerShape_247());
                 shapes.Add(SpriteShape_66());
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(34.796,24)";
@@ -1893,14 +2936,142 @@ namespace Compositions
                 return result;
             }
 
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_232()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_233()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_234()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_235()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_236()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_237()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_238()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_239()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_240()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_241()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_242()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_243()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_244()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_245()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_246()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                return result;
+            }
+
+            // Transforms: Sprinkles 8
+            CompositionContainerShape ContainerShape_247()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                return result;
+            }
+
             // Layer (Shape): Candle
-            CompositionContainerShape ContainerShape_110()
+            CompositionContainerShape ContainerShape_248()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_111());
+                shapes.Add(ContainerShape_249());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1909,26 +3080,214 @@ namespace Compositions
             }
 
             // Layer (Shape): Candle
-            // Transforms for Candle
-            CompositionContainerShape ContainerShape_111()
+            CompositionContainerShape ContainerShape_249()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(-48.5F, -91.25F);
                 var shapes = result.Shapes;
+                shapes.Add(ContainerShape_250());
+                shapes.Add(ContainerShape_251());
+                shapes.Add(ContainerShape_252());
+                shapes.Add(ContainerShape_253());
+                shapes.Add(ContainerShape_254());
                 shapes.Add(SpriteShape_67());
                 shapes.Add(SpriteShape_68());
                 shapes.Add(SpriteShape_69());
+                shapes.Add(ContainerShape_255());
+                shapes.Add(ContainerShape_256());
+                shapes.Add(ContainerShape_257());
+                shapes.Add(ContainerShape_259());
+                shapes.Add(ContainerShape_261());
+                shapes.Add(ContainerShape_263());
+                shapes.Add(ContainerShape_265());
+                shapes.Add(ContainerShape_267());
+                shapes.Add(ContainerShape_269());
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_250()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_251()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_252()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_253()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_254()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_255()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_256()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                return result;
+            }
+
+            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_257()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                result.Scale = new Vector2(0.873979986F, 0.873979986F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_258());
+                return result;
+            }
+
+            // ShapeGroup: Group 7
+            CompositionContainerShape ContainerShape_258()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 6
+            CompositionContainerShape ContainerShape_259()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(64.7710037F, 48.882F);
+                result.Scale = new Vector2(0.867699981F, 0.867699981F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_260());
+                return result;
+            }
+
+            // ShapeGroup: Group 6
+            CompositionContainerShape ContainerShape_260()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 5
+            CompositionContainerShape ContainerShape_261()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                result.Scale = new Vector2(0.880330026F, 0.880330026F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_262());
+                return result;
+            }
+
+            // ShapeGroup: Group 5
+            CompositionContainerShape ContainerShape_262()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 4
+            CompositionContainerShape ContainerShape_263()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                result.Scale = new Vector2(0.85777998F, 0.85777998F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_264());
+                return result;
+            }
+
+            // ShapeGroup: Group 4
+            CompositionContainerShape ContainerShape_264()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 3
+            CompositionContainerShape ContainerShape_265()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                result.Scale = new Vector2(0.827109993F, 0.827109993F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_266());
+                return result;
+            }
+
+            // ShapeGroup: Group 3
+            CompositionContainerShape ContainerShape_266()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 2
+            CompositionContainerShape ContainerShape_267()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(14.224F, 34.6780014F);
+                result.Scale = new Vector2(0.850629985F, 0.850629985F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_268());
+                return result;
+            }
+
+            // ShapeGroup: Group 2
+            CompositionContainerShape ContainerShape_268()
+            {
+                var result = _c.CreateContainerShape();
+                return result;
+            }
+
+            // ShapeGroup: Group 1
+            CompositionContainerShape ContainerShape_269()
+            {
+                var result = _c.CreateContainerShape();
+                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                result.Scale = new Vector2(0.865750015F, 0.865750015F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_270());
+                return result;
+            }
+
+            // ShapeGroup: Group 1
+            CompositionContainerShape ContainerShape_270()
+            {
+                var result = _c.CreateContainerShape();
                 return result;
             }
 
             // Layer (Shape): Flame
-            CompositionContainerShape ContainerShape_112()
+            CompositionContainerShape ContainerShape_271()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_113());
+                shapes.Add(ContainerShape_272());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1937,8 +3296,7 @@ namespace Compositions
             }
 
             // Layer (Shape): Flame
-            // Transforms for Flame
-            CompositionContainerShape ContainerShape_113()
+            CompositionContainerShape ContainerShape_272()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(-48.5F, -91.25F);
@@ -2126,6 +3484,7 @@ namespace Compositions
             {
                 var result = _c.CreateContainerVisual();
                 result.CenterPoint = new Vector3(48, 48, 0);
+                result.Clip = GeometricClip();
                 result.Offset = new Vector3(-39.75F, -37.25F, 0);
                 result.Scale = new Vector3(-1, 1, 1);
                 var children = result.Children;
@@ -2230,11 +3589,9 @@ namespace Compositions
                 return _cubicBezierEasingFunction_08 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.349999994F, 1));
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
-            //       Path 1.PathGeometry
-            //         Path
+            // Path 1
+            //   Path 1.PathGeometry
+            //     Path
             CubicBezierEasingFunction CubicBezierEasingFunction_09()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.833000004F, 1));
@@ -2248,6 +3605,16 @@ namespace Compositions
             CubicBezierEasingFunction CubicBezierEasingFunction_11()
             {
                 return _cubicBezierEasingFunction_11 = _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.75F, 1));
+            }
+
+            // Transforms for Null 130
+            //   Transforms for Birthdaycake_v2_Fireworks_2
+            // Mask 1
+            CompositionGeometricClip GeometricClip()
+            {
+                var result = _c.CreateGeometricClip();
+                result.Geometry = PathGeometry_19();
+                return result;
             }
 
             CanvasGeometry Geometry_00()
@@ -2411,6 +3778,27 @@ namespace Compositions
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
                 {
+                    builder.BeginFigure(new Vector2(13.75F, -5));
+                    builder.AddLine(new Vector2(-8.25F, 18.25F));
+                    builder.AddLine(new Vector2(1.25F, 46.75F));
+                    builder.AddCubicBezier(new Vector2(1.25F, 46.75F), new Vector2(18, 42.25F), new Vector2(20.25F, 41.5F));
+                    builder.AddCubicBezier(new Vector2(22.5F, 40.75F), new Vector2(25.25F, 35), new Vector2(25.25F, 35));
+                    builder.AddLine(new Vector2(28.5F, 27));
+                    builder.AddLine(new Vector2(38, 20));
+                    builder.AddLine(new Vector2(40, 3.5F));
+                    builder.AddLine(new Vector2(38.25F, -1));
+                    builder.AddLine(new Vector2(13.75F, -5));
+                    builder.EndFigure(CanvasFigureLoop.Open);
+                    result = CanvasGeometry.CreatePath(builder);
+                }
+                return result;
+            }
+
+            CanvasGeometry Geometry_13()
+            {
+                CanvasGeometry result;
+                using (var builder = new CanvasPathBuilder(null))
+                {
                     builder.SetFilledRegionDetermination(CanvasFilledRegionDetermination.Winding);
                     builder.BeginFigure(new Vector2(47.0209999F, -10.1879997F));
                     builder.AddCubicBezier(new Vector2(47.0209999F, 2.9519999F), new Vector2(25.9890003F, 13.5830002F), new Vector2(-0.00100000005F, 13.5830002F));
@@ -2424,7 +3812,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_13()
+            CanvasGeometry Geometry_14()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2441,7 +3829,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_14()
+            CanvasGeometry Geometry_15()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2459,7 +3847,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_15()
+            CanvasGeometry Geometry_16()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2504,7 +3892,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_16()
+            CanvasGeometry Geometry_17()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2549,7 +3937,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_17()
+            CanvasGeometry Geometry_18()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2594,7 +3982,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_18()
+            CanvasGeometry Geometry_19()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2639,7 +4027,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_19()
+            CanvasGeometry Geometry_20()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2660,7 +4048,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_20()
+            CanvasGeometry Geometry_21()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2680,7 +4068,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_21()
+            CanvasGeometry Geometry_22()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2700,7 +4088,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_22()
+            CanvasGeometry Geometry_23()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2721,7 +4109,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_23()
+            CanvasGeometry Geometry_24()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2741,7 +4129,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_24()
+            CanvasGeometry Geometry_25()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2761,7 +4149,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_25()
+            CanvasGeometry Geometry_26()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2781,7 +4169,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_26()
+            CanvasGeometry Geometry_27()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2801,7 +4189,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_27()
+            CanvasGeometry Geometry_28()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2821,7 +4209,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_28()
+            CanvasGeometry Geometry_29()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2838,7 +4226,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_29()
+            CanvasGeometry Geometry_30()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2855,7 +4243,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_30()
+            CanvasGeometry Geometry_31()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2873,7 +4261,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_31()
+            CanvasGeometry Geometry_32()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2891,7 +4279,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_32()
+            CanvasGeometry Geometry_33()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2909,7 +4297,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_33()
+            CanvasGeometry Geometry_34()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2927,7 +4315,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_34()
+            CanvasGeometry Geometry_35()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2945,7 +4333,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_35()
+            CanvasGeometry Geometry_36()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2963,7 +4351,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_36()
+            CanvasGeometry Geometry_37()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2981,7 +4369,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_37()
+            CanvasGeometry Geometry_38()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -2999,7 +4387,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_38()
+            CanvasGeometry Geometry_39()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3017,7 +4405,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_39()
+            CanvasGeometry Geometry_40()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3035,7 +4423,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_40()
+            CanvasGeometry Geometry_41()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3053,7 +4441,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_41()
+            CanvasGeometry Geometry_42()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3071,7 +4459,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_42()
+            CanvasGeometry Geometry_43()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3089,7 +4477,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_43()
+            CanvasGeometry Geometry_44()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3107,7 +4495,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_44()
+            CanvasGeometry Geometry_45()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3124,7 +4512,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_45()
+            CanvasGeometry Geometry_46()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3141,7 +4529,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_46()
+            CanvasGeometry Geometry_47()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3158,7 +4546,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_47()
+            CanvasGeometry Geometry_48()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3175,7 +4563,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_48()
+            CanvasGeometry Geometry_49()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3192,7 +4580,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_49()
+            CanvasGeometry Geometry_50()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3209,7 +4597,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_50()
+            CanvasGeometry Geometry_51()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3226,7 +4614,7 @@ namespace Compositions
                 return result;
             }
 
-            CanvasGeometry Geometry_51()
+            CanvasGeometry Geometry_52()
             {
                 CanvasGeometry result;
                 using (var builder = new CanvasPathBuilder(null))
@@ -3748,8 +5136,18 @@ namespace Compositions
                 return result;
             }
 
-            // Path 1.PathGeometry
+            // Transforms for Null 130
+            //   Transforms for Birthdaycake_v2_Fireworks_2
+            //     Mask 1
+            // Mask 1.PathGeometry
             CompositionPathGeometry PathGeometry_19()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_12()));
+                return result;
+            }
+
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_20()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_06);
                 var propertySet = result.Properties;
@@ -3775,7 +5173,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_20()
+            CompositionPathGeometry PathGeometry_21()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_00);
                 var propertySet = result.Properties;
@@ -3801,7 +5199,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_21()
+            CompositionPathGeometry PathGeometry_22()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_01);
                 var propertySet = result.Properties;
@@ -3827,7 +5225,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_22()
+            CompositionPathGeometry PathGeometry_23()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_07);
                 var propertySet = result.Properties;
@@ -3853,7 +5251,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_23()
+            CompositionPathGeometry PathGeometry_24()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_08);
                 var propertySet = result.Properties;
@@ -3879,7 +5277,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_24()
+            CompositionPathGeometry PathGeometry_25()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_09);
                 var propertySet = result.Properties;
@@ -3905,7 +5303,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_25()
+            CompositionPathGeometry PathGeometry_26()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_02);
                 var propertySet = result.Properties;
@@ -3931,7 +5329,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_26()
+            CompositionPathGeometry PathGeometry_27()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_03);
                 var propertySet = result.Properties;
@@ -3957,7 +5355,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_27()
+            CompositionPathGeometry PathGeometry_28()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_10);
                 var propertySet = result.Properties;
@@ -3983,7 +5381,7 @@ namespace Compositions
             }
 
             // Path 2.PathGeometry
-            CompositionPathGeometry PathGeometry_28()
+            CompositionPathGeometry PathGeometry_29()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_11);
                 var propertySet = result.Properties;
@@ -4009,7 +5407,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_29()
+            CompositionPathGeometry PathGeometry_30()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_11);
                 var propertySet = result.Properties;
@@ -4035,7 +5433,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_30()
+            CompositionPathGeometry PathGeometry_31()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_04);
                 var propertySet = result.Properties;
@@ -4061,7 +5459,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_31()
+            CompositionPathGeometry PathGeometry_32()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_05);
                 var propertySet = result.Properties;
@@ -4087,7 +5485,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_32()
+            CompositionPathGeometry PathGeometry_33()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_06);
                 var propertySet = result.Properties;
@@ -4113,7 +5511,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_33()
+            CompositionPathGeometry PathGeometry_34()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_00);
                 var propertySet = result.Properties;
@@ -4139,7 +5537,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_34()
+            CompositionPathGeometry PathGeometry_35()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_01);
                 var propertySet = result.Properties;
@@ -4165,7 +5563,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_35()
+            CompositionPathGeometry PathGeometry_36()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_07);
                 var propertySet = result.Properties;
@@ -4191,7 +5589,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_36()
+            CompositionPathGeometry PathGeometry_37()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_08);
                 var propertySet = result.Properties;
@@ -4217,7 +5615,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_37()
+            CompositionPathGeometry PathGeometry_38()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_09);
                 var propertySet = result.Properties;
@@ -4243,7 +5641,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_38()
+            CompositionPathGeometry PathGeometry_39()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_02);
                 var propertySet = result.Properties;
@@ -4269,7 +5667,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_39()
+            CompositionPathGeometry PathGeometry_40()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_03);
                 var propertySet = result.Properties;
@@ -4295,7 +5693,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_40()
+            CompositionPathGeometry PathGeometry_41()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_10);
                 var propertySet = result.Properties;
@@ -4321,7 +5719,7 @@ namespace Compositions
             }
 
             // Path 2.PathGeometry
-            CompositionPathGeometry PathGeometry_41()
+            CompositionPathGeometry PathGeometry_42()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_11);
                 var propertySet = result.Properties;
@@ -4347,7 +5745,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_42()
+            CompositionPathGeometry PathGeometry_43()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_11);
                 var propertySet = result.Properties;
@@ -4373,7 +5771,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_43()
+            CompositionPathGeometry PathGeometry_44()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_04);
                 var propertySet = result.Properties;
@@ -4399,7 +5797,7 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_44()
+            CompositionPathGeometry PathGeometry_45()
             {
                 var result = _c.CreatePathGeometry(_compositionPath_05);
                 var propertySet = result.Properties;
@@ -4425,13 +5823,6 @@ namespace Compositions
             }
 
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_45()
-            {
-                var result = _pathGeometry_45 = _c.CreatePathGeometry(new CompositionPath(Geometry_12()));
-                return result;
-            }
-
-            // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_46()
             {
                 var result = _pathGeometry_46 = _c.CreatePathGeometry(new CompositionPath(Geometry_13()));
@@ -4445,13 +5836,18 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_48()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_15()));
+                var result = _pathGeometry_48 = _c.CreatePathGeometry(new CompositionPath(Geometry_15()));
+                return result;
+            }
+
+            // Path 1
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_49()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_16()));
                 result.StartAnimation("Path", PathKeyFrameAnimation_0());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
@@ -4459,21 +5855,12 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 7
-            //       Path 1
-            // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_49()
-            {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_19()));
-                return result;
-            }
-
+            // ShapeGroup: Group 7
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_50()
             {
-                var result = _pathGeometry_50 = _c.CreatePathGeometry(new CompositionPath(Geometry_20()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_20()));
                 return result;
             }
 
@@ -4484,21 +5871,19 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 4
-            //       Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_52()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_22()));
+                var result = _pathGeometry_52 = _c.CreatePathGeometry(new CompositionPath(Geometry_22()));
                 return result;
             }
 
+            // ShapeGroup: Group 4
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_53()
             {
-                var result = _pathGeometry_53 = _c.CreatePathGeometry(new CompositionPath(Geometry_23()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_23()));
                 return result;
             }
 
@@ -4516,16 +5901,14 @@ namespace Compositions
                 return result;
             }
 
-            // Transforms: Sprinkles 2
-            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_56()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_26()));
+                var result = _pathGeometry_56 = _c.CreatePathGeometry(new CompositionPath(Geometry_26()));
                 return result;
             }
 
-            // Transforms: Sprinkles 5
+            // Transforms: Sprinkles 2
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_57()
@@ -4534,9 +5917,8 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Candle
-            //   Transforms: Candle
-            //     Path 1
+            // Transforms: Sprinkles 5
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_58()
             {
@@ -4544,20 +5926,26 @@ namespace Compositions
                 return result;
             }
 
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_59()
             {
-                var result = _pathGeometry_59 = _c.CreatePathGeometry(new CompositionPath(Geometry_29()));
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_29()));
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
-            //     Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_60()
             {
-                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_30()));
+                var result = _pathGeometry_60 = _c.CreatePathGeometry(new CompositionPath(Geometry_30()));
+                return result;
+            }
+
+            // Path 1
+            // Path 1.PathGeometry
+            CompositionPathGeometry PathGeometry_61()
+            {
+                var result = _c.CreatePathGeometry(new CompositionPath(Geometry_31()));
                 result.StartAnimation("Path", PathKeyFrameAnimation_1());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
@@ -4565,13 +5953,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
-            CompositionPathGeometry PathGeometry_61()
+            CompositionPathGeometry PathGeometry_62()
             {
-                var result = _c.CreatePathGeometry(CompositionPath_44());
+                var result = _c.CreatePathGeometry(CompositionPath_45());
                 result.StartAnimation("Path", PathKeyFrameAnimation_2());
                 var controller = result.TryGetAnimationController("Path");
                 controller.Pause();
@@ -4579,69 +5965,63 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_0()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_16(), _linearEasingFunction);
-                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_17()), CubicBezierEasingFunction_09());
-                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_18()), CubicBezierEasingFunction_10());
-                result.InsertKeyFrame(0.983333349F, CompositionPath_16(), _cubicBezierEasingFunction_08);
+                result.InsertKeyFrame(0, CompositionPath_17(), _linearEasingFunction);
+                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_18()), CubicBezierEasingFunction_09());
+                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_19()), CubicBezierEasingFunction_10());
+                result.InsertKeyFrame(0.983333349F, _compositionPath_17, _cubicBezierEasingFunction_08);
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_1()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new CompositionPath(Geometry_31()), _linearEasingFunction);
-                result.InsertKeyFrame(0.0833333358F, new CompositionPath(Geometry_32()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_33()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_34()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_35()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.416666657F, new CompositionPath(Geometry_36()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_37()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_38()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_39()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_40()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.833333313F, new CompositionPath(Geometry_41()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.916666687F, new CompositionPath(Geometry_42()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.983333349F, new CompositionPath(Geometry_43()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0, new CompositionPath(Geometry_32()), _linearEasingFunction);
+                result.InsertKeyFrame(0.0833333358F, new CompositionPath(Geometry_33()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_34()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_35()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.333333343F, new CompositionPath(Geometry_36()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.416666657F, new CompositionPath(Geometry_37()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.5F, new CompositionPath(Geometry_38()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_39()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_40()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_41()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.833333313F, new CompositionPath(Geometry_42()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.916666687F, new CompositionPath(Geometry_43()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.983333349F, new CompositionPath(Geometry_44()), _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_2()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, _compositionPath_44, _linearEasingFunction);
-                result.InsertKeyFrame(0.0833333358F, new CompositionPath(Geometry_45()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_46()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_47()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.333333343F, _compositionPath_44, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.416666657F, new CompositionPath(Geometry_48()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.5F, _compositionPath_44, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_49()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.666666687F, _compositionPath_44, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_50()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.833333313F, _compositionPath_44, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.916666687F, new CompositionPath(Geometry_51()), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.983333349F, _compositionPath_44, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0, _compositionPath_45, _linearEasingFunction);
+                result.InsertKeyFrame(0.0833333358F, new CompositionPath(Geometry_46()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.166666672F, new CompositionPath(Geometry_47()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.25F, new CompositionPath(Geometry_48()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.333333343F, _compositionPath_45, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.416666657F, new CompositionPath(Geometry_49()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.5F, _compositionPath_45, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_50()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.666666687F, _compositionPath_45, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_51()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.833333313F, _compositionPath_45, _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.916666687F, new CompositionPath(Geometry_52()), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.983333349F, _compositionPath_45, _cubicBezierEasingFunction_00);
                 return result;
             }
 
@@ -4684,7 +6064,7 @@ namespace Compositions
                 controller = result.TryGetAnimationController("t5");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t6", ScalarAnimation_0_to_1_84());
+                result.StartAnimation("t6", _scalarAnimation_0_to_1_84);
                 controller = result.TryGetAnimationController("t6");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -4697,7 +6077,7 @@ namespace Compositions
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, LinearEasingFunction());
-                result.InsertKeyFrame(0.583333313F, 0, LinearEasingFunction());
+                result.InsertKeyFrame(0.583333313F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 1, CubicBezierEasingFunction_00());
                 return result;
             }
@@ -5681,9 +7061,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_00()
             {
@@ -5695,8 +7073,7 @@ namespace Compositions
                 return result;
             }
 
-            // ShapeGroup: Shape 1
-            //   Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_01()
             {
@@ -5708,9 +7085,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_02()
             {
@@ -5722,9 +7097,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_03()
             {
@@ -5736,9 +7109,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_04()
             {
@@ -5750,9 +7121,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_05()
             {
@@ -5764,9 +7133,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_06()
             {
@@ -5789,9 +7156,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_08()
             {
@@ -5803,9 +7168,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_09()
             {
@@ -5817,9 +7180,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_10()
             {
@@ -5831,9 +7192,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_2_11()
             {
@@ -5845,9 +7204,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_00()
             {
@@ -5859,9 +7216,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_01()
             {
@@ -5873,9 +7228,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_02()
             {
@@ -5887,9 +7240,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_03()
             {
@@ -5901,9 +7252,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_04()
             {
@@ -5915,9 +7264,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_05()
             {
@@ -5929,9 +7276,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_06()
             {
@@ -5943,9 +7288,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_07()
             {
@@ -5957,9 +7300,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_08()
             {
@@ -5971,9 +7312,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_09()
             {
@@ -5985,9 +7324,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_10()
             {
@@ -5999,9 +7336,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_11()
             {
@@ -6013,9 +7348,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_12()
             {
@@ -6027,9 +7360,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_13()
             {
@@ -6052,9 +7383,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_15()
             {
@@ -6066,9 +7395,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_16()
             {
@@ -6080,9 +7407,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_17()
             {
@@ -6094,9 +7419,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_18()
             {
@@ -6108,9 +7431,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_19()
             {
@@ -6122,9 +7443,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_20()
             {
@@ -6136,9 +7455,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_21()
             {
@@ -6150,9 +7467,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_22()
             {
@@ -6175,9 +7490,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_24()
             {
@@ -6189,9 +7502,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_3_25()
             {
@@ -6203,9 +7514,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_5_0()
             {
@@ -6217,9 +7526,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_5_1()
             {
@@ -6231,9 +7538,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_5_2()
             {
@@ -6245,9 +7550,7 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
-            //     Path 1
+            // Path 1
             // StrokeThickness
             ScalarKeyFrameAnimation ScalarAnimation_0_to_5_3()
             {
@@ -6265,7 +7568,7 @@ namespace Compositions
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0.566666663F, 1, StepEasingFunction_0());
-                result.InsertKeyFrame(0.649999976F, 0, StepEasingFunction_0());
+                result.InsertKeyFrame(0.649999976F, 0, _stepEasingFunction_0);
                 return result;
             }
 
@@ -6857,30 +8160,28 @@ namespace Compositions
                 // Layer (Shape): Cake
                 shapes.Add(ContainerShape_085());
                 // Layer (Shape): Cake 2
-                shapes.Add(ContainerShape_087());
-                // Layer (Shape): Sprinkles 2
-                shapes.Add(ContainerShape_096());
-                // Layer (Shape): Sprinkles 3
-                shapes.Add(ContainerShape_098());
-                // Layer (Shape): Sprinkles 4
-                shapes.Add(ContainerShape_100());
-                // Layer (Shape): Sprinkles 5
-                shapes.Add(ContainerShape_102());
-                // Layer (Shape): Sprinkles 6
-                shapes.Add(ContainerShape_104());
-                // Layer (Shape): Sprinkles 7
-                shapes.Add(ContainerShape_106());
-                // Layer (Shape): Sprinkles 8
                 shapes.Add(ContainerShape_108());
+                // Layer (Shape): Sprinkles 2
+                shapes.Add(ContainerShape_122());
+                // Layer (Shape): Sprinkles 3
+                shapes.Add(ContainerShape_140());
+                // Layer (Shape): Sprinkles 4
+                shapes.Add(ContainerShape_158());
+                // Layer (Shape): Sprinkles 5
+                shapes.Add(ContainerShape_176());
+                // Layer (Shape): Sprinkles 6
+                shapes.Add(ContainerShape_194());
+                // Layer (Shape): Sprinkles 7
+                shapes.Add(ContainerShape_212());
+                // Layer (Shape): Sprinkles 8
+                shapes.Add(ContainerShape_230());
                 // Layer (Shape): Candle
-                shapes.Add(ContainerShape_110());
+                shapes.Add(ContainerShape_248());
                 // Layer (Shape): Flame
-                shapes.Add(ContainerShape_112());
+                shapes.Add(ContainerShape_271());
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_00()
             {
@@ -6900,8 +8201,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_01()
             {
@@ -6921,7 +8220,6 @@ namespace Compositions
                 return result;
             }
 
-            // ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_02()
             {
@@ -6941,8 +8239,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_03()
             {
@@ -6962,8 +8258,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_04()
             {
@@ -6983,8 +8277,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_05()
             {
@@ -7004,8 +8296,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_06()
             {
@@ -7025,8 +8315,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_07()
             {
@@ -7046,8 +8334,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_08()
             {
@@ -7067,8 +8353,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_09()
             {
@@ -7088,8 +8372,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_10()
             {
@@ -7109,8 +8391,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_11()
             {
@@ -7130,8 +8410,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_12()
             {
@@ -7151,8 +8429,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_13()
             {
@@ -7172,8 +8448,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_14()
             {
@@ -7193,8 +8467,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 2
             CompositionSpriteShape SpriteShape_15()
             {
@@ -7214,8 +8486,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_16()
             {
@@ -7235,8 +8505,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_17()
             {
@@ -7256,8 +8524,6 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_18()
             {
@@ -7277,13 +8543,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_19()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_19();
+                result.Geometry = PathGeometry_20();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7298,13 +8562,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_20()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_20();
+                result.Geometry = PathGeometry_21();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7319,13 +8581,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_21()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_21();
+                result.Geometry = PathGeometry_22();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7340,13 +8600,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_22()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_22();
+                result.Geometry = PathGeometry_23();
                 result.StrokeBrush = _colorBrush_AlmostOrange_FFFFB901;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7361,13 +8619,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_23()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_23();
+                result.Geometry = PathGeometry_24();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7382,13 +8638,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_24()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_24();
+                result.Geometry = PathGeometry_25();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7403,13 +8657,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_25()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_25();
+                result.Geometry = PathGeometry_26();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7424,13 +8676,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_26()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_26();
+                result.Geometry = PathGeometry_27();
                 result.StrokeBrush = _colorBrush_AlmostOrange_FFFFB901;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7445,13 +8695,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_27()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_27();
+                result.Geometry = PathGeometry_28();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7466,13 +8714,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 2
             CompositionSpriteShape SpriteShape_28()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_28();
+                result.Geometry = PathGeometry_29();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7487,13 +8733,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_29()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_29();
+                result.Geometry = PathGeometry_30();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7508,13 +8752,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_30()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_30();
+                result.Geometry = PathGeometry_31();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7529,13 +8771,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_31()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_31();
+                result.Geometry = PathGeometry_32();
                 result.StrokeBrush = _colorBrush_AlmostOrange_FFFFB901;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7550,13 +8790,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 9
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_32()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_32();
+                result.Geometry = PathGeometry_33();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7571,13 +8809,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 8
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_33()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_33();
+                result.Geometry = PathGeometry_34();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7592,13 +8828,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 7
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_34()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_34();
+                result.Geometry = PathGeometry_35();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7613,13 +8847,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 6
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_35()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_35();
+                result.Geometry = PathGeometry_36();
                 result.StrokeBrush = _colorBrush_AlmostOrange_FFFFB901;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7634,13 +8866,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 5
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_36()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_36();
+                result.Geometry = PathGeometry_37();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7655,13 +8885,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 4
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_37()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_37();
+                result.Geometry = PathGeometry_38();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7676,13 +8904,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 12
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_38()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_38();
+                result.Geometry = PathGeometry_39();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7697,13 +8923,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 11
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_39()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_39();
+                result.Geometry = PathGeometry_40();
                 result.StrokeBrush = _colorBrush_AlmostOrange_FFFFB901;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7718,13 +8942,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 10
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_40()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_40();
+                result.Geometry = PathGeometry_41();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7739,13 +8961,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 2
             CompositionSpriteShape SpriteShape_41()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_41();
+                result.Geometry = PathGeometry_42();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7760,13 +8980,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 3
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_42()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_42();
+                result.Geometry = PathGeometry_43();
                 result.StrokeBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7781,13 +8999,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 2
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_43()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_43();
+                result.Geometry = PathGeometry_44();
                 result.StrokeBrush = _colorBrush_AlmostSpringGreen_FF01CC68;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7802,13 +9018,11 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Shape Layer 1
-            //   ShapeGroup: Shape 1
             // Path 1
             CompositionSpriteShape SpriteShape_44()
             {
                 var result = _c.CreateSpriteShape();
-                result.Geometry = PathGeometry_44();
+                result.Geometry = PathGeometry_45();
                 result.StrokeBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
                 result.StrokeEndCap = CompositionStrokeCap.Round;
@@ -7823,131 +9037,99 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake
-            //   Transforms: Cake
             // Path 1
             CompositionSpriteShape SpriteShape_45()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 82.4160004F);
                 result.FillBrush = ColorBrush_AlmostLightGray_FFCCCCCC();
-                result.Geometry = PathGeometry_45();
+                result.Geometry = PathGeometry_46();
                 return result;
             }
 
-            // Layer (Shape): Cake
-            //   Transforms: Cake
             // Path 1
             CompositionSpriteShape SpriteShape_46()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 68.5719986F);
                 result.FillBrush = ColorBrush_AlmostWhiteSmoke_FFF1F1F1();
-                result.Geometry = PathGeometry_46();
+                result.Geometry = PathGeometry_47();
                 return result;
             }
 
-            // Layer (Shape): Cake
-            //   Transforms: Cake
             // Path 1
             CompositionSpriteShape SpriteShape_47()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0200005F, 64.1279984F);
                 result.FillBrush = ColorBrush_AlmostDarkKhaki_FFB88F66();
-                result.Geometry = PathGeometry_47();
+                result.Geometry = PathGeometry_48();
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_48()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 82.4160004F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
-                result.Geometry = _pathGeometry_45;
+                result.Geometry = _pathGeometry_46;
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_49()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 68.5719986F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
-                result.Geometry = _pathGeometry_46;
+                result.Geometry = _pathGeometry_47;
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_50()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0200005F, 64.1279984F);
                 result.FillBrush = ColorBrush_AlmostOrange_FFFFBA01();
-                result.Geometry = _pathGeometry_47;
+                result.Geometry = _pathGeometry_48;
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_51()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 62.7290001F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFDA4100();
-                result.Geometry = PathGeometry_48();
+                result.Geometry = PathGeometry_49();
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_52()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 39.1839981F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFF7630B();
-                result.Geometry = _pathGeometry_46;
+                result.Geometry = _pathGeometry_47;
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 7
+            // ShapeGroup: Group 7
             // Path 1
             CompositionSpriteShape SpriteShape_53()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = ColorBrush_AlmostDarkOliveGreen_FF613D30();
-                result.Geometry = PathGeometry_49();
-                return result;
-            }
-
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 6
-            // Path 1
-            CompositionSpriteShape SpriteShape_54()
-            {
-                var result = _c.CreateSpriteShape();
-                result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_50();
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 5
+            // ShapeGroup: Group 6
             // Path 1
-            CompositionSpriteShape SpriteShape_55()
+            CompositionSpriteShape SpriteShape_54()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
@@ -7955,11 +9137,9 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 4
+            // ShapeGroup: Group 5
             // Path 1
-            CompositionSpriteShape SpriteShape_56()
+            CompositionSpriteShape SpriteShape_55()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
@@ -7967,11 +9147,9 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 3
+            // ShapeGroup: Group 4
             // Path 1
-            CompositionSpriteShape SpriteShape_57()
+            CompositionSpriteShape SpriteShape_56()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
@@ -7979,11 +9157,9 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 2
+            // ShapeGroup: Group 3
             // Path 1
-            CompositionSpriteShape SpriteShape_58()
+            CompositionSpriteShape SpriteShape_57()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
@@ -7991,15 +9167,23 @@ namespace Compositions
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            //   Transforms: Cake 2
-            //     ShapeGroup: Group 1
+            // ShapeGroup: Group 2
+            // Path 1
+            CompositionSpriteShape SpriteShape_58()
+            {
+                var result = _c.CreateSpriteShape();
+                result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
+                result.Geometry = PathGeometry_55();
+                return result;
+            }
+
+            // ShapeGroup: Group 1
             // Path 1
             CompositionSpriteShape SpriteShape_59()
             {
                 var result = _c.CreateSpriteShape();
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
-                result.Geometry = PathGeometry_55();
+                result.Geometry = PathGeometry_56();
                 return result;
             }
 
@@ -8010,7 +9194,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(61.8320007F, 24.3320007F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
-                result.Geometry = PathGeometry_56();
+                result.Geometry = PathGeometry_57();
                 return result;
             }
 
@@ -8021,7 +9205,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(77.4079971F, 34.1889992F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
-                result.Geometry = _pathGeometry_51;
+                result.Geometry = _pathGeometry_52;
                 return result;
             }
 
@@ -8032,7 +9216,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(64.7710037F, 48.882F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
-                result.Geometry = _pathGeometry_50;
+                result.Geometry = _pathGeometry_51;
                 return result;
             }
 
@@ -8043,7 +9227,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 54.762001F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
-                result.Geometry = PathGeometry_57();
+                result.Geometry = PathGeometry_58();
                 return result;
             }
 
@@ -8054,7 +9238,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(28.0359993F, 48.3930016F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
-                result.Geometry = _pathGeometry_53;
+                result.Geometry = _pathGeometry_54;
                 return result;
             }
 
@@ -8065,7 +9249,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(14.224F, 34.6780014F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
-                result.Geometry = _pathGeometry_54;
+                result.Geometry = _pathGeometry_55;
                 return result;
             }
 
@@ -8076,67 +9260,57 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(34.8930016F, 23.9029999F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
-                result.Geometry = _pathGeometry_55;
+                result.Geometry = _pathGeometry_56;
                 return result;
             }
 
-            // Layer (Shape): Candle
-            //   Transforms: Candle
             // Path 1
             CompositionSpriteShape SpriteShape_67()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0200005F, 29.4230003F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF0063B0();
-                result.Geometry = PathGeometry_58();
+                result.Geometry = PathGeometry_59();
                 return result;
             }
 
-            // Layer (Shape): Candle
-            //   Transforms: Candle
             // Path 1
             CompositionSpriteShape SpriteShape_68()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 39.1839981F);
                 result.FillBrush = _colorBrush_AlmostDarkCyan_FF0063B0;
-                result.Geometry = PathGeometry_59();
+                result.Geometry = PathGeometry_60();
                 return result;
             }
 
-            // Layer (Shape): Candle
-            //   Transforms: Candle
             // Path 1
             CompositionSpriteShape SpriteShape_69()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 19.5919991F);
                 result.FillBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
-                result.Geometry = _pathGeometry_59;
+                result.Geometry = _pathGeometry_60;
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
             // Path 1
             CompositionSpriteShape SpriteShape_70()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.026001F, 9.3210001F);
                 result.FillBrush = _colorBrush_AlmostTomato_FFFD4341;
-                result.Geometry = PathGeometry_60();
+                result.Geometry = PathGeometry_61();
                 return result;
             }
 
-            // Layer (Shape): Flame
-            //   Transforms: Flame
             // Path 1
             CompositionSpriteShape SpriteShape_71()
             {
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(48.0209999F, 11.6599998F);
                 result.FillBrush = ColorBrush_AlmostKhaki_FFFFD579();
-                result.Geometry = PathGeometry_61();
+                result.Geometry = PathGeometry_62();
                 return result;
             }
 
@@ -8177,10 +9351,10 @@ namespace Compositions
                 result.InsertKeyFrame(0, new Vector2(13.2340002F, -66.8209991F), _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, new Vector2(13.2340002F, -66.8209991F), _linearEasingFunction);
                 result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-66.821))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-67.65434))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-72.00237))) + (Pow(_.t0, 3) * Vector2(13.234,(-71.821)))", StepEasingFunction_1());
-                result.InsertKeyFrame(0.75F, new Vector2(13.2340002F, -71.8209991F), StepEasingFunction_1());
+                result.InsertKeyFrame(0.75F, new Vector2(13.2340002F, -71.8209991F), _stepEasingFunction_1);
                 result.InsertKeyFrame(0.816666663F, new Vector2(13.2340002F, -65.7330017F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", StepEasingFunction_1());
-                result.InsertKeyFrame(0.900000036F, new Vector2(13.2340002F, -66.8209991F), StepEasingFunction_1());
+                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", _stepEasingFunction_1);
+                result.InsertKeyFrame(0.900000036F, new Vector2(13.2340002F, -66.8209991F), _stepEasingFunction_1);
                 return result;
             }
 
@@ -8286,14 +9460,16 @@ namespace Compositions
                 return result;
             }
 
-            Instantiator(Compositor compositor)
+            internal Composition(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();
+                Root();
             }
 
-            public static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).Root();
+            Visual IComposition.RootVisual => _root;
+            TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
+            Vector2 IComposition.Size => new Vector2(300, 300);
         }
     }
 }

@@ -6,8 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System;
 using System.Numerics;
 using Windows.UI;
@@ -15,26 +15,30 @@ using Windows.UI.Composition;
 
 namespace Compositions
 {
-    sealed class Gift_popup : Host.ICompositionSource
+    sealed class Gift_popup : ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(1080, 1200);
-            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
+            if (!IsRuntimeCompatible())
+            {
+                return null;
+            }
+            return new Composition(compositor);
+        }
+
+        static bool IsRuntimeCompatible()
+        {
+            if (!Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
             return true;
         }
 
-        const long c_durationTicks = 23330000;
-
-        sealed class Instantiator
+        sealed class Composition : IComposition
         {
+            const long c_durationTicks = 23330000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _colorBrush_AlmostDarkCyan_FF1F9B7C;
@@ -946,7 +950,7 @@ namespace Compositions
                 controller = result.TryGetAnimationController("t2");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t3", ScalarAnimation_0_to_1_0());
+                result.StartAnimation("t3", _scalarAnimation_0_to_1_0);
                 controller = result.TryGetAnimationController("t3");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1281,17 +1285,17 @@ namespace Compositions
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(540.01001F, 895.005005F), LinearEasingFunction());
-                result.InsertKeyFrame(0.314285725F, new Vector2(540.01001F, 895.005005F), LinearEasingFunction());
+                result.InsertKeyFrame(0.314285725F, new Vector2(540.01001F, 895.005005F), _linearEasingFunction);
                 result.InsertKeyFrame(0.357142866F, new Vector2(540.01001F, 916.098999F), CubicBezierEasingFunction_0());
                 result.InsertExpressionKeyFrame(0.399999887F, "(Pow(1 - _.t0, 3) * Vector2(540.01,916.099)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(540.01,916.099)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(540.01,898.5206)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", StepEasingFunction());
-                result.InsertKeyFrame(0.399999976F, new Vector2(540.01001F, 895.005005F), StepEasingFunction());
-                result.InsertKeyFrame(0.442857146F, new Vector2(540.01001F, 895.005005F), CubicBezierEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t0, 3) * Vector2(540.01,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(541.5725,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(549.7756,895.005)) + (Pow(_.t0, 3) * Vector2(549.385,895.005))", StepEasingFunction());
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t0, 3) * Vector2(549.385,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(548.9944,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(536.8848,895.005)) + (Pow(_.t0, 3) * Vector2(537.666,895.005))", StepEasingFunction());
-                result.InsertKeyFrame(0.5F, new Vector2(537.666016F, 895.005005F), StepEasingFunction());
-                result.InsertKeyFrame(0.528571427F, new Vector2(554.072021F, 895.005005F), CubicBezierEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t0, 3) * Vector2(554.072,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(554.4626,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(542.3538,895.005)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", StepEasingFunction());
-                result.InsertKeyFrame(0.557142854F, new Vector2(540.01001F, 895.005005F), StepEasingFunction());
+                result.InsertKeyFrame(0.399999976F, new Vector2(540.01001F, 895.005005F), _stepEasingFunction);
+                result.InsertKeyFrame(0.442857146F, new Vector2(540.01001F, 895.005005F), _cubicBezierEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t0, 3) * Vector2(540.01,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(541.5725,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(549.7756,895.005)) + (Pow(_.t0, 3) * Vector2(549.385,895.005))", _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t0, 3) * Vector2(549.385,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(548.9944,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(536.8848,895.005)) + (Pow(_.t0, 3) * Vector2(537.666,895.005))", _stepEasingFunction);
+                result.InsertKeyFrame(0.5F, new Vector2(537.666016F, 895.005005F), _stepEasingFunction);
+                result.InsertKeyFrame(0.528571427F, new Vector2(554.072021F, 895.005005F), _cubicBezierEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t0, 3) * Vector2(554.072,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(554.4626,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(542.3538,895.005)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", _stepEasingFunction);
+                result.InsertKeyFrame(0.557142854F, new Vector2(540.01001F, 895.005005F), _stepEasingFunction);
                 return result;
             }
 
@@ -1381,14 +1385,16 @@ namespace Compositions
                 return result;
             }
 
-            Instantiator(Compositor compositor)
+            internal Composition(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();
+                Root();
             }
 
-            public static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).Root();
+            Visual IComposition.RootVisual => _root;
+            TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
+            Vector2 IComposition.Size => new Vector2(1080, 1200);
         }
     }
 }
