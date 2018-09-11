@@ -12,20 +12,26 @@ namespace Compositions
 {
     sealed class UiFeedbackAnimations : Host.ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        sealed class Comp : Host.IComposition
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(337, 317);
-            duration = TimeSpan.FromTicks(23830000);
-            diagnostics = null;
-            return true;
+            public Visual RootVisual { get; set; }
+            public TimeSpan Duration { get; set; }
+            public Vector2 Size { get; set; }
         }
-        
+
+        public Host.IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
+        {
+            diagnostics = null;
+            return new Comp
+            {
+                RootVisual = Instantiator.InstantiateComposition(compositor),
+                Size = new Vector2(337, 317),
+                Duration = TimeSpan.FromTicks(c_durationTicks)
+            };
+        }
+
+        const long c_durationTicks = 23830000;
+
         sealed class Instantiator
         {
             readonly Compositor _c;

@@ -268,15 +268,14 @@ namespace WinCompData.CodeGen
             // up to the start of the Instantiator class.
             WriteFileStart(builder, info);
 
-            // Write fields for constant values.
-            WriteField(builder, Const(_stringifier.Int64TypeName), $"{c_durationTicksFieldName} = {_stringifier.Int64(_compositionDuration.Ticks)}");
-            builder.WriteLine();
-
             // Write the IsRuntimeCompatible() method.
             WriteIsRuntimeCompatibleMethod(builder);
 
             // Write the body of the Instantiator class.
             WriteInstantiatorStart(builder, info);
+
+            // Write fields for constant values.
+            WriteField(builder, Const(_stringifier.Int64TypeName), $"{c_durationTicksFieldName} = {_stringifier.Int64(_compositionDuration.Ticks)}");
 
             // Write fields for each object that needs storage (i.e. objects that are 
             // referenced more than once).
@@ -328,7 +327,7 @@ namespace WinCompData.CodeGen
             string result;
             if (callerNode.CallFactoryFromForCache.TryGetValue(calleeNode, out result))
             {
-                // The caller had called this factory before. Return what they got last time.
+                // Return the factory from the cache.
                 return result;
             }
 
@@ -336,7 +335,15 @@ namespace WinCompData.CodeGen
             result = CallFactoryFromFor_UnCached(callerNode, calleeNode);
 
             // Save the factory call code in the cache on the caller for next time.
-            callerNode.CallFactoryFromForCache.Add(calleeNode, result);
+            if (calleeNode.RequiresStorage && !_disableFieldOptimization)
+            {
+                // The node has storage for its result. Next time just return the field.
+                callerNode.CallFactoryFromForCache.Add(calleeNode, calleeNode.FieldName);
+            }
+            else
+            {
+                callerNode.CallFactoryFromForCache.Add(calleeNode, result);
+            }
             return result;
         }
 

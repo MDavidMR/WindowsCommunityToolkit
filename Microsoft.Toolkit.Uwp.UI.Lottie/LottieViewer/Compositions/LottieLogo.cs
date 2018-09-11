@@ -6,8 +6,8 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using Microsoft.Graphics.Canvas.Geometry;
+using Microsoft.UI.Xaml.Controls.CompositionPlayer;
 using System;
 using System.Numerics;
 using Windows.UI;
@@ -15,26 +15,30 @@ using Windows.UI.Composition;
 
 namespace Compositions
 {
-    sealed class LottieLogo : Host.ICompositionSource
+    sealed class LottieLogo : ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(375, 667);
-            duration = TimeSpan.FromTicks(c_durationTicks);
             diagnostics = null;
+            if (!IsRuntimeCompatible())
+            {
+                return null;
+            }
+            return new Composition(compositor);
+        }
+
+        static bool IsRuntimeCompatible()
+        {
+            if (!Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
+            {
+                return false;
+            }
             return true;
         }
 
-        const long c_durationTicks = 59670000;
-
-        sealed class Instantiator
+        sealed class Composition : IComposition
         {
+            const long c_durationTicks = 59670000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CompositionColorBrush _colorBrush_AlmostTeal_FF007A87;
@@ -3064,20 +3068,6 @@ namespace Compositions
                 return result;
             }
 
-            // Rectangle Path 1.RectangleGeometry
-            CompositionRectangleGeometry Rectangle_375x667()
-            {
-                var result = _c.CreateRectangleGeometry();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(0, 0));
-                result.Size = new Vector2(375, 667);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "Vector2((my.Position.X - (my.Size.X / 2)),(my.Position.Y - (my.Size.Y / 2)))";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                return result;
-            }
-
             // The root of the composition.
             ContainerVisual Root()
             {
@@ -3092,10 +3082,21 @@ namespace Compositions
                 var controller = result.TryGetAnimationController("t0");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t1", ScalarAnimation_0_to_1_2());
+                result.StartAnimation("t1", _scalarAnimation_0_to_1_2);
                 controller = result.TryGetAnimationController("t1");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Rectangle Path 1
+            // Rectangle Path 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_375x667()
+            {
+                var result = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(9.99999997E-07F, 9.99999997E-07F);
+                result.Offset = new Vector2(-187.5F, -333.5F);
+                result.Size = new Vector2(375, 667);
                 return result;
             }
 
@@ -4293,7 +4294,7 @@ namespace Compositions
                 var result = _c.CreateSpriteShape();
                 result.Offset = new Vector2(187.5F, 333.5F);
                 result.FillBrush = ColorBrush_AlmostDarkTurquoise_FF00D1C1();
-                result.Geometry = Rectangle_375x667();
+                result.Geometry = RoundedRectangle_375x667();
                 return result;
             }
 
@@ -5000,7 +5001,7 @@ namespace Compositions
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, new Vector2(43.2630005F, 59.75F), LinearEasingFunction());
-                result.InsertKeyFrame(0.536312878F, new Vector2(43.2630005F, 59.75F), LinearEasingFunction());
+                result.InsertKeyFrame(0.536312878F, new Vector2(43.2630005F, 59.75F), _linearEasingFunction);
                 result.InsertKeyFrame(0.603351951F, new Vector2(62.5130005F, 59.75F), CubicBezierEasingFunction_00());
                 result.InsertKeyFrame(0.642458081F, new Vector2(63.7630005F, 59.75F), CubicBezierEasingFunction_01());
                 return result;
@@ -5016,8 +5017,8 @@ namespace Compositions
                 result.InsertKeyFrame(0.536312878F, new Vector2(164.781998F, 57.4729996F), _linearEasingFunction);
                 result.InsertKeyFrame(0.553072631F, new Vector2(164.781998F, 55.4729996F), CubicBezierEasingFunction_02());
                 result.InsertKeyFrame(0.569832385F, new Vector2(164.781998F, 57.4729996F), CubicBezierEasingFunction_03());
-                result.InsertKeyFrame(0.586592197F, new Vector2(164.781998F, 56.9090004F), CubicBezierEasingFunction_02());
-                result.InsertKeyFrame(0.603351951F, new Vector2(164.781998F, 57.4729996F), CubicBezierEasingFunction_03());
+                result.InsertKeyFrame(0.586592197F, new Vector2(164.781998F, 56.9090004F), _cubicBezierEasingFunction_02);
+                result.InsertKeyFrame(0.603351951F, new Vector2(164.781998F, 57.4729996F), _cubicBezierEasingFunction_03);
                 return result;
             }
 
@@ -5102,8 +5103,8 @@ namespace Compositions
                 result.InsertKeyFrame(0.17318435F, new Vector2(-62.7919998F, 73.0569992F), _linearEasingFunction);
                 result.InsertKeyFrame(0.196966484F, new Vector2(-53.7919998F, 7.55700016F), _cubicBezierEasingFunction_04);
                 result.InsertExpressionKeyFrame(0.245809957F, "(Pow(1 - _.t0, 3) * Vector2((-53.792),7.557)) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-53.792),7.557)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-52.82329),(-71.07968))) + (Pow(_.t0, 3) * Vector2((-33.667),(-72.818)))", StepEasingFunction_1());
-                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t0, 3) * Vector2((-33.667),(-72.818))) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-17.45947),(-74.28873))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-14.167),102.182)) + (Pow(_.t0, 3) * Vector2((-14.167),102.182))", StepEasingFunction_1());
-                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), StepEasingFunction_1());
+                result.InsertExpressionKeyFrame(0.301675886F, "(Pow(1 - _.t0, 3) * Vector2((-33.667),(-72.818))) + (3 * Square(1 - _.t0) * _.t0 * Vector2((-17.45947),(-74.28873))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2((-14.167),102.182)) + (Pow(_.t0, 3) * Vector2((-14.167),102.182))", _stepEasingFunction_1);
+                result.InsertKeyFrame(0.301675975F, new Vector2(-14.1669998F, 102.181999F), _stepEasingFunction_1);
                 result.InsertKeyFrame(0.351955295F, new Vector2(-14.1669998F, 59.1819992F), CubicBezierEasingFunction_15());
                 result.InsertKeyFrame(0.407821238F, new Vector2(-14.1669998F, 62.1819992F), CubicBezierEasingFunction_16());
                 return result;
@@ -5163,14 +5164,16 @@ namespace Compositions
                 return result;
             }
 
-            Instantiator(Compositor compositor)
+            internal Composition(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();
+                Root();
             }
 
-            public static Visual InstantiateComposition(Compositor compositor)
-                => new Instantiator(compositor).Root();
+            Visual IComposition.RootVisual => _root;
+            TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
+            Vector2 IComposition.Size => new Vector2(375, 667);
         }
     }
 }

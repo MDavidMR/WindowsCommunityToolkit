@@ -80,11 +80,8 @@ namespace Compositions
 ref class {className} sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::ICompositionSource
 {{
 public:
-    virtual bool TryCreateInstance(
+    virtual Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ TryCreateInstance(
         Windows::UI::Composition::Compositor^ compositor,
-        Windows::UI::Composition::Visual^* rootVisual,
-        Windows::Foundation::Numerics::float2* size,
-        Windows::Foundation::TimeSpan* duration,
         Platform::Object^* diagnostics);
 }};
 }}";
@@ -133,7 +130,7 @@ public:
         protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
         {
             // Start writing the instantiator.
-            builder.WriteLine("class Instantiator final");
+            builder.WriteLine("ref class Comp sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition");
             builder.OpenScope();
 
             // D2D factory field.
@@ -164,7 +161,10 @@ public:
             builder.WriteLine();
 
             // Write the constructor for the instantiator.
-            builder.WriteLine("Instantiator(Compositor^ compositor)");
+            builder.UnIndent();
+            builder.WriteLine("public:");
+            builder.Indent();
+            builder.WriteLine("Comp(Compositor^ compositor)");
             // Initializer list.
             builder.Indent();
             builder.WriteLine(": _c(compositor)");
@@ -173,16 +173,25 @@ public:
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine($"{FailFastWrapper("D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf())")};");
+            // Instantiate the root. This will cause the whole Visual tree to be built and animations started.
+            builder.WriteLine("Root();");
             builder.CloseScope();
 
-            // Write the method that instantiates the composition.
+            // Write the properties on IComposition.
             builder.WriteLine();
-            builder.UnIndent();
-            builder.WriteLine("public:");
-            builder.Indent();
-            builder.WriteLine("static Visual^ InstantiateComposition(Compositor^ compositor)");
+            builder.WriteLine("property Windows::Foundation::TimeSpan Duration");
             builder.OpenScope();
-            builder.WriteLine($"return Instantiator(compositor).{CallFactoryFor(info.RootVisual)};");
+            builder.WriteLine("virtual Windows::Foundation::TimeSpan get() { return { c_durationTicks }; }");
+            builder.CloseScope();
+            builder.WriteLine();
+            builder.WriteLine("property Windows::UI::Composition::Visual^ RootVisual");
+            builder.OpenScope();
+            builder.WriteLine("virtual Windows::UI::Composition::Visual^ get() { return _root; }");
+            builder.CloseScope();
+            builder.WriteLine();
+            builder.WriteLine("property Windows::Foundation::Numerics::float2 Size");
+            builder.OpenScope();
+            builder.WriteLine($"virtual Windows::Foundation::Numerics::float2 get() {{ return {Vector2(info.CompositionDeclaredSize)}; }}");
             builder.CloseScope();
             builder.WriteLine();
 
@@ -194,29 +203,19 @@ public:
             builder.WriteLine("} // end namespace");
             builder.WriteLine();
 
-
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine($"bool Compositions::{info.ClassName}::TryCreateInstance(");
+            builder.WriteLine($"Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ Compositions::{info.ClassName}::TryCreateInstance(");
             builder.Indent();
             builder.WriteLine("Compositor^ compositor,");
-            builder.WriteLine("Visual^* rootVisual,");
-            builder.WriteLine("float2* size,");
-            builder.WriteLine("TimeSpan* duration,");
             builder.WriteLine("Object^* diagnostics)");
             builder.UnIndent();
             builder.OpenScope();
             builder.WriteLine("diagnostics = nullptr;");
             builder.WriteLine("if (!IsRuntimeCompatible())");
             builder.OpenScope();
-            builder.WriteLine("*rootVisual = nullptr;");
-            builder.WriteLine("*size = {0, 0};");
-            builder.WriteLine("duration = {0};");
-            builder.WriteLine("return false;");
+            builder.WriteLine("return nullptr;");
             builder.CloseScope();
-            builder.WriteLine("*rootVisual = Instantiator::InstantiateComposition(compositor);");
-            builder.WriteLine($"*size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine($"duration->Duration = {{{info.DurationTicksFieldName}}};");
-            builder.WriteLine("return true;");
+            builder.WriteLine("return ref new Comp(compositor);");
             builder.CloseScope();
         }
 

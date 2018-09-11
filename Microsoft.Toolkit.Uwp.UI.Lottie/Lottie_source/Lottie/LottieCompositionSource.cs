@@ -144,32 +144,20 @@ namespace Lottie
         }
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
-        public bool TryCreateInstance(
+        public IComposition TryCreateInstance(
         //bool ICompositionSource.TryCreateInstance(
             Compositor compositor,
-            out Visual rootVisual,
-            out System.Numerics.Vector2 size,
-            out TimeSpan duration,
             out object diagnostics)
         {
+
             if (_contentFactory == null)
             {
-                rootVisual = null;
-                size = default(System.Numerics.Vector2);
-                duration = default(TimeSpan);
                 diagnostics = null;
-                // Return true to indicate that this is a successful load of null content.
-                // Only return false if a load actually failed.
-                return true;
+                return new Comp();
             }
             else
             {
-                return _contentFactory.TryCreateInstance(
-                    compositor,
-                    out rootVisual,
-                    out size,
-                    out duration,
-                    out diagnostics);
+                return _contentFactory.TryCreateInstance(compositor, out diagnostics);
             }
         }
 
@@ -559,36 +547,30 @@ namespace Lottie
                 return _diagnostics != null ? _diagnostics.Clone() : null;
             }
 
-            public bool TryCreateInstance(
-                Compositor compositor,
-                out Visual rootVisual,
-                out System.Numerics.Vector2 size,
-                out TimeSpan duration,
-                out object diagnostics)
+            public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
             {
                 var diags = GetDiagnosticsClone();
                 diagnostics = diags;
 
                 if (!CanInstantiate)
                 {
-                    rootVisual = null;
-                    size = default(System.Numerics.Vector2);
-                    duration = default(TimeSpan);
-                    return false;
+                    return null;
                 }
                 else
                 {
                     var sw = Stopwatch.StartNew();
-
-                    rootVisual = Instantiator.CreateVisual(compositor, _wincompDataRootVisual);
-                    size = new System.Numerics.Vector2((float)_width, (float)_height);
-                    duration = _duration;
+                    var result = new Comp()
+                    {
+                        RootVisual = Instantiator.CreateVisual(compositor, _wincompDataRootVisual),
+                        Size = new System.Numerics.Vector2((float)_width, (float)_height),
+                        Duration = _duration
+                    };
 
                     if (diags != null)
                     {
                         diags.InstantiationTime = sw.Elapsed;
                     }
-                    return true;
+                    return result;
                 }
             }
         }
@@ -605,13 +587,21 @@ namespace Lottie
         /// </summary>
         static bool IsRuntimeCompatible(ApiCompatibility compatibility)
         {
-            if (compatibility.RequiresCompositionGeometricClip && 
+            if (compatibility.RequiresCompositionGeometricClip &&
                 !ApiInformation.IsTypePresent("Windows.UI.Composition.CompositionGeometricClip"))
             {
                 return false;
             }
             return true;
         }
+
+        sealed class Comp : IComposition
+        {
+            public Visual RootVisual { get; set; }
+            public TimeSpan Duration { get; set; }
+            public System.Numerics.Vector2 Size { get; set; }
+        }
+
 
         #region DEBUG
         // For testing purposes, slows down a task.

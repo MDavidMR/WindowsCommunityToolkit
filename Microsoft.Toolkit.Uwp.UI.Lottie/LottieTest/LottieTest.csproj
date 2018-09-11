@@ -188,10 +188,10 @@
       <Version>1.8.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.8</Version>
+      <Version>6.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
-      <Version>0.1.0.13</Version>
+      <Version>0.1.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

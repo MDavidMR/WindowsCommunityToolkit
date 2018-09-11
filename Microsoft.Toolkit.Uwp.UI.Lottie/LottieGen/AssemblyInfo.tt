@@ -31,5 +31,5 @@ static readonly int MinorVersion = 1;
 // Build number is the number of days from the base date.
 static readonly int BuildNumber = (int)NowRelativeToBaseDate.TotalDays;
 // Revision number is the number of seconds into the build day.
-static readonly int RevisionNumber = (int)NowRelativeToToday.TotalSeconds;
+static readonly int RevisionNumber = (int)(NowRelativeToToday.TotalSeconds / 5);
 #>

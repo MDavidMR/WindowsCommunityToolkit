@@ -56,11 +56,11 @@ namespace WinCompData.CodeGen
         // Called by the base class to write the start of the file (i.e. everything up to the body of the Instantiator class).
         protected override void WriteFileStart(CodeBuilder builder, CodeGenInfo info)
         {
-            builder.WriteLine("using Host = Microsoft.UI.Xaml.Controls.CompositionPlayer;");
             if (info.RequiresWin2d)
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
             }
+            builder.WriteLine("using Microsoft.UI.Xaml.Controls.CompositionPlayer;");
             builder.WriteLine("using System;");
             builder.WriteLine("using System.Numerics;");
             builder.WriteLine("using Windows.UI;");
@@ -69,32 +69,18 @@ namespace WinCompData.CodeGen
             builder.WriteLine();
             builder.WriteLine("namespace Compositions");
             builder.OpenScope();
-            builder.WriteLine($"sealed class {info.ClassName} : Host.ICompositionSource");
+            builder.WriteLine($"sealed class {info.ClassName} : ICompositionSource");
             builder.OpenScope();
 
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine("public bool TryCreateInstance(");
-            builder.Indent();
-            builder.WriteLine("Compositor compositor,");
-            builder.WriteLine("out Visual rootVisual,");
-            builder.WriteLine("out Vector2 size,");
-            builder.WriteLine("out TimeSpan duration,");
-            builder.WriteLine("out object diagnostics)");
-            builder.UnIndent();
+            builder.WriteLine("public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)");
             builder.OpenScope();
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("if (!IsRuntimeCompatible())");
             builder.OpenScope();
-            builder.WriteLine("rootVisual = null;");
-            builder.WriteLine("size = default(Vector2);");
-            builder.WriteLine("duration = TimeSpan.Zero;");
-            builder.WriteLine("return false;");
+            builder.WriteLine("return null;");
             builder.CloseScope();
-            builder.WriteLine();
-            builder.WriteLine("rootVisual = Instantiator.InstantiateComposition(compositor);");
-            builder.WriteLine($"size = {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine($"duration = TimeSpan.FromTicks({info.DurationTicksFieldName});");
-            builder.WriteLine("return true;");
+            builder.WriteLine("return new Composition(compositor);");
             builder.CloseScope();
             builder.WriteLine();
         }
@@ -102,7 +88,7 @@ namespace WinCompData.CodeGen
         protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
         {
             // Start the instantiator class.
-            builder.WriteLine("sealed class Instantiator");
+            builder.WriteLine("sealed class Composition : IComposition");
             builder.OpenScope();
         }
 
@@ -112,18 +98,18 @@ namespace WinCompData.CodeGen
             CodeGenInfo info)
         {
             // Write the constructor for the instantiator.
-            builder.WriteLine("Instantiator(Compositor compositor)");
+            builder.WriteLine("internal Composition(Compositor compositor)");
             builder.OpenScope();
             builder.WriteLine("_c = compositor;");
             builder.WriteLine($"{info.ReusableExpressionAnimationFieldName} = compositor.CreateExpressionAnimation();");
+            builder.WriteLine("Root();");
             builder.CloseScope();
             builder.WriteLine();
 
-            // Generate the code for the root method.
-            builder.WriteLine("public static Visual InstantiateComposition(Compositor compositor)");
-            builder.Indent();
-            builder.WriteLine($"=> new Instantiator(compositor).{CallFactoryFor(info.RootVisual)};");
-            builder.UnIndent();
+            // Write the IComposition implementation.
+            builder.WriteLine("Visual IComposition.RootVisual => _root;");
+            builder.WriteLine($"TimeSpan IComposition.Duration => TimeSpan.FromTicks({info.DurationTicksFieldName});");
+            builder.WriteLine($"Vector2 IComposition.Size => {Vector2(info.CompositionDeclaredSize)};");
 
             // Close the scope for the instantiator class.
             builder.CloseScope();

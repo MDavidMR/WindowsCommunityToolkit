@@ -18,24 +18,28 @@ namespace Compositions
 {
     sealed class MyComposition : Host.ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        sealed class Comp : Host.IComposition
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(426, 213);
-            duration = TimeSpan.FromTicks(102330000);
-            diagnostics = null;
-            // Fail loading randomly half of the time in order to test the fallback code.
-            return (DateTime.Now.Second % 2) == 0;
+            public Visual RootVisual { get; set; }
+            public TimeSpan Duration { get; set; }
+            public Vector2 Size { get; set; }
         }
+
+        public Host.IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
+        {
+            diagnostics = null;
+            return new Comp
+            {
+                RootVisual = Instantiator.InstantiateComposition(compositor),
+                Size = new Vector2(426, 213),
+                Duration = TimeSpan.FromTicks(c_durationTicks)
+            };
+        }
+
+        const long c_durationTicks = 102330000;
 
         sealed class Instantiator
         {
-            const long c_durationTicks = 102330000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             ColorKeyFrameAnimation _colorAnimation_AlmostDarkSlateGray_FF2A2A2A_to_TransparentAlmostDarkSlateGray_002A2A2A;

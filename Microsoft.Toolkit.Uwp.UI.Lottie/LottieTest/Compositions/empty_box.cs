@@ -17,23 +17,28 @@ namespace Compositions
 {
     sealed class Empty_box : Host.ICompositionSource
     {
-        public bool TryCreateInstance(
-            Compositor compositor,
-            out Visual rootVisual,
-            out Vector2 size,
-            out TimeSpan duration,
-            out object diagnostics)
+        sealed class Comp : Host.IComposition
         {
-            rootVisual = Instantiator.InstantiateComposition(compositor);
-            size = new Vector2(120, 120);
-            duration = TimeSpan.FromTicks(20000000);
-            diagnostics = null;
-            return true;
+            public Visual RootVisual { get; set; }
+            public TimeSpan Duration { get; set; }
+            public Vector2 Size { get; set; }
         }
+
+        public Host.IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
+        {
+            diagnostics = null;
+            return new Comp
+            {
+                RootVisual = Instantiator.InstantiateComposition(compositor),
+                Size = new Vector2(120, 120),
+                Duration = TimeSpan.FromTicks(c_durationTicks)
+            };
+        }
+
+        const long c_durationTicks = 20000000;
 
         sealed class Instantiator
         {
-            const long c_durationTicks = 20000000;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             CubicBezierEasingFunction _cubicBezierEasingFunction_3;
