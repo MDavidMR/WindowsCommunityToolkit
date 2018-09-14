@@ -135,7 +135,7 @@
       <Version>6.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
-      <Version>0.1.1.2</Version>
+      <Version>0.1.1.5</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>

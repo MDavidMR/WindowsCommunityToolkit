@@ -9670,6 +9670,8 @@ namespace
             virtual Windows::Foundation::Numerics::float2 get() { return { 300, 300 }; }
         }
 
+        virtual void Unload() {  }
+
     };
 } // end namespace
 

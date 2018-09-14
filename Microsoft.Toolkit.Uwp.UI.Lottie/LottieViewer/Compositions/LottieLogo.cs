@@ -5174,6 +5174,11 @@ namespace Compositions
             Visual IComposition.RootVisual => _root;
             TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
             Vector2 IComposition.Size => new Vector2(375, 667);
+
+            public void Unload()
+            {
+                _root?.Dispose();
+            }
         }
     }
 }

@@ -118,6 +118,8 @@ namespace LottieData.Serialization
             string name = null;
             bool? is3d = null;
             var assets = new Asset[0];
+            var chars = new Char[0];
+            var fonts = new Font[0];
             var layers = new Layer[0];
             var markers = new Marker[0];
 
@@ -160,8 +162,7 @@ namespace LottieData.Serialization
                                 assets = ParseArrayOf(reader, ParseAsset).ToArray();
                                 break;
                             case "chars":
-                                _issues.Chars();
-                                ConsumeArray(reader);
+                                chars = ParseArrayOf(reader, ParseChar).ToArray();
                                 break;
                             case "comps":
                                 _issues.IgnoredField("comps");
@@ -174,8 +175,7 @@ namespace LottieData.Serialization
                                 framesPerSecond = ParseDouble(reader);
                                 break;
                             case "fonts":
-                                _issues.Fonts();
-                                ConsumeObject(reader);
+                                fonts = ParseFonts(reader).ToArray();
                                 break;
                             case "layers":
                                 layers = ParseLayers(reader);
@@ -263,6 +263,8 @@ namespace LottieData.Serialization
                                                 is3d: false,
                                                 version: new Version(versions[0], versions[1], versions[2]),
                                                 assets: new AssetCollection(assets),
+                                                chars: chars,
+                                                fonts: fonts,
                                                 layers: new LayerCollection(layers),
                                                 markers: markers);
                             return result;
@@ -414,6 +416,78 @@ namespace LottieData.Serialization
             throw EofException;
         }
 
+        Char ParseChar(JsonReader reader)
+        {
+            ExpectToken(reader, JsonToken.StartObject);
+
+            string ch = null;
+            string fFamily = null;
+            double? size = null;
+            string style = null;
+            double? width = null;
+            List<ShapeLayerContent> shapes = null;
+
+            while (reader.Read())
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.PropertyName:
+                        {
+                            var currentProperty = (string)reader.Value;
+                            ConsumeToken(reader);
+
+                            switch (currentProperty)
+                            {
+                                case "ch":
+                                    ch = (string)reader.Value;
+                                    break;
+                                case "data":
+                                    shapes = ReadShapes(JObject.Load(reader, s_jsonLoadSettings));
+                                    break;
+                                case "fFamily":
+                                    fFamily = (string)reader.Value;
+                                    break;
+                                case "size":
+                                    size = ParseDouble(reader);
+                                    break;
+                                case "style":
+                                    style = (string)reader.Value;
+                                    break;
+                                case "w":
+                                    width = ParseDouble(reader);
+                                    break;
+                                default:
+                                    throw UnexpectedFieldException(reader, currentProperty);
+                            }
+                        }
+                        break;
+                    case JsonToken.EndObject:
+                        {
+                            return new Char(ch, fFamily, style, size ?? 0, width ?? 0, shapes);
+                        }
+
+                    default: throw UnexpectedTokenException(reader);
+
+                }
+            }
+            throw EofException;
+        }
+
+        IEnumerable<Font> ParseFonts(JsonReader reader)
+        {
+            var fontsObject = JObject.Load(reader, s_jsonLoadSettings);
+            foreach (JObject item in fontsObject.GetNamedArray("list"))
+            {
+                var fName = item.GetNamedString("fName");
+                var fFamily = item.GetNamedString("fFamily");
+                var fStyle = item.GetNamedString("fStyle");
+                var ascent = ReadFloat(item.GetNamedValue("ascent"));
+                AssertAllFieldsRead(item);
+                yield return new Font(fName, fFamily, fStyle, ascent);
+            }
+            AssertAllFieldsRead(fontsObject);
+        }
+
         Layer[] ParseLayers(JsonReader reader)
         {
             return LoadArrayOfJObjects(reader).Select(a => ReadLayer(a)).Where(a => a != null).ToArray();
@@ -425,7 +499,6 @@ namespace LottieData.Serialization
             // Not clear whether we need to read these fields.
             IgnoreFieldThatIsNotYetSupported(obj, "bounds");
             IgnoreFieldThatIsNotYetSupported(obj, "sy");
-            IgnoreFieldThatIsNotYetSupported(obj, "t");
             IgnoreFieldThatIsNotYetSupported(obj, "td");
 
             var name = obj.GetNamedString("nm", "");
@@ -582,21 +655,7 @@ namespace LottieData.Serialization
                     }
                 case Layer.LayerType.Shape:
                     {
-                        var shapes = new List<ShapeLayerContent>();
-                        var shapesJson = obj.GetNamedArray("shapes", null);
-                        shapes.Capacity = shapesJson.Count;
-                        if (shapesJson != null)
-                        {
-                            var shapesJsonCount = shapesJson.Count;
-                            for (var i = 0; i < shapesJsonCount; i++)
-                            {
-                                var item = ReadShapeContent(shapesJson[i].AsObject());
-                                if (item != null)
-                                {
-                                    shapes.Add(item);
-                                }
-                            }
-                        }
+                        var shapes = ReadShapes(obj);
 
                         AssertAllFieldsRead(obj);
                         return new ShapeLayer(
@@ -617,7 +676,11 @@ namespace LottieData.Serialization
                     }
                 case Layer.LayerType.Text:
                     {
+                        // Text layer references an asset.
                         var refId = obj.GetNamedString("refId", "");
+
+                        // Text data.
+                        ReadTextData(obj.GetNamedObject("t"));
 
                         AssertAllFieldsRead(obj);
                         return new TextLayer(
@@ -640,6 +703,41 @@ namespace LottieData.Serialization
                     throw new InvalidOperationException();
             }
         }
+
+        void ReadTextData(JObject obj)
+        {
+            // TODO - read text data
+            IgnoreFieldThatIsNotYetSupported(obj, "d");
+            IgnoreFieldThatIsNotYetSupported(obj, "p");
+            IgnoreFieldThatIsNotYetSupported(obj, "m");
+            IgnoreFieldThatIsNotYetSupported(obj, "a");
+            AssertAllFieldsRead(obj);
+        }
+
+        List<ShapeLayerContent> ReadShapes(JObject obj)
+        {
+            return ReadShapesList(obj.GetNamedArray("shapes", null));
+        }
+
+        List<ShapeLayerContent> ReadShapesList(JArray shapesJson)
+        {
+            var shapes = new List<ShapeLayerContent>();
+            if (shapesJson != null)
+            {
+                var shapesJsonCount = shapesJson.Count;
+                shapes.Capacity = shapesJsonCount;
+                for (var i = 0; i < shapesJsonCount; i++)
+                {
+                    var item = ReadShapeContent(shapesJson[i].AsObject());
+                    if (item != null)
+                    {
+                        shapes.Add(item);
+                    }
+                }
+            }
+            return shapes;
+        }
+
 
         IEnumerable<Mask> ReadMaskProperties(JArray array)
         {
@@ -765,18 +863,7 @@ namespace LottieData.Serialization
 
             var name = ReadName(obj);
             var numberOfProperties = ReadInt(obj, "np");
-            var itemsJson = obj.GetNamedArray("it");
-            var items = new List<ShapeLayerContent>();
-
-            var itemsJsonCount = itemsJson.Count;
-            for (var i = 0; i < itemsJsonCount; i++)
-            {
-                var item = ReadShapeContent(itemsJson[i].AsObject());
-                if (item != null)
-                {
-                    items.Add(item);
-                }
-            }
+            var items = ReadShapesList(obj.GetNamedArray("it", null));
             AssertAllFieldsRead(obj);
             return new ShapeGroup(name.Name, name.MatchName, items);
         }
@@ -980,6 +1067,7 @@ namespace LottieData.Serialization
         Ellipse ReadEllipse(JObject obj)
         {
             // Not clear whether we need to read these fields.
+            IgnoreFieldThatIsNotYetSupported(obj, "closed");
             IgnoreFieldThatIsNotYetSupported(obj, "hd");
 
             var name = ReadName(obj);
@@ -1198,13 +1286,13 @@ namespace LottieData.Serialization
             var endOpacityPercent = ReadOpacityPercentFromObject(obj.GetNamedObject("eo", null));
             var transform = ReadTransform(obj);
             return new RepeaterTransform(
-                transform.Name, 
-                transform.Anchor, 
-                transform.Position, 
-                transform.ScalePercent, 
-                transform.RotationDegrees, 
-                transform.OpacityPercent, 
-                startOpacityPercent, 
+                transform.Name,
+                transform.Anchor,
+                transform.Position,
+                transform.ScalePercent,
+                transform.RotationDegrees,
+                transform.OpacityPercent,
+                startOpacityPercent,
                 endOpacityPercent);
         }
 
@@ -1636,8 +1724,8 @@ namespace LottieData.Serialization
 
                 // Get the number of color stops. If _colorStopCount wasn't specified, all of
                 // the data in the array is for color stops.
-                var colorStopsDataLength = _colorStopCount.HasValue 
-                    ? _colorStopCount.Value * 4 
+                var colorStopsDataLength = _colorStopCount.HasValue
+                    ? _colorStopCount.Value * 4
                     : gradientStopsData.Length;
 
                 if (gradientStopsData.Length < colorStopsDataLength)

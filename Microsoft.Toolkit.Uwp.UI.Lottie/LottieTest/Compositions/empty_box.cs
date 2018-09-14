@@ -22,6 +22,10 @@ namespace Compositions
             public Visual RootVisual { get; set; }
             public TimeSpan Duration { get; set; }
             public Vector2 Size { get; set; }
+            public void Unload()
+            {
+                RootVisual?.Dispose();
+            }
         }
 
         public Host.IComposition TryCreateInstance(Compositor compositor, out object diagnostics)

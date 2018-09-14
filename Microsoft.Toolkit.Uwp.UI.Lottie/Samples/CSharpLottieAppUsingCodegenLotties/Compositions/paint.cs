@@ -25357,14 +25357,14 @@ namespace Compositions
             StepEasingFunction StepEasingFunction_0()
             {
                 var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame = true;
+                result.IsFinalStepSingleFrame  = true;
                 return result;
             }
 
             StepEasingFunction StepEasingFunction_1()
             {
                 var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame = true;
+                result.IsInitialStepSingleFrame  = true;
                 return result;
             }
 
@@ -25615,6 +25615,7 @@ namespace Compositions
             Visual IComposition.RootVisual => _root;
             TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
             Vector2 IComposition.Size => new Vector2(300, 300);
+            void IComposition.Unload() => _root?.Dispose();
         }
     }
 }

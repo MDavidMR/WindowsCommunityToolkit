@@ -177,7 +177,7 @@ public:
             builder.WriteLine("Root();");
             builder.CloseScope();
 
-            // Write the properties on IComposition.
+            // Write the members on IComposition.
             builder.WriteLine();
             builder.WriteLine("property Windows::Foundation::TimeSpan Duration");
             builder.OpenScope();
@@ -193,6 +193,8 @@ public:
             builder.OpenScope();
             builder.WriteLine($"virtual Windows::Foundation::Numerics::float2 get() {{ return {Vector2(info.CompositionDeclaredSize)}; }}");
             builder.CloseScope();
+            builder.WriteLine();
+            builder.WriteLine("virtual void Unload() {  }");
             builder.WriteLine();
 
             // Close the scope for the instantiator class.

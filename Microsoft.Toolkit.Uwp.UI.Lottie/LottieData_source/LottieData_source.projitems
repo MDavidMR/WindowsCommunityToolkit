@@ -16,10 +16,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\AssetCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\BezierSegment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\BlendMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Char.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\CubicBezierEasing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Easing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\Ellipse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LottieData\Font.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\GradientStop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\HoldEasing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LottieData\IAnimatableValue.cs" />

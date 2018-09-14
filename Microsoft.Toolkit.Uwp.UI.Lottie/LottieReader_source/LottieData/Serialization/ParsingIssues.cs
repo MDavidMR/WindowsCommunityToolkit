@@ -23,15 +23,15 @@ namespace LottieData.Serialization
             Report("LP0002", $"Fatal error: {message}");
         }
 
-        internal void Chars()
-        {
-            Report("LP0003", "Chars field");
-        }
+        //internal void Chars()
+        //{
+        //    Report("LP0003", "Chars field");
+        //}
 
-        internal void Fonts()
-        {
-            Report("LP0004", "Fonts field");
-        }
+        //internal void Fonts()
+        //{
+        //    Report("LP0004", "Fonts field");
+        //}
 
         internal void AssetType(string type)
         {

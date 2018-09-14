@@ -34,7 +34,7 @@ namespace Lottie
     public sealed class LottieCompositionSource : DependencyObject, IDynamicCompositionSource
     {
         readonly StorageFile _storageFile;
-        EventRegistrationTokenTable<TypedEventHandler<object, object>> _compositionInvalidatedEventTokenTable;
+        EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>> _compositionInvalidatedEventTokenTable;
         int _loadVersion;
         Uri _uriSource;
         ContentFactory _contentFactory;
@@ -126,18 +126,18 @@ namespace Lottie
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
         //event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
-        public event TypedEventHandler<object, object> CompositionInvalidated
+        public event TypedEventHandler<IDynamicCompositionSource, object> CompositionInvalidated
         {
             add
             {
-                return EventRegistrationTokenTable<TypedEventHandler<object, object>>
+                return EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                    .AddEventHandler(value);
             }
 
             remove
             {
-                EventRegistrationTokenTable<TypedEventHandler<object, object>>
+                EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                     .RemoveEventHandler(value);
             }
@@ -163,7 +163,7 @@ namespace Lottie
 
         void NotifyListenersThatCompositionChanged()
         {
-            EventRegistrationTokenTable<TypedEventHandler<object, object>>
+            EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
                 .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                 .InvocationList?.Invoke(this, null);
         }
@@ -600,6 +600,10 @@ namespace Lottie
             public Visual RootVisual { get; set; }
             public TimeSpan Duration { get; set; }
             public System.Numerics.Vector2 Size { get; set; }
+            public void Unload()
+            {
+                RootVisual?.Dispose();
+            }
         }
 
 

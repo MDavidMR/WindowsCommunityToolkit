@@ -110,6 +110,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine("Visual IComposition.RootVisual => _root;");
             builder.WriteLine($"TimeSpan IComposition.Duration => TimeSpan.FromTicks({info.DurationTicksFieldName});");
             builder.WriteLine($"Vector2 IComposition.Size => {Vector2(info.CompositionDeclaredSize)};");
+            builder.WriteLine("void IComposition.Unload() => _root?.Dispose();");
 
             // Close the scope for the instantiator class.
             builder.CloseScope();
