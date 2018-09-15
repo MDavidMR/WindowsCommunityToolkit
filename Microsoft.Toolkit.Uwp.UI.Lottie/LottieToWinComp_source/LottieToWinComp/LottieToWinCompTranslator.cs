@@ -1,7 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-// Enable workaround for RS5 prerelease where rotated rectangles were not drawn correctly.
+// Enable workaround for RS5 where rotated rectangles were not drawn correctly.
 #define WorkAroundRectangleGeometryHalfDrawn
 // Use the simple algorithm for combining trim paths. We're not sure of the correct semantics
 // for multiple trim paths, so it's possible this is actually the most correct.

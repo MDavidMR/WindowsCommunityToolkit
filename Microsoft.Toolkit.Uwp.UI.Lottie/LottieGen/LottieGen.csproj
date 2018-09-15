@@ -13,16 +13,15 @@
     <AssemblyName>LottieGen</AssemblyName>
     <!-- Turn off automatic assembly info generation so we can specify version number attributes in code. -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
