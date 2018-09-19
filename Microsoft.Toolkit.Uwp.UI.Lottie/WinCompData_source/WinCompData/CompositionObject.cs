@@ -13,7 +13,7 @@ namespace WinCompData
 #endif
     abstract class CompositionObject : IDisposable, IDescribable
     {
-        readonly ListOfNeverNull<Animator> _animators = new ListOfNeverNull<Animator>(null);
+        readonly ListOfNeverNull<Animator> _animators = new ListOfNeverNull<Animator>();
         CompositionPropertySet _propertySet;
 
         protected private CompositionObject()
@@ -104,14 +104,6 @@ namespace WinCompData
             public CompositionAnimation Animation { get; internal set; }
             public AnimationController Controller { get; internal set; }
             public override string ToString() => $"{Animation.Type} bound to {AnimatedProperty}";
-        }
-
-        /// <summary>
-        /// Implemented by <see cref="CompositionObject"/> classes that form a tree.
-        /// </summary>
-        internal interface IContainedBy<T>
-        {
-            void SetParent(T parent);
         }
     }
 }

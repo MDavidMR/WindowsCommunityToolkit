@@ -9,25 +9,13 @@ namespace WinCompData
 #if !WINDOWS_UWP
     public
 #endif
-    abstract class CompositionShape : CompositionObject, CompositionObject.IContainedBy<IContainShapes>
+    abstract class CompositionShape : CompositionObject
     {
         protected private CompositionShape() { }
-
-        public IContainShapes Parent { get; private set; }
         public Vector2? CenterPoint { get; set; }
         public Vector2? Offset { get; set; }
         public float? RotationAngleInDegrees { get; set; }
         public Vector2? Scale { get; set; }
         public Matrix3x2? TransformMatrix { get; set; }
-
-        void IContainedBy<IContainShapes>.SetParent(IContainShapes parent)
-        {
-            if (parent != null && Parent != null)
-            {
-                // Object already has a parent.
-                throw new InvalidOperationException();
-            }
-            Parent = parent;
-        }
     }
 }

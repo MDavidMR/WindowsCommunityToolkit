@@ -14,7 +14,7 @@ namespace WinCompData.Mgcg
 #endif
     sealed class CanvasPathBuilder : IDisposable
     {
-        readonly ListOfNeverNull<Command> _commands = new ListOfNeverNull<Command>(null);
+        readonly ListOfNeverNull<Command> _commands = new ListOfNeverNull<Command>();
         bool _isFilledRegionDeterminationSet;
 
         public CanvasPathBuilder(CanvasDevice device) { }

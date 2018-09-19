@@ -8,11 +8,11 @@ namespace WinCompData
 #if !WINDOWS_UWP
     public
 #endif
-    sealed class ShapeVisual : ContainerVisual, IContainShapes, ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner
+    sealed class ShapeVisual : ContainerVisual, IContainShapes
     {
         internal ShapeVisual()
         {
-            Shapes = new ListOfNeverNull<CompositionShape>(this);
+            Shapes = new ListOfNeverNull<CompositionShape>();
         }
 
         public ListOfNeverNull<CompositionShape> Shapes { get; }
@@ -20,15 +20,5 @@ namespace WinCompData
         public CompositionViewBox ViewBox { get; set; }
 
         public override CompositionObjectType Type => CompositionObjectType.ShapeVisual;
-
-        void ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner.ItemAdded(CompositionShape item)
-        {
-            ((IContainedBy<IContainShapes>)item).SetParent(this);
-        }
-
-        void ListOfNeverNull<CompositionShape>.IListOfNeverNullOwner.ItemRemoved(CompositionShape item)
-        {
-            ((IContainedBy<IContainShapes>)item).SetParent(null);
-        }
     }
 }

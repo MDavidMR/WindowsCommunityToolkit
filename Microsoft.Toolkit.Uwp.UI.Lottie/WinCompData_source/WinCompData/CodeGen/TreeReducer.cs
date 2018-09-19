@@ -15,7 +15,28 @@ namespace WinCompData.CodeGen
     {
         internal static Visual OptimizeContainers(Visual root)
         {
-            var graph = Graph.FromCompositionObject(root, includeVertices: true);
+            var graph = ObjectGraph<Node>.FromCompositionObject(root, includeVertices: true);
+
+            // Discover the parents of each container
+            foreach (var node in graph.CompositionObjectNodes)
+            {
+                switch (node.Object.Type)
+                {
+                    case CompositionObjectType.CompositionContainerShape:
+                        foreach (var child in ((CompositionContainerShape)node.Object).Shapes)
+                        {
+                            graph[child].Parent = node.Object;
+                        }
+                        break;
+                    case CompositionObjectType.ContainerVisual:
+                        foreach (var child in ((ContainerVisual)node.Object).Children)
+                        {
+                            graph[child].Parent = node.Object;
+                        }
+                        break;
+                }
+            }
+
             SimplifyProperties(graph);
             CoalesceContainerShapes(graph);
             CoalesceContainerVisuals(graph);
@@ -23,7 +44,7 @@ namespace WinCompData.CodeGen
         }
 
         // Where possible, replace properties with a TransformMatrix.
-        static void SimplifyProperties(ObjectGraph<Graph.Node> graph)
+        static void SimplifyProperties(ObjectGraph<Node> graph)
         {
             foreach (var (_, obj) in graph.CompositionObjectNodes)
             {
@@ -143,7 +164,7 @@ namespace WinCompData.CodeGen
         static float DegreesToRadians(float angle) => (float)(Math.PI * angle / 180.0);
 
 
-        static void CoalesceContainerShapes(ObjectGraph<Graph.Node> graph)
+        static void CoalesceContainerShapes(ObjectGraph<Node> graph)
         {
             var containerShapes = graph.CompositionObjectNodes.Where(n => n.Object.Type == CompositionObjectType.CompositionContainerShape).ToArray();
 
@@ -211,12 +232,13 @@ namespace WinCompData.CodeGen
                 }
                 // Container has no properties set.
                 return true;
-            }).Select(n => (CompositionContainerShape)n.Object);
+            }).ToArray();
 
-            foreach (var container in containersWithNoPropertiesSet)
+            foreach (var (Node, Object) in containersWithNoPropertiesSet)
             {
+                var container = (CompositionContainerShape)Object;
                 // Insert the children into the parent.
-                var parent = container.Parent;
+                var parent = (CompositionContainerShape)Node.Parent;
                 if (parent == null)
                 {
                     // The container may have already been removed, or it might be a root.
@@ -243,15 +265,20 @@ namespace WinCompData.CodeGen
                 // Insert the first child where the container was.
                 parent.Shapes[index] = children[0];
 
+                // Fix the parent pointer in the graph.
+                graph[children[0]].Parent = parent;
+
                 // Insert the rest of the children.
                 for (var i = 1; i < children.Length; i++)
                 {
                     parent.Shapes.Insert(index + i, children[i]);
+                    // Fix the parent pointer in the graph.
+                    graph[children[i]].Parent = parent;
                 }
             }
         }
 
-        static void CoalesceContainerVisuals(ObjectGraph<Graph.Node> graph)
+        static void CoalesceContainerVisuals(ObjectGraph<Node> graph)
         {
             // If a container is not animated and has no properties set, its children can be inserted into its parent.
             var containersWithNoPropertiesSet = graph.CompositionObjectNodes.Where(n =>
@@ -269,13 +296,14 @@ namespace WinCompData.CodeGen
                     container.TransformMatrix == null &&
                     !container.Animators.Any() &&
                     !container.Properties.PropertyNames.Any();
-            }).Select(n => (ContainerVisual)n.Object).ToArray();
+            }).ToArray();
 
             // Pull the children of the container into the parent of the container. Remove the unnecessary containers.
-            foreach (var container in containersWithNoPropertiesSet)
+            foreach (var (Node, Object) in containersWithNoPropertiesSet)
             {
+                var container = (ContainerVisual)Object;
                 // Insert the children into the parent.
-                var parent = container.Parent;
+                var parent = (ContainerVisual)Node.Parent;
                 if (parent == null)
                 {
                     // The container may have already been removed, or it might be a root.
@@ -298,15 +326,26 @@ namespace WinCompData.CodeGen
 
                 // Remove the children from the container.
                 container.Children.Clear();
+
                 // Insert the first child where the container was.
                 parent.Children[index] = children[0];
+                
+                // Fix the parent pointer in the graph.
+                graph[children[0]].Parent = parent;
 
                 // Insert the rest of the children.
                 for (var i = 1; i < children.Length; i++)
                 {
                     parent.Children.Insert(index + i, children[i]);
+                    // Fix the parent pointer in the graph.
+                    graph[children[i]].Parent = parent;
                 }
             }
+        }
+
+        sealed class Node : Graph.Node<Node>
+        {
+            internal CompositionObject Parent { get; set; }
         }
     }
 }
