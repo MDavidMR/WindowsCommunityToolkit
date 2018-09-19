@@ -74,6 +74,11 @@ namespace WinCompData.CodeGen
             return $"{{{Float(value.M11)}, {Float(value.M12)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M31)}, {Float(value.M32)}}}";
         }
 
+        public override string Matrix4x4(Matrix4x4 value)
+        {
+            return $"{{{Float(value.M11)}, {Float(value.M12)}, {Float(value.M13)}, {Float(value.M14)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M23)}, {Float(value.M24)}, {Float(value.M31)}, {Float(value.M32)}, {Float(value.M33)}, {Float(value.M34)}, {Float(value.M41)}, {Float(value.M22)}, {Float(value.M43)}, {Float(value.M44)}}}";
+        }
+
         public override string Readonly(string value) => $"{value} const";
 
         public override string ReferenceTypeName(string value) =>

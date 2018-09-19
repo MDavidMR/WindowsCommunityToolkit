@@ -119,6 +119,10 @@ namespace Lottie
             {
                 target.RotationAngleInDegrees = source.RotationAngleInDegrees.Value;
             }
+            if (source.RotationAxis.HasValue)
+            {
+                target.RotationAxis = source.RotationAxis.Value;
+            }
             if (source.Scale.HasValue)
             {
                 target.Scale = source.Scale.Value;
@@ -126,6 +130,10 @@ namespace Lottie
             if (source.Size.HasValue)
             {
                 target.Size = source.Size.Value;
+            }
+            if (source.TransformMatrix.HasValue)
+            {
+                target.TransformMatrix = source.TransformMatrix.Value;
             }
             return target;
         }

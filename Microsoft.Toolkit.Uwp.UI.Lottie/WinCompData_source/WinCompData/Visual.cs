@@ -18,8 +18,10 @@ namespace WinCompData
         public Vector3? Offset { get; set; }
         public float? Opacity { get; set; }
         public float? RotationAngleInDegrees { get; set; }
+        public Vector3? RotationAxis { get; set; }
         public Vector3? Scale { get; set; }
         public Vector2? Size { get; set; }
+        public Matrix4x4? TransformMatrix { get; set; }
 
         void IContainedBy<ContainerVisual>.SetParent(ContainerVisual parent)
         {

@@ -849,6 +849,10 @@ namespace WinCompData.CodeGen
             {
                 builder.WriteLine($"result{Deref}RotationAngleInDegrees = {Float(obj.RotationAngleInDegrees.Value)};");
             }
+            if (obj.RotationAxis.HasValue)
+            {
+                builder.WriteLine($"result{Deref}RotationAxis = {Vector3(obj.RotationAxis.Value)};");
+            }
             if (obj.Scale.HasValue)
             {
                 builder.WriteLine($"result{Deref}Scale = {Vector3(obj.Scale.Value)};");
@@ -856,6 +860,10 @@ namespace WinCompData.CodeGen
             if (obj.Size.HasValue)
             {
                 builder.WriteLine($"result{Deref}Size = {Vector2(obj.Size.Value)};");
+            }
+            if (obj.TransformMatrix.HasValue)
+            {
+                builder.WriteLine($"result{Deref}TransformMatrix = {Matrix4x4(obj.TransformMatrix.Value)};");
             }
         }
 
@@ -1367,6 +1375,7 @@ namespace WinCompData.CodeGen
         string Int64(long value) => _stringifier.Int64(value);
 
         string Matrix3x2(Matrix3x2 value) => _stringifier.Matrix3x2(value);
+        string Matrix4x4(Matrix4x4 value) => _stringifier.Matrix4x4(value);
 
         // readonly on C#, const on C++.
         string Readonly(string value) => _stringifier.Readonly(value);
@@ -1491,6 +1500,7 @@ namespace WinCompData.CodeGen
             string Int64(long value);
             string Int64TypeName { get; }
             string Matrix3x2(Matrix3x2 value);
+            string Matrix4x4(Matrix4x4 value);
             string MemberSelect { get; }
             string New { get; }
             string Null { get; }
@@ -1551,6 +1561,7 @@ namespace WinCompData.CodeGen
             public abstract string Int64(long value);
 
             public abstract string Matrix3x2(Matrix3x2 value);
+            public abstract string Matrix4x4(Matrix4x4 value);
 
             public abstract string ReferenceTypeName(string value);
 

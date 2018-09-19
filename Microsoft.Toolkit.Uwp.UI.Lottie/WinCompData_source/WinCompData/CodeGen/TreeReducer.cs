@@ -1,7 +1,9 @@
 ﻿// Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Linq;
+using System.Numerics;
 using WinCompData.Tools;
 
 namespace WinCompData.CodeGen
@@ -14,14 +16,14 @@ namespace WinCompData.CodeGen
         internal static Visual OptimizeContainers(Visual root)
         {
             var graph = Graph.FromCompositionObject(root, includeVertices: true);
-            RemoveRedundantCenterPoints(graph);
+            SimplifyProperties(graph);
             CoalesceContainerShapes(graph);
             CoalesceContainerVisuals(graph);
             return root;
         }
 
-        // Set the CenterPoint property to null on objects that have no Scale or Rotation set.
-        static void RemoveRedundantCenterPoints(ObjectGraph<Graph.Node> graph)
+        // Where possible, replace properties with a TransformMatrix.
+        static void SimplifyProperties(ObjectGraph<Graph.Node> graph)
         {
             foreach (var (_, obj) in graph.CompositionObjectNodes)
             {
@@ -29,120 +31,170 @@ namespace WinCompData.CodeGen
                 {
                     case CompositionObjectType.ContainerVisual:
                     case CompositionObjectType.ShapeVisual:
-                        RemoveRedundantCenterPoint((Visual)obj);
+                        SimplifyProperties((Visual)obj);
                         break;
                     case CompositionObjectType.CompositionContainerShape:
                     case CompositionObjectType.CompositionSpriteShape:
-                        RemoveRedundantCenterPoint((CompositionShape)obj);
+                        SimplifyProperties((CompositionShape)obj);
                         break;
                 }
             }
         }
 
-        // Set the CenterPoint property to null if the object has no Scale or Rotation set.
-        static void RemoveRedundantCenterPoint(Visual obj)
+        // Remove the centerpoint property if it's redundant, and convert properties to TransformMatrix if possible.
+        static void SimplifyProperties(Visual obj)
         {
             if (obj.CenterPoint.HasValue &&
                 !obj.Scale.HasValue &&
                 !obj.RotationAngleInDegrees.HasValue &&
                 !obj.Animators.Where(a => a.AnimatedProperty == nameof(obj.Scale) || a.AnimatedProperty == nameof(obj.RotationAngleInDegrees)).Any())
             {
+                // Centerpoint is not needed if Scale or Rotation are not used.
                 obj.CenterPoint = null;
+            }
+
+            // Convert the properties to a transform matrix. This can reduce the
+            // number of calls needed to initialize the object, and makes finding
+            // and removing redundant containers easier.
+
+            // We currently only support rotation around the Z axis here. Check for that.
+            var hasNonStandardRotation =
+                obj.RotationAngleInDegrees.HasValue && obj.RotationAngleInDegrees.Value != 0 &&
+                obj.RotationAxis.HasValue && obj.RotationAxis != Vector3.UnitZ;
+
+            if (!obj.Animators.Any() && !hasNonStandardRotation)
+            {
+                // Get the values of the properties, and the defaults for properties that are not set.
+                var centerPoint = obj.CenterPoint ?? Vector3.Zero;
+                var scale = obj.Scale ?? Vector3.One;
+                var rotation = obj.RotationAngleInDegrees ?? 0;
+                var offset = obj.Offset ?? Vector3.Zero;
+                var transform = obj.TransformMatrix ?? Matrix4x4.Identity;
+
+                // Clear out the properties.
+                obj.CenterPoint = null;
+                obj.Scale = null;
+                obj.RotationAngleInDegrees = null;
+                obj.Offset = null;
+                obj.TransformMatrix = null;
+
+                // Calculate the matrix that is equivalent to the properties.
+                var combinedMatrix =
+                    Matrix4x4.CreateScale(scale, centerPoint) *
+                    Matrix4x4.CreateRotationZ(DegreesToRadians(rotation), centerPoint) *
+                    Matrix4x4.CreateTranslation(offset) *
+                    transform;
+
+                // If the matrix actually does something, set it.
+                if (!combinedMatrix.IsIdentity)
+                {
+                    obj.TransformMatrix = combinedMatrix;
+                }
             }
         }
 
-        // Set the CenterPoint property to null if the object has no Scale or Rotation set.
-        static void RemoveRedundantCenterPoint(CompositionShape obj)
+        // Remove the centerpoint property if it's redundant, and convert properties to TransformMatrix if possible.
+        static void SimplifyProperties(CompositionShape obj)
         {
+            // Remove the centerpoint if it's not used by Scale or Rotation.
             if (obj.CenterPoint.HasValue &&
                 !obj.Scale.HasValue &&
                 !obj.RotationAngleInDegrees.HasValue &&
                 !obj.Animators.Where(a => a.AnimatedProperty == nameof(obj.Scale) || a.AnimatedProperty == nameof(obj.RotationAngleInDegrees)).Any())
             {
+                // Centerpoint is not needed if Scale or Rotation are not used.
                 obj.CenterPoint = null;
             }
 
-            // Convert the properties to a transform matrix. This reduces the
-            // amount of code, but is only valid if the object if not animated.
+            // Convert the properties to a transform matrix. This can reduce the
+            // number of calls needed to initialize the object, and makes finding
+            // and removing redundant containers easier.
             if (!obj.Animators.Any())
             {
-                //var matrix = new Sn.Matrix3x2();
-                // ORDER: Scale around centerpoint, rotate around centerpoint, translate (offset), multiply by custom matrix)
-                // TODO - have a Matrix3x2 that takes the centerpoint, scale, rotation, translation, and custom matrix and returns a new matrix.
+                // Get the values for the properties, and the defaults for the properties that are not set.
+                var centerPoint = obj.CenterPoint ?? Vector2.Zero;
+                var scale = obj.Scale ?? Vector2.One;
+                var rotation = obj.RotationAngleInDegrees ?? 0;
+                var offset = obj.Offset ?? Vector2.Zero;
+                var transform = obj.TransformMatrix ?? Matrix3x2.Identity;
+
+                // Clear out the properties.
+                obj.CenterPoint = null;
+                obj.Scale = null;
+                obj.RotationAngleInDegrees = null;
+                obj.Offset = null;
+                obj.TransformMatrix = null;
+
+                // Calculate the matrix that is equivalent to the properties.
+                var combinedMatrix =
+                    Matrix3x2.CreateScale(scale, centerPoint) *
+                    Matrix3x2.CreateRotation(DegreesToRadians(rotation), centerPoint) *
+                    Matrix3x2.CreateTranslation(offset) *
+                    transform;
+
+                // If the matrix actually does something, set it.
+                if (!combinedMatrix.IsIdentity)
+                {
+                    obj.TransformMatrix = combinedMatrix;
+                }
             }
         }
+
+        static float DegreesToRadians(float angle) => (float)(Math.PI * angle / 180.0);
+
 
         static void CoalesceContainerShapes(ObjectGraph<Graph.Node> graph)
         {
             var containerShapes = graph.CompositionObjectNodes.Where(n => n.Object.Type == CompositionObjectType.CompositionContainerShape).ToArray();
 
-            // If a container sets just the translate properties (offset and centerpoint) and the child
-            // also sets only the translate properties, the container's properties can be pushed down to
-            // the child.
+            // If a container is not animated and has no other properties set apart from a transform,
+            // and all of its children are also not animated and have no other properties set apart
+            // from a transform, the transform can be pushed down to the child, allowing the parent to be removed.
             var elidableContainers = containerShapes.Where(n =>
             {
                 var container = (CompositionContainerShape)n.Object;
                 if (container.Properties.PropertyNames.Any() ||
                     container.Animators.Any() ||
+                    container.CenterPoint != null ||
+                    container.Offset != null ||
                     container.RotationAngleInDegrees != null ||
-                    container.Scale != null ||
-                    container.TransformMatrix != null ||
-                    container.Shapes.Count != 1)
+                    container.Scale != null)
                 {
                     return false;
                 }
-                // Container has only translate properties.
-                var child = container.Shapes.Single();
-                if (child.Properties.PropertyNames.Any() ||
-                    child.Animators.Any() ||
-                    child.RotationAngleInDegrees != null ||
-                    child.Scale != null ||
-                    child.TransformMatrix != null)
+
+                foreach (var child in container.Shapes)
                 {
-                    return false;
+                    if (child.Properties.PropertyNames.Any() ||
+                        child.Animators.Any() ||
+                        child.CenterPoint != null ||
+                        child.Offset != null ||
+                        child.RotationAngleInDegrees != null ||
+                        child.Scale != null)
+                    {
+                        return false;
+                    }
                 }
-                // Child also has only translate properties.
                 return true;
             });
 
-            // Push the offset and centerpoint from the container down to the child and remove the container.
+            // Push the transform down to the child.
             foreach (var node in elidableContainers)
             {
                 var container = (CompositionContainerShape)node.Object;
-                var child = container.Shapes.Single();
-                var parent = container.Parent;
-
-                if (container.Offset != null)
+                foreach (var child in container.Shapes)
                 {
-                    if (child.Offset != null)
+                    // Push the transform down to the child
+                    if (container.TransformMatrix.HasValue)
                     {
-                        child.Offset = child.Offset.Value + container.Offset.Value;
-                    }
-                    else
-                    {
-                        child.Offset = container.Offset;
+                        child.TransformMatrix = (child.TransformMatrix?? Matrix3x2.Identity) * container.TransformMatrix;
                     }
                 }
-
-                if (container.CenterPoint != null)
-                {
-                    if (child.CenterPoint != null)
-                    {
-                        child.CenterPoint = child.CenterPoint.Value + container.CenterPoint.Value;
-                    }
-                    else
-                    {
-                        child.CenterPoint = container.CenterPoint;
-                    }
-                }
-                // Remove the container. The child must be placed in the slot where the container was.
-                var index = parent.Shapes.IndexOf(container);
-                // Clear the container to unparent the child. This must be done before reparenting.
-                container.Shapes.Clear();
-                parent.Shapes[index] = child;
+                // Remove the transform from the container.
+                container.TransformMatrix = null;
             }
 
-            // If a container has no properties set, its children can be inserted into its parent.
+            // If a container is not animated and has no properties set, its children can be inserted into its parent.
             var containersWithNoPropertiesSet = containerShapes.Where(n =>
             {
                 var container = (CompositionContainerShape)n.Object;
@@ -201,6 +253,7 @@ namespace WinCompData.CodeGen
 
         static void CoalesceContainerVisuals(ObjectGraph<Graph.Node> graph)
         {
+            // If a container is not animated and has no properties set, its children can be inserted into its parent.
             var containersWithNoPropertiesSet = graph.CompositionObjectNodes.Where(n =>
             {
                 // Find the ContainerVisuals that have no properties set.
@@ -213,6 +266,7 @@ namespace WinCompData.CodeGen
                     container.RotationAngleInDegrees == null &&
                     container.Scale == null &&
                     container.Size == null &&
+                    container.TransformMatrix == null &&
                     !container.Animators.Any() &&
                     !container.Properties.PropertyNames.Any();
             }).Select(n => (ContainerVisual)n.Object).ToArray();
