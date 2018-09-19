@@ -10,10 +10,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Grid Background="Yellow">
+    <Grid Background="Yellow">
+        <StackPanel>
+            <Button Content="Start"  HorizontalAlignment="Stretch" Click="Button_Click"/>
             <compPlayer:CompositionPlayer Stretch="UniformToFill" x:Name="player">
-                <lottie:LottieCompositionSource x:Name="lottieSource"/>
+                <!--<lottie:LottieCompositionSource x:Name="lottieSource"/>-->
             </compPlayer:CompositionPlayer>
-        </Grid>
+        </StackPanel>
+    </Grid>
 
 </Page>
