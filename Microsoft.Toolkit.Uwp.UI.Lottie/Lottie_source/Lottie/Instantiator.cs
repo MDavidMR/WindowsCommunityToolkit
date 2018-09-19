@@ -7,6 +7,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Linq;
 using Wc = Windows.UI.Composition;
 using Wd = WinCompData;
@@ -73,11 +74,11 @@ namespace Lottie
             CacheAndInitializeCompositionObject(source, target);
             if (source.CenterPoint.HasValue)
             {
-                target.CenterPoint = Vector2(source.CenterPoint);
+                target.CenterPoint = source.CenterPoint.Value;
             }
             if (source.Offset.HasValue)
             {
-                target.Offset = Vector2(source.Offset);
+                target.Offset = source.Offset.Value;
             }
             if (source.RotationAngleInDegrees.HasValue)
             {
@@ -85,11 +86,11 @@ namespace Lottie
             }
             if (source.Scale.HasValue)
             {
-                target.Scale = Vector2(source.Scale);
+                target.Scale = source.Scale.Value;
             }
             if (source.TransformMatrix.HasValue)
             {
-                target.TransformMatrix = Matrix3x2(source.TransformMatrix.Value);
+                target.TransformMatrix = source.TransformMatrix.Value;
             }
             return target;
         }
@@ -104,11 +105,11 @@ namespace Lottie
             }
             if (source.CenterPoint.HasValue)
             {
-                target.CenterPoint = Vector3(source.CenterPoint);
+                target.CenterPoint = source.CenterPoint.Value;
             }
             if (source.Offset.HasValue)
             {
-                target.Offset = Vector3(source.Offset);
+                target.Offset = source.Offset.Value;
             }
             if (source.Opacity.HasValue)
             {
@@ -120,11 +121,11 @@ namespace Lottie
             }
             if (source.Scale.HasValue)
             {
-                target.Scale = Vector3(source.Scale);
+                target.Scale = source.Scale.Value;
             }
             if (source.Size.HasValue)
             {
-                target.Size = Vector2(source.Size);
+                target.Size = source.Size.Value;
             }
             return target;
         }
@@ -356,7 +357,7 @@ namespace Lottie
 
             foreach (var prop in obj.Vector2Properties)
             {
-                result.InsertVector2(prop.Key, Vector2(prop.Value));
+                result.InsertVector2(prop.Key, prop.Value);
             }
 
             StartAnimations(obj, result);
@@ -498,13 +499,13 @@ namespace Lottie
             {
                 switch (kf.Type)
                 {
-                    case Wd.KeyFrameAnimation<Wd.Sn.Vector2>.KeyFrameType.Expression:
-                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector2>.ExpressionKeyFrame)kf;
+                    case Wd.KeyFrameAnimation<Vector2>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Vector2>.ExpressionKeyFrame)kf;
                         result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
                         break;
-                    case Wd.KeyFrameAnimation<Wd.Sn.Vector2>.KeyFrameType.Value:
-                        var valueKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector2>.ValueKeyFrame)kf;
-                        result.InsertKeyFrame(kf.Progress, Vector2(valueKeyFrame.Value), GetCompositionEasingFunction(kf.Easing));
+                    case Wd.KeyFrameAnimation<Vector2>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<Vector2>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, valueKeyFrame.Value, GetCompositionEasingFunction(kf.Easing));
                         break;
                     default:
                         throw new InvalidOperationException();
@@ -526,13 +527,13 @@ namespace Lottie
             {
                 switch (kf.Type)
                 {
-                    case Wd.KeyFrameAnimation<Wd.Sn.Vector3>.KeyFrameType.Expression:
-                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector3>.ExpressionKeyFrame)kf;
+                    case Wd.KeyFrameAnimation<Vector3>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (Wd.KeyFrameAnimation<Vector3>.ExpressionKeyFrame)kf;
                         result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
                         break;
-                    case Wd.KeyFrameAnimation<Wd.Sn.Vector3>.KeyFrameType.Value:
-                        var valueKeyFrame = (Wd.KeyFrameAnimation<Wd.Sn.Vector3>.ValueKeyFrame)kf;
-                        result.InsertKeyFrame(kf.Progress, Vector3(valueKeyFrame.Value), GetCompositionEasingFunction(kf.Easing));
+                    case Wd.KeyFrameAnimation<Vector3>.KeyFrameType.Value:
+                        var valueKeyFrame = (Wd.KeyFrameAnimation<Vector3>.ValueKeyFrame)kf;
+                        result.InsertKeyFrame(kf.Progress, valueKeyFrame.Value, GetCompositionEasingFunction(kf.Easing));
                         break;
                     default:
                         throw new InvalidCastException();
@@ -597,11 +598,11 @@ namespace Lottie
             // CompositionClip properties
             if (obj.CenterPoint.X != 0 || obj.CenterPoint.Y != 0)
             {
-                result.CenterPoint = Vector2(obj.CenterPoint);
+                result.CenterPoint = obj.CenterPoint;
             }
             if (obj.Scale.X != 1 || obj.Scale.Y != 1)
             {
-                result.Scale = Vector2(obj.Scale);
+                result.Scale = obj.Scale;
             }
             // InsetClip properties
             if (obj.LeftInset != 0)
@@ -687,7 +688,7 @@ namespace Lottie
                 return result;
             }
 
-            result = CacheAndInitializeCompositionObject(obj, _c.CreateCubicBezierEasingFunction(Vector2(obj.ControlPoint1), Vector2(obj.ControlPoint2)));
+            result = CacheAndInitializeCompositionObject(obj, _c.CreateCubicBezierEasingFunction(obj.ControlPoint1, obj.ControlPoint2));
             StartAnimations(obj, result);
             return result;
         }
@@ -699,7 +700,7 @@ namespace Lottie
             }
 
             result = CacheAndInitializeCompositionObject(obj, _c.CreateViewBox());
-            result.Size = Vector2(obj.Size);
+            result.Size = obj.Size;
             StartAnimations(obj, result);
             return result;
         }
@@ -842,9 +843,9 @@ namespace Lottie
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateEllipseGeometry());
             if (obj.Center.X != 0 || obj.Center.Y != 0)
             {
-                result.Center = Vector2(obj.Center);
+                result.Center = obj.Center;
             }
-            result.Radius = Vector2(obj.Radius);
+            result.Radius = obj.Radius;
             StartAnimations(obj, result);
             return result;
         }
@@ -856,11 +857,11 @@ namespace Lottie
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRectangleGeometry());
-            if (obj.Offset != null)
+            if (obj.Offset.HasValue)
             {
-                result.Offset = Vector2(obj.Offset);
+                result.Offset = obj.Offset.Value;
             }
-            result.Size = Vector2(obj.Size);
+            result.Size = obj.Size;
             StartAnimations(obj, result);
             return result;
         }
@@ -872,12 +873,12 @@ namespace Lottie
                 return result;
             }
             result = CacheAndInitializeCompositionGeometry(obj, _c.CreateRoundedRectangleGeometry());
-            if (obj.Offset != null)
+            if (obj.Offset.HasValue)
             {
-                result.Offset = Vector2(obj.Offset);
+                result.Offset = obj.Offset.Value;
             }
-            result.Size = Vector2(obj.Size);
-            result.CornerRadius = Vector2(obj.CornerRadius);
+            result.Size = obj.Size;
+            result.CornerRadius = obj.CornerRadius;
             StartAnimations(obj, result);
             return result;
         }
@@ -919,7 +920,7 @@ namespace Lottie
                         var combination = (Wd.Mgcg.CanvasGeometry.Combination)canvasGeometry;
                         return Cache(obj, GetCanvasGeometry(combination.A).CombineWith(
                             GetCanvasGeometry(combination.B),
-                            Matrix3x2(combination.Matrix),
+                            combination.Matrix,
                             Combine(combination.CombineMode)));
                     }
                 case Wd.Mgcg.CanvasGeometry.GeometryType.Ellipse:
@@ -945,17 +946,17 @@ namespace Lottie
                             switch (command.Type)
                             {
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
-                                    builder.BeginFigure(Vector2(((Wd.Mgcg.CanvasPathBuilder.Command.BeginFigure)command).StartPoint));
+                                    builder.BeginFigure(((Wd.Mgcg.CanvasPathBuilder.Command.BeginFigure)command).StartPoint);
                                     break;
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.EndFigure:
                                     builder.EndFigure(CanvasFigureLoop(((Wd.Mgcg.CanvasPathBuilder.Command.EndFigure)command).FigureLoop));
                                     break;
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.AddLine:
-                                    builder.AddLine(Vector2(((Wd.Mgcg.CanvasPathBuilder.Command.AddLine)command).EndPoint));
+                                    builder.AddLine(((Wd.Mgcg.CanvasPathBuilder.Command.AddLine)command).EndPoint);
                                     break;
                                 case Wd.Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
                                     var cb = (Wd.Mgcg.CanvasPathBuilder.Command.AddCubicBezier)command;
-                                    builder.AddCubicBezier(Vector2(cb.ControlPoint1), Vector2(cb.ControlPoint2), Vector2(cb.EndPoint));
+                                    builder.AddCubicBezier(cb.ControlPoint1, cb.ControlPoint2, cb.EndPoint);
                                     break;
                                 default:
                                     throw new InvalidOperationException();
@@ -1026,22 +1027,6 @@ namespace Lottie
                 default:
                     throw new InvalidOperationException();
             }
-        }
-
-        static System.Numerics.Vector2 Vector2(Wd.Sn.Vector2 value) => new System.Numerics.Vector2(value.X, value.Y);
-        static System.Numerics.Vector2 Vector2(Wd.Sn.Vector2? value) => Vector2(value.Value);
-        static System.Numerics.Vector3 Vector3(Wd.Sn.Vector3 value) => new System.Numerics.Vector3(value.X, value.Y, value.Z);
-        static System.Numerics.Vector3 Vector3(Wd.Sn.Vector3? value) => Vector3(value.Value);
-
-        static System.Numerics.Matrix3x2 Matrix3x2(Wd.Sn.Matrix3x2 value)
-        {
-            return new System.Numerics.Matrix3x2(
-                value.M11,
-                value.M12,
-                value.M21,
-                value.M22,
-                value.M31,
-                value.M32);
         }
 
         static Windows.UI.Color Color(Wd.Wui.Color color) =>

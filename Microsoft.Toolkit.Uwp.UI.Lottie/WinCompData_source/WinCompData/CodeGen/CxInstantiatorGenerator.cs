@@ -2,8 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Numerics;
 using WinCompData.Mgcg;
-using WinCompData.Sn;
+
 
 namespace WinCompData.CodeGen
 {

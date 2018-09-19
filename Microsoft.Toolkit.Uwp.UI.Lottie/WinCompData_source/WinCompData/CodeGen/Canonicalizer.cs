@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WinCompData.Mgcg;
-using WinCompData.Sn;
+using System.Numerics;
 using WinCompData.Tools;
 using WinCompData.Wui;
 

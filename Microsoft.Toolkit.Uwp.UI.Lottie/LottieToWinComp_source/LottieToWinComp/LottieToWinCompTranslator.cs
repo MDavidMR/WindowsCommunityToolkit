@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Sn = System.Numerics;
 using WinCompData;
 using Expr = WinCompData.Expressions.Expression;
 using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
@@ -1447,7 +1448,7 @@ namespace LottieToWinComp
                 // Rounded rectangles do not have a problem, so create a rounded rectangle with a tiny corner
                 // radius to work around the bug.
                 var geometry = CreateRoundedRectangleGeometry();
-                geometry.CornerRadius = new WinCompData.Sn.Vector2(0.000001F, 0.000001F);
+                geometry.CornerRadius = new Sn.Vector2(0.000001F, 0.000001F);
 #else
                 var geometry = CreateRectangleGeometry();
 #endif
@@ -3031,29 +3032,29 @@ namespace LottieToWinComp
         static float? FloatDefaultIsZero(double value) => value == 0 ? null : (float?)value;
         static float? FloatDefaultIsOne(double value) => value == 1 ? null : (float?)value;
 
-        static WinCompData.Sn.Matrix3x2 Matrix3x2Identity => WinCompData.Sn.Matrix3x2.Identity;
-        static WinCompData.Sn.Matrix3x2 Matrix3x2Zero => new WinCompData.Sn.Matrix3x2();
+        static Sn.Matrix3x2 Matrix3x2Identity => Sn.Matrix3x2.Identity;
+        static Sn.Matrix3x2 Matrix3x2Zero => new Sn.Matrix3x2();
 
-        static WinCompData.Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
-        static WinCompData.Sn.Vector2 Vector2(LottieData.Vector2 vector2) => Vector2(vector2.X, vector2.Y);
-        static WinCompData.Sn.Vector2 Vector2(double x, double y) => new WinCompData.Sn.Vector2((float)x, (float)y);
-        static WinCompData.Sn.Vector2 Vector2(float x, float y) => new WinCompData.Sn.Vector2(x, y);
-        static WinCompData.Sn.Vector2 Vector2(float x) => new WinCompData.Sn.Vector2(x, x);
-        static WinCompData.Sn.Vector2? Vector2DefaultIsOne(LottieData.Vector3 vector2) =>
-            vector2.X == 1 && vector2.Y == 1 ? null : (WinCompData.Sn.Vector2?)Vector2(vector2);
-        static WinCompData.Sn.Vector2? Vector2DefaultIsZero(WinCompData.Sn.Vector2 vector2) =>
-            vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector2?)vector2;
-        static WinCompData.Sn.Vector2 ClampedVector2(LottieData.Vector3 vector3) => ClampedVector2((float)vector3.X, (float)vector3.Y);
-        static WinCompData.Sn.Vector2 ClampedVector2(float x, float y) => Vector2(Clamp(x, 0, 1), Clamp(y, 0, 1));
+        static Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
+        static Sn.Vector2 Vector2(LottieData.Vector2 vector2) => Vector2(vector2.X, vector2.Y);
+        static Sn.Vector2 Vector2(double x, double y) => new Sn.Vector2((float)x, (float)y);
+        static Sn.Vector2 Vector2(float x, float y) => new Sn.Vector2(x, y);
+        static Sn.Vector2 Vector2(float x) => new Sn.Vector2(x, x);
+        static Sn.Vector2? Vector2DefaultIsOne(LottieData.Vector3 vector2) =>
+            vector2.X == 1 && vector2.Y == 1 ? null : (Sn.Vector2?)Vector2(vector2);
+        static Sn.Vector2? Vector2DefaultIsZero(Sn.Vector2 vector2) =>
+            vector2.X == 0 && vector2.Y == 0 ? null : (Sn.Vector2?)vector2;
+        static Sn.Vector2 ClampedVector2(LottieData.Vector3 vector3) => ClampedVector2((float)vector3.X, (float)vector3.Y);
+        static Sn.Vector2 ClampedVector2(float x, float y) => Vector2(Clamp(x, 0, 1), Clamp(y, 0, 1));
 
-        static WinCompData.Sn.Vector3 Vector3(double x, double y, double z) => new WinCompData.Sn.Vector3((float)x, (float)y, (float)z);
-        static WinCompData.Sn.Vector3 Vector3(LottieData.Vector3 vector3) => new WinCompData.Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z);
-        static WinCompData.Sn.Vector3? Vector3DefaultIsZero(WinCompData.Sn.Vector2 vector2) =>
-                    vector2.X == 0 && vector2.Y == 0 ? null : (WinCompData.Sn.Vector3?)Vector3(vector2);
-        static WinCompData.Sn.Vector3? Vector3DefaultIsOne(WinCompData.Sn.Vector3 vector3) =>
-                    vector3.X == 1 && vector3.Y == 1 && vector3.Z == 1 ? null : (WinCompData.Sn.Vector3?)vector3;
-        static WinCompData.Sn.Vector3? Vector3DefaultIsOne(LottieData.Vector3 vector3) => Vector3DefaultIsOne(new WinCompData.Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z));
-        static WinCompData.Sn.Vector3 Vector3(WinCompData.Sn.Vector2 vector2) => Vector3(vector2.X, vector2.Y, 0);
+        static Sn.Vector3 Vector3(double x, double y, double z) => new Sn.Vector3((float)x, (float)y, (float)z);
+        static Sn.Vector3 Vector3(LottieData.Vector3 vector3) => new Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z);
+        static Sn.Vector3? Vector3DefaultIsZero(Sn.Vector2 vector2) =>
+                    vector2.X == 0 && vector2.Y == 0 ? null : (Sn.Vector3?)Vector3(vector2);
+        static Sn.Vector3? Vector3DefaultIsOne(Sn.Vector3 vector3) =>
+                    vector3.X == 1 && vector3.Y == 1 && vector3.Z == 1 ? null : (Sn.Vector3?)vector3;
+        static Sn.Vector3? Vector3DefaultIsOne(LottieData.Vector3 vector3) => Vector3DefaultIsOne(new Sn.Vector3((float)vector3.X, (float)vector3.Y, (float)vector3.Z));
+        static Sn.Vector3 Vector3(Sn.Vector2 vector2) => Vector3(vector2.X, vector2.Y, 0);
 
         static float Clamp(float value, float min, float max)
         {

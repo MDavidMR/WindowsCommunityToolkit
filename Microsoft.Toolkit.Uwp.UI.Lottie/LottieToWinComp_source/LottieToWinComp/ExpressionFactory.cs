@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Sn = System.Numerics;
 using WinCompData.Expressions;
 
 namespace LottieToWinComp
@@ -31,8 +32,8 @@ namespace LottieToWinComp
                                                                         Subtract(Scalar("my.Position.Y"), Scalar("my.Anchor.Y")),
                                                                         Scalar(0));
 
-        internal static Expression PositionToOffsetExpression(WinCompData.Sn.Vector2 position) => Subtract(Vector2(position), HalfSize2);
-        internal static Expression HalfSizeToOffsetExpression(WinCompData.Sn.Vector2 halfSize) => Subtract(MyPosition2, Vector2(halfSize));
+        internal static Expression PositionToOffsetExpression(Sn.Vector2 position) => Subtract(Vector2(position), HalfSize2);
+        internal static Expression HalfSizeToOffsetExpression(Sn.Vector2 halfSize) => Subtract(MyPosition2, Vector2(halfSize));
         internal static Expression ScaledAndOffsetRootProgress(double scale, double offset)
         {
             var result = RootProgress;

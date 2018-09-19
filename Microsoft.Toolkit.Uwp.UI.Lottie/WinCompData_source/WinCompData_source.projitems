@@ -84,9 +84,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Serialization\CompositionObjectDgmlSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Serialization\CompositionObjectXmlSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\ShapeVisual.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Matrix3x2.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Vector2.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Sn\Vector3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\StepEasingFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\CanonicalizedNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\CodeGen\Canonicalizer.cs" />

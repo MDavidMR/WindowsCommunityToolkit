@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
-using WinCompData.Sn;
+using System.Numerics;
 
 namespace WinCompData
 {

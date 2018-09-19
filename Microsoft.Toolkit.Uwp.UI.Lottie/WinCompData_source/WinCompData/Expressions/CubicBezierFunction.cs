@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
-using SnVector2 = WinCompData.Sn.Vector2;
+using SnVector2 = System.Numerics.Vector2;
 
 namespace WinCompData.Expressions
 {

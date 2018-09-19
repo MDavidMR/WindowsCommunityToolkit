@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using WinCompData.Mgcg;
-using WinCompData.Sn;
 using WinCompData.Tools;
 using WinCompData.Wui;
 
@@ -251,7 +251,7 @@ namespace WinCompData.CodeGen
                 className: className,
                 reusableExpressionAnimationFieldName: c_singletonExpressionAnimationName,
                 durationTicksFieldName: c_durationTicksFieldName,
-                compositionDeclaredSize: new Sn.Vector2(width, height),
+                compositionDeclaredSize: new Vector2(width, height),
                 // Determine whether to add #includes and usings for namespaces.
                 requiresWin2d: _nodes.Where(n => n.RequiresWin2D).Any(),
                 rootVisual: (Visual)_rootNode.Object

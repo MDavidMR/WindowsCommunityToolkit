@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using WinCompData.Sn;
+using System.Numerics;
 
 namespace WinCompData.Tools
 {

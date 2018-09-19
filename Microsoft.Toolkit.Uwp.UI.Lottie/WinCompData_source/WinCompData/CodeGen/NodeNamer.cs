@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WinCompData.Sn;
+using System.Numerics;
 using WinCompData.Tools;
 
 namespace WinCompData.CodeGen

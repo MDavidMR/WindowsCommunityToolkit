@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using WinCompData.Mgcg;
 using WinCompData.Tools;
 
@@ -534,12 +535,12 @@ namespace WinCompData.CodeGen
             {
                 switch (kf.Type)
                 {
-                    case KeyFrameAnimation<Sn.Vector2>.KeyFrameType.Expression:
-                        var expressionKeyFrame = (KeyFrameAnimation<Sn.Vector2>.ExpressionKeyFrame)kf;
+                    case KeyFrameAnimation<Vector2>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<Vector2>.ExpressionKeyFrame)kf;
                         result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
                         break;
-                    case KeyFrameAnimation<Sn.Vector2>.KeyFrameType.Value:
-                        var valueKeyFrame = (KeyFrameAnimation<Sn.Vector2>.ValueKeyFrame)kf;
+                    case KeyFrameAnimation<Vector2>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<Vector2>.ValueKeyFrame)kf;
                         result.InsertKeyFrame(kf.Progress, valueKeyFrame.Value, GetCompositionEasingFunction(kf.Easing));
                         break;
                     default:
@@ -562,12 +563,12 @@ namespace WinCompData.CodeGen
             {
                 switch (kf.Type)
                 {
-                    case KeyFrameAnimation<Sn.Vector3>.KeyFrameType.Expression:
-                        var expressionKeyFrame = (KeyFrameAnimation<Sn.Vector3>.ExpressionKeyFrame)kf;
+                    case KeyFrameAnimation<Vector3>.KeyFrameType.Expression:
+                        var expressionKeyFrame = (KeyFrameAnimation<Vector3>.ExpressionKeyFrame)kf;
                         result.InsertExpressionKeyFrame(kf.Progress, expressionKeyFrame.Expression, GetCompositionEasingFunction(kf.Easing));
                         break;
-                    case KeyFrameAnimation<Sn.Vector3>.KeyFrameType.Value:
-                        var valueKeyFrame = (KeyFrameAnimation<Sn.Vector3>.ValueKeyFrame)kf;
+                    case KeyFrameAnimation<Vector3>.KeyFrameType.Value:
+                        var valueKeyFrame = (KeyFrameAnimation<Vector3>.ValueKeyFrame)kf;
                         result.InsertKeyFrame(kf.Progress, valueKeyFrame.Value, GetCompositionEasingFunction(kf.Easing));
                         break;
                     default:

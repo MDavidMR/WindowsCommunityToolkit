@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using WinCompData.Mgc;
-using WinCompData.Sn;
 using WinCompData.Tools;
 
 namespace WinCompData.Mgcg

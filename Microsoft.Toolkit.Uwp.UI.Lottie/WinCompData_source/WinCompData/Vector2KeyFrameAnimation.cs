@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using WinCompData.Sn;
+using System.Numerics;
 
 namespace WinCompData
 {

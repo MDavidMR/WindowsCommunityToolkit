@@ -1,6 +1,8 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
+using Sn = System.Numerics;
+
 namespace WinCompData.Expressions
 {
 #if !WINDOWS_UWP
@@ -20,7 +22,7 @@ namespace WinCompData.Expressions
 
         public static Divide Divide(Expression x, Expression y) => new Divide(x, y);
 
-        public static Vector2 Constant(WinCompData.Sn.Vector2 value) => new Vector2(Scalar(value.X), Scalar(value.Y));
+        public static Vector2 Constant(Sn.Vector2 value) => new Vector2(Scalar(value.X), Scalar(value.Y));
 
         public static TypeAssert Scalar(string name) => Name(name, TypeConstraint.Scalar);
 

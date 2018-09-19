@@ -2,10 +2,9 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using WinCompData.Mgc;
-using WinCompData.Sn;
 using WinCompData.Wg;
 
 namespace WinCompData.Mgcg

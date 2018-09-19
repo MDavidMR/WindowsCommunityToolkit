@@ -61,6 +61,15 @@ namespace WinCompData.CodeGen
             {
                 obj.CenterPoint = null;
             }
+
+            // Convert the properties to a transform matrix. This reduces the
+            // amount of code, but is only valid if the object if not animated.
+            if (!obj.Animators.Any())
+            {
+                //var matrix = new Sn.Matrix3x2();
+                // ORDER: Scale around centerpoint, rotate around centerpoint, translate (offset), multiply by custom matrix)
+                // TODO - have a Matrix3x2 that takes the centerpoint, scale, rotation, translation, and custom matrix and returns a new matrix.
+            }
         }
 
         static void CoalesceContainerShapes(ObjectGraph<Graph.Node> graph)
