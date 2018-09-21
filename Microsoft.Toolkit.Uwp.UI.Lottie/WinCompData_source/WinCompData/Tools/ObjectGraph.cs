@@ -323,6 +323,8 @@ namespace WinCompData.Tools
                     return VisitPath((CanvasGeometry.Path)obj, node);
                 case CanvasGeometry.GeometryType.RoundedRectangle:
                     return VisitRoundedRectangle((CanvasGeometry.RoundedRectangle)obj, node);
+                case CanvasGeometry.GeometryType.TransformedGeometry:
+                    return VisitTransformedGeometry((CanvasGeometry.TransformedGeometry)obj, node);
                 default:
                     throw new InvalidOperationException();
             }
@@ -358,6 +360,11 @@ namespace WinCompData.Tools
 
         bool VisitRoundedRectangle(CanvasGeometry.RoundedRectangle obj, T node)
         {
+            return VisitCanvasGeometry(obj, node);
+        }
+        bool VisitTransformedGeometry(CanvasGeometry.TransformedGeometry obj, T node)
+        {
+            Reference(node, obj.SourceGeometry);
             return VisitCanvasGeometry(obj, node);
         }
 

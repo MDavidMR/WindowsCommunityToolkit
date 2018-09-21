@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -32,10 +33,28 @@ namespace WinCompData.CodeGen
             // was given to us.
             var result = (Visual)new Optimizer(graph).GetCompositionObject(root);
 
+            AssertGraphsAreDisjoint(result, root);
+
             // Try to optimize away redundant containers.
             result = TreeReducer.OptimizeContainers(result);
 
             return result;
+        }
+
+        // Asserts that the 2 graphs are disjoint. If this assert ever fires then
+        // the graph copier is broken - it is reusing an object rather than making
+        // a copy.
+        [Conditional("DEBUG")]
+        static void AssertGraphsAreDisjoint(CompositionObject root1, CompositionObject root2)
+        {
+            var graph1 = Graph.FromCompositionObject(root1, includeVertices: false);
+            var graph2 = Graph.FromCompositionObject(root2, includeVertices: false);
+
+            var graph1Objects = new HashSet<object>(graph1.Nodes.Select(n => n.Object));
+            foreach (var obj in graph2.Nodes.Select(n => n.Object))
+            {
+                Debug.Assert(!graph1Objects.Contains(obj));
+            }
         }
 
         sealed class ObjectData : CanonicalizedNode<ObjectData>
@@ -64,7 +83,7 @@ namespace WinCompData.CodeGen
             return _graph[obj].Canonical;
         }
 
-        bool GetExisting<T>(T key, out T result) where T: CompositionObject
+        bool GetExisting<T>(T key, out T result) where T : CompositionObject
         {
             result = (T)NodeFor(key).Copied;
             return result != null;
@@ -951,20 +970,20 @@ namespace WinCompData.CodeGen
                 return result;
             }
 
-            var canvasGeometry = (Mgcg.CanvasGeometry)obj;
+            var canvasGeometry = (CanvasGeometry)obj;
             switch (canvasGeometry.Type)
             {
-                case Mgcg.CanvasGeometry.GeometryType.Combination:
+                case CanvasGeometry.GeometryType.Combination:
                     {
-                        var combination = (Mgcg.CanvasGeometry.Combination)canvasGeometry;
+                        var combination = (CanvasGeometry.Combination)canvasGeometry;
                         result = CacheCanvasGeometry((CanvasGeometry)obj, GetCanvasGeometry(combination.A).CombineWith(
                             GetCanvasGeometry(combination.B),
                             combination.Matrix,
                             combination.CombineMode));
                         break;
                     }
-                case Mgcg.CanvasGeometry.GeometryType.Ellipse:
-                    var ellipse = (Mgcg.CanvasGeometry.Ellipse)canvasGeometry;
+                case CanvasGeometry.GeometryType.Ellipse:
+                    var ellipse = (CanvasGeometry.Ellipse)canvasGeometry;
                     result = CanvasGeometry.CreateEllipse(
                         null,
                         ellipse.X,
@@ -972,12 +991,12 @@ namespace WinCompData.CodeGen
                         ellipse.RadiusX,
                         ellipse.RadiusY);
                     break;
-                case Mgcg.CanvasGeometry.GeometryType.Path:
+                case CanvasGeometry.GeometryType.Path:
                     using (var builder = new CanvasPathBuilder(null))
                     {
-                        var path = (Mgcg.CanvasGeometry.Path)canvasGeometry;
+                        var path = (CanvasGeometry.Path)canvasGeometry;
 
-                        if (path.FilledRegionDetermination != Mgcg.CanvasFilledRegionDetermination.Alternate)
+                        if (path.FilledRegionDetermination != CanvasFilledRegionDetermination.Alternate)
                         {
                             builder.SetFilledRegionDetermination(path.FilledRegionDetermination);
                         }
@@ -986,17 +1005,17 @@ namespace WinCompData.CodeGen
                         {
                             switch (command.Type)
                             {
-                                case Mgcg.CanvasPathBuilder.CommandType.BeginFigure:
-                                    builder.BeginFigure(((Mgcg.CanvasPathBuilder.Command.BeginFigure)command).StartPoint);
+                                case CanvasPathBuilder.CommandType.BeginFigure:
+                                    builder.BeginFigure(((CanvasPathBuilder.Command.BeginFigure)command).StartPoint);
                                     break;
-                                case Mgcg.CanvasPathBuilder.CommandType.EndFigure:
-                                    builder.EndFigure(((Mgcg.CanvasPathBuilder.Command.EndFigure)command).FigureLoop);
+                                case CanvasPathBuilder.CommandType.EndFigure:
+                                    builder.EndFigure(((CanvasPathBuilder.Command.EndFigure)command).FigureLoop);
                                     break;
-                                case Mgcg.CanvasPathBuilder.CommandType.AddLine:
-                                    builder.AddLine(((Mgcg.CanvasPathBuilder.Command.AddLine)command).EndPoint);
+                                case CanvasPathBuilder.CommandType.AddLine:
+                                    builder.AddLine(((CanvasPathBuilder.Command.AddLine)command).EndPoint);
                                     break;
-                                case Mgcg.CanvasPathBuilder.CommandType.AddCubicBezier:
-                                    var cb = (Mgcg.CanvasPathBuilder.Command.AddCubicBezier)command;
+                                case CanvasPathBuilder.CommandType.AddCubicBezier:
+                                    var cb = (CanvasPathBuilder.Command.AddCubicBezier)command;
                                     builder.AddCubicBezier(cb.ControlPoint1, cb.ControlPoint2, cb.EndPoint);
                                     break;
                                 default:
@@ -1006,8 +1025,8 @@ namespace WinCompData.CodeGen
                         result = CacheCanvasGeometry((CanvasGeometry)obj, CanvasGeometry.CreatePath(builder));
                     }
                     break;
-                case Mgcg.CanvasGeometry.GeometryType.RoundedRectangle:
-                    var roundedRectangle = (Mgcg.CanvasGeometry.RoundedRectangle)canvasGeometry;
+                case CanvasGeometry.GeometryType.RoundedRectangle:
+                    var roundedRectangle = (CanvasGeometry.RoundedRectangle)canvasGeometry;
                     result = CanvasGeometry.CreateRoundedRectangle(
                         null,
                         roundedRectangle.X,
@@ -1016,6 +1035,10 @@ namespace WinCompData.CodeGen
                         roundedRectangle.H,
                         roundedRectangle.RadiusX,
                         roundedRectangle.RadiusY);
+                    break;
+                case CanvasGeometry.GeometryType.TransformedGeometry:
+                    var transformedGeometry = (CanvasGeometry.TransformedGeometry)canvasGeometry;
+                    result = GetCanvasGeometry(transformedGeometry.SourceGeometry).Transform(transformedGeometry.TransformMatrix);
                     break;
                 default:
                     throw new InvalidOperationException();

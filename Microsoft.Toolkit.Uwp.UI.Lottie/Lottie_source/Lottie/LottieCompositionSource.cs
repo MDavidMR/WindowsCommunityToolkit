@@ -374,11 +374,11 @@ namespace Lottie
                     }
 
                     // Optimize the resulting translation. This will usually significantly reduce the size of
-                    // the Composition code, however iit might slow down loading too much on complex Lotties.
+                    // the Composition code, however it might slow down loading too much on complex Lotties.
                     if (translateSucceeded && optimizationEnabled)
                     {
                         // Optimize.
-                        wincompDataRootVisual = WinCompData.CodeGen.Optimizer.Optimize(wincompDataRootVisual, true);
+                        wincompDataRootVisual = WinCompData.CodeGen.Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties:true);
 
                         if (diagnostics != null)
                         {

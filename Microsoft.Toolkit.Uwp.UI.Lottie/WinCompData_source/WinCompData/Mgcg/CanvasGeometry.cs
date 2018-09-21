@@ -22,6 +22,7 @@ namespace WinCompData.Mgcg
             Ellipse,
             Path,
             RoundedRectangle,
+            TransformedGeometry,
         }
 
         public static CanvasGeometry CreatePath(CanvasPathBuilder pathBuilder)
@@ -55,6 +56,17 @@ namespace WinCompData.Mgcg
              Matrix = matrix,
              CombineMode = combineMode
          };
+
+        public CanvasGeometry Transform(Matrix3x2 transformMatrix) =>
+            transformMatrix.IsIdentity
+            ? this
+            : new TransformedGeometry
+            {
+                SourceGeometry = this,
+                TransformMatrix = transformMatrix,
+                LongDescription = LongDescription,
+                ShortDescription = ShortDescription,
+            };
 
         public abstract GeometryType Type { get; }
 
@@ -148,6 +160,13 @@ namespace WinCompData.Mgcg
             public float RadiusX { get; internal set; }
             public float RadiusY { get; internal set; }
             public override GeometryType Type => GeometryType.RoundedRectangle;
+        }
+
+        public sealed class TransformedGeometry : CanvasGeometry
+        {
+            public CanvasGeometry SourceGeometry { get; internal set; }
+            public Matrix3x2 TransformMatrix { get; internal set; }
+            public override GeometryType Type => GeometryType.TransformedGeometry;
         }
     }
 }

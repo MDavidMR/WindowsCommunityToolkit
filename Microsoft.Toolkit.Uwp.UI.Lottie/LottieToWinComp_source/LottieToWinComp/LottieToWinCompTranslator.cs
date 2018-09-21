@@ -475,7 +475,7 @@ namespace LottieToWinComp
                 if (inProgress > 0)
                 {
                     // Set initial value to be non-visible (default is visible).
-                    visibilityNode.TransformMatrix = Matrix3x2Zero;
+                    visibilityNode.TransformMatrix = new Sn.Matrix3x2();
                     visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
                 }
                 if (outProgress < 1)
@@ -684,6 +684,7 @@ namespace LottieToWinComp
             internal SolidColorFill Fill { get; private set; }
             internal TrimPath TrimPath { get; private set; }
             internal RoundedCorner RoundedCorner { get; private set; }
+            internal Transform Transform { get; private set; }
             // Opacity is not part of the Lottie context for shapes. But because WinComp
             // doesn't support opacity on shapes, the opacity is inherited from
             // the Transform and passed through to the brushes here.
@@ -693,6 +694,7 @@ namespace LottieToWinComp
             {
                 _owner = owner;
             }
+
             internal void UpdateFromStack(Stack<ShapeLayerContent> stack)
             {
                 while (stack.Count > 0)
@@ -741,6 +743,7 @@ namespace LottieToWinComp
                     TrimPath = TrimPath,
                     RoundedCorner = RoundedCorner,
                     OpacityPercent = OpacityPercent,
+                    Transform = Transform,
                 };
             }
 
@@ -752,6 +755,14 @@ namespace LottieToWinComp
                 }
 
                 OpacityPercent = ComposeOpacityPercents(OpacityPercent, transform.OpacityPercent);
+            }
+
+            // Only used when translating geometries. Layers use an extra Shape or Visual to
+            // apply the transform, but geometries need to take the transform into account when
+            // they're created.
+            internal void SetTransform(Transform transform)
+            {
+                Transform = transform;
             }
 
             Animatable<double> ComposeOpacityPercents(Animatable<double> a, Animatable<double> b)
@@ -1225,7 +1236,7 @@ namespace LottieToWinComp
                 var accumulator = geometries[0];
                 for (var i = 1; i < geometries.Length; i++)
                 {
-                    accumulator = accumulator.CombineWith(geometries[i], Matrix3x2Identity, combineMode);
+                    accumulator = accumulator.CombineWith(geometries[i], Sn.Matrix3x2.Identity, combineMode);
                 }
                 return accumulator;
 #endif
@@ -1244,7 +1255,7 @@ namespace LottieToWinComp
                         {
                             // Convert all the shapes in the group to a list of geometries
                             var group = (ShapeGroup)shapeContent;
-                            var groupedGeometries = CreateCanvasGeometries(context.Clone(), new Stack<ShapeLayerContent>(group.Items), pathFillType);
+                            var groupedGeometries = CreateCanvasGeometries(context.Clone(), new Stack<ShapeLayerContent>(group.Items), pathFillType).ToArray();
                             foreach (var geometry in groupedGeometries)
                             {
                                 yield return geometry;
@@ -1258,9 +1269,9 @@ namespace LottieToWinComp
                         _unsupported.Repeater();
                         break;
                     case ShapeContentType.Transform:
-                        // Ignore transforms applied to geometries.
-                        // TODO - should transforms be applied to the geometries?
-                        continue;
+                        // TODO - do we need to clear out the transform when we've finished with this call to CreateCanvasGeometries?? Maybe the caller should clone the context.
+                        context.SetTransform((Transform)shapeContent);
+                        break;
 
                     case ShapeContentType.SolidColorStroke:
                     case ShapeContentType.LinearGradientStroke:
@@ -1271,13 +1282,13 @@ namespace LottieToWinComp
                     case ShapeContentType.TrimPath:
                     case ShapeContentType.RoundedCorner:
                         // Ignore commands that set the context - we only want geometries.
-                        continue;
+                        break;
 
                     case ShapeContentType.Path:
-                        yield return CreateWin2dPathGeometryFromShape((Shape)shapeContent, pathFillType, optimizeLines: true);
+                        yield return CreateWin2dPathGeometryFromShape(context, (Shape)shapeContent, pathFillType, optimizeLines: true);
                         break;
                     case ShapeContentType.Ellipse:
-                        yield return CreateWin2dEllipseGeometry((Ellipse)shapeContent);
+                        yield return CreateWin2dEllipseGeometry(context, (Ellipse)shapeContent);
                         break;
                     case ShapeContentType.Rectangle:
                         yield return CreateWin2dRectangleGeometry(context, (Rectangle)shapeContent);
@@ -1291,8 +1302,13 @@ namespace LottieToWinComp
             }
         }
 
-        CanvasGeometry CreateWin2dPathGeometry(Sequence<BezierSegment> figure, SolidColorFill.PathFillType fillType, bool optimizeLines)
+        CanvasGeometry CreateWin2dPathGeometry(
+            Sequence<BezierSegment> figure, 
+            SolidColorFill.PathFillType fillType, 
+            Sn.Matrix3x2 transformMatrix, 
+            bool optimizeLines)
         {
+            
             var beziers = figure.Items.ToArray();
             using (var builder = new CanvasPathBuilder(null))
             {
@@ -1304,14 +1320,14 @@ namespace LottieToWinComp
                 else
                 {
                     builder.SetFilledRegionDetermination(FilledRegionDetermination(fillType));
-                    builder.BeginFigure(Vector2(beziers[0].ControlPoint0));
+                    builder.BeginFigure(Sn.Vector2.Transform(Vector2(beziers[0].ControlPoint0), transformMatrix));
 
                     foreach (var segment in beziers)
                     {
-                        var cp0 = Vector2(segment.ControlPoint0);
-                        var cp1 = Vector2(segment.ControlPoint1);
-                        var cp2 = Vector2(segment.ControlPoint2);
-                        var cp3 = Vector2(segment.ControlPoint3);
+                        var cp0 = Sn.Vector2.Transform(Vector2(segment.ControlPoint0), transformMatrix);
+                        var cp1 = Sn.Vector2.Transform(Vector2(segment.ControlPoint1), transformMatrix);
+                        var cp2 = Sn.Vector2.Transform(Vector2(segment.ControlPoint2), transformMatrix);
+                        var cp3 = Sn.Vector2.Transform(Vector2(segment.ControlPoint3), transformMatrix);
 
                         // Add a line rather than a cubic bezier if the segment is a straight line.
                         if (optimizeLines && segment.IsALine)
@@ -1338,14 +1354,49 @@ namespace LottieToWinComp
             } // end using
         }
 
-        CanvasGeometry CreateWin2dPathGeometryFromShape(Shape path, SolidColorFill.PathFillType fillType, bool optimizeLines)
+        static Sn.Matrix3x2 CreateMatrixFromTransform(Transform transform)
+        {
+            if (transform == null)
+            {
+                return Sn.Matrix3x2.Identity;
+            }
+
+            if (transform.IsAnimated)
+            {
+                // TODO - report an issue. We can't handle an animated transform.
+                // TODO - we could handle it if the only thing that is animated is the Opacity.
+            }
+
+            var anchor = Vector2(transform.Anchor.InitialValue);
+            var position = Vector2(transform.Position.InitialValue);
+            var scale = Vector2(transform.ScalePercent.InitialValue / 100.0);
+            var rotation = (float)DegreesToRadians(transform.RotationDegrees.InitialValue);
+
+            // Calculate the matrix that is equivalent to the properties.
+            var combinedMatrix =
+                Sn.Matrix3x2.CreateScale(scale, anchor) *
+                Sn.Matrix3x2.CreateRotation(rotation, anchor) *
+                Sn.Matrix3x2.CreateTranslation(position + anchor);
+
+            return combinedMatrix;
+        }
+
+        static double DegreesToRadians(double angle) => Math.PI * angle / 180.0;
+
+        CanvasGeometry CreateWin2dPathGeometryFromShape(ShapeContentContext context, Shape path, SolidColorFill.PathFillType fillType, bool optimizeLines)
         {
             if (path.PathData.IsAnimated)
             {
                 _unsupported.CombiningAnimatedShapes();
             }
 
-            var result = CreateWin2dPathGeometry(path.PathData.InitialValue, fillType, optimizeLines: optimizeLines);
+            var transform = CreateMatrixFromTransform(context.Transform);
+
+            var result = CreateWin2dPathGeometry(
+                path.PathData.InitialValue, 
+                fillType, 
+                transform,
+                optimizeLines: optimizeLines);
 
             if (_addDescriptions)
             {
@@ -1355,7 +1406,7 @@ namespace LottieToWinComp
             return result;
         }
 
-        CanvasGeometry CreateWin2dEllipseGeometry(Ellipse ellipse)
+        CanvasGeometry CreateWin2dEllipseGeometry(ShapeContentContext context, Ellipse ellipse)
         {
             var ellipsePosition = ellipse.Position;
             var ellipseDiameter = ellipse.Diameter;
@@ -1374,6 +1425,12 @@ namespace LottieToWinComp
                 (float)(ellipsePosition.InitialValue.Y - (yRadius / 2)),
                 (float)xRadius,
                 (float)yRadius);
+
+            var transformMatrix = CreateMatrixFromTransform(context.Transform);
+            if (!transformMatrix.IsIdentity)
+            {
+                result = result.Transform(transformMatrix);
+            }
 
             if (_addDescriptions)
             {
@@ -1406,6 +1463,12 @@ namespace LottieToWinComp
                 (float)height,
                 (float)radius,
                 (float)radius);
+
+            var transformMatrix = CreateMatrixFromTransform(context.Transform);
+            if (!transformMatrix.IsIdentity)
+            {
+                result = result.Transform(transformMatrix);
+            }
 
             if (_addDescriptions)
             {
@@ -2681,7 +2744,7 @@ namespace LottieToWinComp
             // CompositionPaths can be shared by many SpriteShapes.
             if (!_compositionPaths.TryGetValue((pathGeometry, fillType, optimizeLines), out var result))
             {
-                result = new CompositionPath(CreateWin2dPathGeometry(pathGeometry, fillType, optimizeLines));
+                result = new CompositionPath(CreateWin2dPathGeometry(pathGeometry, fillType, Sn.Matrix3x2.Identity, optimizeLines));
                 _compositionPaths.Add((pathGeometry, fillType, optimizeLines), result);
             }
             return result;
@@ -3031,10 +3094,6 @@ namespace LottieToWinComp
 
         static float? FloatDefaultIsZero(double value) => value == 0 ? null : (float?)value;
         static float? FloatDefaultIsOne(double value) => value == 1 ? null : (float?)value;
-
-        static Sn.Matrix3x2 Matrix3x2Identity => Sn.Matrix3x2.Identity;
-        static Sn.Matrix3x2 Matrix3x2Zero => new Sn.Matrix3x2();
-
         static Sn.Vector2 Vector2(LottieData.Vector3 vector3) => Vector2(vector3.X, vector3.Y);
         static Sn.Vector2 Vector2(LottieData.Vector2 vector2) => Vector2(vector2.X, vector2.Y);
         static Sn.Vector2 Vector2(double x, double y) => new Sn.Vector2((float)x, (float)y);

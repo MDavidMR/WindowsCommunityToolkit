@@ -238,6 +238,17 @@ namespace WinCompData.CodeGen
             string fieldName);
 
         /// <summary>
+        /// Writes CanvasGeometery.TransformedGeometry factory code.
+        /// </summary>
+        /// <param name="typeName">The type of the result.</param>
+        /// <param name="fieldName">If not null, the name of the field in which the result is stored.</param>
+        protected abstract void WriteCanvasGeometryTransformedGeometryFactory(
+            CodeBuilder builder,
+            CanvasGeometry.TransformedGeometry obj,
+            string typeName,
+            string fieldName);
+
+        /// <summary>
         /// Call this to generate the code. Returns a string containing the generated code.
         /// </summary>
         protected string GenerateCode(
@@ -507,53 +518,27 @@ namespace WinCompData.CodeGen
 
         bool GenerateCanvasGeometryFactory(CodeBuilder builder, CanvasGeometry obj, ObjectData node)
         {
+            WriteObjectFactoryStart(builder, node);
             switch (obj.Type)
             {
                 case CanvasGeometry.GeometryType.Combination:
-                    return GenerateCanvasGeometryCombinationFactory(builder, (CanvasGeometry.Combination)obj, node);
+                    WriteCanvasGeometryCombinationFactory(builder, (CanvasGeometry.Combination)obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+                    break;
                 case CanvasGeometry.GeometryType.Ellipse:
-                    return GenerateCanvasGeometryEllipseFactory(builder, (CanvasGeometry.Ellipse)obj, node);
+                    WriteCanvasGeometryEllipseFactory(builder, (CanvasGeometry.Ellipse)obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+                    break;
                 case CanvasGeometry.GeometryType.Path:
-                    return GenerateCanvasGeometryPathFactory(builder, (CanvasGeometry.Path)obj, node);
+                    WriteCanvasGeometryPathFactory(builder, (CanvasGeometry.Path)obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+                    break;
                 case CanvasGeometry.GeometryType.RoundedRectangle:
-                    return GenerateCanvasGeometryRoundedRectangleFactory(builder, (CanvasGeometry.RoundedRectangle)obj, node);
+                    WriteCanvasGeometryRoundedRectangleFactory(builder, (CanvasGeometry.RoundedRectangle)obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
+                    break;
+                case CanvasGeometry.GeometryType.TransformedGeometry:
+                    WriteCanvasGeometryTransformedGeometryFactory(builder, (CanvasGeometry.TransformedGeometry)obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName); 
+                    break;
                 default:
                     throw new InvalidOperationException();
             }
-        }
-
-        bool GenerateCanvasGeometryCombinationFactory(CodeBuilder builder, CanvasGeometry.Combination obj, ObjectData node)
-        {
-            WriteObjectFactoryStart(builder, node);
-            // Call the subclass to write the body.
-            WriteCanvasGeometryCombinationFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
-            WriteObjectFactoryEnd(builder);
-            return true;
-        }
-
-        bool GenerateCanvasGeometryEllipseFactory(CodeBuilder builder, CanvasGeometry.Ellipse obj, ObjectData node)
-        {
-            WriteObjectFactoryStart(builder, node);
-            // Call the subclass to write the body.
-            WriteCanvasGeometryEllipseFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
-            WriteObjectFactoryEnd(builder);
-            return true;
-        }
-
-        bool GenerateCanvasGeometryPathFactory(CodeBuilder builder, CanvasGeometry.Path obj, ObjectData node)
-        {
-            WriteObjectFactoryStart(builder, node);
-            // Call the subclass to write the body.
-            WriteCanvasGeometryPathFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
-            WriteObjectFactoryEnd(builder);
-            return true;
-        }
-
-        bool GenerateCanvasGeometryRoundedRectangleFactory(CodeBuilder builder, CanvasGeometry.RoundedRectangle obj, ObjectData node)
-        {
-            WriteObjectFactoryStart(builder, node);
-            // Call the subclass to write the body.
-            WriteCanvasGeometryRoundedRectangleFactory(builder, obj, _stringifier.ReferenceTypeName(node.TypeName), node.FieldName);
             WriteObjectFactoryEnd(builder);
             return true;
         }

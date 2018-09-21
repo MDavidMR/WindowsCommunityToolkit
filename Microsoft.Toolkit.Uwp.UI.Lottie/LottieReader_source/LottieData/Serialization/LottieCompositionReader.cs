@@ -707,9 +707,25 @@ namespace LottieData.Serialization
         void ReadTextData(JObject obj)
         {
             // TODO - read text data
+
+            // Animatable text value
+            // "t":text
+            // "f":fontName
+            // "s":size
+            // "j":(int)justification
+            // "tr":(int)tracking
+            // "lh":lineHeight
+            // "ls":baselineShift
+            // "fc":fillColor
+            // "sc":strokeColor
+            // "sw":strokeWidth
+            // "of":(bool)strokeOverFill
             IgnoreFieldThatIsNotYetSupported(obj, "d");
+
             IgnoreFieldThatIsNotYetSupported(obj, "p");
             IgnoreFieldThatIsNotYetSupported(obj, "m");
+
+            // Array of animatable text properties (fc:fill color, sc:stroke color, sw:stroke width, t:tracking (float))
             IgnoreFieldThatIsNotYetSupported(obj, "a");
             AssertAllFieldsRead(obj);
         }

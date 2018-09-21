@@ -982,6 +982,9 @@ namespace Lottie
                         roundedRectangle.H,
                         roundedRectangle.RadiusX,
                         roundedRectangle.RadiusY);
+                case Wd.Mgcg.CanvasGeometry.GeometryType.TransformedGeometry:
+                    var transformedGeometry = (Wd.Mgcg.CanvasGeometry.TransformedGeometry)canvasGeometry;
+                    return GetCanvasGeometry(transformedGeometry.SourceGeometry).Transform(transformedGeometry.TransformMatrix);
                 default:
                     throw new InvalidOperationException();
             }

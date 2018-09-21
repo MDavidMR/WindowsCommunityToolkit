@@ -200,6 +200,11 @@ namespace WinCompData.CodeGen
             builder.UnIndent();
         }
 
+        protected override void WriteCanvasGeometryTransformedGeometryFactory(CodeBuilder builder, CanvasGeometry.TransformedGeometry obj, string typeName, string fieldName)
+        {
+            builder.WriteLine($"var result = {FieldAssignment(fieldName)}{CallFactoryFor(obj.SourceGeometry)}.Transform({_stringifier.Matrix3x2(obj.TransformMatrix)});");
+        }
+
         static string FieldAssignment(string fieldName) => (fieldName != null ? $"{fieldName} = " : "");
         string Float(float value) => _stringifier.Float(value);
         string Vector2(Vector2 value) => _stringifier.Vector2(value);
@@ -274,7 +279,7 @@ namespace WinCompData.CodeGen
             }
             public override string Matrix4x4(Matrix4x4 value)
             {
-                return $"new Matrix4x4({Float(value.M11)}, {Float(value.M12)}, {Float(value.M13)}, {Float(value.M14)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M23)}, {Float(value.M24)}, {Float(value.M31)}, {Float(value.M32)}, {Float(value.M33)}, {Float(value.M34)}, {Float(value.M41)}, {Float(value.M22)}, {Float(value.M43)}, {Float(value.M44)})";
+                return $"new Matrix4x4({Float(value.M11)}, {Float(value.M12)}, {Float(value.M13)}, {Float(value.M14)}, {Float(value.M21)}, {Float(value.M22)}, {Float(value.M23)}, {Float(value.M24)}, {Float(value.M31)}, {Float(value.M32)}, {Float(value.M33)}, {Float(value.M34)}, {Float(value.M41)}, {Float(value.M42)}, {Float(value.M43)}, {Float(value.M44)})";
             }
 
             public override string Readonly(string value) => $"readonly {value}";

@@ -309,6 +309,18 @@ public:
             builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(rect.Get());");
         }
 
+        protected override void WriteCanvasGeometryTransformedGeometryFactory(CodeBuilder builder, CanvasGeometry.TransformedGeometry obj, string typeName, string fieldName)
+        {
+            builder.WriteLine($"{typeName} result;");
+            builder.WriteLine("ID2D1Geometry **geoA = new ID2D1Geometry*;");
+            builder.WriteLine("ID2D1TransformedGeometry *transformed;");
+            builder.WriteLine($"D2D1_MATRIX_3X2_F transformMatrix{_stringifier.Matrix3x2(obj.TransformMatrix)};");
+            builder.WriteLine();
+            builder.WriteLine($"{CallFactoryFor(obj.SourceGeometry)}->GetGeometry(geoA);");
+            builder.WriteLine("FFHR(_d2dFactory->CreateTransformedGeometry((*geoA), transformMatrix, &transformed));");
+            builder.WriteLine($"result = {FieldAssignment(fieldName)}new GeoSource(transformed);");
+        }
+
         string CanvasFigureLoop(CanvasFigureLoop value) => _stringifier.CanvasFigureLoop(value);
         static string FieldAssignment(string fieldName) => (fieldName != null ? $"{fieldName} = " : "");
         string FilledRegionDetermination(CanvasFilledRegionDetermination value) => _stringifier.FilledRegionDetermination(value);

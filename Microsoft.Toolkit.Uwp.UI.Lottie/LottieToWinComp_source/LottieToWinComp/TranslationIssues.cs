@@ -25,12 +25,10 @@ namespace LottieToWinComp
         {
             Report("LT0001", "Rectangle with animated size and TrimPath");
         }
-
         internal void AnimatedTrimOffsetWithStaticTrimOffset()
         {
             Report("LT0002", "Animated trim offset with static trim offset");
         }
-
         internal void AnimationMultiplication()
         {
             Report("LT0003", "Multiplication of two or more animated values");
@@ -43,7 +41,6 @@ namespace LottieToWinComp
         {
             Report("LT0005", "Combining animated shapes");
         }
-
         internal void GradientFill()
         {
             Report("LT0006", "Gradient fill");
@@ -112,30 +109,21 @@ namespace LottieToWinComp
         {
             Report("LT0022", "Time stretch");
         }
-
         internal void MaskWithInvert()
         {
             Report("LT0023", "Mask with invert");
         }
-
         internal void MaskWithUnsupportedMode(Mask.MaskMode mode)
         {
             Report("LT0024", $"Mask mode: {mode}");
         }
-
         internal void MaskWithAlpha()
         {
             Report("LT0025", "Mask with alpha value other than 1");
         }
-
         internal void MultipleShapeMasks()
         {
             Report("LT0026", "Mask with multiple shapes");
-        }
-
-        internal void MaskSDKSupport()
-        {
-            Report("LT0027", "Mask support requires targeting RS5 or later");
         }
 
         void Report(string code, string description)
