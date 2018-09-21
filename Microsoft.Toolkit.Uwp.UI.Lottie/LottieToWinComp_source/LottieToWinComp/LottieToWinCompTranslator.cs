@@ -2071,42 +2071,51 @@ namespace LottieToWinComp
         void TranslateAndApplyAnchorAndPositionToContainerVisual(TranslationContext context, IAnimatableVector3 anchor, IAnimatableVector3 position, ContainerVisual container)
         {
             var initialAnchor = Vector2(anchor.InitialValue);
-
-            if (anchor.IsAnimated || anchor.Type == AnimatableVector3Type.XYZ)
-            {
-                container.Properties.InsertVector2("Anchor", initialAnchor);
-            }
-
             var initialPosition = Vector2(position.InitialValue);
 
-            if (position.IsAnimated || position.Type == AnimatableVector3Type.XYZ)
+
+            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
+            if (position.IsAnimated)
             {
                 container.Properties.InsertVector2("Position", initialPosition);
+
+                if (position is AnimatableXYZ xyzPosition)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
+                }
             }
 
+            // The Lottie Anchor is the centerpoint of the object and is used for rotation and scaling.
             if (anchor.IsAnimated)
             {
+                container.Properties.InsertVector2("Anchor", initialAnchor);
                 var centerPointExpression = CreateExpressionAnimation(MyAnchor3);
                 centerPointExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
+
+                if (anchor is AnimatableXYZ xyzAnchor)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzAnchor.X, container, targetPropertyName: "Anchor.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzAnchor.Y, container, targetPropertyName: "Anchor.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
+                }
             }
             else
             {
                 container.CenterPoint = Vector3DefaultIsZero(initialAnchor);
             }
 
-            if (anchor.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Anchor.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Anchor.Y");
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
-            }
-
+            // If the position or anchor are animated, the offset needs to be calculated via an expression.
             ExpressionAnimation offsetExpression = null;
             if (position.IsAnimated && anchor.IsAnimated)
             {
@@ -2129,6 +2138,7 @@ namespace LottieToWinComp
             }
             else
             {
+                // Position and Anchor are static. No expression needed.
                 container.Offset = Vector3DefaultIsZero(initialPosition - initialAnchor);
             }
 
@@ -2137,64 +2147,59 @@ namespace LottieToWinComp
                 offsetExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
             }
-
-            if (position.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Position.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Position.Y");
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
-            }
         }
 
         void TranslateAndApplyAnchorAndPositionToContainerShape(TranslationContext context, IAnimatableVector3 anchor, IAnimatableVector3 position, CompositionContainerShape container)
         {
             var initialAnchor = Vector2(anchor.InitialValue);
-
-            if (anchor.IsAnimated || anchor.Type == AnimatableVector3Type.XYZ)
-            {
-                container.Properties.InsertVector2("Anchor", initialAnchor);
-            }
-
             var initialPosition = Vector2(position.InitialValue);
 
-            if (position.IsAnimated || position.Type == AnimatableVector3Type.XYZ)
+            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
+            if (position.IsAnimated)
             {
                 container.Properties.InsertVector2("Position", initialPosition);
+                if (position is AnimatableXYZ xyzPosition)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
+                }
             }
 
+            // The Lottie Anchor is the centerpoint of the object and is used for rotation and scaling.
             if (anchor.IsAnimated)
             {
+                container.Properties.InsertVector2("Anchor", initialAnchor);
                 var centerPointExpression = CreateExpressionAnimation(MyAnchor2);
                 centerPointExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.CenterPoint), centerPointExpression);
+
+                if (anchor is AnimatableXYZ xyzAnchor)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzAnchor.X, container, "Anchor.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzAnchor.Y, container, "Anchor.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
+                }
             }
             else
             {
                 container.CenterPoint = Vector2DefaultIsZero(initialAnchor);
             }
 
-            if (anchor.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)anchor;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, "Anchor.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, "Anchor.Y");
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)anchor, container, "Anchor");
-            }
-
+            // If the position or anchor are animated, the offset needs to be calculated via an expression.
             ExpressionAnimation offsetExpression = null;
             if (position.IsAnimated && anchor.IsAnimated)
             {
                 // Position and Anchor are both animated.
-                offsetExpression = CreateExpressionAnimation(PositionMinusAnchor);
+                offsetExpression = CreateExpressionAnimation(PositionMinusAnchor2);
             }
             else if (position.IsAnimated)
             {
@@ -2208,6 +2213,7 @@ namespace LottieToWinComp
             }
             else
             {
+                // Position and Anchor are static. No expression needed.
                 container.Offset = Vector2DefaultIsZero(initialPosition - initialAnchor);
             }
 
@@ -2215,18 +2221,6 @@ namespace LottieToWinComp
             {
                 offsetExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
-            }
-
-            if (position.Type == AnimatableVector3Type.XYZ)
-            {
-                // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                var anchorValue = (AnimatableXYZ)position;
-                ApplyScalarKeyFrameAnimation(context, anchorValue.X, container, targetPropertyName: "Position.X");
-                ApplyScalarKeyFrameAnimation(context, anchorValue.Y, container, targetPropertyName: "Position.Y");
-            }
-            else
-            {
-                ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
             }
         }
 

@@ -25,7 +25,7 @@ namespace LottieToWinComp
         internal static readonly Expression PositionAndSizeToOffsetExpression = Subtract(MyPosition2, HalfSize2);
         internal static readonly Expression TransformMatrixM11Expression = Scalar("my.TransformMatrix._11");
         internal static readonly Expression MyAnchor2 = Vector2("my.Anchor");
-        internal static readonly Expression PositionMinusAnchor = Subtract(MyPosition2, MyAnchor2);
+        internal static readonly Expression PositionMinusAnchor2 = Subtract(MyPosition2, MyAnchor2);
         internal static readonly Expression MyAnchor3 = Vector3(Scalar("my.Anchor.X"), Scalar("my.Anchor.Y"));
         internal static readonly Expression PositionMinusAnchor3 = Vector3(
                                                                         Subtract(Scalar("my.Position.X"), Scalar("my.Anchor.X")),
