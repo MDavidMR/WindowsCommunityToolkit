@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WinCompData.Tools;
@@ -23,7 +24,8 @@ namespace WinCompData.CodeGen
                 switch (node.Object.Type)
                 {
                     case CompositionObjectType.CompositionContainerShape:
-                        foreach (var child in ((CompositionContainerShape)node.Object).Shapes)
+                    case CompositionObjectType.ShapeVisual:
+                        foreach (var child in ((IContainShapes)node.Object).Shapes)
                         {
                             graph[child].Parent = node.Object;
                         }
@@ -37,6 +39,7 @@ namespace WinCompData.CodeGen
                 }
             }
 
+            RemoveEmptyContainers(graph);
             SimplifyProperties(graph);
             CoalesceContainerShapes(graph);
             CoalesceContainerVisuals(graph);
@@ -164,6 +167,36 @@ namespace WinCompData.CodeGen
         static float DegreesToRadians(float angle) => (float)(Math.PI * angle / 180.0);
 
 
+        // Removes any CompositionContainerShapes that have no children.
+        static void RemoveEmptyContainers(ObjectGraph<Node> graph)
+        {
+            var containerNodes =
+                (from pair in graph.CompositionObjectNodes
+                 where pair.Object.Type == CompositionObjectType.CompositionContainerShape
+                 select (Container: (CompositionContainerShape)pair.Object, Parent: (IContainShapes)pair.Node.Parent)).ToArray();
+
+            // Keep track of which containers were removed so we don't consider them again.
+            var removed = new HashSet<CompositionContainerShape>();
+
+            // Keep going as long as progress is made.
+            for (var madeProgress = true; madeProgress; )
+            {
+                madeProgress = false;
+                foreach (var (Container, Parent) in containerNodes)
+                {
+                    if (!removed.Contains(Container) && Container.Shapes.Count == 0)
+                    {
+                        // Indicate that we successfully removed a container.
+                        madeProgress = true;
+                        // Remove the empty container.
+                        Parent.Shapes.Remove(Container);
+                        // Don't look at the removed object again.
+                        removed.Add(Container);
+                    }
+                }
+            }
+        }
+
         static void CoalesceContainerShapes(ObjectGraph<Node> graph)
         {
             var containerShapes = graph.CompositionObjectNodes.Where(n => n.Object.Type == CompositionObjectType.CompositionContainerShape).ToArray();
@@ -208,7 +241,7 @@ namespace WinCompData.CodeGen
                     // Push the transform down to the child
                     if (container.TransformMatrix.HasValue)
                     {
-                        child.TransformMatrix = (child.TransformMatrix?? Matrix3x2.Identity) * container.TransformMatrix;
+                        child.TransformMatrix = (child.TransformMatrix ?? Matrix3x2.Identity) * container.TransformMatrix;
                     }
                 }
                 // Remove the transform from the container.
@@ -329,7 +362,7 @@ namespace WinCompData.CodeGen
 
                 // Insert the first child where the container was.
                 parent.Children[index] = children[0];
-                
+
                 // Fix the parent pointer in the graph.
                 graph[children[0]].Parent = parent;
 
