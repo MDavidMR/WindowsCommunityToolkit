@@ -111,7 +111,7 @@ namespace WinCompData.Expressions
                     {
                         // Can't divide by X because it's 0 in at least one case (i.e. vertical line)
                         // The points can only be colinear if they're all equal.
-                        return _p0 == _p1 && _p0 == _p2 && _p0 == _p3;
+                        return p01X == p02X && p02X == p03X && p03X == p01X;
                     }
                     else
                     {

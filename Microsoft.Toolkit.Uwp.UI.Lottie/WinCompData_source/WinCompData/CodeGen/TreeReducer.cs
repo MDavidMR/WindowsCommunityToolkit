@@ -271,7 +271,7 @@ namespace WinCompData.CodeGen
             {
                 var container = (CompositionContainerShape)Object;
                 // Insert the children into the parent.
-                var parent = (CompositionContainerShape)Node.Parent;
+                var parent = (IContainShapes)Node.Parent;
                 if (parent == null)
                 {
                     // The container may have already been removed, or it might be a root.
@@ -299,14 +299,14 @@ namespace WinCompData.CodeGen
                 parent.Shapes[index] = children[0];
 
                 // Fix the parent pointer in the graph.
-                graph[children[0]].Parent = parent;
+                graph[children[0]].Parent = (CompositionObject)parent;
 
                 // Insert the rest of the children.
                 for (var i = 1; i < children.Length; i++)
                 {
                     parent.Shapes.Insert(index + i, children[i]);
                     // Fix the parent pointer in the graph.
-                    graph[children[i]].Parent = parent;
+                    graph[children[i]].Parent = (CompositionObject)parent;
                 }
             }
         }
