@@ -22,8 +22,8 @@
         </NavigationView.MenuItems>
         <StackPanel>
 
-            <Border BorderBrush="Green" BorderThickness="5">
-                <cp:CompositionPlayer Tag="My Player">
+            <Border BorderBrush="Green" BorderThickness="5" x:Name="TheBorder">
+                <cp:CompositionPlayer Tag="My Player" x:Name="ThePlayer">
                     <comps:MyComposition/>
                     <cp:CompositionPlayer.FallbackContent>
                         <DataTemplate>
@@ -36,7 +36,7 @@
                 </cp:CompositionPlayer>
             </Border>
             <Frame x:Name="ContentFrame">
-
+                <Button Margin="5,5,5,5" HorizontalAlignment="Center" Click="Button_Click" >Push me</Button>
             </Frame>
         </StackPanel>
     </NavigationView>

@@ -60,5 +60,23 @@ namespace LottieTest
                     throw new InvalidOperationException();
             }
         }
+
+
+        // Test reparenting of the player.
+        CompositionPlayer m_player;
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (TheBorder.Child != null)
+            {
+                m_player = (CompositionPlayer)TheBorder.Child;
+                TheBorder.Child = null;
+            }
+            else
+            {
+                TheBorder.Child = m_player;
+                m_player = null;
+            }
+        }
     }
 }

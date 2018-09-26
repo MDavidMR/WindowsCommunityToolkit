@@ -11,13 +11,13 @@ namespace LottieData
         public LinearGradientFill(
             string name,
             string matchName,
-            Animatable<double> opacity,
+            Animatable<double> opacityPercent,
             Animatable<Vector2> startPoint,
             Animatable<Vector2> endPoint,
             Animatable<Sequence<GradientStop>> gradientStops)
             : base(name, matchName)
         {
-            Opacity = opacity;
+            OpacityPercent = opacityPercent;
             StartPoint = startPoint;
             EndPoint = endPoint;
             GradientStops = gradientStops;
@@ -27,7 +27,7 @@ namespace LottieData
 
         public Animatable<Vector2> EndPoint { get; }
 
-        public Animatable<double> Opacity { get; }
+        public Animatable<double> OpacityPercent { get; }
 
         public Animatable<Sequence<GradientStop>> GradientStops { get; }
 

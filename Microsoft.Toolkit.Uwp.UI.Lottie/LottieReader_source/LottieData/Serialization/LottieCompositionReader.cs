@@ -1048,21 +1048,40 @@ namespace LottieData.Serialization
         RadialGradientFill ReadRadialGradientFill(JObject obj)
         {
             // Not clear whether we need to read these fields.
-            IgnoreFieldThatIsNotYetSupported(obj, "a");
-            IgnoreFieldThatIsNotYetSupported(obj, "g");
             IgnoreFieldThatIsNotYetSupported(obj, "hd");
             IgnoreFieldThatIsNotYetSupported(obj, "r");
-            // highlightLength - ReadAnimatableFloat(obj.GetNamedObject("h")) - but is optional
-            IgnoreFieldThatIsNotYetSupported(obj, "h");
-            // highlightAngle - ReadAnimatableFloat(obj.GetNamedObject("a")) - but is optional
             IgnoreFieldThatIsNotYetSupported(obj, "1");
 
             var name = ReadName(obj);
             var opacityPercent = ReadOpacityPercent(obj);
             var startPoint = ReadAnimatableVector3(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector3(obj.GetNamedObject("e"));
+            var gradientStops = ReadAnimatableGradientStops(obj.GetNamedObject("g"));
+
+            Animatable<double> highlightLength = null;
+            var highlightLengthObject = obj.GetNamedObject("h");
+            if (highlightLengthObject != null)
+            {
+                highlightLength = ReadAnimatableFloat(highlightLengthObject);
+            }
+
+            Animatable<double> highlightDegrees = null;
+            var highlightAngleObject = obj.GetNamedObject("a");
+            if (highlightAngleObject != null)
+            {
+                highlightDegrees = ReadAnimatableFloat(highlightAngleObject);
+            }
+
             AssertAllFieldsRead(obj);
-            return new RadialGradientFill(name.Name, name.MatchName, opacityPercent, startPoint, endPoint, null, null);
+            return new RadialGradientFill(
+                name.Name,
+                name.MatchName,
+                opacityPercent: opacityPercent,
+                startPoint: startPoint,
+                endPoint: endPoint,
+                gradientStops: gradientStops,
+                highlightLength: null,
+                highlightDegrees: null);
         }
 
         LinearGradientFill ReadLinearGradientFill(JObject obj)
@@ -1072,12 +1091,18 @@ namespace LottieData.Serialization
             IgnoreFieldThatIsNotYetSupported(obj, "hd");
 
             var name = ReadName(obj);
-            var opacity = ReadOpacityPercent(obj);
+            var opacityPercent = ReadOpacityPercent(obj);
             var startPoint = ReadAnimatableVector2(obj.GetNamedObject("s"));
             var endPoint = ReadAnimatableVector2(obj.GetNamedObject("e"));
             var gradientStops = ReadAnimatableGradientStops(obj.GetNamedObject("g"));
             AssertAllFieldsRead(obj);
-            return new LinearGradientFill(name.Name, name.MatchName, opacity, startPoint, endPoint, gradientStops);
+            return new LinearGradientFill(
+                name.Name,
+                name.MatchName,
+                opacityPercent: opacityPercent,
+                startPoint: startPoint,
+                endPoint: endPoint,
+                gradientStops: gradientStops);
         }
 
         Ellipse ReadEllipse(JObject obj)

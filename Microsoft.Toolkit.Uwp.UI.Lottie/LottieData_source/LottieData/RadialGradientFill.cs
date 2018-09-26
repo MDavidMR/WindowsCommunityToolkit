@@ -14,15 +14,17 @@ namespace LottieData
             Animatable<double> opacityPercent,
             IAnimatableVector3 startPoint,
             IAnimatableVector3 endPoint,
+            Animatable<Sequence<GradientStop>> gradientStops,
             Animatable<double> highlightLength,
-            Animatable<double> highlightAngle)
+            Animatable<double> highlightDegrees)
             : base(name, matchName)
         {
             OpacityPercent = opacityPercent;
             StartPoint = startPoint;
             EndPoint = endPoint;
+            GradientStops = gradientStops;
             HighlightLength = highlightLength;
-            HighlightAngle = highlightAngle;
+            HighlightDegrees = highlightDegrees;
         }
 
 
@@ -30,9 +32,11 @@ namespace LottieData
 
         public IAnimatableVector3 EndPoint { get; }
 
+        public Animatable<Sequence<GradientStop>> GradientStops { get; }
+
         public Animatable<double> HighlightLength { get; }
 
-        public Animatable<double> HighlightAngle { get; }
+        public Animatable<double> HighlightDegrees { get; }
 
         public Animatable<double> OpacityPercent { get; }
 

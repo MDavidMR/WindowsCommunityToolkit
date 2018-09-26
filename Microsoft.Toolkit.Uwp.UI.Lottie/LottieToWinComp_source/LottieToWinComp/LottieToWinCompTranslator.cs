@@ -703,8 +703,30 @@ namespace LottieToWinComp
                     switch (popped.ContentType)
                     {
                         case ShapeContentType.LinearGradientFill:
+                            _owner._unsupported.GradientFill();
+                            {
+                                // We don't yet support gradient fill, but we can at least
+                                // draw something. Use data from the first gradient stop as the fill.
+                                var lgf = (LinearGradientFill)popped;
+                                Fill = new SolidColorFill(
+                                    null, null,
+                                    SolidColorFill.PathFillType.EvenOdd,
+                                    new Animatable<Color>(lgf.GradientStops.InitialValue.Items.First().Color, null),
+                                    lgf.OpacityPercent);
+                            }
+                            break;
                         case ShapeContentType.RadialGradientFill:
                             _owner._unsupported.GradientFill();
+                            {
+                                // We don't yet support gradient fill, but we can at least
+                                // draw something. Use data from the first gradient stop as the fill.
+                                var rgf = (RadialGradientFill)popped;
+                                Fill = new SolidColorFill(
+                                    null, null,
+                                    SolidColorFill.PathFillType.EvenOdd,
+                                    new Animatable<Color>(rgf.GradientStops.InitialValue.Items.First().Color, null),
+                                    rgf.OpacityPercent);
+                            }
                             break;
 
                         case ShapeContentType.LinearGradientStroke:
