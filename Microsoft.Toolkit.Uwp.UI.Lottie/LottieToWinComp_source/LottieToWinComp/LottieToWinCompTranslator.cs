@@ -2457,7 +2457,7 @@ namespace LottieToWinComp
             compositionAnimation.Duration = _lc.Duration;
 
             // Get only the key frames that exist from at or just before the animation starts, and end at or just after the animation ends.
-            var trimmedKeyFrames = _lottieDataOptimizer.GetTrimmed(value.KeyFrames, context.StartTime, context.EndTime).ToArray();
+            var trimmedKeyFrames = Optimizer.GetOptimized(Optimizer.GetTrimmed(value.KeyFrames, context.StartTime, context.EndTime)).ToArray();
 
             if (trimmedKeyFrames.Length == 0)
             {

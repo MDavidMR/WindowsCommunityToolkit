@@ -204,43 +204,85 @@ namespace LottieData.Optimization
         }
 
         /// <summary>
+        /// Removes redundant keyFrames.
+        /// </summary>
+        public static IEnumerable<KeyFrame<T>> GetOptimized<T>(
+            IEnumerable<KeyFrame<T>> keyFrames) where T : IEquatable<T>
+        {
+            // Holds onto a keyFrame until it is determined that it is
+            // different from the next keyFrame. If it's not different
+            // then it can be discarded.
+            KeyFrame<T> previous = null;
+            bool previousWasOutputAlready = false;
+            foreach (var keyFrame in keyFrames)
+            {
+                if (previous != null && keyFrame.Value.Equals(previous.Value) && 
+                    keyFrame.SpatialControlPoint1.Equals(previous.SpatialControlPoint1) &&
+                    keyFrame.SpatialControlPoint2.Equals(previous.SpatialControlPoint2))
+                {
+                    // Don't output keyFrame yet - it is the same as the previous keyFrame
+                    // and is only needed if the next keyFrame is different or there
+                    // are no more keyFrames.
+                    // Note that this latest keyFrame hasn't been output.
+                    previousWasOutputAlready = false;
+                }
+                else
+                {
+                    // It's a new value, so output the previous value if it hasn't been output,
+                    // and the new value.
+                    if (previous != null && !previousWasOutputAlready)
+                    {
+                        yield return previous;
+                    }
+                    // Output the new value.
+                    yield return keyFrame;
+                    previousWasOutputAlready = true;
+                }
+                previous = keyFrame;
+            }
+
+            if (previous != null && !previousWasOutputAlready)
+            {
+                // Output the final value.
+                yield return previous;
+            }
+        }
+
+        /// <summary>
         /// Returns at most 1 key frame with progress less than or equal <paramref name="startFrame"/>, and
         /// at most 1 key frame with progress greater than or equal <paramref name="endFrame"/>.
         /// </summary>
-        public IEnumerable<KeyFrame<T>> GetTrimmed<T>(
+        public static IEnumerable<KeyFrame<T>> GetTrimmed<T>(
             IEnumerable<KeyFrame<T>> keyFrames, 
             double startFrame, 
             double endFrame) where T : IEquatable<T>
         {
-            bool firstKeyFrameReturned = false;
             KeyFrame<T> firstCandidate = null;
             foreach (var keyFrame in keyFrames)
             {
-                if (keyFrame.Frame <= startFrame)
+                if (keyFrame.Frame < startFrame)
                 {
+                    // Save the latest keyFrame that is before the startFrame.
                     firstCandidate = keyFrame;
-                }
-                else if (keyFrame.Frame == 0)
-                {
-                    firstCandidate = null;
-                    yield return keyFrame;
-                    firstKeyFrameReturned = true;
                 }
                 else
                 {
-                    if (!firstKeyFrameReturned && firstCandidate != null)
+                    // We are past the startFrame. Return keyFrames.
+                    if (firstCandidate != null)
                     {
+                        // Return the latest keyFrame before this one.
                         yield return firstCandidate;
-                        firstKeyFrameReturned = true;
+                        firstCandidate = null;
                     }
+                    // We are after start. Keep returning keyFrames until we get past endFrame.
                     yield return keyFrame;
                     if (keyFrame.Frame >= endFrame)
                     {
-                        yield break;
+                        // No more keyFrames should be returned because we are past the endFrame.
+                        break;
                     }
                 }
             }
-
         }
 
         sealed class AnimatableComparer<T>

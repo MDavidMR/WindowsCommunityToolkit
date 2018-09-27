@@ -8,8 +8,8 @@
 //------------------------------------------------------------------------------
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.1.87.13560")]
-[assembly: AssemblyFileVersion("0.1.87.13560")]
+[assembly: AssemblyVersion("0.1.88.765")]
+[assembly: AssemblyFileVersion("0.1.88.765")]
 [assembly: AssemblyProduct("Lottie Windows")]
 [assembly: AssemblyCopyright("Microsoft 2018")]
 [assembly: AssemblyDescription("Command line Lottie code generator tool")]
