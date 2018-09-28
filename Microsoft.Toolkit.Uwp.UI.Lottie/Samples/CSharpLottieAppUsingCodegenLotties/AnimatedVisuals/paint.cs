@@ -7,24 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System;
 using System.Numerics;
 using Windows.UI;
 using Windows.UI.Composition;
 
-namespace Compositions
+namespace AnimatedVisuals
 {
-    sealed class Paint : ICompositionSource
+    sealed class Paint : IAnimatedVisualSource
     {
-        public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
+        public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)
         {
             diagnostics = null;
             if (!IsRuntimeCompatible())
             {
                 return null;
             }
-            return new Composition(compositor);
+            return new AnimatedVisual(compositor);
         }
 
         static bool IsRuntimeCompatible()
@@ -36,7 +36,7 @@ namespace Compositions
             return true;
         }
 
-        sealed class Composition : IComposition
+        sealed class AnimatedVisual : IAnimatedVisual
         {
             const long c_durationTicks = 20000000;
             readonly Compositor _c;
@@ -25605,17 +25605,17 @@ namespace Compositions
                 return result;
             }
 
-            internal Composition(Compositor compositor)
+            internal AnimatedVisual(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();
                 Root();
             }
 
-            Visual IComposition.RootVisual => _root;
-            TimeSpan IComposition.Duration => TimeSpan.FromTicks(c_durationTicks);
-            Vector2 IComposition.Size => new Vector2(300, 300);
-            void IComposition.Unload() => _root?.Dispose();
+            Visual IAnimatedVisual.RootVisual => _root;
+            TimeSpan IAnimatedVisual.Duration => TimeSpan.FromTicks(c_durationTicks);
+            Vector2 IAnimatedVisual.Size => new Vector2(300, 300);
+            void IDisposable.Dispose() => _root?.Dispose();
         }
     }
 }

@@ -11,7 +11,7 @@
     <AssemblyName>CSharpLottieAppUsingCodegenLotties</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17754.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18251.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -96,10 +96,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Compositions\2416.gift_popup.cs" />
-    <Compile Include="Compositions\birthdayCake.cs" />
-    <Compile Include="Compositions\LottieLogo2.cs" />
-    <Compile Include="Compositions\paint.cs" />
+    <Compile Include="AnimatedVisuals\2416.gift_popup.cs" />
+    <Compile Include="AnimatedVisuals\birthdayCake.cs" />
+    <Compile Include="AnimatedVisuals\LottieLogo2.cs" />
+    <Compile Include="AnimatedVisuals\paint.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -135,8 +135,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
-      <Version>0.1.1.5</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer">
+      <Version>0.2.1.4</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>
