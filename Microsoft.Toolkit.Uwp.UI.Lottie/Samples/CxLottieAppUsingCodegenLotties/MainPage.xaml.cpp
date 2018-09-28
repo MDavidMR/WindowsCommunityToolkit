@@ -19,10 +19,9 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 MainPage::MainPage()
 {
 	InitializeComponent();
-	Player1->Source = ref new Compositions::BirthdayCake();
+	Player1->Source = ref new AnimatedVisuals::BirthdayCake();
 }

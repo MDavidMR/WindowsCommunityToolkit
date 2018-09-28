@@ -24,7 +24,7 @@ namespace AnimatedVisuals
             {
                 return null;
             }
-            return new Composition(compositor);
+            return new AnimatedVisual(compositor);
         }
 
         static bool IsRuntimeCompatible()
@@ -36,7 +36,7 @@ namespace AnimatedVisuals
             return true;
         }
 
-        sealed class Composition : IAnimatedVisual
+        sealed class AnimatedVisual : IAnimatedVisual
         {
             const long c_durationTicks = 20000000;
             readonly Compositor _c;
@@ -69,9 +69,10 @@ namespace AnimatedVisuals
             CubicBezierEasingFunction _cubicBezierEasingFunction_03;
             CubicBezierEasingFunction _cubicBezierEasingFunction_04;
             CubicBezierEasingFunction _cubicBezierEasingFunction_05;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_08;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_07;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_09;
             CubicBezierEasingFunction _cubicBezierEasingFunction_10;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_11;
+            StepEasingFunction _holdThenStepEasingFunction;
             InsetClip _insetClip;
             LinearEasingFunction _linearEasingFunction;
             CompositionPathGeometry _pathGeometry_46;
@@ -95,8 +96,7 @@ namespace AnimatedVisuals
             ScalarKeyFrameAnimation _scalarAnimation_0_to_3_14;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_3_23;
             ExpressionAnimation _scalarExpressionAnimation;
-            StepEasingFunction _stepEasingFunction_0;
-            StepEasingFunction _stepEasingFunction_1;
+            StepEasingFunction _stepThenHoldEasingFunction;
             Vector2KeyFrameAnimation _vector2Animation_0;
 
             CompositionColorBrush ColorBrush_AlmostDarkCyan_FF0063B0()
@@ -104,7 +104,8 @@ namespace AnimatedVisuals
                 return _colorBrush_AlmostDarkCyan_FF0063B0 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0x00, 0x63, 0xB0));
             }
 
-            // Path 1
+            // Layer (Shape): Cake
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostDarkKhaki_FFB88F66()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xB8, 0x8F, 0x66));
@@ -120,7 +121,8 @@ namespace AnimatedVisuals
                 return _colorBrush_AlmostDodgerBlue_FF0177D9 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0x01, 0x77, 0xD9));
             }
 
-            // Path 1
+            // Layer (Shape): Flame
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostKhaki_FFFFD579()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xD5, 0x79));
@@ -142,19 +144,22 @@ namespace AnimatedVisuals
                 return _colorBrush_AlmostOrange_FFFFB901 = _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xB9, 0x01));
             }
 
-            // Path 1
+            // Layer (Shape): Cake 2
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostOrange_FFFFBA01()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01));
             }
 
-            // Path 1
+            // Layer (Shape): Cake 2
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostOrangeRed_FFDA4100()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xDA, 0x41, 0x00));
             }
 
-            // Path 1
+            // Layer (Shape): Cake 2
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostOrangeRed_FFF7630B()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xF7, 0x63, 0x0B));
@@ -281,7 +286,7 @@ namespace AnimatedVisuals
             CompositionContainerShape ContainerShape_001()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(83.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 83.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_00());
                 return result;
@@ -309,7 +314,7 @@ namespace AnimatedVisuals
             CompositionContainerShape ContainerShape_003()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(83.875F, 64.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 83.875F, 64.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_01());
                 return result;
@@ -337,30 +342,19 @@ namespace AnimatedVisuals
             CompositionContainerShape ContainerShape_005()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(-38.25F, -19.625F);
-                result.Offset = new Vector2(56.5F, 59.25F);
-                result.RotationAngleInDegrees = 35;
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_006());
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_006()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-0.125F, 0);
+                result.TransformMatrix = new Matrix3x2(0.819152057F, 0.57357645F, -0.57357645F, 0.819152057F, 38.223732F, 77.5684662F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_02());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_007()
+            CompositionContainerShape ContainerShape_006()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_008());
+                shapes.Add(ContainerShape_007());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_03());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -373,22 +367,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_008()
+            CompositionContainerShape ContainerShape_007()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(83.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 83.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_03());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_009()
+            CompositionContainerShape ContainerShape_008()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_010());
+                shapes.Add(ContainerShape_009());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_04());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -401,22 +395,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_010()
+            CompositionContainerShape ContainerShape_009()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(71.375F, 61.75F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 71.375F, 61.75F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_04());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_011()
+            CompositionContainerShape ContainerShape_010()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_012());
+                shapes.Add(ContainerShape_011());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_05());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -429,22 +423,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_012()
+            CompositionContainerShape ContainerShape_011()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(66.375F, 64.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 66.375F, 64.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_05());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_013()
+            CompositionContainerShape ContainerShape_012()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_014());
+                shapes.Add(ContainerShape_013());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_07());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -457,22 +451,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_014()
+            CompositionContainerShape ContainerShape_013()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_06());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_015()
+            CompositionContainerShape ContainerShape_014()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_016());
+                shapes.Add(ContainerShape_015());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_08());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -485,22 +479,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_016()
+            CompositionContainerShape ContainerShape_015()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_07());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_017()
+            CompositionContainerShape ContainerShape_016()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_018());
+                shapes.Add(ContainerShape_017());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_09());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -513,22 +507,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_018()
+            CompositionContainerShape ContainerShape_017()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_08());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_019()
+            CompositionContainerShape ContainerShape_018()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_020());
+                shapes.Add(ContainerShape_019());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_10());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -541,22 +535,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_020()
+            CompositionContainerShape ContainerShape_019()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_09());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_021()
+            CompositionContainerShape ContainerShape_020()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_022());
+                shapes.Add(ContainerShape_021());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_11());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -569,22 +563,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_022()
+            CompositionContainerShape ContainerShape_021()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_10());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_023()
+            CompositionContainerShape ContainerShape_022()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_024());
+                shapes.Add(ContainerShape_023());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_12());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -597,22 +591,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_024()
+            CompositionContainerShape ContainerShape_023()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_11());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_025()
+            CompositionContainerShape ContainerShape_024()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_026());
+                shapes.Add(ContainerShape_025());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_13());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -625,22 +619,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_026()
+            CompositionContainerShape ContainerShape_025()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_12());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_027()
+            CompositionContainerShape ContainerShape_026()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_028());
+                shapes.Add(ContainerShape_027());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_14());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -653,22 +647,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_028()
+            CompositionContainerShape ContainerShape_027()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_13());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_029()
+            CompositionContainerShape ContainerShape_028()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_030());
+                shapes.Add(ContainerShape_029());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_15());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -681,22 +675,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_030()
+            CompositionContainerShape ContainerShape_029()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_14());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_031()
+            CompositionContainerShape ContainerShape_030()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_032());
+                shapes.Add(ContainerShape_031());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_16());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -709,10 +703,10 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_032()
+            CompositionContainerShape ContainerShape_031()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_15());
                 shapes.Add(SpriteShape_16());
@@ -720,12 +714,12 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_033()
+            CompositionContainerShape ContainerShape_032()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_034());
+                shapes.Add(ContainerShape_033());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_17());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -738,22 +732,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_034()
+            CompositionContainerShape ContainerShape_033()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_17());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_035()
+            CompositionContainerShape ContainerShape_034()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_036());
+                shapes.Add(ContainerShape_035());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_18());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -766,22 +760,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_036()
+            CompositionContainerShape ContainerShape_035()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(73.875F, 69.25F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.875F, 69.25F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_18());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_037()
+            CompositionContainerShape ContainerShape_036()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_038());
+                shapes.Add(ContainerShape_037());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_20());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -794,22 +788,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_038()
+            CompositionContainerShape ContainerShape_037()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_19());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_039()
+            CompositionContainerShape ContainerShape_038()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_040());
+                shapes.Add(ContainerShape_039());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_21());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -822,22 +816,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_040()
+            CompositionContainerShape ContainerShape_039()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_20());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_041()
+            CompositionContainerShape ContainerShape_040()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_042());
+                shapes.Add(ContainerShape_041());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_22());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -850,22 +844,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_042()
+            CompositionContainerShape ContainerShape_041()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_21());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_043()
+            CompositionContainerShape ContainerShape_042()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_044());
+                shapes.Add(ContainerShape_043());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_23());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -878,22 +872,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_044()
+            CompositionContainerShape ContainerShape_043()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_22());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_045()
+            CompositionContainerShape ContainerShape_044()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_046());
+                shapes.Add(ContainerShape_045());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_24());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -906,22 +900,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_046()
+            CompositionContainerShape ContainerShape_045()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_23());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_047()
+            CompositionContainerShape ContainerShape_046()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_048());
+                shapes.Add(ContainerShape_047());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_25());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -934,22 +928,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_048()
+            CompositionContainerShape ContainerShape_047()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_24());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_049()
+            CompositionContainerShape ContainerShape_048()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_050());
+                shapes.Add(ContainerShape_049());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_26());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -962,22 +956,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_050()
+            CompositionContainerShape ContainerShape_049()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_25());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_051()
+            CompositionContainerShape ContainerShape_050()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_052());
+                shapes.Add(ContainerShape_051());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_27());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -990,22 +984,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_052()
+            CompositionContainerShape ContainerShape_051()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_26());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_053()
+            CompositionContainerShape ContainerShape_052()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_054());
+                shapes.Add(ContainerShape_053());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_28());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1018,22 +1012,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_054()
+            CompositionContainerShape ContainerShape_053()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_27());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_055()
+            CompositionContainerShape ContainerShape_054()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_056());
+                shapes.Add(ContainerShape_055());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_29());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1046,10 +1040,10 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_056()
+            CompositionContainerShape ContainerShape_055()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_28());
                 shapes.Add(SpriteShape_29());
@@ -1057,12 +1051,12 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_057()
+            CompositionContainerShape ContainerShape_056()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_058());
+                shapes.Add(ContainerShape_057());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_30());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1075,22 +1069,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_058()
+            CompositionContainerShape ContainerShape_057()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_30());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_059()
+            CompositionContainerShape ContainerShape_058()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_060());
+                shapes.Add(ContainerShape_059());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_31());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1103,22 +1097,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_060()
+            CompositionContainerShape ContainerShape_059()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_31());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_061()
+            CompositionContainerShape ContainerShape_060()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_062());
+                shapes.Add(ContainerShape_061());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_33());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1131,22 +1125,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 9
-            CompositionContainerShape ContainerShape_062()
+            CompositionContainerShape ContainerShape_061()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_32());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_063()
+            CompositionContainerShape ContainerShape_062()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_064());
+                shapes.Add(ContainerShape_063());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_34());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1159,22 +1153,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 8
-            CompositionContainerShape ContainerShape_064()
+            CompositionContainerShape ContainerShape_063()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_33());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_065()
+            CompositionContainerShape ContainerShape_064()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_066());
+                shapes.Add(ContainerShape_065());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_35());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1187,22 +1181,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 7
-            CompositionContainerShape ContainerShape_066()
+            CompositionContainerShape ContainerShape_065()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_34());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_067()
+            CompositionContainerShape ContainerShape_066()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_068());
+                shapes.Add(ContainerShape_067());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_36());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1215,22 +1209,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 6
-            CompositionContainerShape ContainerShape_068()
+            CompositionContainerShape ContainerShape_067()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_35());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_069()
+            CompositionContainerShape ContainerShape_068()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_070());
+                shapes.Add(ContainerShape_069());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_37());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1243,22 +1237,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 5
-            CompositionContainerShape ContainerShape_070()
+            CompositionContainerShape ContainerShape_069()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_36());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_071()
+            CompositionContainerShape ContainerShape_070()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_072());
+                shapes.Add(ContainerShape_071());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_38());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1271,22 +1265,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 4
-            CompositionContainerShape ContainerShape_072()
+            CompositionContainerShape ContainerShape_071()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_37());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_073()
+            CompositionContainerShape ContainerShape_072()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_074());
+                shapes.Add(ContainerShape_073());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_39());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1299,22 +1293,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 12
-            CompositionContainerShape ContainerShape_074()
+            CompositionContainerShape ContainerShape_073()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_38());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_075()
+            CompositionContainerShape ContainerShape_074()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_076());
+                shapes.Add(ContainerShape_075());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_40());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1327,22 +1321,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 11
-            CompositionContainerShape ContainerShape_076()
+            CompositionContainerShape ContainerShape_075()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_39());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_077()
+            CompositionContainerShape ContainerShape_076()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_078());
+                shapes.Add(ContainerShape_077());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_41());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1355,22 +1349,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 10
-            CompositionContainerShape ContainerShape_078()
+            CompositionContainerShape ContainerShape_077()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_40());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_079()
+            CompositionContainerShape ContainerShape_078()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_080());
+                shapes.Add(ContainerShape_079());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_42());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1383,10 +1377,10 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 3
-            CompositionContainerShape ContainerShape_080()
+            CompositionContainerShape ContainerShape_079()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_41());
                 shapes.Add(SpriteShape_42());
@@ -1394,12 +1388,12 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_081()
+            CompositionContainerShape ContainerShape_080()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_082());
+                shapes.Add(ContainerShape_081());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_43());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1412,22 +1406,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 2
-            CompositionContainerShape ContainerShape_082()
+            CompositionContainerShape ContainerShape_081()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_43());
                 return result;
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_083()
+            CompositionContainerShape ContainerShape_082()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_084());
+                shapes.Add(ContainerShape_083());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_44());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1440,23 +1434,25 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Shape Layer 1
-            CompositionContainerShape ContainerShape_084()
+            CompositionContainerShape ContainerShape_083()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(47.875F, 48);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 47.875F, 48);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_44());
                 return result;
             }
 
             // Layer (Shape): Cake
-            CompositionContainerShape ContainerShape_085()
+            CompositionContainerShape ContainerShape_084()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_086());
+                shapes.Add(SpriteShape_45());
+                shapes.Add(SpriteShape_46());
+                shapes.Add(SpriteShape_47());
                 result.StartAnimation("Scale", Vector2Animation_0());
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1464,215 +1460,25 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Layer (Shape): Cake
-            CompositionContainerShape ContainerShape_086()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-48.5F, -91.25F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_45());
-                shapes.Add(SpriteShape_46());
-                shapes.Add(SpriteShape_47());
-                shapes.Add(ContainerShape_087());
-                shapes.Add(ContainerShape_088());
-                shapes.Add(ContainerShape_089());
-                shapes.Add(ContainerShape_090());
-                shapes.Add(ContainerShape_091());
-                shapes.Add(ContainerShape_092());
-                shapes.Add(ContainerShape_093());
-                shapes.Add(ContainerShape_094());
-                shapes.Add(ContainerShape_096());
-                shapes.Add(ContainerShape_098());
-                shapes.Add(ContainerShape_100());
-                shapes.Add(ContainerShape_102());
-                shapes.Add(ContainerShape_104());
-                shapes.Add(ContainerShape_106());
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_087()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_088()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_089()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_090()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_091()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_092()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_093()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // ShapeGroup: Group 7
-            CompositionContainerShape ContainerShape_094()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                result.Scale = new Vector2(0.873979986F, 0.873979986F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_095());
-                return result;
-            }
-
-            // ShapeGroup: Group 7
-            CompositionContainerShape ContainerShape_095()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_096()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                result.Scale = new Vector2(0.867699981F, 0.867699981F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_097());
-                return result;
-            }
-
-            // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_097()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_098()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                result.Scale = new Vector2(0.880330026F, 0.880330026F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_099());
-                return result;
-            }
-
-            // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_099()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_100()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                result.Scale = new Vector2(0.85777998F, 0.85777998F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_101());
-                return result;
-            }
-
-            // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_101()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_102()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                result.Scale = new Vector2(0.827109993F, 0.827109993F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_103());
-                return result;
-            }
-
-            // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_103()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_104()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                result.Scale = new Vector2(0.850629985F, 0.850629985F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_105());
-                return result;
-            }
-
-            // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_105()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_106()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
-                result.Scale = new Vector2(0.865750015F, 0.865750015F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_107());
-                return result;
-            }
-
-            // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_107()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
             // Layer (Shape): Cake 2
-            CompositionContainerShape ContainerShape_108()
+            CompositionContainerShape ContainerShape_085()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_109());
+                shapes.Add(SpriteShape_48());
+                shapes.Add(SpriteShape_49());
+                shapes.Add(SpriteShape_50());
+                shapes.Add(SpriteShape_51());
+                shapes.Add(SpriteShape_52());
+                shapes.Add(SpriteShape_53());
+                shapes.Add(SpriteShape_54());
+                shapes.Add(SpriteShape_55());
+                shapes.Add(SpriteShape_56());
+                shapes.Add(SpriteShape_57());
+                shapes.Add(SpriteShape_58());
+                shapes.Add(SpriteShape_59());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1680,152 +1486,14 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Layer (Shape): Cake 2
-            CompositionContainerShape ContainerShape_109()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-48.5F, -91.25F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_48());
-                shapes.Add(SpriteShape_49());
-                shapes.Add(SpriteShape_50());
-                shapes.Add(SpriteShape_51());
-                shapes.Add(SpriteShape_52());
-                shapes.Add(ContainerShape_110());
-                shapes.Add(ContainerShape_111());
-                shapes.Add(ContainerShape_112());
-                shapes.Add(ContainerShape_113());
-                shapes.Add(ContainerShape_114());
-                shapes.Add(ContainerShape_115());
-                shapes.Add(ContainerShape_116());
-                shapes.Add(ContainerShape_117());
-                shapes.Add(ContainerShape_118());
-                shapes.Add(ContainerShape_119());
-                shapes.Add(ContainerShape_120());
-                shapes.Add(ContainerShape_121());
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_110()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_111()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_112()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_113()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_114()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // ShapeGroup: Group 7
-            CompositionContainerShape ContainerShape_115()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                result.Scale = new Vector2(0.873979986F, 0.873979986F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_53());
-                return result;
-            }
-
-            // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_116()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                result.Scale = new Vector2(0.867699981F, 0.867699981F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_54());
-                return result;
-            }
-
-            // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_117()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                result.Scale = new Vector2(0.880330026F, 0.880330026F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_55());
-                return result;
-            }
-
-            // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_118()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                result.Scale = new Vector2(0.85777998F, 0.85777998F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_56());
-                return result;
-            }
-
-            // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_119()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                result.Scale = new Vector2(0.827109993F, 0.827109993F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_57());
-                return result;
-            }
-
-            // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_120()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                result.Scale = new Vector2(0.850629985F, 0.850629985F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_58());
-                return result;
-            }
-
-            // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_121()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
-                result.Scale = new Vector2(0.865750015F, 0.865750015F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_59());
-                return result;
-            }
-
             // Layer (Shape): Sprinkles 2
-            CompositionContainerShape ContainerShape_122()
+            CompositionContainerShape ContainerShape_086()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_123());
+                shapes.Add(ContainerShape_087());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1834,176 +1502,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 2
-            CompositionContainerShape ContainerShape_123()
+            CompositionContainerShape ContainerShape_087()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(13.2340002F, -66.8209991F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_124());
-                shapes.Add(ContainerShape_125());
-                shapes.Add(ContainerShape_126());
-                shapes.Add(ContainerShape_127());
-                shapes.Add(ContainerShape_128());
-                shapes.Add(ContainerShape_129());
-                shapes.Add(ContainerShape_130());
-                shapes.Add(ContainerShape_131());
-                shapes.Add(ContainerShape_132());
-                shapes.Add(ContainerShape_133());
-                shapes.Add(ContainerShape_134());
-                shapes.Add(ContainerShape_135());
-                shapes.Add(ContainerShape_136());
                 shapes.Add(SpriteShape_60());
-                shapes.Add(ContainerShape_137());
-                shapes.Add(ContainerShape_138());
-                shapes.Add(ContainerShape_139());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(61.734,24.429)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_1());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_124()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_125()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_126()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_127()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_128()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_129()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_130()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_131()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_132()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_133()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_134()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_135()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_136()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_137()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_138()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 2
-            CompositionContainerShape ContainerShape_139()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(61.734,24.429)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 3
-            CompositionContainerShape ContainerShape_140()
+            CompositionContainerShape ContainerShape_088()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_141());
+                shapes.Add(ContainerShape_089());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2012,176 +1536,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 3
-            CompositionContainerShape ContainerShape_141()
+            CompositionContainerShape ContainerShape_089()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(28.9080009F, -56.9640007F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_142());
-                shapes.Add(ContainerShape_143());
-                shapes.Add(ContainerShape_144());
-                shapes.Add(ContainerShape_145());
-                shapes.Add(ContainerShape_146());
-                shapes.Add(ContainerShape_147());
-                shapes.Add(ContainerShape_148());
-                shapes.Add(ContainerShape_149());
-                shapes.Add(ContainerShape_150());
-                shapes.Add(ContainerShape_151());
-                shapes.Add(ContainerShape_152());
-                shapes.Add(ContainerShape_153());
                 shapes.Add(SpriteShape_61());
-                shapes.Add(ContainerShape_154());
-                shapes.Add(ContainerShape_155());
-                shapes.Add(ContainerShape_156());
-                shapes.Add(ContainerShape_157());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(77.408,34.286)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_2());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_142()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_143()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_144()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_145()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_146()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_147()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_148()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_149()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_150()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_151()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_152()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_153()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_154()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_155()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_156()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 3
-            CompositionContainerShape ContainerShape_157()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(77.408,34.286)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 4
-            CompositionContainerShape ContainerShape_158()
+            CompositionContainerShape ContainerShape_090()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_159());
+                shapes.Add(ContainerShape_091());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2190,176 +1570,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 4
-            CompositionContainerShape ContainerShape_159()
+            CompositionContainerShape ContainerShape_091()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(16.1739998F, -42.2700005F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_160());
-                shapes.Add(ContainerShape_161());
-                shapes.Add(ContainerShape_162());
-                shapes.Add(ContainerShape_163());
-                shapes.Add(ContainerShape_164());
-                shapes.Add(ContainerShape_165());
-                shapes.Add(ContainerShape_166());
-                shapes.Add(ContainerShape_167());
-                shapes.Add(ContainerShape_168());
-                shapes.Add(ContainerShape_169());
-                shapes.Add(ContainerShape_170());
                 shapes.Add(SpriteShape_62());
-                shapes.Add(ContainerShape_171());
-                shapes.Add(ContainerShape_172());
-                shapes.Add(ContainerShape_173());
-                shapes.Add(ContainerShape_174());
-                shapes.Add(ContainerShape_175());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(64.674,48.98)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_3());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_160()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_161()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_162()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_163()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_164()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_165()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_166()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_167()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_168()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_169()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_170()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_171()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_172()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_173()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_174()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 4
-            CompositionContainerShape ContainerShape_175()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(64.674,48.98)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 5
-            CompositionContainerShape ContainerShape_176()
+            CompositionContainerShape ContainerShape_092()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_177());
+                shapes.Add(ContainerShape_093());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2368,176 +1604,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 5
-            CompositionContainerShape ContainerShape_177()
+            CompositionContainerShape ContainerShape_093()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(-0.477999985F, -36.3909988F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_178());
-                shapes.Add(ContainerShape_179());
-                shapes.Add(ContainerShape_180());
-                shapes.Add(ContainerShape_181());
-                shapes.Add(ContainerShape_182());
-                shapes.Add(ContainerShape_183());
-                shapes.Add(ContainerShape_184());
-                shapes.Add(ContainerShape_185());
-                shapes.Add(ContainerShape_186());
-                shapes.Add(ContainerShape_187());
                 shapes.Add(SpriteShape_63());
-                shapes.Add(ContainerShape_188());
-                shapes.Add(ContainerShape_189());
-                shapes.Add(ContainerShape_190());
-                shapes.Add(ContainerShape_191());
-                shapes.Add(ContainerShape_192());
-                shapes.Add(ContainerShape_193());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(48.022,54.859)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_4());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_178()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_179()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_180()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_181()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_182()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_183()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_184()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_185()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_186()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_187()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_188()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_189()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_190()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_191()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_192()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 5
-            CompositionContainerShape ContainerShape_193()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(48.022,54.859)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 6
-            CompositionContainerShape ContainerShape_194()
+            CompositionContainerShape ContainerShape_094()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_195());
+                shapes.Add(ContainerShape_095());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2546,176 +1638,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 6
-            CompositionContainerShape ContainerShape_195()
+            CompositionContainerShape ContainerShape_095()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(-20.5620003F, -42.7589989F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_196());
-                shapes.Add(ContainerShape_197());
-                shapes.Add(ContainerShape_198());
-                shapes.Add(ContainerShape_199());
-                shapes.Add(ContainerShape_200());
-                shapes.Add(ContainerShape_201());
-                shapes.Add(ContainerShape_202());
-                shapes.Add(ContainerShape_203());
-                shapes.Add(ContainerShape_204());
-                shapes.Add(ContainerShape_205());
-                shapes.Add(ContainerShape_206());
-                shapes.Add(ContainerShape_207());
-                shapes.Add(ContainerShape_208());
-                shapes.Add(ContainerShape_209());
                 shapes.Add(SpriteShape_64());
-                shapes.Add(ContainerShape_210());
-                shapes.Add(ContainerShape_211());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(27.938,48.491)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_5());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_196()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_197()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_198()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_199()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_200()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_201()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_202()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_203()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_204()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_205()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_206()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_207()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_208()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_209()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_210()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 6
-            CompositionContainerShape ContainerShape_211()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(27.938,48.491)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 7
-            CompositionContainerShape ContainerShape_212()
+            CompositionContainerShape ContainerShape_096()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_213());
+                shapes.Add(ContainerShape_097());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2724,176 +1672,32 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 7
-            CompositionContainerShape ContainerShape_213()
+            CompositionContainerShape ContainerShape_097()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(-34.276001F, -56.473999F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_214());
-                shapes.Add(ContainerShape_215());
-                shapes.Add(ContainerShape_216());
-                shapes.Add(ContainerShape_217());
-                shapes.Add(ContainerShape_218());
-                shapes.Add(ContainerShape_219());
-                shapes.Add(ContainerShape_220());
-                shapes.Add(ContainerShape_221());
-                shapes.Add(ContainerShape_222());
-                shapes.Add(ContainerShape_223());
-                shapes.Add(ContainerShape_224());
-                shapes.Add(ContainerShape_225());
-                shapes.Add(ContainerShape_226());
-                shapes.Add(ContainerShape_227());
-                shapes.Add(ContainerShape_228());
                 shapes.Add(SpriteShape_65());
-                shapes.Add(ContainerShape_229());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(14.224,34.776)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_6());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_214()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_215()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_216()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_217()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_218()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_219()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_220()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_221()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_222()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_223()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_224()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_225()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_226()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_227()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_228()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 7
-            CompositionContainerShape ContainerShape_229()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(14.224,34.776)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Sprinkles 8
-            CompositionContainerShape ContainerShape_230()
+            CompositionContainerShape ContainerShape_098()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_231());
+                shapes.Add(ContainerShape_099());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -2902,392 +1706,34 @@ namespace AnimatedVisuals
             }
 
             // Transforms for Sprinkles 8
-            CompositionContainerShape ContainerShape_231()
+            CompositionContainerShape ContainerShape_099()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(-13.7040005F, -67.25F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_232());
-                shapes.Add(ContainerShape_233());
-                shapes.Add(ContainerShape_234());
-                shapes.Add(ContainerShape_235());
-                shapes.Add(ContainerShape_236());
-                shapes.Add(ContainerShape_237());
-                shapes.Add(ContainerShape_238());
-                shapes.Add(ContainerShape_239());
-                shapes.Add(ContainerShape_240());
-                shapes.Add(ContainerShape_241());
-                shapes.Add(ContainerShape_242());
-                shapes.Add(ContainerShape_243());
-                shapes.Add(ContainerShape_244());
-                shapes.Add(ContainerShape_245());
-                shapes.Add(ContainerShape_246());
-                shapes.Add(ContainerShape_247());
                 shapes.Add(SpriteShape_66());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(34.796,24)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_7());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_232()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_233()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_234()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_235()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_236()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_237()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_238()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_239()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_240()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_241()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_242()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_243()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_244()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_245()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_246()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                return result;
-            }
-
-            // Transforms: Sprinkles 8
-            CompositionContainerShape ContainerShape_247()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(34.796,24)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Candle
-            CompositionContainerShape ContainerShape_248()
+            CompositionContainerShape ContainerShape_100()
             {
                 var result = _c.CreateContainerShape();
                 result.Offset = new Vector2(48.5F, 91.25F);
                 result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_249());
-                result.StartAnimation("Scale", _vector2Animation_0);
-                var controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Candle
-            CompositionContainerShape ContainerShape_249()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-48.5F, -91.25F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_250());
-                shapes.Add(ContainerShape_251());
-                shapes.Add(ContainerShape_252());
-                shapes.Add(ContainerShape_253());
-                shapes.Add(ContainerShape_254());
                 shapes.Add(SpriteShape_67());
                 shapes.Add(SpriteShape_68());
                 shapes.Add(SpriteShape_69());
-                shapes.Add(ContainerShape_255());
-                shapes.Add(ContainerShape_256());
-                shapes.Add(ContainerShape_257());
-                shapes.Add(ContainerShape_259());
-                shapes.Add(ContainerShape_261());
-                shapes.Add(ContainerShape_263());
-                shapes.Add(ContainerShape_265());
-                shapes.Add(ContainerShape_267());
-                shapes.Add(ContainerShape_269());
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_250()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_251()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_252()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_253()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_254()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_255()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_256()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
-                return result;
-            }
-
-            // ShapeGroup: Group 7
-            CompositionContainerShape ContainerShape_257()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
-                result.Scale = new Vector2(0.873979986F, 0.873979986F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_258());
-                return result;
-            }
-
-            // ShapeGroup: Group 7
-            CompositionContainerShape ContainerShape_258()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_259()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
-                result.Scale = new Vector2(0.867699981F, 0.867699981F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_260());
-                return result;
-            }
-
-            // ShapeGroup: Group 6
-            CompositionContainerShape ContainerShape_260()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_261()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
-                result.Scale = new Vector2(0.880330026F, 0.880330026F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_262());
-                return result;
-            }
-
-            // ShapeGroup: Group 5
-            CompositionContainerShape ContainerShape_262()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_263()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
-                result.Scale = new Vector2(0.85777998F, 0.85777998F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_264());
-                return result;
-            }
-
-            // ShapeGroup: Group 4
-            CompositionContainerShape ContainerShape_264()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_265()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
-                result.Scale = new Vector2(0.827109993F, 0.827109993F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_266());
-                return result;
-            }
-
-            // ShapeGroup: Group 3
-            CompositionContainerShape ContainerShape_266()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_267()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
-                result.Scale = new Vector2(0.850629985F, 0.850629985F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_268());
-                return result;
-            }
-
-            // ShapeGroup: Group 2
-            CompositionContainerShape ContainerShape_268()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_269()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
-                result.Scale = new Vector2(0.865750015F, 0.865750015F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_270());
-                return result;
-            }
-
-            // ShapeGroup: Group 1
-            CompositionContainerShape ContainerShape_270()
-            {
-                var result = _c.CreateContainerShape();
-                return result;
-            }
-
-            // Layer (Shape): Flame
-            CompositionContainerShape ContainerShape_271()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(48.5F, 91.25F);
-                result.Scale = new Vector2(0.949999988F, 0.949999988F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_272());
                 result.StartAnimation("Scale", _vector2Animation_0);
                 var controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -3296,13 +1742,18 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Flame
-            CompositionContainerShape ContainerShape_272()
+            CompositionContainerShape ContainerShape_101()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-48.5F, -91.25F);
+                result.Offset = new Vector2(48.5F, 91.25F);
+                result.Scale = new Vector2(0.949999988F, 0.949999988F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_70());
                 shapes.Add(SpriteShape_71());
+                result.StartAnimation("Scale", _vector2Animation_0);
+                var controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
@@ -3322,9 +1773,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_02()
             {
                 var result = _c.CreateContainerVisual();
-                result.CenterPoint = new Vector3(48, 48, 0);
-                result.Offset = new Vector3(102, 93.5F, 0);
-                result.Scale = new Vector3(2.79999995F, 2.79999995F, 1);
+                result.TransformMatrix = new Matrix4x4(2.79999995F, 0, 0, 0, 0, 2.79999995F, 0, 0, 0, 0, 1, 0, 15.6000061F, 7.1000061F, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_03());
                 children.InsertAtTop(ContainerVisual_07());
@@ -3367,7 +1816,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_05()
             {
                 var result = _c.CreateContainerVisual();
-                result.Offset = new Vector3(48, 48, 0);
+                result.TransformMatrix = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_06());
                 return result;
@@ -3378,9 +1827,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_06()
             {
                 var result = _c.CreateContainerVisual();
-                result.CenterPoint = new Vector3(48, 48, 0);
-                result.Offset = new Vector3(-36.25F, -56.25F, 0);
-                result.Scale = new Vector3(1.20000005F, 1.20000005F, 1);
+                result.TransformMatrix = new Matrix4x4(1.20000005F, 0, 0, 0, 0, 1.20000005F, 0, 0, 0, 0, 1, 0, -45.8500023F, -65.8500061F, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ShapeVisual_0());
                 return result;
@@ -3419,7 +1866,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_09()
             {
                 var result = _c.CreateContainerVisual();
-                result.Offset = new Vector3(48, 48, 0);
+                result.TransformMatrix = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_10());
                 return result;
@@ -3430,10 +1877,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_10()
             {
                 var result = _c.CreateContainerVisual();
-                result.CenterPoint = new Vector3(48, 48, 0);
-                result.Offset = new Vector3(-68.75F, -63.75F, 0);
-                result.RotationAngleInDegrees = -31;
-                result.Scale = new Vector3(1.21000004F, 1.21000004F, 1);
+                result.TransformMatrix = new Matrix4x4(1.03717244F, -0.623196065F, 0, 0, 0.623196065F, 1.03717244F, 0, 0, 0, 0, 1, 0, -100.447693F, -35.6208649F, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ShapeVisual_1());
                 return result;
@@ -3472,7 +1916,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_13()
             {
                 var result = _c.CreateContainerVisual();
-                result.Offset = new Vector3(48, 48, 0);
+                result.TransformMatrix = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_14());
                 return result;
@@ -3483,10 +1927,8 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_14()
             {
                 var result = _c.CreateContainerVisual();
-                result.CenterPoint = new Vector3(48, 48, 0);
                 result.Clip = GeometricClip();
-                result.Offset = new Vector3(-39.75F, -37.25F, 0);
-                result.Scale = new Vector3(-1, 1, 1);
+                result.TransformMatrix = new Matrix4x4(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 56.25F, -37.25F, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ShapeVisual_2());
                 return result;
@@ -3525,7 +1967,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_17()
             {
                 var result = _c.CreateContainerVisual();
-                result.Offset = new Vector3(48, 48, 0);
+                result.TransformMatrix = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_18());
                 return result;
@@ -3536,7 +1978,7 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_18()
             {
                 var result = _c.CreateContainerVisual();
-                result.Offset = new Vector3(-48, -48, 0);
+                result.TransformMatrix = new Matrix4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -48, -48, 0, 1);
                 var children = result.Children;
                 children.InsertAtTop(ShapeVisual_3());
                 return result;
@@ -3575,36 +2017,31 @@ namespace AnimatedVisuals
             // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_06()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.150000006F, 1));
-            }
-
-            // Scale
-            CubicBezierEasingFunction CubicBezierEasingFunction_07()
-            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.75F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_08()
+            CubicBezierEasingFunction CubicBezierEasingFunction_07()
             {
-                return _cubicBezierEasingFunction_08 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.349999994F, 1));
+                return _cubicBezierEasingFunction_07 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.349999994F, 1));
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
-            //     Path
-            CubicBezierEasingFunction CubicBezierEasingFunction_09()
+            // Layer (Shape): Cake 2
+            //   Path 1
+            //     Path 1.PathGeometry
+            //       Path
+            CubicBezierEasingFunction CubicBezierEasingFunction_08()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.833000004F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_10()
+            CubicBezierEasingFunction CubicBezierEasingFunction_09()
             {
-                return _cubicBezierEasingFunction_10 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.75F, 1));
+                return _cubicBezierEasingFunction_09 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.75F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_11()
+            CubicBezierEasingFunction CubicBezierEasingFunction_10()
             {
-                return _cubicBezierEasingFunction_11 = _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.75F, 1));
+                return _cubicBezierEasingFunction_10 = _c.CreateCubicBezierEasingFunction(new Vector2(0.850000024F, 0), new Vector2(0.75F, 1));
             }
 
             // Transforms for Null 130
@@ -4628,6 +3065,13 @@ namespace AnimatedVisuals
                     builder.EndFigure(CanvasFigureLoop.Open);
                     result = CanvasGeometry.CreatePath(builder);
                 }
+                return result;
+            }
+
+            StepEasingFunction HoldThenStepEasingFunction()
+            {
+                var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
+                result.IsFinalStepSingleFrame = true;
                 return result;
             }
 
@@ -5843,7 +4287,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Cake 2
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_49()
             {
@@ -5855,7 +4300,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // ShapeGroup: Group 7
+            // Layer (Shape): Cake 2
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_50()
@@ -5878,7 +4323,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // ShapeGroup: Group 4
+            // Layer (Shape): Cake 2
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_53()
@@ -5926,7 +4371,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Candle
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_59()
             {
@@ -5941,7 +4387,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Flame
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_61()
             {
@@ -5953,7 +4400,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Flame
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_62()
             {
@@ -5965,22 +4413,24 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
+            // Layer (Shape): Cake 2
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_0()
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, CompositionPath_17(), _linearEasingFunction);
-                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_18()), CubicBezierEasingFunction_09());
-                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_19()), CubicBezierEasingFunction_10());
-                result.InsertKeyFrame(0.983333349F, _compositionPath_17, _cubicBezierEasingFunction_08);
+                result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_18()), CubicBezierEasingFunction_08());
+                result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_19()), CubicBezierEasingFunction_09());
+                result.InsertKeyFrame(0.983333349F, _compositionPath_17, _cubicBezierEasingFunction_07);
                 return result;
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
+            // Layer (Shape): Flame
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_1()
             {
@@ -6002,8 +4452,9 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
+            // Layer (Shape): Flame
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_2()
             {
@@ -6076,8 +4527,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, LinearEasingFunction());
-                result.InsertKeyFrame(0.583333313F, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, StepThenHoldEasingFunction());
+                result.InsertKeyFrame(0.583333313F, 0, LinearEasingFunction());
                 result.InsertKeyFrame(0.649999976F, 1, CubicBezierEasingFunction_00());
                 return result;
             }
@@ -6087,7 +4538,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 1, CubicBezierEasingFunction_01());
                 return result;
@@ -6098,7 +4549,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6109,7 +4560,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6120,7 +4571,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6131,7 +4582,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6142,7 +4593,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6153,7 +4604,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6164,7 +4615,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.5F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6175,7 +4626,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6186,7 +4637,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6197,7 +4648,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6208,7 +4659,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6219,7 +4670,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6230,7 +4681,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6241,7 +4692,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6252,7 +4703,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6263,7 +4714,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6274,7 +4725,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6285,7 +4736,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6296,7 +4747,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6307,7 +4758,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6318,7 +4769,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6329,7 +4780,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6340,7 +4791,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.5F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6351,7 +4802,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6362,7 +4813,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6373,7 +4824,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6384,7 +4835,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6395,7 +4846,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6406,7 +4857,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_30 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6417,7 +4868,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_31 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6428,7 +4879,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6439,7 +4890,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6450,7 +4901,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -6461,7 +4912,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6472,7 +4923,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, CubicBezierEasingFunction_03());
                 return result;
@@ -6483,7 +4934,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6494,7 +4945,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, CubicBezierEasingFunction_04());
                 return result;
@@ -6505,7 +4956,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6516,7 +4967,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.283333331F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6527,7 +4978,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6538,7 +4989,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6549,7 +5000,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6560,7 +5011,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6571,7 +5022,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.25F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6582,7 +5033,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.283333331F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 1, _cubicBezierEasingFunction_02);
                 return result;
@@ -6593,7 +5044,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6604,7 +5055,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6615,7 +5066,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6626,7 +5077,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_04);
                 return result;
@@ -6637,7 +5088,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6648,7 +5099,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_04);
                 return result;
@@ -6659,7 +5110,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6670,7 +5121,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_54 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6681,7 +5132,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_55 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6692,7 +5143,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.316666663F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6703,7 +5154,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6714,7 +5165,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6725,7 +5176,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6736,7 +5187,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6747,7 +5198,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6758,7 +5209,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.25F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_04);
                 return result;
@@ -6769,7 +5220,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6780,7 +5231,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.13333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6791,7 +5242,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6802,7 +5253,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6813,7 +5264,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0666666701F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6824,7 +5275,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6835,7 +5286,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.100000001F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6846,7 +5297,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.13333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_02);
                 return result;
@@ -6857,7 +5308,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6868,7 +5319,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6879,7 +5330,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6890,7 +5341,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.25F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.316666663F, 1, _cubicBezierEasingFunction_04);
                 return result;
@@ -6901,7 +5352,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.316666663F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6912,7 +5363,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.283333331F, 1, _cubicBezierEasingFunction_04);
                 return result;
@@ -6923,7 +5374,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.283333331F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6934,7 +5385,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_78 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6945,7 +5396,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_79 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6956,7 +5407,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.166666672F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6967,7 +5418,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6978,7 +5429,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_03);
                 return result;
@@ -6989,7 +5440,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_01);
                 return result;
@@ -6999,9 +5450,9 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_84 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.583333433F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.749999881F, 1, CubicBezierEasingFunction_11());
-                result.InsertKeyFrame(0.816666782F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.583333433F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.749999881F, 1, CubicBezierEasingFunction_10());
+                result.InsertKeyFrame(0.816666782F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7010,9 +5461,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.600000143F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.833333433F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.600000143F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.833333433F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7021,9 +5472,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.616666794F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.850000143F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.616666794F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.850000143F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7032,9 +5483,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.583333433F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.749999881F, 1, _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.816666782F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.583333433F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.749999881F, 1, _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.816666782F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7043,9 +5494,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.600000143F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.833333433F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.600000143F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.833333433F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7054,9 +5505,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.616666794F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.850000143F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.616666794F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.850000143F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -7067,7 +5518,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7079,7 +5530,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7091,7 +5542,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7103,7 +5554,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.666666687F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7115,7 +5566,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7127,7 +5578,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7139,7 +5590,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7150,7 +5601,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_2_07 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.600000024F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7162,7 +5613,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.550000012F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7174,7 +5625,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7186,7 +5637,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7198,7 +5649,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 2, _cubicBezierEasingFunction_02);
                 return result;
@@ -7210,7 +5661,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.649999976F, 3, CubicBezierEasingFunction_02());
                 return result;
@@ -7222,7 +5673,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.583333313F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7234,7 +5685,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.566666663F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7246,7 +5697,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7258,7 +5709,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.616666675F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7270,7 +5721,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.483333319F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7282,7 +5733,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7294,7 +5745,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7306,7 +5757,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7318,7 +5769,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.516666651F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7330,7 +5781,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.25F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7342,7 +5793,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.349999994F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7354,7 +5805,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7366,7 +5817,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7377,7 +5828,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_3_14 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.416666657F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7389,7 +5840,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.433333337F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7401,7 +5852,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.400000006F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7413,7 +5864,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7425,7 +5876,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7437,7 +5888,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.100000001F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.25F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7449,7 +5900,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7461,7 +5912,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.316666663F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7473,7 +5924,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.283333331F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7484,7 +5935,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_3_23 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7496,7 +5947,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.300000012F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7508,7 +5959,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.266666681F, 3, _cubicBezierEasingFunction_02);
                 return result;
@@ -7520,7 +5971,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.466666669F, 5, _cubicBezierEasingFunction_02);
                 return result;
@@ -7532,7 +5983,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 5, _cubicBezierEasingFunction_02);
                 return result;
@@ -7544,7 +5995,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.333333343F, 5, _cubicBezierEasingFunction_02);
                 return result;
@@ -7556,7 +6007,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0666666701F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.200000003F, 5, _cubicBezierEasingFunction_02);
                 return result;
@@ -7567,8 +6018,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.566666663F, 1, StepEasingFunction_0());
-                result.InsertKeyFrame(0.649999976F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.566666663F, 1, HoldThenStepEasingFunction());
+                result.InsertKeyFrame(0.649999976F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7577,8 +6028,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7587,8 +6038,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.516666651F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.583333313F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.516666651F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.583333313F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7597,8 +6048,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.533333361F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.533333361F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7607,8 +6058,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.566666663F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.566666663F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7617,8 +6068,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.533333361F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.533333361F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7626,8 +6077,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.433333337F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.933333337F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.433333337F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.933333337F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7636,8 +6087,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.666666687F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7646,8 +6097,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.533333361F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.683333337F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.533333361F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.683333337F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7656,8 +6107,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.633333325F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.633333325F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7666,8 +6117,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.400000006F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.5F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.400000006F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.5F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7676,8 +6127,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.433333337F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.433333337F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7686,8 +6137,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7696,8 +6147,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7706,8 +6157,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.550000012F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.550000012F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.666666687F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7716,8 +6167,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.516666651F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.633333325F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.516666651F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.633333325F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7726,8 +6177,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.616666675F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.616666675F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7736,8 +6187,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7746,8 +6197,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.516666651F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.516666651F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7755,8 +6206,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.400000006F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.899999976F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.400000006F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.899999976F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7765,8 +6216,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.516666651F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.516666651F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7775,8 +6226,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.349999994F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.533333361F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.349999994F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.533333361F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7785,8 +6236,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.483333319F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.483333319F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7795,8 +6246,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.349999994F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.349999994F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7805,8 +6256,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.25F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.25F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7815,8 +6266,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.366666675F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.366666675F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7825,8 +6276,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.416666657F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.416666657F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7835,8 +6286,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.366666675F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.483333319F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.366666675F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.483333319F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7845,8 +6296,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.333333343F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.449999988F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.333333343F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.449999988F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7855,8 +6306,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.433333337F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.433333337F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7865,8 +6316,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.266666681F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.433333337F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.266666681F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.433333337F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7875,8 +6326,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7884,8 +6335,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.716666639F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.716666639F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7894,8 +6345,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.383333325F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.383333325F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7904,8 +6355,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.200000003F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.200000003F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7914,8 +6365,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.349999994F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.349999994F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7924,8 +6375,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0666666701F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.216666669F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0666666701F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.216666669F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7934,8 +6385,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.100000001F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.100000001F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7944,8 +6395,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.216666669F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.216666669F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7954,8 +6405,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7964,8 +6415,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.333333343F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.333333343F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7974,8 +6425,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.183333337F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.300000012F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.183333337F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.300000012F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7984,8 +6435,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.283333331F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.283333331F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -7994,8 +6445,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.116666667F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.300000012F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.116666667F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.300000012F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -8004,8 +6455,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -8013,8 +6464,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0666666701F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.566666663F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0666666701F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.566666663F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -8040,11 +6491,11 @@ namespace AnimatedVisuals
                 // Layer (Shape): Shape Layer 12
                 shapes.Add(ContainerShape_004());
                 // Layer (Shape): Shape Layer 11
-                shapes.Add(ContainerShape_007());
+                shapes.Add(ContainerShape_006());
                 // Layer (Shape): Shape Layer 2
-                shapes.Add(ContainerShape_009());
+                shapes.Add(ContainerShape_008());
                 // Layer (Shape): Shape Layer 1
-                shapes.Add(ContainerShape_011());
+                shapes.Add(ContainerShape_010());
                 return result;
             }
 
@@ -8056,29 +6507,29 @@ namespace AnimatedVisuals
                 result.Size = new Vector2(96, 96);
                 var shapes = result.Shapes;
                 // Layer (Shape): Shape Layer 9
-                shapes.Add(ContainerShape_013());
+                shapes.Add(ContainerShape_012());
                 // Layer (Shape): Shape Layer 8
-                shapes.Add(ContainerShape_015());
+                shapes.Add(ContainerShape_014());
                 // Layer (Shape): Shape Layer 7
-                shapes.Add(ContainerShape_017());
+                shapes.Add(ContainerShape_016());
                 // Layer (Shape): Shape Layer 6
-                shapes.Add(ContainerShape_019());
+                shapes.Add(ContainerShape_018());
                 // Layer (Shape): Shape Layer 5
-                shapes.Add(ContainerShape_021());
+                shapes.Add(ContainerShape_020());
                 // Layer (Shape): Shape Layer 4
-                shapes.Add(ContainerShape_023());
+                shapes.Add(ContainerShape_022());
                 // Layer (Shape): Shape Layer 12
-                shapes.Add(ContainerShape_025());
+                shapes.Add(ContainerShape_024());
                 // Layer (Shape): Shape Layer 11
-                shapes.Add(ContainerShape_027());
+                shapes.Add(ContainerShape_026());
                 // Layer (Shape): Shape Layer 10
-                shapes.Add(ContainerShape_029());
+                shapes.Add(ContainerShape_028());
                 // Layer (Shape): Shape Layer 3
-                shapes.Add(ContainerShape_031());
+                shapes.Add(ContainerShape_030());
                 // Layer (Shape): Shape Layer 2
-                shapes.Add(ContainerShape_033());
+                shapes.Add(ContainerShape_032());
                 // Layer (Shape): Shape Layer 1
-                shapes.Add(ContainerShape_035());
+                shapes.Add(ContainerShape_034());
                 return result;
             }
 
@@ -8090,29 +6541,29 @@ namespace AnimatedVisuals
                 result.Size = new Vector2(96, 96);
                 var shapes = result.Shapes;
                 // Layer (Shape): Shape Layer 9
-                shapes.Add(ContainerShape_037());
+                shapes.Add(ContainerShape_036());
                 // Layer (Shape): Shape Layer 8
-                shapes.Add(ContainerShape_039());
+                shapes.Add(ContainerShape_038());
                 // Layer (Shape): Shape Layer 7
-                shapes.Add(ContainerShape_041());
+                shapes.Add(ContainerShape_040());
                 // Layer (Shape): Shape Layer 6
-                shapes.Add(ContainerShape_043());
+                shapes.Add(ContainerShape_042());
                 // Layer (Shape): Shape Layer 5
-                shapes.Add(ContainerShape_045());
+                shapes.Add(ContainerShape_044());
                 // Layer (Shape): Shape Layer 4
-                shapes.Add(ContainerShape_047());
+                shapes.Add(ContainerShape_046());
                 // Layer (Shape): Shape Layer 12
-                shapes.Add(ContainerShape_049());
+                shapes.Add(ContainerShape_048());
                 // Layer (Shape): Shape Layer 11
-                shapes.Add(ContainerShape_051());
+                shapes.Add(ContainerShape_050());
                 // Layer (Shape): Shape Layer 10
-                shapes.Add(ContainerShape_053());
+                shapes.Add(ContainerShape_052());
                 // Layer (Shape): Shape Layer 3
-                shapes.Add(ContainerShape_055());
+                shapes.Add(ContainerShape_054());
                 // Layer (Shape): Shape Layer 2
-                shapes.Add(ContainerShape_057());
+                shapes.Add(ContainerShape_056());
                 // Layer (Shape): Shape Layer 1
-                shapes.Add(ContainerShape_059());
+                shapes.Add(ContainerShape_058());
                 return result;
             }
 
@@ -8124,29 +6575,29 @@ namespace AnimatedVisuals
                 result.Size = new Vector2(96, 96);
                 var shapes = result.Shapes;
                 // Layer (Shape): Shape Layer 9
-                shapes.Add(ContainerShape_061());
+                shapes.Add(ContainerShape_060());
                 // Layer (Shape): Shape Layer 8
-                shapes.Add(ContainerShape_063());
+                shapes.Add(ContainerShape_062());
                 // Layer (Shape): Shape Layer 7
-                shapes.Add(ContainerShape_065());
+                shapes.Add(ContainerShape_064());
                 // Layer (Shape): Shape Layer 6
-                shapes.Add(ContainerShape_067());
+                shapes.Add(ContainerShape_066());
                 // Layer (Shape): Shape Layer 5
-                shapes.Add(ContainerShape_069());
+                shapes.Add(ContainerShape_068());
                 // Layer (Shape): Shape Layer 4
-                shapes.Add(ContainerShape_071());
+                shapes.Add(ContainerShape_070());
                 // Layer (Shape): Shape Layer 12
-                shapes.Add(ContainerShape_073());
+                shapes.Add(ContainerShape_072());
                 // Layer (Shape): Shape Layer 11
-                shapes.Add(ContainerShape_075());
+                shapes.Add(ContainerShape_074());
                 // Layer (Shape): Shape Layer 10
-                shapes.Add(ContainerShape_077());
+                shapes.Add(ContainerShape_076());
                 // Layer (Shape): Shape Layer 3
-                shapes.Add(ContainerShape_079());
+                shapes.Add(ContainerShape_078());
                 // Layer (Shape): Shape Layer 2
-                shapes.Add(ContainerShape_081());
+                shapes.Add(ContainerShape_080());
                 // Layer (Shape): Shape Layer 1
-                shapes.Add(ContainerShape_083());
+                shapes.Add(ContainerShape_082());
                 return result;
             }
 
@@ -8158,27 +6609,27 @@ namespace AnimatedVisuals
                 result.Size = new Vector2(96, 96);
                 var shapes = result.Shapes;
                 // Layer (Shape): Cake
-                shapes.Add(ContainerShape_085());
+                shapes.Add(ContainerShape_084());
                 // Layer (Shape): Cake 2
-                shapes.Add(ContainerShape_108());
+                shapes.Add(ContainerShape_085());
                 // Layer (Shape): Sprinkles 2
-                shapes.Add(ContainerShape_122());
+                shapes.Add(ContainerShape_086());
                 // Layer (Shape): Sprinkles 3
-                shapes.Add(ContainerShape_140());
+                shapes.Add(ContainerShape_088());
                 // Layer (Shape): Sprinkles 4
-                shapes.Add(ContainerShape_158());
+                shapes.Add(ContainerShape_090());
                 // Layer (Shape): Sprinkles 5
-                shapes.Add(ContainerShape_176());
+                shapes.Add(ContainerShape_092());
                 // Layer (Shape): Sprinkles 6
-                shapes.Add(ContainerShape_194());
+                shapes.Add(ContainerShape_094());
                 // Layer (Shape): Sprinkles 7
-                shapes.Add(ContainerShape_212());
+                shapes.Add(ContainerShape_096());
                 // Layer (Shape): Sprinkles 8
-                shapes.Add(ContainerShape_230());
+                shapes.Add(ContainerShape_098());
                 // Layer (Shape): Candle
-                shapes.Add(ContainerShape_248());
+                shapes.Add(ContainerShape_100());
                 // Layer (Shape): Flame
-                shapes.Add(ContainerShape_271());
+                shapes.Add(ContainerShape_101());
                 return result;
             }
 
@@ -9037,151 +7488,166 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            // Layer (Shape): Cake
             // Path 1
             CompositionSpriteShape SpriteShape_45()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -8.83399963F);
                 result.FillBrush = ColorBrush_AlmostLightGray_FFCCCCCC();
                 result.Geometry = PathGeometry_46();
                 return result;
             }
 
+            // Layer (Shape): Cake
             // Path 1
             CompositionSpriteShape SpriteShape_46()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -22.6780014F);
                 result.FillBrush = ColorBrush_AlmostWhiteSmoke_FFF1F1F1();
                 result.Geometry = PathGeometry_47();
                 return result;
             }
 
+            // Layer (Shape): Cake
             // Path 1
             CompositionSpriteShape SpriteShape_47()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479999542F, -27.1220016F);
                 result.FillBrush = ColorBrush_AlmostDarkKhaki_FFB88F66();
                 result.Geometry = PathGeometry_48();
                 return result;
             }
 
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_48()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 82.4160004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -8.83399963F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
                 result.Geometry = _pathGeometry_46;
                 return result;
             }
 
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_49()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 68.5719986F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -22.6780014F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
                 result.Geometry = _pathGeometry_47;
                 return result;
             }
 
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_50()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0200005F, 64.1279984F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479999542F, -27.1220016F);
                 result.FillBrush = ColorBrush_AlmostOrange_FFFFBA01();
                 result.Geometry = _pathGeometry_48;
                 return result;
             }
 
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_51()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 62.7290001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -28.5209999F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFDA4100();
                 result.Geometry = PathGeometry_49();
                 return result;
             }
 
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_52()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -52.0660019F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFF7630B();
                 result.Geometry = _pathGeometry_47;
                 return result;
             }
 
-            // ShapeGroup: Group 7
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_53()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.873979986F, 0, 0, 0.873979986F, -0.479000092F, -36.487999F);
                 result.FillBrush = ColorBrush_AlmostDarkOliveGreen_FF613D30();
                 result.Geometry = PathGeometry_50();
                 return result;
             }
 
-            // ShapeGroup: Group 6
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_54()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.867699981F, 0, 0, 0.867699981F, 16.2710037F, -42.368F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_51();
                 return result;
             }
 
-            // ShapeGroup: Group 5
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_55()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.880330026F, 0, 0, 0.880330026F, 28.9079971F, -57.0610008F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_52();
                 return result;
             }
 
-            // ShapeGroup: Group 4
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_56()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.85777998F, 0, 0, 0.85777998F, 13.3320007F, -66.9179993F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_53();
                 return result;
             }
 
-            // ShapeGroup: Group 3
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_57()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.827109993F, 0, 0, 0.827109993F, -20.4640007F, -42.8569984F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_54();
                 return result;
             }
 
-            // ShapeGroup: Group 2
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_58()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.850629985F, 0, 0, 0.850629985F, -34.276001F, -56.5719986F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_55();
                 return result;
             }
 
-            // ShapeGroup: Group 1
+            // Layer (Shape): Cake 2
             // Path 1
             CompositionSpriteShape SpriteShape_59()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.865750015F, 0, 0, 0.865750015F, -13.6069984F, -67.3470001F);
                 result.FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
                 result.Geometry = PathGeometry_56();
                 return result;
@@ -9192,7 +7658,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_60()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(61.8320007F, 24.3320007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 61.8320007F, 24.3320007F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
                 result.Geometry = PathGeometry_57();
                 return result;
@@ -9203,7 +7669,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_61()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(77.4079971F, 34.1889992F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 77.4079971F, 34.1889992F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
                 result.Geometry = _pathGeometry_52;
                 return result;
@@ -9214,7 +7680,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_62()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(64.7710037F, 48.882F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 64.7710037F, 48.882F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
                 result.Geometry = _pathGeometry_51;
                 return result;
@@ -9225,7 +7691,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_63()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 54.762001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 48.0209999F, 54.762001F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
                 result.Geometry = PathGeometry_58();
                 return result;
@@ -9236,7 +7702,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_64()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(28.0359993F, 48.3930016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 28.0359993F, 48.3930016F);
                 result.FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
                 result.Geometry = _pathGeometry_54;
                 return result;
@@ -9247,7 +7713,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_65()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(14.224F, 34.6780014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 14.224F, 34.6780014F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
                 result.Geometry = _pathGeometry_55;
                 return result;
@@ -9258,73 +7724,71 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_66()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(34.8930016F, 23.9029999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 34.8930016F, 23.9029999F);
                 result.FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
                 result.Geometry = _pathGeometry_56;
                 return result;
             }
 
+            // Layer (Shape): Candle
             // Path 1
             CompositionSpriteShape SpriteShape_67()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0200005F, 29.4230003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479999542F, -61.8269997F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF0063B0();
                 result.Geometry = PathGeometry_59();
                 return result;
             }
 
+            // Layer (Shape): Candle
             // Path 1
             CompositionSpriteShape SpriteShape_68()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 39.1839981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -52.0660019F);
                 result.FillBrush = _colorBrush_AlmostDarkCyan_FF0063B0;
                 result.Geometry = PathGeometry_60();
                 return result;
             }
 
+            // Layer (Shape): Candle
             // Path 1
             CompositionSpriteShape SpriteShape_69()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 19.5919991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -71.6580048F);
                 result.FillBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
                 result.Geometry = _pathGeometry_60;
                 return result;
             }
 
+            // Layer (Shape): Flame
             // Path 1
             CompositionSpriteShape SpriteShape_70()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.026001F, 9.3210001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.473999023F, -81.9290009F);
                 result.FillBrush = _colorBrush_AlmostTomato_FFFD4341;
                 result.Geometry = PathGeometry_61();
                 return result;
             }
 
+            // Layer (Shape): Flame
             // Path 1
             CompositionSpriteShape SpriteShape_71()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.0209999F, 11.6599998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -0.479000092F, -79.5899963F);
                 result.FillBrush = ColorBrush_AlmostKhaki_FFFFD579();
                 result.Geometry = PathGeometry_62();
                 return result;
             }
 
-            StepEasingFunction StepEasingFunction_0()
+            StepEasingFunction StepThenHoldEasingFunction()
             {
-                var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame  = true;
-                return result;
-            }
-
-            StepEasingFunction StepEasingFunction_1()
-            {
-                var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame  = true;
+                var result = _stepThenHoldEasingFunction = _c.CreateStepEasingFunction();
+                result.IsInitialStepSingleFrame = true;
                 return result;
             }
 
@@ -9333,11 +7797,11 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_0 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(0.949999988F, 0.949999988F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(0.949999988F, 0.949999988F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.416666657F, new Vector2(0.75F, 0.75F), CubicBezierEasingFunction_05());
-                result.InsertKeyFrame(0.583333313F, new Vector2(0.75F, 0.75F), CubicBezierEasingFunction_06());
-                result.InsertKeyFrame(0.75F, new Vector2(1, 1), CubicBezierEasingFunction_07());
-                result.InsertKeyFrame(0.983333349F, new Vector2(0.949999988F, 0.949999988F), CubicBezierEasingFunction_08());
+                result.InsertKeyFrame(0.583333313F, new Vector2(0.75F, 0.75F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.75F, new Vector2(1, 1), CubicBezierEasingFunction_06());
+                result.InsertKeyFrame(0.983333349F, new Vector2(0.949999988F, 0.949999988F), CubicBezierEasingFunction_07());
                 return result;
             }
 
@@ -9348,13 +7812,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(13.2340002F, -66.8209991F), _linearEasingFunction);
-                result.InsertKeyFrame(0.583333313F, new Vector2(13.2340002F, -66.8209991F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-66.821))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-67.65434))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-72.00237))) + (Pow(_.t0, 3) * Vector2(13.234,(-71.821)))", StepEasingFunction_1());
-                result.InsertKeyFrame(0.75F, new Vector2(13.2340002F, -71.8209991F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.816666663F, new Vector2(13.2340002F, -65.7330017F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.900000036F, new Vector2(13.2340002F, -66.8209991F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(13.2340002F, -66.8209991F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.583333313F, new Vector2(13.2340002F, -66.8209991F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-66.821))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-67.65434))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-72.00237))) + (Pow(_.t0, 3) * Vector2(13.234,(-71.821)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.75F, new Vector2(13.2340002F, -71.8209991F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.816666663F, new Vector2(13.2340002F, -65.7330017F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.900000036F, new Vector2(13.2340002F, -66.8209991F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9365,13 +7829,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(28.9080009F, -56.9640007F), _linearEasingFunction);
-                result.InsertKeyFrame(0.600000024F, new Vector2(28.9080009F, -56.9640007F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.964))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-57.79733))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-62.04015))) + (Pow(_.t1, 3) * Vector2(28.908,(-61.964)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.76666671F, new Vector2(28.9080009F, -61.9640007F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.833333313F, new Vector2(28.9080009F, -56.507F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.507))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-55.67367))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-56.88785))) + (Pow(_.t1, 3) * Vector2(28.908,(-56.964)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.916666687F, new Vector2(28.9080009F, -56.9640007F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(28.9080009F, -56.9640007F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.600000024F, new Vector2(28.9080009F, -56.9640007F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.964))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-57.79733))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-62.04015))) + (Pow(_.t1, 3) * Vector2(28.908,(-61.964)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.76666671F, new Vector2(28.9080009F, -61.9640007F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.833333313F, new Vector2(28.9080009F, -56.507F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.507))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-55.67367))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-56.88785))) + (Pow(_.t1, 3) * Vector2(28.908,(-56.964)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.916666687F, new Vector2(28.9080009F, -56.9640007F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9382,13 +7846,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(16.1739998F, -42.2700005F), _linearEasingFunction);
-                result.InsertKeyFrame(0.616666675F, new Vector2(16.1739998F, -42.2700005F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-42.27))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-43.10333))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-47.36807))) + (Pow(_.t2, 3) * Vector2(16.174,(-47.27)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.783333361F, new Vector2(16.1739998F, -47.2700005F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.850000024F, new Vector2(16.1739998F, -41.6809998F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-41.681))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-40.84767))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-42.17193))) + (Pow(_.t2, 3) * Vector2(16.174,(-42.27)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.900000036F, new Vector2(16.1739998F, -42.2700005F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(16.1739998F, -42.2700005F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.616666675F, new Vector2(16.1739998F, -42.2700005F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-42.27))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-43.10333))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-47.36807))) + (Pow(_.t2, 3) * Vector2(16.174,(-47.27)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.783333361F, new Vector2(16.1739998F, -47.2700005F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.850000024F, new Vector2(16.1739998F, -41.6809998F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-41.681))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-40.84767))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-42.17193))) + (Pow(_.t2, 3) * Vector2(16.174,(-42.27)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.900000036F, new Vector2(16.1739998F, -42.2700005F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9399,13 +7863,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-0.477999985F, -36.3909988F), _linearEasingFunction);
-                result.InsertKeyFrame(0.583333313F, new Vector2(-0.477999985F, -36.3909988F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-36.391))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-37.22433))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-41.4878))) + (Pow(_.t3, 3) * Vector2((-0.478),(-41.391)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.75F, new Vector2(-0.477999985F, -41.3909988F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.816666663F, new Vector2(-0.477999985F, -35.8110008F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-35.811))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-34.97767))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-36.29419))) + (Pow(_.t3, 3) * Vector2((-0.478),(-36.391)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.916666687F, new Vector2(-0.477999985F, -36.3909988F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(-0.477999985F, -36.3909988F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.583333313F, new Vector2(-0.477999985F, -36.3909988F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-36.391))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-37.22433))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-41.4878))) + (Pow(_.t3, 3) * Vector2((-0.478),(-41.391)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.75F, new Vector2(-0.477999985F, -41.3909988F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.816666663F, new Vector2(-0.477999985F, -35.8110008F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-35.811))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-34.97767))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-36.29419))) + (Pow(_.t3, 3) * Vector2((-0.478),(-36.391)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.916666687F, new Vector2(-0.477999985F, -36.3909988F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9416,13 +7880,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-20.5620003F, -42.7589989F), _linearEasingFunction);
-                result.InsertKeyFrame(0.600000024F, new Vector2(-20.5620003F, -42.7589989F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.759))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-43.59233))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-47.85645))) + (Pow(_.t4, 3) * Vector2((-20.562),(-47.759)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.76666671F, new Vector2(-20.5620003F, -47.7589989F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.833333313F, new Vector2(-20.5620003F, -42.1739998F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.174))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-41.34067))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-42.66155))) + (Pow(_.t4, 3) * Vector2((-20.562),(-42.759)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.900000036F, new Vector2(-20.5620003F, -42.7589989F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(-20.5620003F, -42.7589989F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.600000024F, new Vector2(-20.5620003F, -42.7589989F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.759))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-43.59233))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-47.85645))) + (Pow(_.t4, 3) * Vector2((-20.562),(-47.759)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.76666671F, new Vector2(-20.5620003F, -47.7589989F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.833333313F, new Vector2(-20.5620003F, -42.1739998F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.174))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-41.34067))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-42.66155))) + (Pow(_.t4, 3) * Vector2((-20.562),(-42.759)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.900000036F, new Vector2(-20.5620003F, -42.7589989F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9433,13 +7897,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-34.276001F, -56.473999F), _linearEasingFunction);
-                result.InsertKeyFrame(0.616666675F, new Vector2(-34.276001F, -56.473999F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-56.474))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-57.30733))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-61.59352))) + (Pow(_.t5, 3) * Vector2((-34.276),(-61.474)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.783333361F, new Vector2(-34.276001F, -61.473999F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.850000024F, new Vector2(-34.276001F, -55.757F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-55.757))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-54.92367))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-56.35448))) + (Pow(_.t5, 3) * Vector2((-34.276),(-56.474)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.916666687F, new Vector2(-34.276001F, -56.473999F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(-34.276001F, -56.473999F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.616666675F, new Vector2(-34.276001F, -56.473999F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-56.474))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-57.30733))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-61.59352))) + (Pow(_.t5, 3) * Vector2((-34.276),(-61.474)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.783333361F, new Vector2(-34.276001F, -61.473999F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.850000024F, new Vector2(-34.276001F, -55.757F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-55.757))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-54.92367))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-56.35448))) + (Pow(_.t5, 3) * Vector2((-34.276),(-56.474)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.916666687F, new Vector2(-34.276001F, -56.473999F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -9450,17 +7914,17 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-13.7040005F, -67.25F), _linearEasingFunction);
-                result.InsertKeyFrame(0.583333313F, new Vector2(-13.7040005F, -67.25F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-67.25))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-68.08334))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-72.36794))) + (Pow(_.t6, 3) * Vector2((-13.704),(-72.25)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.75F, new Vector2(-13.7040005F, -72.25F), _stepEasingFunction_1);
-                result.InsertKeyFrame(0.816666663F, new Vector2(-13.7040005F, -66.5419998F), _cubicBezierEasingFunction_10);
-                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-66.542))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-65.70866))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-67.13206))) + (Pow(_.t6, 3) * Vector2((-13.704),(-67.25)))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.900000036F, new Vector2(-13.7040005F, -67.25F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(-13.7040005F, -67.25F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.583333313F, new Vector2(-13.7040005F, -67.25F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-67.25))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-68.08334))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-72.36794))) + (Pow(_.t6, 3) * Vector2((-13.704),(-72.25)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.75F, new Vector2(-13.7040005F, -72.25F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.816666663F, new Vector2(-13.7040005F, -66.5419998F), _cubicBezierEasingFunction_09);
+                result.InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-66.542))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-65.70866))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-67.13206))) + (Pow(_.t6, 3) * Vector2((-13.704),(-67.25)))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.900000036F, new Vector2(-13.7040005F, -67.25F), _stepThenHoldEasingFunction);
                 return result;
             }
 
-            internal Composition(Compositor compositor)
+            internal AnimatedVisual(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();

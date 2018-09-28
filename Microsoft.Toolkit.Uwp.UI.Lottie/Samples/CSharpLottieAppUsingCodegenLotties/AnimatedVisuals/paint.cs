@@ -57,6 +57,7 @@ namespace AnimatedVisuals
             CompositionPath _compositionPath_607;
             CubicBezierEasingFunction _cubicBezierEasingFunction_01;
             CubicBezierEasingFunction _cubicBezierEasingFunction_03;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_04;
             CubicBezierEasingFunction _cubicBezierEasingFunction_05;
             CubicBezierEasingFunction _cubicBezierEasingFunction_06;
             CubicBezierEasingFunction _cubicBezierEasingFunction_08;
@@ -64,8 +65,9 @@ namespace AnimatedVisuals
             CubicBezierEasingFunction _cubicBezierEasingFunction_10;
             CubicBezierEasingFunction _cubicBezierEasingFunction_11;
             CubicBezierEasingFunction _cubicBezierEasingFunction_15;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_22;
             CubicBezierEasingFunction _cubicBezierEasingFunction_23;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_24;
+            StepEasingFunction _holdThenStepEasingFunction;
             InsetClip _insetClip;
             LinearEasingFunction _linearEasingFunction;
             CompositionPathGeometry _pathGeometry_553;
@@ -75,19 +77,17 @@ namespace AnimatedVisuals
             ScalarKeyFrameAnimation _scalarAnimation_0_to_0_2;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_0_3;
             ScalarKeyFrameAnimation _scalarAnimation_1_to_1_0;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_1_2;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_1_3;
+            ScalarKeyFrameAnimation _scalarAnimation_1_to_1_1;
+            ScalarKeyFrameAnimation _scalarAnimation_to_1_0;
             ExpressionAnimation _scalarExpressionAnimation;
-            StepEasingFunction _stepEasingFunction_0;
-            StepEasingFunction _stepEasingFunction_1;
+            StepEasingFunction _stepThenHoldEasingFunction;
             Vector2KeyFrameAnimation _vector2Animation_01;
             Vector2KeyFrameAnimation _vector2Animation_02;
             Vector2KeyFrameAnimation _vector2Animation_05;
             Vector2KeyFrameAnimation _vector2Animation_09;
 
             // Transforms: Brush Tip
-            //   Transforms: Brush Tip 2
-            //     Path 1
+            //   Path 1
             CompositionColorBrush AnimatedColorBrush_AlmostOrange_FFFFBA01_to_AlmostDarkMagenta_FF9A008A()
             {
                 var result = _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01));
@@ -104,7 +104,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateColorKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 // AlmostOrange_FFFFBA01
-                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01), _linearEasingFunction);
+                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01), _stepThenHoldEasingFunction);
                 // AlmostOrange_FFFFBA01
                 result.InsertKeyFrame(0.200000003F, Color.FromArgb(0xFF, 0xFF, 0xBA, 0x01), _linearEasingFunction);
                 // AlmostDarkCyan_FF0063B1
@@ -114,7 +114,7 @@ namespace AnimatedVisuals
                 // AlmostDarkCyan_FF0063B1
                 result.InsertKeyFrame(0.400000006F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _cubicBezierEasingFunction_01);
                 // AlmostDarkCyan_FF0063B1
-                result.InsertKeyFrame(0.433333337F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _linearEasingFunction);
+                result.InsertKeyFrame(0.433333337F, Color.FromArgb(0xFF, 0x00, 0x63, 0xB1), _holdThenStepEasingFunction);
                 // AlmostHotPink_FFFD41A1
                 result.InsertKeyFrame(0.5F, Color.FromArgb(0xFF, 0xFD, 0x41, 0xA1), _cubicBezierEasingFunction_01);
                 // AlmostDarkMagenta_FF992B9A
@@ -236,13 +236,15 @@ namespace AnimatedVisuals
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFD, 0x43, 0x42));
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             CompositionColorBrush ColorBrush_AlmostWhiteSmoke_FFF1F1F1()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xF1, 0xF1, 0xF1));
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             CompositionColorBrush ColorBrush_White()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
@@ -313,24 +315,6 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_01());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_0());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Paint_splatter Outlines
-            CompositionContainerShape ContainerShape_01()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(58.5F, -56.5F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_000());
                 shapes.Add(SpriteShape_001());
@@ -884,17 +868,43 @@ namespace AnimatedVisuals
                 shapes.Add(SpriteShape_549());
                 shapes.Add(SpriteShape_550());
                 shapes.Add(SpriteShape_551());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_to_1_0());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Paintbrush Outlines
+            CompositionContainerShape ContainerShape_01()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_552());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1_0);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Paintbrush Outlines 2
             CompositionContainerShape ContainerShape_02()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_03());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_0);
+                shapes.Add(SpriteShape_553());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1_0);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -905,126 +915,53 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Layer (Shape): Paintbrush Outlines
+            // Layer (Shape): Paintbrush Outlines 3
             CompositionContainerShape ContainerShape_03()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(182.378006F, 19.4510002F);
-                result.Offset = new Vector2(22.3529968F, 54.3959999F);
-                result.RotationAngleInDegrees = -29.6730003F;
-                result.Scale = new Vector2(0.850600004F, 1.4095F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_552());
+                shapes.Add(SpriteShape_554());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1_0);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Paintbrush Outlines 2
+            // Layer (Shape): Paintbrush Outlines 4
             CompositionContainerShape ContainerShape_04()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_05());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_0);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Paintbrush Outlines 2
-            CompositionContainerShape ContainerShape_05()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(182.378006F, 19.4510002F);
-                result.Offset = new Vector2(86.4550018F, 39.7150002F);
-                result.RotationAngleInDegrees = -16.4729996F;
-                result.Scale = new Vector2(0.602689981F, 1.4095F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_553());
-                return result;
-            }
-
-            // Layer (Shape): Paintbrush Outlines 3
-            CompositionContainerShape ContainerShape_06()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_07());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_0);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Paintbrush Outlines 3
-            CompositionContainerShape ContainerShape_07()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(182.378006F, 19.4510002F);
-                result.Offset = new Vector2(151.296005F, 55.0460014F);
-                result.RotationAngleInDegrees = 12.927F;
-                result.Scale = new Vector2(0.530480027F, 1.4095F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_554());
-                return result;
-            }
-
-            // Layer (Shape): Paintbrush Outlines 4
-            CompositionContainerShape ContainerShape_08()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_09());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1_0);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Paintbrush Outlines 4
-            CompositionContainerShape ContainerShape_09()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(182.378006F, 19.4510002F);
-                result.Offset = new Vector2(142.94899F, 49.031002F);
-                result.RotationAngleInDegrees = 432.527008F;
-                result.Scale = new Vector2(-0.455489993F, 1.4095F);
-                var shapes = result.Shapes;
                 shapes.Add(SpriteShape_555());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1_0);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Layer 1 Outlines
-            CompositionContainerShape ContainerShape_10()
+            CompositionContainerShape ContainerShape_05()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_11());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_01);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(SpriteShape_556());
+                shapes.Add(SpriteShape_557());
+                shapes.Add(SpriteShape_558());
+                shapes.Add(SpriteShape_559());
+                result.StartAnimation("Offset", Vector2Animation_01());
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", Vector2Animation_02());
@@ -1038,33 +975,14 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Layer (Shape): Layer 1 Outlines
-            CompositionContainerShape ContainerShape_11()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-124.927002F, -123.386993F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_556());
-                shapes.Add(SpriteShape_557());
-                shapes.Add(SpriteShape_558());
-                shapes.Add(SpriteShape_559());
-                return result;
-            }
-
             // Layer (Shape): Layer 3 Outlines
-            CompositionContainerShape ContainerShape_12()
+            CompositionContainerShape ContainerShape_06()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_13());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_01);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(ContainerShape_07());
+                result.StartAnimation("Offset", _vector2Animation_01);
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_02);
@@ -1080,17 +998,17 @@ namespace AnimatedVisuals
 
             // Layer (Shape): Layer 3 Outlines
             // Transforms for Layer 1 Outlines
-            CompositionContainerShape ContainerShape_13()
+            CompositionContainerShape ContainerShape_07()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-124.927002F, -123.386993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -124.927002F, -123.386993F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_14());
+                shapes.Add(ContainerShape_08());
                 return result;
             }
 
             // Transforms for Layer 3 Outlines
-            CompositionContainerShape ContainerShape_14()
+            CompositionContainerShape ContainerShape_08()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1100,14 +1018,14 @@ namespace AnimatedVisuals
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_560());
                 shapes.Add(SpriteShape_561());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.713)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_03());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.713)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("RotationAngleInDegrees", ScalarAnimation_0_to_0_1());
                 controller = result.TryGetAnimationController("RotationAngleInDegrees");
                 controller.Pause();
@@ -1116,19 +1034,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Layer 4 Outlines 2
-            CompositionContainerShape ContainerShape_15()
+            CompositionContainerShape ContainerShape_09()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_16());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_01);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(ContainerShape_10());
+                result.StartAnimation("Offset", _vector2Animation_01);
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_02);
@@ -1144,17 +1056,17 @@ namespace AnimatedVisuals
 
             // Layer (Shape): Layer 4 Outlines 2
             // Transforms for Layer 1 Outlines
-            CompositionContainerShape ContainerShape_16()
+            CompositionContainerShape ContainerShape_10()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-124.927002F, -123.386993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -124.927002F, -123.386993F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_17());
+                shapes.Add(ContainerShape_11());
                 return result;
             }
 
             // Transforms for Layer 4 Outlines 2
-            CompositionContainerShape ContainerShape_17()
+            CompositionContainerShape ContainerShape_11()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1163,14 +1075,14 @@ namespace AnimatedVisuals
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_562());
                 shapes.Add(SpriteShape_563());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.713)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_04());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.713)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", Vector2Animation_05());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1183,19 +1095,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Layer 5 Outlines
-            CompositionContainerShape ContainerShape_18()
+            CompositionContainerShape ContainerShape_12()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_19());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_01);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(ContainerShape_13());
+                result.StartAnimation("Offset", _vector2Animation_01);
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_02);
@@ -1211,17 +1117,17 @@ namespace AnimatedVisuals
 
             // Layer (Shape): Layer 5 Outlines
             // Transforms for Layer 1 Outlines
-            CompositionContainerShape ContainerShape_19()
+            CompositionContainerShape ContainerShape_13()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-124.927002F, -123.386993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -124.927002F, -123.386993F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_20());
+                shapes.Add(ContainerShape_14());
                 return result;
             }
 
             // Transforms for Layer 5 Outlines
-            CompositionContainerShape ContainerShape_20()
+            CompositionContainerShape ContainerShape_14()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1230,14 +1136,14 @@ namespace AnimatedVisuals
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_564());
                 shapes.Add(SpriteShape_565());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.712,17.713)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_06());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.712,17.713)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_05);
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1250,19 +1156,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Layer 6 Outlines
-            CompositionContainerShape ContainerShape_21()
+            CompositionContainerShape ContainerShape_15()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_22());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_01);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(ContainerShape_16());
+                result.StartAnimation("Offset", _vector2Animation_01);
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_02);
@@ -1278,17 +1178,17 @@ namespace AnimatedVisuals
 
             // Layer (Shape): Layer 6 Outlines
             // Transforms for Layer 1 Outlines
-            CompositionContainerShape ContainerShape_22()
+            CompositionContainerShape ContainerShape_16()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(-124.927002F, -123.386993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -124.927002F, -123.386993F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_23());
+                shapes.Add(ContainerShape_17());
                 return result;
             }
 
             // Transforms for Layer 6 Outlines
-            CompositionContainerShape ContainerShape_23()
+            CompositionContainerShape ContainerShape_17()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1297,14 +1197,14 @@ namespace AnimatedVisuals
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_566());
                 shapes.Add(SpriteShape_567());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.712)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_07());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(17.713,17.712)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_05);
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1317,22 +1217,22 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Brush Tip
-            CompositionContainerShape ContainerShape_24()
+            CompositionContainerShape ContainerShape_18()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
                 result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_25());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(ContainerShape_19());
                 result.StartAnimation("Position", Vector2Animation_08());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", Vector2Animation_09());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1346,7 +1246,7 @@ namespace AnimatedVisuals
 
             // Layer (Shape): Brush Tip
             // Transforms for Brush Tip
-            CompositionContainerShape ContainerShape_25()
+            CompositionContainerShape ContainerShape_19()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
@@ -1361,13 +1261,132 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Brush Tip 2
-            CompositionContainerShape ContainerShape_26()
+            CompositionContainerShape ContainerShape_20()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_27());
+                shapes.Add(ContainerShape_21());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_21()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
+                result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_22());
+                result.StartAnimation("Position", Vector2Animation_10());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Scale", _vector2Animation_09);
+                controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_3);
+                controller = result.TryGetAnimationController("RotationAngleInDegrees");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Brush Tip
+            CompositionContainerShape ContainerShape_22()
+            {
+                var result = _c.CreateContainerShape();
+                result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
+                result.Offset = new Vector2(56.5460014F, 51.8539963F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_569());
+                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_2);
+                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Brush Tip Shade 2
+            CompositionContainerShape ContainerShape_23()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_24());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_to_1_1());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_24()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
+                result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_25());
+                result.StartAnimation("Position", Vector2Animation_11());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                result.StartAnimation("Scale", _vector2Animation_09);
+                controller = result.TryGetAnimationController("Scale");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_3);
+                controller = result.TryGetAnimationController("RotationAngleInDegrees");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Brush Tip
+            CompositionContainerShape ContainerShape_25()
+            {
+                var result = _c.CreateContainerShape();
+                result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
+                result.Offset = new Vector2(56.5460014F, 51.8539963F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_570());
+                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_2);
+                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Brush Tip Shade
+            CompositionContainerShape ContainerShape_26()
+            {
+                var result = _c.CreateContainerShape();
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_27());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_to_0());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1386,14 +1405,14 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_28());
+                result.StartAnimation("Position", Vector2Animation_12());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_10());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_09);
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1412,137 +1431,6 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
                 result.Offset = new Vector2(56.5460014F, 51.8539963F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_29());
-                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_2);
-                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms: Brush Tip
-            // Transforms for Brush Tip 2
-            CompositionContainerShape ContainerShape_29()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
-                result.Scale = new Vector2(1.01800001F, 1.01800001F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_569());
-                return result;
-            }
-
-            // Layer (Shape): Brush Tip Shade 2
-            CompositionContainerShape ContainerShape_30()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_31());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1_1());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_31()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
-                result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_32());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_11());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("Scale", _vector2Animation_09);
-                controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_3);
-                controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Brush Tip
-            CompositionContainerShape ContainerShape_32()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
-                result.Offset = new Vector2(56.5460014F, 51.8539963F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_570());
-                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_2);
-                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Brush Tip Shade
-            CompositionContainerShape ContainerShape_33()
-            {
-                var result = _c.CreateContainerShape();
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_34());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_0_to_0_4());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_34()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
-                result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_35());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_12());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("Scale", _vector2Animation_09);
-                controller = result.TryGetAnimationController("Scale");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_3);
-                controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Brush Tip
-            CompositionContainerShape ContainerShape_35()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(2.2019999F, 70.5680008F);
-                result.Offset = new Vector2(56.5460014F, 51.8539963F);
-                var shapes = result.Shapes;
                 shapes.Add(SpriteShape_571());
                 result.StartAnimation("RotationAngleInDegrees", _scalarAnimation_0_to_0_2);
                 var controller = result.TryGetAnimationController("RotationAngleInDegrees");
@@ -1552,29 +1440,27 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Brush
-            CompositionContainerShape ContainerShape_36()
+            CompositionContainerShape ContainerShape_29()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(101.129997F, 266.394012F));
                 result.CenterPoint = new Vector2(7.67500019F, 168.248001F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_37());
-                shapes.Add(ContainerShape_38());
                 shapes.Add(SpriteShape_572());
                 shapes.Add(SpriteShape_573());
                 shapes.Add(SpriteShape_574());
                 shapes.Add(SpriteShape_575());
                 shapes.Add(SpriteShape_576());
                 shapes.Add(SpriteShape_577());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_13());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(7.675,168.248)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", _vector2Animation_09);
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1583,22 +1469,6 @@ namespace AnimatedVisuals
                 controller = result.TryGetAnimationController("RotationAngleInDegrees");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Brush
-            CompositionContainerShape ContainerShape_37()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(29.7749996F, 151.932007F);
-                return result;
-            }
-
-            // Layer (Shape): Brush
-            CompositionContainerShape ContainerShape_38()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(26.3309994F, 144.279007F);
                 return result;
             }
 
@@ -1620,7 +1490,7 @@ namespace AnimatedVisuals
                 result.Opacity = 0;
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_3());
-                result.StartAnimation("Opacity", _scalarAnimation_1_to_1_0);
+                result.StartAnimation("Opacity", _scalarAnimation_to_1_0);
                 var controller = result.TryGetAnimationController("Opacity");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1631,19 +1501,13 @@ namespace AnimatedVisuals
             ContainerVisual ContainerVisual_3()
             {
                 var result = _c.CreateContainerVisual();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(150, 150));
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_4());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "Vector3((my.Position.X),(my.Position.Y),0)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_01());
-                var controller = result.TryGetAnimationController("Position");
+                result.StartAnimation("Offset", Vector3KeyFrameAnimation_1());
+                var controller = result.TryGetAnimationController("Offset");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("Scale", Vector3KeyFrameAnimation_1());
+                result.StartAnimation("Scale", Vector3KeyFrameAnimation_2());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1664,14 +1528,14 @@ namespace AnimatedVisuals
                 result.RotationAngleInDegrees = -5.5F;
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_5());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "Vector3((my.Position.X - 242.644),(my.Position.Y - 210.094),0)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_00());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "Vector3((my.Position.X - 242.644),(my.Position.Y - 210.094),0)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", Vector3KeyFrameAnimation_0());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -1699,7 +1563,7 @@ namespace AnimatedVisuals
                 result.Opacity = 0;
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_7());
-                result.StartAnimation("Opacity", _scalarAnimation_1_to_1_0);
+                result.StartAnimation("Opacity", _scalarAnimation_to_1_0);
                 var controller = result.TryGetAnimationController("Opacity");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1742,10 +1606,9 @@ namespace AnimatedVisuals
                 return _cubicBezierEasingFunction_03 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0, 1));
             }
 
-            // Position
             CubicBezierEasingFunction CubicBezierEasingFunction_04()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(1, 1));
+                return _cubicBezierEasingFunction_04 = _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(1, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_05()
@@ -1810,71 +1673,65 @@ namespace AnimatedVisuals
             // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_16()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0), new Vector2(1, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.75F, 0), new Vector2(0.649999976F, 1));
             }
 
             // Scale
             CubicBezierEasingFunction CubicBezierEasingFunction_17()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.75F, 0), new Vector2(0.649999976F, 1));
-            }
-
-            // Scale
-            CubicBezierEasingFunction CubicBezierEasingFunction_18()
-            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.550000012F, 1));
             }
 
             // RotationAngleInDegrees
-            CubicBezierEasingFunction CubicBezierEasingFunction_19()
+            CubicBezierEasingFunction CubicBezierEasingFunction_18()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.261000007F, 0.00700000022F), new Vector2(0.441000015F, 0.981999993F));
             }
 
             // RotationAngleInDegrees
-            CubicBezierEasingFunction CubicBezierEasingFunction_20()
+            CubicBezierEasingFunction CubicBezierEasingFunction_19()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.222000003F, 0), new Vector2(0.533999979F, 1));
             }
 
             // RotationAngleInDegrees
-            CubicBezierEasingFunction CubicBezierEasingFunction_21()
+            CubicBezierEasingFunction CubicBezierEasingFunction_20()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.412F, 0), new Vector2(0.737999976F, 1));
             }
 
             // RotationAngleInDegrees
-            CubicBezierEasingFunction CubicBezierEasingFunction_22()
+            CubicBezierEasingFunction CubicBezierEasingFunction_21()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.833000004F, 0.0140000004F), new Vector2(0, 1));
             }
 
+            CubicBezierEasingFunction CubicBezierEasingFunction_22()
+            {
+                return _cubicBezierEasingFunction_22 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.649999976F, 1));
+            }
+
             CubicBezierEasingFunction CubicBezierEasingFunction_23()
             {
-                return _cubicBezierEasingFunction_23 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.649999976F, 1));
+                return _cubicBezierEasingFunction_23 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.649999976F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_24()
             {
-                return _cubicBezierEasingFunction_24 = _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.649999976F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(0.649999976F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_25()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0, 0), new Vector2(0.649999976F, 1));
+                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.25F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_26()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.25F, 1));
-            }
-
-            CubicBezierEasingFunction CubicBezierEasingFunction_27()
-            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.349999994F, 0), new Vector2(0.809000015F, 0.897000015F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_28()
+            CubicBezierEasingFunction CubicBezierEasingFunction_27()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.497999996F, 0.165000007F), new Vector2(0.333999991F, 1));
             }
@@ -14533,6 +14390,13 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            StepEasingFunction HoldThenStepEasingFunction()
+            {
+                var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
+                result.IsFinalStepSingleFrame = true;
+                return result;
+            }
+
             InsetClip InsetClip()
             {
                 var result = _insetClip = _c.CreateInsetClip();
@@ -14557,7 +14421,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_001()
             {
@@ -14565,7 +14430,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_002()
             {
@@ -14573,7 +14439,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_003()
             {
@@ -14581,7 +14448,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_004()
             {
@@ -14589,7 +14457,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_005()
             {
@@ -14597,7 +14466,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_006()
             {
@@ -14605,7 +14475,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_007()
             {
@@ -14613,7 +14484,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_008()
             {
@@ -14621,7 +14493,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_009()
             {
@@ -14629,7 +14502,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_010()
             {
@@ -14637,7 +14511,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_011()
             {
@@ -14645,7 +14520,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_012()
             {
@@ -14653,7 +14529,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_013()
             {
@@ -14661,7 +14538,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_014()
             {
@@ -14669,7 +14547,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_015()
             {
@@ -14677,7 +14556,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_016()
             {
@@ -14685,7 +14565,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_017()
             {
@@ -14693,7 +14574,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_018()
             {
@@ -14701,7 +14583,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_019()
             {
@@ -14709,7 +14592,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_020()
             {
@@ -14717,7 +14601,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_021()
             {
@@ -14725,7 +14610,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_022()
             {
@@ -14733,7 +14619,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_023()
             {
@@ -14741,7 +14628,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_024()
             {
@@ -14749,7 +14637,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_025()
             {
@@ -14757,7 +14646,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_026()
             {
@@ -14765,7 +14655,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_027()
             {
@@ -14773,7 +14664,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_028()
             {
@@ -14781,7 +14673,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_029()
             {
@@ -14789,7 +14682,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_030()
             {
@@ -14797,7 +14691,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_031()
             {
@@ -14805,7 +14700,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_032()
             {
@@ -14813,7 +14709,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_033()
             {
@@ -14821,7 +14718,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_034()
             {
@@ -14829,7 +14727,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_035()
             {
@@ -14837,7 +14736,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_036()
             {
@@ -14845,7 +14745,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_037()
             {
@@ -14853,7 +14754,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_038()
             {
@@ -14861,7 +14763,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_039()
             {
@@ -14869,7 +14772,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_040()
             {
@@ -14877,7 +14781,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_041()
             {
@@ -14885,7 +14790,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_042()
             {
@@ -14893,7 +14799,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_043()
             {
@@ -14901,7 +14808,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_044()
             {
@@ -14909,7 +14817,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_045()
             {
@@ -14917,7 +14826,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_046()
             {
@@ -14925,7 +14835,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_047()
             {
@@ -14933,7 +14844,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_048()
             {
@@ -14941,7 +14853,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_049()
             {
@@ -14949,7 +14862,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_050()
             {
@@ -14957,7 +14871,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_051()
             {
@@ -14965,7 +14880,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_052()
             {
@@ -14973,7 +14889,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_053()
             {
@@ -14981,7 +14898,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_054()
             {
@@ -14989,7 +14907,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_055()
             {
@@ -14997,7 +14916,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_056()
             {
@@ -15005,7 +14925,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_057()
             {
@@ -15013,7 +14934,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_058()
             {
@@ -15021,7 +14943,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_059()
             {
@@ -15029,7 +14952,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_060()
             {
@@ -15037,7 +14961,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_061()
             {
@@ -15045,7 +14970,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_062()
             {
@@ -15053,7 +14979,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_063()
             {
@@ -15061,7 +14988,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_064()
             {
@@ -15069,7 +14997,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_065()
             {
@@ -15077,7 +15006,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_066()
             {
@@ -15085,7 +15015,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_067()
             {
@@ -15093,7 +15024,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_068()
             {
@@ -15101,7 +15033,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_069()
             {
@@ -15109,7 +15042,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_070()
             {
@@ -15117,7 +15051,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_071()
             {
@@ -15125,7 +15060,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_072()
             {
@@ -15133,7 +15069,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_073()
             {
@@ -15141,7 +15078,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_074()
             {
@@ -15149,7 +15087,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_075()
             {
@@ -15157,7 +15096,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_076()
             {
@@ -15165,7 +15105,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_077()
             {
@@ -15173,7 +15114,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_078()
             {
@@ -15181,7 +15123,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_079()
             {
@@ -15189,7 +15132,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_080()
             {
@@ -15197,7 +15141,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_081()
             {
@@ -15205,7 +15150,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_082()
             {
@@ -15213,7 +15159,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_083()
             {
@@ -15221,7 +15168,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_084()
             {
@@ -15229,7 +15177,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_085()
             {
@@ -15237,7 +15186,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_086()
             {
@@ -15245,7 +15195,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_087()
             {
@@ -15253,7 +15204,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_088()
             {
@@ -15261,7 +15213,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_089()
             {
@@ -15269,7 +15222,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_090()
             {
@@ -15277,7 +15231,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_091()
             {
@@ -15285,7 +15240,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_092()
             {
@@ -15293,7 +15249,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_093()
             {
@@ -15301,7 +15258,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_094()
             {
@@ -15309,7 +15267,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_095()
             {
@@ -15317,7 +15276,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_096()
             {
@@ -15325,7 +15285,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_097()
             {
@@ -15333,7 +15294,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_098()
             {
@@ -15341,7 +15303,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_099()
             {
@@ -15349,7 +15312,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_100()
             {
@@ -15357,7 +15321,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_101()
             {
@@ -15365,7 +15330,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_102()
             {
@@ -15373,7 +15339,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_103()
             {
@@ -15381,7 +15348,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_104()
             {
@@ -15389,7 +15357,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_105()
             {
@@ -15397,7 +15366,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_106()
             {
@@ -15405,7 +15375,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_107()
             {
@@ -15413,7 +15384,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_108()
             {
@@ -15421,7 +15393,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_109()
             {
@@ -15429,7 +15402,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_110()
             {
@@ -15437,7 +15411,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_111()
             {
@@ -15445,7 +15420,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_112()
             {
@@ -15453,7 +15429,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_113()
             {
@@ -15461,7 +15438,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_114()
             {
@@ -15469,7 +15447,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_115()
             {
@@ -15477,7 +15456,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_116()
             {
@@ -15485,7 +15465,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_117()
             {
@@ -15493,7 +15474,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_118()
             {
@@ -15501,7 +15483,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_119()
             {
@@ -15509,7 +15492,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_120()
             {
@@ -15517,7 +15501,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_121()
             {
@@ -15525,7 +15510,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_122()
             {
@@ -15533,7 +15519,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_123()
             {
@@ -15541,7 +15528,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_124()
             {
@@ -15549,7 +15537,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_125()
             {
@@ -15557,7 +15546,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_126()
             {
@@ -15565,7 +15555,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_127()
             {
@@ -15573,7 +15564,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_128()
             {
@@ -15581,7 +15573,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_129()
             {
@@ -15589,7 +15582,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_130()
             {
@@ -15597,7 +15591,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_131()
             {
@@ -15605,7 +15600,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_132()
             {
@@ -15613,7 +15609,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_133()
             {
@@ -15621,7 +15618,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_134()
             {
@@ -15629,7 +15627,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_135()
             {
@@ -15637,7 +15636,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_136()
             {
@@ -15645,7 +15645,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_137()
             {
@@ -15653,7 +15654,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_138()
             {
@@ -15661,7 +15663,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_139()
             {
@@ -15669,7 +15672,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_140()
             {
@@ -15677,7 +15681,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_141()
             {
@@ -15685,7 +15690,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_142()
             {
@@ -15693,7 +15699,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_143()
             {
@@ -15701,7 +15708,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_144()
             {
@@ -15709,7 +15717,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_145()
             {
@@ -15717,7 +15726,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_146()
             {
@@ -15725,7 +15735,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_147()
             {
@@ -15733,7 +15744,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_148()
             {
@@ -15741,7 +15753,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_149()
             {
@@ -15749,7 +15762,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_150()
             {
@@ -15757,7 +15771,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_151()
             {
@@ -15765,7 +15780,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_152()
             {
@@ -15773,7 +15789,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_153()
             {
@@ -15781,7 +15798,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_154()
             {
@@ -15789,7 +15807,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_155()
             {
@@ -15797,7 +15816,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_156()
             {
@@ -15805,7 +15825,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_157()
             {
@@ -15813,7 +15834,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_158()
             {
@@ -15821,7 +15843,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_159()
             {
@@ -15829,7 +15852,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_160()
             {
@@ -15837,7 +15861,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_161()
             {
@@ -15845,7 +15870,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_162()
             {
@@ -15853,7 +15879,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_163()
             {
@@ -15861,7 +15888,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_164()
             {
@@ -15869,7 +15897,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_165()
             {
@@ -15877,7 +15906,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_166()
             {
@@ -15885,7 +15915,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_167()
             {
@@ -15893,7 +15924,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_168()
             {
@@ -15901,7 +15933,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_169()
             {
@@ -15909,7 +15942,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_170()
             {
@@ -15917,7 +15951,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_171()
             {
@@ -15925,7 +15960,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_172()
             {
@@ -15933,7 +15969,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_173()
             {
@@ -15941,7 +15978,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_174()
             {
@@ -15949,7 +15987,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_175()
             {
@@ -15957,7 +15996,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_176()
             {
@@ -15965,7 +16005,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_177()
             {
@@ -15973,7 +16014,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_178()
             {
@@ -15981,7 +16023,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_179()
             {
@@ -15989,7 +16032,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_180()
             {
@@ -15997,7 +16041,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_181()
             {
@@ -16005,7 +16050,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_182()
             {
@@ -16013,7 +16059,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_183()
             {
@@ -16021,7 +16068,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_184()
             {
@@ -16029,7 +16077,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_185()
             {
@@ -16037,7 +16086,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_186()
             {
@@ -16045,7 +16095,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_187()
             {
@@ -16053,7 +16104,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_188()
             {
@@ -16061,7 +16113,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_189()
             {
@@ -16069,7 +16122,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_190()
             {
@@ -16077,7 +16131,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_191()
             {
@@ -16085,7 +16140,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_192()
             {
@@ -16093,7 +16149,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_193()
             {
@@ -16101,7 +16158,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_194()
             {
@@ -16109,7 +16167,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_195()
             {
@@ -16117,7 +16176,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_196()
             {
@@ -16125,7 +16185,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_197()
             {
@@ -16133,7 +16194,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_198()
             {
@@ -16141,7 +16203,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_199()
             {
@@ -16149,7 +16212,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_200()
             {
@@ -16157,7 +16221,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_201()
             {
@@ -16165,7 +16230,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_202()
             {
@@ -16173,7 +16239,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_203()
             {
@@ -16181,7 +16248,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_204()
             {
@@ -16189,7 +16257,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_205()
             {
@@ -16197,7 +16266,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_206()
             {
@@ -16205,7 +16275,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_207()
             {
@@ -16213,7 +16284,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_208()
             {
@@ -16221,7 +16293,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_209()
             {
@@ -16229,7 +16302,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_210()
             {
@@ -16237,7 +16311,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_211()
             {
@@ -16245,7 +16320,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_212()
             {
@@ -16253,7 +16329,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_213()
             {
@@ -16261,7 +16338,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_214()
             {
@@ -16269,7 +16347,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_215()
             {
@@ -16277,7 +16356,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_216()
             {
@@ -16285,7 +16365,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_217()
             {
@@ -16293,7 +16374,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_218()
             {
@@ -16301,7 +16383,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_219()
             {
@@ -16309,7 +16392,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_220()
             {
@@ -16317,7 +16401,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_221()
             {
@@ -16325,7 +16410,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_222()
             {
@@ -16333,7 +16419,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_223()
             {
@@ -16341,7 +16428,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_224()
             {
@@ -16349,7 +16437,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_225()
             {
@@ -16357,7 +16446,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_226()
             {
@@ -16365,7 +16455,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_227()
             {
@@ -16373,7 +16464,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_228()
             {
@@ -16381,7 +16473,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_229()
             {
@@ -16389,7 +16482,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_230()
             {
@@ -16397,7 +16491,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_231()
             {
@@ -16405,7 +16500,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_232()
             {
@@ -16413,7 +16509,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_233()
             {
@@ -16421,7 +16518,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_234()
             {
@@ -16429,7 +16527,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_235()
             {
@@ -16437,7 +16536,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_236()
             {
@@ -16445,7 +16545,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_237()
             {
@@ -16453,7 +16554,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_238()
             {
@@ -16461,7 +16563,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_239()
             {
@@ -16469,7 +16572,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_240()
             {
@@ -16477,7 +16581,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_241()
             {
@@ -16485,7 +16590,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_242()
             {
@@ -16493,7 +16599,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_243()
             {
@@ -16501,7 +16608,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_244()
             {
@@ -16509,7 +16617,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_245()
             {
@@ -16517,7 +16626,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_246()
             {
@@ -16525,7 +16635,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_247()
             {
@@ -16533,7 +16644,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_248()
             {
@@ -16541,7 +16653,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_249()
             {
@@ -16549,7 +16662,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_250()
             {
@@ -16557,7 +16671,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_251()
             {
@@ -16565,7 +16680,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_252()
             {
@@ -16573,7 +16689,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_253()
             {
@@ -16581,7 +16698,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_254()
             {
@@ -16589,7 +16707,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_255()
             {
@@ -16597,7 +16716,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_256()
             {
@@ -16605,7 +16725,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_257()
             {
@@ -16613,7 +16734,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_258()
             {
@@ -16621,7 +16743,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_259()
             {
@@ -16629,7 +16752,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_260()
             {
@@ -16637,7 +16761,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_261()
             {
@@ -16645,7 +16770,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_262()
             {
@@ -16653,7 +16779,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_263()
             {
@@ -16661,7 +16788,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_264()
             {
@@ -16669,7 +16797,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_265()
             {
@@ -16677,7 +16806,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_266()
             {
@@ -16685,7 +16815,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_267()
             {
@@ -16693,7 +16824,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_268()
             {
@@ -16701,7 +16833,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_269()
             {
@@ -16709,7 +16842,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_270()
             {
@@ -16717,7 +16851,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_271()
             {
@@ -16725,7 +16860,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_272()
             {
@@ -16733,7 +16869,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_273()
             {
@@ -16741,7 +16878,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_274()
             {
@@ -16749,7 +16887,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_275()
             {
@@ -16757,7 +16896,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_276()
             {
@@ -16765,7 +16905,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_277()
             {
@@ -16773,7 +16914,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_278()
             {
@@ -16781,7 +16923,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_279()
             {
@@ -16789,7 +16932,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_280()
             {
@@ -16797,7 +16941,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_281()
             {
@@ -16805,7 +16950,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_282()
             {
@@ -16813,7 +16959,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_283()
             {
@@ -16821,7 +16968,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_284()
             {
@@ -16829,7 +16977,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_285()
             {
@@ -16837,7 +16986,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_286()
             {
@@ -16845,7 +16995,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_287()
             {
@@ -16853,7 +17004,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_288()
             {
@@ -16861,7 +17013,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_289()
             {
@@ -16869,7 +17022,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_290()
             {
@@ -16877,7 +17031,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_291()
             {
@@ -16885,7 +17040,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_292()
             {
@@ -16893,7 +17049,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_293()
             {
@@ -16901,7 +17058,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_294()
             {
@@ -16909,7 +17067,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_295()
             {
@@ -16917,7 +17076,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_296()
             {
@@ -16925,7 +17085,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_297()
             {
@@ -16933,7 +17094,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_298()
             {
@@ -16941,7 +17103,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_299()
             {
@@ -16949,7 +17112,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_300()
             {
@@ -16957,7 +17121,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_301()
             {
@@ -16965,7 +17130,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_302()
             {
@@ -16973,7 +17139,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_303()
             {
@@ -16981,7 +17148,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_304()
             {
@@ -16989,7 +17157,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_305()
             {
@@ -16997,7 +17166,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_306()
             {
@@ -17005,7 +17175,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_307()
             {
@@ -17013,7 +17184,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_308()
             {
@@ -17021,7 +17193,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_309()
             {
@@ -17029,7 +17202,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_310()
             {
@@ -17037,7 +17211,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_311()
             {
@@ -17045,7 +17220,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_312()
             {
@@ -17053,7 +17229,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_313()
             {
@@ -17061,7 +17238,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_314()
             {
@@ -17069,7 +17247,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_315()
             {
@@ -17077,7 +17256,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_316()
             {
@@ -17085,7 +17265,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_317()
             {
@@ -17093,7 +17274,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_318()
             {
@@ -17101,7 +17283,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_319()
             {
@@ -17109,7 +17292,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_320()
             {
@@ -17117,7 +17301,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_321()
             {
@@ -17125,7 +17310,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_322()
             {
@@ -17133,7 +17319,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_323()
             {
@@ -17141,7 +17328,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_324()
             {
@@ -17149,7 +17337,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_325()
             {
@@ -17157,7 +17346,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_326()
             {
@@ -17165,7 +17355,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_327()
             {
@@ -17173,7 +17364,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_328()
             {
@@ -17181,7 +17373,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_329()
             {
@@ -17189,7 +17382,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_330()
             {
@@ -17197,7 +17391,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_331()
             {
@@ -17205,7 +17400,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_332()
             {
@@ -17213,7 +17409,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_333()
             {
@@ -17221,7 +17418,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_334()
             {
@@ -17229,7 +17427,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_335()
             {
@@ -17237,7 +17436,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_336()
             {
@@ -17245,7 +17445,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_337()
             {
@@ -17253,7 +17454,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_338()
             {
@@ -17261,7 +17463,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_339()
             {
@@ -17269,7 +17472,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_340()
             {
@@ -17277,7 +17481,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_341()
             {
@@ -17285,7 +17490,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_342()
             {
@@ -17293,7 +17499,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_343()
             {
@@ -17301,7 +17508,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_344()
             {
@@ -17309,7 +17517,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_345()
             {
@@ -17317,7 +17526,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_346()
             {
@@ -17325,7 +17535,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_347()
             {
@@ -17333,7 +17544,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_348()
             {
@@ -17341,7 +17553,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_349()
             {
@@ -17349,7 +17562,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_350()
             {
@@ -17357,7 +17571,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_351()
             {
@@ -17365,7 +17580,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_352()
             {
@@ -17373,7 +17589,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_353()
             {
@@ -17381,7 +17598,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_354()
             {
@@ -17389,7 +17607,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_355()
             {
@@ -17397,7 +17616,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_356()
             {
@@ -17405,7 +17625,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_357()
             {
@@ -17413,7 +17634,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_358()
             {
@@ -17421,7 +17643,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_359()
             {
@@ -17429,7 +17652,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_360()
             {
@@ -17437,7 +17661,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_361()
             {
@@ -17445,7 +17670,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_362()
             {
@@ -17453,7 +17679,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_363()
             {
@@ -17461,7 +17688,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_364()
             {
@@ -17469,7 +17697,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_365()
             {
@@ -17477,7 +17706,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_366()
             {
@@ -17485,7 +17715,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_367()
             {
@@ -17493,7 +17724,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_368()
             {
@@ -17501,7 +17733,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_369()
             {
@@ -17509,7 +17742,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_370()
             {
@@ -17517,7 +17751,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_371()
             {
@@ -17525,7 +17760,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_372()
             {
@@ -17533,7 +17769,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_373()
             {
@@ -17541,7 +17778,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_374()
             {
@@ -17549,7 +17787,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_375()
             {
@@ -17557,7 +17796,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_376()
             {
@@ -17565,7 +17805,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_377()
             {
@@ -17573,7 +17814,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_378()
             {
@@ -17581,7 +17823,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_379()
             {
@@ -17589,7 +17832,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_380()
             {
@@ -17597,7 +17841,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_381()
             {
@@ -17605,7 +17850,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_382()
             {
@@ -17613,7 +17859,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_383()
             {
@@ -17621,7 +17868,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_384()
             {
@@ -17629,7 +17877,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_385()
             {
@@ -17637,7 +17886,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_386()
             {
@@ -17645,7 +17895,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_387()
             {
@@ -17653,7 +17904,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_388()
             {
@@ -17661,7 +17913,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_389()
             {
@@ -17669,7 +17922,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_390()
             {
@@ -17677,7 +17931,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_391()
             {
@@ -17685,7 +17940,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_392()
             {
@@ -17693,7 +17949,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_393()
             {
@@ -17701,7 +17958,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_394()
             {
@@ -17709,7 +17967,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_395()
             {
@@ -17717,7 +17976,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_396()
             {
@@ -17725,7 +17985,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_397()
             {
@@ -17733,7 +17994,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_398()
             {
@@ -17741,7 +18003,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_399()
             {
@@ -17749,7 +18012,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_400()
             {
@@ -17757,7 +18021,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_401()
             {
@@ -17765,7 +18030,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_402()
             {
@@ -17773,7 +18039,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_403()
             {
@@ -17781,7 +18048,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_404()
             {
@@ -17789,7 +18057,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_405()
             {
@@ -17797,7 +18066,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_406()
             {
@@ -17805,7 +18075,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_407()
             {
@@ -17813,7 +18084,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_408()
             {
@@ -17821,7 +18093,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_409()
             {
@@ -17829,7 +18102,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_410()
             {
@@ -17837,7 +18111,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_411()
             {
@@ -17845,7 +18120,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_412()
             {
@@ -17853,7 +18129,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_413()
             {
@@ -17861,7 +18138,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_414()
             {
@@ -17869,7 +18147,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_415()
             {
@@ -17877,7 +18156,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_416()
             {
@@ -17885,7 +18165,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_417()
             {
@@ -17893,7 +18174,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_418()
             {
@@ -17901,7 +18183,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_419()
             {
@@ -17909,7 +18192,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_420()
             {
@@ -17917,7 +18201,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_421()
             {
@@ -17925,7 +18210,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_422()
             {
@@ -17933,7 +18219,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_423()
             {
@@ -17941,7 +18228,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_424()
             {
@@ -17949,7 +18237,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_425()
             {
@@ -17957,7 +18246,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_426()
             {
@@ -17965,7 +18255,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_427()
             {
@@ -17973,7 +18264,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_428()
             {
@@ -17981,7 +18273,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_429()
             {
@@ -17989,7 +18282,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_430()
             {
@@ -17997,7 +18291,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_431()
             {
@@ -18005,7 +18300,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_432()
             {
@@ -18013,7 +18309,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_433()
             {
@@ -18021,7 +18318,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_434()
             {
@@ -18029,7 +18327,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_435()
             {
@@ -18037,7 +18336,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_436()
             {
@@ -18045,7 +18345,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_437()
             {
@@ -18053,7 +18354,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_438()
             {
@@ -18061,7 +18363,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_439()
             {
@@ -18069,7 +18372,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_440()
             {
@@ -18077,7 +18381,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_441()
             {
@@ -18085,7 +18390,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_442()
             {
@@ -18093,7 +18399,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_443()
             {
@@ -18101,7 +18408,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_444()
             {
@@ -18109,7 +18417,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_445()
             {
@@ -18117,7 +18426,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_446()
             {
@@ -18125,7 +18435,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_447()
             {
@@ -18133,7 +18444,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_448()
             {
@@ -18141,7 +18453,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_449()
             {
@@ -18149,7 +18462,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_450()
             {
@@ -18157,7 +18471,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_451()
             {
@@ -18165,7 +18480,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_452()
             {
@@ -18173,7 +18489,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_453()
             {
@@ -18181,7 +18498,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_454()
             {
@@ -18189,7 +18507,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_455()
             {
@@ -18197,7 +18516,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_456()
             {
@@ -18205,7 +18525,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_457()
             {
@@ -18213,7 +18534,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_458()
             {
@@ -18221,7 +18543,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_459()
             {
@@ -18229,7 +18552,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_460()
             {
@@ -18237,7 +18561,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_461()
             {
@@ -18245,7 +18570,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_462()
             {
@@ -18253,7 +18579,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_463()
             {
@@ -18261,7 +18588,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_464()
             {
@@ -18269,7 +18597,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_465()
             {
@@ -18277,7 +18606,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_466()
             {
@@ -18285,7 +18615,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_467()
             {
@@ -18293,7 +18624,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_468()
             {
@@ -18301,7 +18633,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_469()
             {
@@ -18309,7 +18642,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_470()
             {
@@ -18317,7 +18651,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_471()
             {
@@ -18325,7 +18660,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_472()
             {
@@ -18333,7 +18669,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_473()
             {
@@ -18341,7 +18678,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_474()
             {
@@ -18349,7 +18687,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_475()
             {
@@ -18357,7 +18696,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_476()
             {
@@ -18365,7 +18705,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_477()
             {
@@ -18373,7 +18714,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_478()
             {
@@ -18381,7 +18723,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_479()
             {
@@ -18389,7 +18732,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_480()
             {
@@ -18397,7 +18741,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_481()
             {
@@ -18405,7 +18750,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_482()
             {
@@ -18413,7 +18759,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_483()
             {
@@ -18421,7 +18768,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_484()
             {
@@ -18429,7 +18777,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_485()
             {
@@ -18437,7 +18786,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_486()
             {
@@ -18445,7 +18795,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_487()
             {
@@ -18453,7 +18804,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_488()
             {
@@ -18461,7 +18813,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_489()
             {
@@ -18469,7 +18822,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_490()
             {
@@ -18477,7 +18831,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_491()
             {
@@ -18485,7 +18840,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_492()
             {
@@ -18493,7 +18849,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_493()
             {
@@ -18501,7 +18858,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_494()
             {
@@ -18509,7 +18867,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_495()
             {
@@ -18517,7 +18876,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_496()
             {
@@ -18525,7 +18885,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_497()
             {
@@ -18533,7 +18894,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_498()
             {
@@ -18541,7 +18903,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_499()
             {
@@ -18549,7 +18912,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_500()
             {
@@ -18557,7 +18921,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_501()
             {
@@ -18565,7 +18930,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_502()
             {
@@ -18573,7 +18939,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_503()
             {
@@ -18581,7 +18948,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_504()
             {
@@ -18589,7 +18957,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_505()
             {
@@ -18597,7 +18966,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_506()
             {
@@ -18605,7 +18975,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_507()
             {
@@ -18613,7 +18984,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_508()
             {
@@ -18621,7 +18993,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_509()
             {
@@ -18629,7 +19002,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_510()
             {
@@ -18637,7 +19011,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_511()
             {
@@ -18645,7 +19020,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_512()
             {
@@ -18653,7 +19029,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_513()
             {
@@ -18661,7 +19038,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_514()
             {
@@ -18669,7 +19047,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_515()
             {
@@ -18677,7 +19056,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_516()
             {
@@ -18685,7 +19065,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_517()
             {
@@ -18693,7 +19074,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_518()
             {
@@ -18701,7 +19083,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_519()
             {
@@ -18709,7 +19092,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_520()
             {
@@ -18717,7 +19101,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_521()
             {
@@ -18725,7 +19110,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_522()
             {
@@ -18733,7 +19119,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_523()
             {
@@ -18741,7 +19128,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_524()
             {
@@ -18749,7 +19137,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_525()
             {
@@ -18757,7 +19146,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_526()
             {
@@ -18765,7 +19155,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_527()
             {
@@ -18773,7 +19164,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_528()
             {
@@ -18781,7 +19173,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_529()
             {
@@ -18789,7 +19182,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_530()
             {
@@ -18797,7 +19191,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_531()
             {
@@ -18805,7 +19200,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_532()
             {
@@ -18813,7 +19209,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_533()
             {
@@ -18821,7 +19218,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_534()
             {
@@ -18829,7 +19227,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_535()
             {
@@ -18837,7 +19236,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_536()
             {
@@ -18845,7 +19245,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_537()
             {
@@ -18853,7 +19254,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_538()
             {
@@ -18861,7 +19263,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_539()
             {
@@ -18869,7 +19272,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_540()
             {
@@ -18877,7 +19281,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_541()
             {
@@ -18885,7 +19290,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_542()
             {
@@ -18893,7 +19299,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_543()
             {
@@ -18901,7 +19308,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_544()
             {
@@ -18909,7 +19317,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_545()
             {
@@ -18917,7 +19326,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_546()
             {
@@ -18925,7 +19335,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_547()
             {
@@ -18933,7 +19344,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_548()
             {
@@ -18941,7 +19353,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_549()
             {
@@ -18949,7 +19362,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_550()
             {
@@ -18957,7 +19371,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_551()
             {
@@ -18965,7 +19380,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Paint_splatter Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_552()
             {
@@ -18979,7 +19395,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_554()
             {
@@ -18991,7 +19408,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_555()
             {
@@ -19003,7 +19421,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_556()
             {
@@ -19011,7 +19430,8 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_557()
             {
@@ -19106,8 +19526,7 @@ namespace AnimatedVisuals
             }
 
             // Transforms: Brush Tip
-            //   Transforms: Brush Tip 2
-            //     Path 1
+            //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_567()
             {
@@ -19207,8 +19626,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_001(), LinearEasingFunction());
-                result.InsertKeyFrame(0.666666687F, _compositionPath_001, _linearEasingFunction);
+                result.InsertKeyFrame(0, CompositionPath_001(), StepThenHoldEasingFunction());
+                result.InsertKeyFrame(0.666666687F, _compositionPath_001, LinearEasingFunction());
                 result.InsertKeyFrame(0.716666639F, new CompositionPath(Geometry_002()), CubicBezierEasingFunction_00());
                 result.InsertKeyFrame(0.733333349F, new CompositionPath(Geometry_003()), CubicBezierEasingFunction_01());
                 result.InsertKeyFrame(0.75F, new CompositionPath(Geometry_004()), _cubicBezierEasingFunction_01);
@@ -19218,8 +19637,9 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_1()
             {
@@ -19227,13 +19647,14 @@ namespace AnimatedVisuals
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, CompositionPath_562(), _linearEasingFunction);
                 result.InsertKeyFrame(0.166666672F, CompositionPath_563(), _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.5F, _compositionPath_563, _linearEasingFunction);
+                result.InsertKeyFrame(0.5F, _compositionPath_563, _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, _compositionPath_562, _cubicBezierEasingFunction_05);
                 return result;
             }
 
-            // Path 1
-            //   Path 1.PathGeometry
+            // Layer (Shape): Layer 1 Outlines
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_2()
             {
@@ -19241,7 +19662,7 @@ namespace AnimatedVisuals
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, CompositionPath_565(), _linearEasingFunction);
                 result.InsertKeyFrame(0.166666672F, CompositionPath_566(), _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.5F, _compositionPath_566, _linearEasingFunction);
+                result.InsertKeyFrame(0.5F, _compositionPath_566, _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, _compositionPath_565, _cubicBezierEasingFunction_05);
                 return result;
             }
@@ -19269,9 +19690,8 @@ namespace AnimatedVisuals
             }
 
             // Transforms: Brush Tip
-            //   Transforms: Brush Tip 2
-            //     Path 1
-            //       Path 1.PathGeometry
+            //   Path 1
+            //     Path 1.PathGeometry
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_4()
             {
@@ -19295,7 +19715,7 @@ namespace AnimatedVisuals
                 result.InsertKeyFrame(0.583333313F, new CompositionPath(Geometry_602()), _cubicBezierEasingFunction_10);
                 result.InsertKeyFrame(0.666666687F, new CompositionPath(Geometry_603()), _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.733333349F, CompositionPath_604(), _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.766666651F, _compositionPath_604, _linearEasingFunction);
+                result.InsertKeyFrame(0.766666651F, _compositionPath_604, _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.866666675F, _compositionPath_587, _cubicBezierEasingFunction_11);
                 return result;
             }
@@ -19308,9 +19728,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreatePathKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, CompositionPath_606(), _linearEasingFunction);
+                result.InsertKeyFrame(0, CompositionPath_606(), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.783333361F, _compositionPath_606, _linearEasingFunction);
-                result.InsertKeyFrame(0.983333349F, CompositionPath_607(), CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0.983333349F, CompositionPath_607(), CubicBezierEasingFunction_22());
                 return result;
             }
 
@@ -19324,7 +19744,7 @@ namespace AnimatedVisuals
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, _compositionPath_607, _linearEasingFunction);
                 result.InsertKeyFrame(0.0666666701F, new CompositionPath(Geometry_609()), _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.666666687F, _compositionPath_607, _cubicBezierEasingFunction_23);
+                result.InsertKeyFrame(0.666666687F, _compositionPath_607, _cubicBezierEasingFunction_22);
                 return result;
             }
 
@@ -19346,39 +19766,39 @@ namespace AnimatedVisuals
                 var children = result.Children;
                 children.InsertAtTop(ContainerVisual_1());
                 children.InsertAtTop(ShapeVisual_1());
-                result.StartAnimation("t3", ScalarAnimation_1_to_1_2());
+                result.StartAnimation("t3", ScalarAnimation_1_to_1_0());
                 var controller = result.TryGetAnimationController("t3");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t5", _scalarAnimation_1_to_1_2);
+                result.StartAnimation("t5", _scalarAnimation_1_to_1_0);
                 controller = result.TryGetAnimationController("t5");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t7", _scalarAnimation_1_to_1_2);
+                result.StartAnimation("t7", _scalarAnimation_1_to_1_0);
                 controller = result.TryGetAnimationController("t7");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t9", _scalarAnimation_1_to_1_2);
+                result.StartAnimation("t9", _scalarAnimation_1_to_1_0);
                 controller = result.TryGetAnimationController("t9");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t11", ScalarAnimation_1_to_1_3());
+                result.StartAnimation("t11", ScalarAnimation_1_to_1_1());
                 controller = result.TryGetAnimationController("t11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t12", _scalarAnimation_1_to_1_3);
+                result.StartAnimation("t12", _scalarAnimation_1_to_1_1);
                 controller = result.TryGetAnimationController("t12");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t13", _scalarAnimation_1_to_1_3);
+                result.StartAnimation("t13", _scalarAnimation_1_to_1_1);
                 controller = result.TryGetAnimationController("t13");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t14", _scalarAnimation_1_to_1_3);
+                result.StartAnimation("t14", _scalarAnimation_1_to_1_1);
                 controller = result.TryGetAnimationController("t14");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                result.StartAnimation("t15", _scalarAnimation_1_to_1_3);
+                result.StartAnimation("t15", _scalarAnimation_1_to_1_1);
                 controller = result.TryGetAnimationController("t15");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -19404,7 +19824,7 @@ namespace AnimatedVisuals
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.166666672F, -16.1000004F, _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.666666687F, -16.1000004F, _linearEasingFunction);
+                result.InsertKeyFrame(0.666666687F, -16.1000004F, _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, 0, _cubicBezierEasingFunction_03);
                 return result;
             }
@@ -19418,7 +19838,7 @@ namespace AnimatedVisuals
                 result.InsertKeyFrame(0.166666672F, 11.3000002F, _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.25F, -4.69999981F, _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.333333343F, 11.3000002F, _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.5F, 11.3000002F, _linearEasingFunction);
+                result.InsertKeyFrame(0.5F, 11.3000002F, _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.666666687F, -4.4000001F, CubicBezierEasingFunction_12());
                 result.InsertKeyFrame(0.733333349F, 24.7059994F, CubicBezierEasingFunction_13());
                 result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_14());
@@ -19434,19 +19854,10 @@ namespace AnimatedVisuals
                 result.InsertKeyFrame(0.166666672F, -24, _cubicBezierEasingFunction_15);
                 result.InsertKeyFrame(0.25F, -25, _cubicBezierEasingFunction_01);
                 result.InsertKeyFrame(0.333333343F, -10, _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.400000006F, -54.0489998F, CubicBezierEasingFunction_19());
-                result.InsertKeyFrame(0.5F, -25, CubicBezierEasingFunction_20());
-                result.InsertKeyFrame(0.666666687F, -72.6330032F, CubicBezierEasingFunction_21());
-                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_22());
-                return result;
-            }
-
-            // Layer (Shape): Brush Tip Shade
-            ScalarKeyFrameAnimation ScalarAnimation_0_to_0_4()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0666666701F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.400000006F, -54.0489998F, CubicBezierEasingFunction_18());
+                result.InsertKeyFrame(0.5F, -25, CubicBezierEasingFunction_19());
+                result.InsertKeyFrame(0.666666687F, -72.6330032F, CubicBezierEasingFunction_20());
+                result.InsertKeyFrame(0.983333349F, 0, CubicBezierEasingFunction_21());
                 return result;
             }
 
@@ -19455,8 +19866,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.200000003F, 1, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.883333325F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.200000003F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.883333325F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -19464,44 +19875,53 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_1_0 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.666666687F, 1, StepEasingFunction_0());
-                return result;
-            }
-
-            // Layer (Shape): Brush Tip Shade 2
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_1()
-            {
-                var result = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.783333361F, 1, _stepEasingFunction_0);
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_2()
-            {
-                var result = _scalarAnimation_1_to_1_2 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(0.166666567F, 1, _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.666666806F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.666666806F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.98333323F, 1, _cubicBezierEasingFunction_03);
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_3()
+            ScalarKeyFrameAnimation ScalarAnimation_1_to_1_1()
             {
-                var result = _scalarAnimation_1_to_1_3 = _c.CreateScalarKeyFrameAnimation();
+                var result = _scalarAnimation_1_to_1_1 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.166666567F, 1, CubicBezierEasingFunction_24());
-                result.InsertKeyFrame(0.166666672F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.249999896F, 1, _cubicBezierEasingFunction_24);
-                result.InsertKeyFrame(0.25F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.333333224F, 1, CubicBezierEasingFunction_25());
-                result.InsertKeyFrame(0.333333313F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.499999911F, 1, CubicBezierEasingFunction_26());
-                result.InsertKeyFrame(0.5F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.666666567F, 1, CubicBezierEasingFunction_27());
-                result.InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.98333323F, 1, CubicBezierEasingFunction_28());
+                result.InsertKeyFrame(0.166666567F, 1, CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0.166666672F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.249999896F, 1, _cubicBezierEasingFunction_23);
+                result.InsertKeyFrame(0.25F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.333333224F, 1, CubicBezierEasingFunction_24());
+                result.InsertKeyFrame(0.333333313F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.499999911F, 1, CubicBezierEasingFunction_25());
+                result.InsertKeyFrame(0.5F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.666666567F, 1, CubicBezierEasingFunction_26());
+                result.InsertKeyFrame(0.666666687F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.98333323F, 1, CubicBezierEasingFunction_27());
+                return result;
+            }
+
+            // Layer (Shape): Brush Tip Shade
+            ScalarKeyFrameAnimation ScalarAnimation_to_0()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.0666666701F, 0, _holdThenStepEasingFunction);
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarAnimation_to_1_0()
+            {
+                var result = _scalarAnimation_to_1_0 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.666666687F, 1, HoldThenStepEasingFunction());
+                return result;
+            }
+
+            // Layer (Shape): Brush Tip Shade 2
+            ScalarKeyFrameAnimation ScalarAnimation_to_1_1()
+            {
+                var result = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.783333361F, 1, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -19522,13 +19942,13 @@ namespace AnimatedVisuals
                 // Layer (Shape): Paint_splatter Outlines
                 shapes.Add(ContainerShape_00());
                 // Layer (Shape): Paintbrush Outlines
-                shapes.Add(ContainerShape_02());
+                shapes.Add(ContainerShape_01());
                 // Layer (Shape): Paintbrush Outlines 2
-                shapes.Add(ContainerShape_04());
+                shapes.Add(ContainerShape_02());
                 // Layer (Shape): Paintbrush Outlines 3
-                shapes.Add(ContainerShape_06());
+                shapes.Add(ContainerShape_03());
                 // Layer (Shape): Paintbrush Outlines 4
-                shapes.Add(ContainerShape_08());
+                shapes.Add(ContainerShape_04());
                 return result;
             }
 
@@ -19538,5619 +19958,6179 @@ namespace AnimatedVisuals
                 result.Size = new Vector2(300, 300);
                 var shapes = result.Shapes;
                 // Layer (Shape): Layer 1 Outlines
-                shapes.Add(ContainerShape_10());
+                shapes.Add(ContainerShape_05());
                 // Layer (Shape): Layer 3 Outlines
-                shapes.Add(ContainerShape_12());
+                shapes.Add(ContainerShape_06());
                 // Layer (Shape): Layer 4 Outlines 2
-                shapes.Add(ContainerShape_15());
+                shapes.Add(ContainerShape_09());
                 // Layer (Shape): Layer 5 Outlines
-                shapes.Add(ContainerShape_18());
+                shapes.Add(ContainerShape_12());
                 // Layer (Shape): Layer 6 Outlines
-                shapes.Add(ContainerShape_21());
+                shapes.Add(ContainerShape_15());
                 // Layer (Shape): Brush Tip
-                shapes.Add(ContainerShape_24());
+                shapes.Add(ContainerShape_18());
                 // Layer (Shape): Brush Tip 2
-                shapes.Add(ContainerShape_26());
+                shapes.Add(ContainerShape_20());
                 // Layer (Shape): Brush Tip Shade 2
-                shapes.Add(ContainerShape_30());
+                shapes.Add(ContainerShape_23());
                 // Layer (Shape): Brush Tip Shade
-                shapes.Add(ContainerShape_33());
+                shapes.Add(ContainerShape_26());
                 // Layer (Shape): Brush
-                shapes.Add(ContainerShape_36());
+                shapes.Add(ContainerShape_29());
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_000()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.639F, 47.1889992F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 172.139008F, -9.31100082F);
                 result.FillBrush = ColorBrush_AlmostMediumOrchid_FFC338B3();
                 result.Geometry = PathGeometry_001();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_001()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(148.626999F, 46.0639992F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 207.126999F, -10.4360008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_002();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_002()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(181.639999F, 46.8370018F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 240.139999F, -9.6629982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_003();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_003()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(142.444F, 47.0690002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.944F, -9.43099976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_004();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_004()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(145.154007F, 47.2669983F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 203.654007F, -9.23300171F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_005();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_005()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(214.973999F, 50.0550003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 273.473999F, -6.44499969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_006();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_006()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(232.386993F, 50.493F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 290.886993F, -6.00699997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_007();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_007()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(90.1829987F, 49.012001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 148.682999F, -7.48799896F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_008();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_008()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(251.753998F, 49.8260002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 310.253998F, -6.67399979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_009();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_009()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(158.229996F, 50.2480011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 216.729996F, -6.2519989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_010();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_010()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(148.231003F, 51.0040016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 206.731003F, -5.49599838F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_011();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_011()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(143.186996F, 52.7410011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 201.686996F, -3.75899887F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_012();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_012()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(197.427994F, 52.6829987F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 255.927994F, -3.81700134F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_013();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_013()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(253.330994F, 53.0530014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 311.830994F, -3.4469986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_014();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_014()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(249.723007F, 54.2970009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 308.223022F, -2.20299911F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_015();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_015()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(26.9519997F, 54.4430008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 85.4519958F, -2.05699921F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_016();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_016()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(255.794006F, 54.1389999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 314.294006F, -2.36100006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_017();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_017()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(231.408997F, 54.3730011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 289.908997F, -2.1269989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_018();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_018()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.9860001F, 56.8089981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 151.485992F, 0.308998108F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_019();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_019()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(152.675003F, 56.7000008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 211.175003F, 0.200000763F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_020();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_020()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(231.783005F, 57.2220001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 290.28302F, 0.722000122F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_021();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_021()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(141.917999F, 57.8359985F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.417999F, 1.33599854F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_022();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_022()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.1959991F, 60.8330002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 150.695999F, 4.33300018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_023();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_023()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.4710007F, 60.0009995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 154.971008F, 3.50099945F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_024();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_024()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(106.695F, 58.9490013F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 165.195007F, 2.44900131F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_025();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_025()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(202.953995F, 60.8019981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 261.453979F, 4.30199814F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_026();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_026()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(104.011002F, 61.1839981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.511002F, 4.68399811F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_027();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_027()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(221.348007F, 60.9020004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 279.848022F, 4.40200043F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_028();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_028()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(138.490997F, 64.9120026F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196.990997F, 8.41200256F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_029();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_029()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(103.904999F, 63.8240013F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.404999F, 7.32400131F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_030();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_030()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(23.3330002F, 63.9529991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 81.8330002F, 7.45299911F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_031();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_031()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(146.994995F, 63.7270012F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 205.494995F, 7.22700119F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_032();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_032()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(94.4550018F, 65.4140015F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 152.955002F, 8.91400146F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_033();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_033()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(215.845001F, 63.7249985F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 274.345001F, 7.22499847F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_034();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_034()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(34.9640007F, 64.6179962F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 93.4640045F, 8.11799622F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_035();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_035()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(198.285004F, 64.2450027F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 256.785004F, 7.74500275F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_036();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_036()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.9889984F, 66.0009995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 155.488998F, 9.50099945F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_037();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_037()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196.572006F, 68.2369995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 255.072006F, 11.7369995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_038();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_038()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(199.136993F, 69.072998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 257.636993F, 12.572998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_039();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_039()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(87.3499985F, 69.2180023F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 145.850006F, 12.7180023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_040();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_040()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.7779999F, 69.947998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 147.278F, 13.447998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_041();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_041()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.2229996F, 71.8509979F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 146.722992F, 15.3509979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_042();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_042()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(27.8299999F, 74.9209976F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 86.3300018F, 18.4209976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_043();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_043()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.2730026F, 73.6490021F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 154.77301F, 17.1490021F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_044();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_044()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(81.6999969F, 76.5309982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 140.199997F, 20.0309982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_045();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_045()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.003998F, 80.4800034F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 294.503998F, 23.9800034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_046();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_046()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(45.3720016F, 83.4980011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 103.872002F, 26.9980011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_047();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_047()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.5189972F, 83.2289963F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 155.018997F, 26.7289963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_048();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_048()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(15.2019997F, 92.4759979F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 73.7019958F, 35.9759979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_049();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_049()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.4059982F, 86.1699982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 154.906006F, 29.6699982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_050();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_050()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(77.3960037F, 88.6080017F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 135.895996F, 32.1080017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_051();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_051()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(275.467987F, 91.3050003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 333.967987F, 34.8050003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_052();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_052()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.591003F, 90.3860016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 336.091003F, 33.8860016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_053();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_053()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40.0149994F, 91.7429962F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 98.5149994F, 35.2429962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_054();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_054()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(124.932999F, 94.2310028F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 183.432999F, 37.7310028F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_055();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_055()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.699997F, 98.7659988F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.199997F, 42.2659988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_056();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_056()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(133.404999F, 97.5550003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 191.904999F, 41.0550003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_057();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_057()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(282.54599F, 104.177002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 341.04599F, 47.677002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_058();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_058()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(22.5629997F, 105.800003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 81.0630035F, 49.3000031F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_059();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_059()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(27.1989994F, 109.004997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 85.6989975F, 52.5049973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_060();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_060()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.3280029F, 108.630997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 151.828003F, 52.1309967F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_061();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_061()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.931F, 108.857002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 295.431F, 52.3570023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_062();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_062()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(194.401993F, 110.538002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.901993F, 54.038002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_063();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_063()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(29.7070007F, 110.918999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 88.2070007F, 54.4189987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_064();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_064()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.414993F, 111.239998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.914978F, 54.7399979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_065();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_065()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(122.947998F, 113.684998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.447998F, 57.1849976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_066();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_066()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(35.6889992F, 113.831001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 94.1889954F, 57.3310013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_067();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_067()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(265.484985F, 115.412003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 323.984985F, 58.9120026F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_068();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_068()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(238.848999F, 114.272003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 297.348999F, 57.7720032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_069();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_069()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(275.096985F, 116.318001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 333.596985F, 59.8180008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_070();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_070()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(109.689003F, 121.144997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 168.188995F, 64.6449966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_071();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_071()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(223.501999F, 117.195999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 282.002014F, 60.6959991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_072();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_072()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.345001F, 118.073997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 335.845001F, 61.5739975F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_073();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_073()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.985001F, 118.219002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.485001F, 61.7190018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_074();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_074()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.068001F, 117.635002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 178.567993F, 61.1350021F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_075();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_075()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(97.5940018F, 117.841003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 156.093994F, 61.3410034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_076();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_076()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(159.697998F, 117.843002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 218.197998F, 61.3430023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_077();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_077()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.2210007F, 118.765999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 151.721008F, 62.2659988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_078();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_078()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(220.858002F, 122.068001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 279.358002F, 65.5680008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_079();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_079()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(195.951996F, 120.121002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 254.451996F, 63.6210022F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_080();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_080()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(279.903015F, 122.460999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 338.403015F, 65.9609985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_081();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_081()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.367996F, 123.045998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.867996F, 66.5459976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_082();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_082()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(115.769997F, 129.044006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.269989F, 72.5440063F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_083();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_083()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(185.932999F, 123.777F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 244.432999F, 67.2770004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_084();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_084()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(218.867996F, 126.264999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 277.367981F, 69.7649994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_085();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_085()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(186.246002F, 127.306999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 244.746002F, 70.8069992F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_086();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_086()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(87.0970001F, 129.188004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 145.597F, 72.6880035F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_087();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_087()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.429001F, 132.115005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.929001F, 75.6150055F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_088();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_088()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(214.712006F, 131.968994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 273.212006F, 75.4689941F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_089();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_089()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(218.445007F, 135.479996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 276.945007F, 78.9799957F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_090();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_090()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(216.154999F, 135.300003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 274.654999F, 78.8000031F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_091();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_091()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(205.453003F, 109.224998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 263.953003F, 52.7249985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_092();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_092()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(160.334F, 59.2709999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 218.834F, 2.77099991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_093();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_093()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(167.061005F, 46.0460014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 225.561005F, -10.4539986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_094();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_094()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(165.860001F, 49.4690018F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 224.360001F, -7.03099823F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_095();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_095()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(163.259003F, 52.4939995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 221.759003F, -4.00600052F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_096();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_096()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(172.697998F, 52.7019997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 231.197998F, -3.79800034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_097();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_097()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(235.199997F, 55.2949982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.700012F, -1.20500183F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_098();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_098()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(271.354004F, 58.5349998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 329.854004F, 2.03499985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_099();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_099()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(235.522003F, 62.6349983F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 294.022003F, 6.13499832F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_100();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_100()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(256.756989F, 64.4830017F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 315.256989F, 7.98300171F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_101();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_101()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(188.610001F, 63.6590004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 247.110001F, 7.1590004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_102();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_102()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(233.701996F, 65.6449966F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 292.201996F, 9.14499664F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_103();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_103()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(234.796005F, 66.4400024F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.296021F, 9.94000244F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_104();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_104()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.628006F, 67.9229965F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 295.127991F, 11.4229965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_105();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_105()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(187.647003F, 66.9629974F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 246.147003F, 10.4629974F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_106();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_106()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(251.675003F, 73.1159973F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 310.174988F, 16.6159973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_107();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_107()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.876007F, 69.9469986F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.376007F, 13.4469986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_108();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_108()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(230.979004F, 71.8509979F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 289.479004F, 15.3509979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_109();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_109()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(266.355988F, 69.776001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 324.855988F, 13.276001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_110();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_110()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(209.001999F, 75.6230011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 267.502014F, 19.1230011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_111();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_111()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(265.575012F, 72.9029999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 324.075012F, 16.4029999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_112();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_112()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(146.651001F, 74.8949966F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 205.151001F, 18.3949966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_113();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_113()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(154.248001F, 74.7480011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 212.748001F, 18.2480011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_114();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_114()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.054993F, 79.935997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.554993F, 23.435997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_115();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_115()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(217.548004F, 74.8280029F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 276.048004F, 18.3280029F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_116();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_116()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(264.166992F, 77.1179962F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 322.666992F, 20.6179962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_117();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_117()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(197.451004F, 76.822998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 255.951004F, 20.322998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_118();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_118()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(283.256012F, 78.1399994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 341.756012F, 21.6399994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_119();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_119()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(215.054993F, 78.3460007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 273.554993F, 21.8460007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_120();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_120()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(212.699005F, 79.7009964F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 271.199005F, 23.2009964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_121();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_121()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(209.158005F, 82.564003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 267.65802F, 26.064003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_122();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_122()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(278.710999F, 82.1340027F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 337.210999F, 25.6340027F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_123();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_123()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.744995F, 82.1949997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.244995F, 25.6949997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_124();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_124()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.257004F, 84.7229996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 251.757004F, 28.2229996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_125();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_125()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(274.42099F, 85.8929977F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 332.92099F, 29.3929977F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_126();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_126()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(198.352997F, 89.6959991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 256.852997F, 33.1959991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_127();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_127()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(131.557007F, 90.7210007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 190.057007F, 34.2210007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_128();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_128()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(270.713989F, 91.6589966F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 329.213989F, 35.1589966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_129();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_129()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(208.216003F, 92.2750015F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 266.716003F, 35.7750015F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_130();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_130()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.856003F, 92.6549988F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.356003F, 36.1549988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_131();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_131()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(206.082993F, 94.961998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 264.583008F, 38.461998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_132();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_132()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(279.674988F, 95.9290009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 338.174988F, 39.4290009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_133();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_133()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(238.996002F, 99.4660034F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 297.496002F, 42.9660034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_134();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_134()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(279.923004F, 102.420998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 338.423004F, 45.9209976F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_135();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_135()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(139.177994F, 104.693001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 197.677994F, 48.1930008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_136();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_136()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(49.0279999F, 57.8339996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 107.528F, 1.33399963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_137();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_137()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(124.553001F, 51.3720016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 183.053009F, -5.12799835F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_138();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_138()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(57.7159996F, 52.4650002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 116.216003F, -4.03499985F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_139();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_139()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.563004F, 54.4430008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 179.063004F, -2.05699921F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_140();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_140()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(128.369003F, 55.3209991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 186.869003F, -1.17900085F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_141();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_141()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(131.126999F, 61.7579994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 189.626999F, 5.25799942F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_142();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_142()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(127.015999F, 62.9280014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.515991F, 6.4280014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_143();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_143()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(111.269997F, 65.2720032F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 169.769989F, 8.77200317F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_144();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_144()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(69.3769989F, 66.4120026F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 127.876999F, 9.91200256F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_145();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_145()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(79.8690033F, 73.2979965F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 138.369003F, 16.7979965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_146();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_146()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(63.9539986F, 75.6539993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 122.453995F, 19.1539993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_147();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_147()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(109.602997F, 70.9400024F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 168.102997F, 14.4400024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_148();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_148()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.487F, 71.1679993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 184.987F, 14.6679993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_149();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_149()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(52.8800011F, 74.1910019F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 111.380005F, 17.6910019F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_150();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_150()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(106.665001F, 72.3089981F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 165.165009F, 15.8089981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_151();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_151()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(103.904999F, 75.0439987F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.404999F, 18.5439987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_152();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_152()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(111.137001F, 74.1330032F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 169.636993F, 17.6330032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_153();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_153()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(101.101997F, 78.6660004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 159.60199F, 22.1660004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_154();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_154()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(122.802002F, 79.1119995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.302002F, 22.6119995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_155();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_155()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(75.7919998F, 90.1039963F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 134.291992F, 33.6039963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_156();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_156()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.7770004F, 83.2180023F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 147.277008F, 26.7180023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_157();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_157()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(89.151001F, 86.0950012F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 147.651001F, 29.5950012F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_158();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_158()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(90.0319977F, 88.9649963F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 148.531998F, 32.4649963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_159();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_159()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(75.4349976F, 97.887001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 133.934998F, 41.387001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_160();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_160()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(103.689003F, 98.6869965F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.188995F, 42.1869965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_161();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_161()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(83.6610031F, 116.903F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 142.161011F, 60.4029999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_162();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_162()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(85.9410019F, 128.020996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 144.44101F, 71.5209961F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_163();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_163()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(117.115997F, 49.0309982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 175.615997F, -7.46900177F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_164();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_164()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(112.717003F, 50.1930008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.21701F, -6.30699921F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_165();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_165()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(194.710999F, 50.2680016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 253.210999F, -6.23199844F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_166();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_166()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(94.3960037F, 51.5639992F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 152.895996F, -4.93600082F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_167();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_167()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(102.892998F, 51.9309998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 161.393005F, -4.56900024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_168();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_168()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(232.886993F, 54.4430008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 291.386993F, -2.05699921F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_169();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_169()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.3799973F, 55.612999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 151.880005F, -0.887001038F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_170();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_170()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(204.399002F, 56.5410004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.898987F, 0.0410003662F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_171();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_171()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(287.049011F, 62.8959999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 345.549011F, 6.39599991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_172();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_172()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.3860016F, 63.4529991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 154.886002F, 6.95299911F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_173();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_173()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(99.5619965F, 64.1340027F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 158.061996F, 7.63400269F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_174();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_174()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(32.4129982F, 67.9830017F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 90.9129944F, 11.4830017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_175();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_175()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(19.4559994F, 67.3740005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 77.9560013F, 10.8740005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_176();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_176()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(85.3860016F, 69.9489975F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 143.886002F, 13.4489975F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_177();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_177()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.927002F, 71.5579987F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 155.427002F, 15.0579987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_178();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_178()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(30.8840008F, 71.7040024F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 89.3840027F, 15.2040024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_179();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_179()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(83.0319977F, 74.6289978F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 141.531998F, 18.1289978F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_180();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_180()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(33.3110008F, 78.8710022F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 91.8110046F, 22.3710022F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_181();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_181()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.589005F, 88.5270004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 295.088989F, 32.0270004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_182();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_182()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(35.4039993F, 85.9970016F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 93.9039993F, 29.4970016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_183();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_183()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40.1839981F, 88.7070007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 98.6839981F, 32.2070007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_184();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_184()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(234.574005F, 93.0449982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.074005F, 36.5449982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_185();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_185()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.289001F, 101.397003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.789001F, 44.8970032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_186();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_186()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(98.7180023F, 104.933998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 157.218002F, 48.4339981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_187();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_187()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.216995F, 103.300003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.71698F, 46.8000031F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_188();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_188()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(206.444F, 101.950996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 264.944F, 45.4509964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_189();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_189()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.155998F, 105.070999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.656006F, 48.5709991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_190();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_190()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.425003F, 110.028999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.925003F, 53.5289993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_191();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_191()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(101.536003F, 107.393997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 160.036011F, 50.8939972F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_192();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_192()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(274.660004F, 109.588997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 333.160004F, 53.0889969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_193();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_193()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(197.729996F, 109.199997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 256.22998F, 52.6999969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_194();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_194()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(100.945F, 117.049004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 159.445007F, 60.5490036F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_195();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_195()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(203.619995F, 114.107002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.119995F, 57.6070023F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_196();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_196()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(29.5359993F, 116.319F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 88.0359955F, 59.8190002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_197();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_197()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(33.4210014F, 119.389999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 91.9210052F, 62.8899994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_198();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_198()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(105.389F, 122.400002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 163.889008F, 65.9000015F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_199();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_199()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(213.115997F, 134.921005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 271.615997F, 78.4210052F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_200();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_200()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(24.9790001F, 73.0220032F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 83.4790039F, 16.5220032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_201();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_201()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(20.632F, 113.425003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 79.1320038F, 56.9250031F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_202();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_202()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(182.072998F, 237.167007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 240.572998F, 180.667007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_203();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_203()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(149.520996F, 222.207001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 208.020996F, 165.707001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_204();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_204()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.602997F, 206.287994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 178.102997F, 149.787994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_205();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_205()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(155.320999F, 223.792007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 213.820999F, 167.292007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_206();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_206()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(153.141006F, 222.552994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 211.641006F, 166.052994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_207();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_207()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(90.4970016F, 188.220001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 148.997009F, 131.720001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_208();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_208()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(74.9049988F, 179.835999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 133.404999F, 123.335999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_209();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_209()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(203.764999F, 245.979996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.265015F, 189.479996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_210();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_210()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(56.7799988F, 171.600006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 115.279999F, 115.100006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_211();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_211()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(142.167999F, 213.813995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.667999F, 157.313995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_212();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_212()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(151.718002F, 217.641998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 210.218002F, 161.141998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_213();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_213()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(156.759003F, 218.453003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 215.259003F, 161.953003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_214();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_214()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(107.397003F, 194.078995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 165.897003F, 137.578995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_215();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_215()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(56.387001F, 167.647995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 114.887001F, 111.147995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_216();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_216()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(60.2220001F, 168.121002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 118.722F, 111.621002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_217();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_217()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(263.60199F, 270.502991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 322.10199F, 214.002991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_218();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_218()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(54.6580009F, 165.863998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 113.158005F, 109.363998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_219();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_219()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(76.9260025F, 176.692993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 135.425995F, 120.192993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_220();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_220()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(204.190002F, 237.688995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.690002F, 181.188995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_221();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_221()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(149.843002F, 210.404007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 208.343002F, 153.904007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_222();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_222()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(77.7050018F, 174);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 136.205002F, 117.5F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_223();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_223()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(159.850006F, 214.654999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 218.350006F, 158.154999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_224();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_224()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(206.173004F, 234.436996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 264.673004F, 177.936996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_225();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_225()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(202.444F, 233.134995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 260.944F, 176.634995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_226();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_226()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(192.393005F, 229.464996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 250.893005F, 172.964996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_227();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_227()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(105.136002F, 184.003006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 163.636002F, 127.503006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_228();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_228()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(195.528F, 228.380005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 254.028F, 171.880005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_229();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_229()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.7429962F, 175.636993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 147.242996F, 119.136993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_230();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_230()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(165.371994F, 209.947998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 223.871994F, 153.447998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_231();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_231()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196.619003F, 226.175003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 255.119003F, 169.675003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_232();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_232()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(270.256989F, 262.980011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 328.756989F, 206.480011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_233();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_233()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(157.548004F, 206.707993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 216.048004F, 150.207993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_234();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_234()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(205.873001F, 229.160004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 264.372986F, 172.660004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_235();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_235()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(94.6539993F, 175.244003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 153.153992F, 118.744003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_236();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_236()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(259.869995F, 257.178986F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 318.369995F, 200.678986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_237();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_237()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(110.917F, 182.901993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 169.416992F, 126.401993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_238();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_238()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(204.013F, 227.425995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.513F, 170.925995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_239();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_239()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.897003F, 180.014008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 172.397003F, 123.514008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_240();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_240()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(111.778999F, 177.966003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 170.278992F, 121.466003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_241();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_241()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(213.837997F, 228.841003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 272.338013F, 172.341003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_242();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_242()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(212.787994F, 227.477997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 271.287994F, 170.977997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_243();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_243()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(214.009003F, 226.113998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 272.509003F, 169.613998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_244();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_244()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(270.233002F, 251.117004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 328.733002F, 194.617004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_245();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_245()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(207.522003F, 220.740005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 266.022003F, 164.240005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_246();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_246()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(221.815002F, 224.945007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 280.315002F, 168.445007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_247();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_247()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(82.5400009F, 150.815994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 141.040009F, 94.3159943F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_248();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_248()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(257.412994F, 235.199997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 315.912994F, 178.699997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_249();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_249()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(210.639008F, 211.858002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 269.139008F, 155.358002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_250();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_250()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(287.225006F, 240.513F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 345.725006F, 184.013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_251();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_251()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(211.860992F, 209.406998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 270.360992F, 152.906998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_252();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_252()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(229.994995F, 215.442001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 288.494995F, 158.942001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_253();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_253()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(50.4399986F, 123.043999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 108.940002F, 66.5439987F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_254();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_254()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(47.9869995F, 122.765999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 106.487F, 66.2659988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_255();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_255()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(265.431F, 229.951996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 323.931F, 173.451996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_256();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_256()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(188.806F, 189.013F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 247.306F, 132.513F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_257();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_257()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196.173004F, 187.820007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 254.673004F, 131.320007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_258();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_258()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(182.287003F, 182.042007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 240.787003F, 125.542007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_259();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_259()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.6539993F, 107.754997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 107.153999F, 51.2549973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_260();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_260()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(286.333008F, 225.013F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 344.833008F, 168.513F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_261();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_261()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(283.455994F, 219.858002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 341.955994F, 163.358002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_262();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_262()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(222.809006F, 190.220001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 281.309021F, 133.720001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_263();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_263()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(91.9929962F, 124.393997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 150.492996F, 67.8939972F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_264();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_264()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(131.378006F, 142.509003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 189.878006F, 86.0090027F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_265();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_265()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(281.897003F, 217.214996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 340.397003F, 160.714996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_266();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_266()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(125.452003F, 138.623001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 183.951996F, 82.1230011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_267();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_267()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(197.977005F, 172.233002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 256.47699F, 115.733002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_268();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_268()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.808014F, 212.033997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 336.308014F, 155.533997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_269();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_269()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(68.1419983F, 105.003998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 126.641998F, 48.5039978F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_270();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_270()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.1800003F, 118.473F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 150.679993F, 61.9729996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_271();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_271()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(60.2179985F, 100.236F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 118.718002F, 43.7360001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_272();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_272()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(212.158997F, 171.378006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 270.658997F, 114.878006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_273();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_273()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(107.578003F, 123.276001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 166.078003F, 66.776001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_274();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_274()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(58.5340004F, 97.8249969F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 117.033997F, 41.3249969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_275();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_275()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(203.638F, 169.839996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.138F, 113.339996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_276();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_276()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.919998F, 169.832993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 260.419983F, 113.332993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_277();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_277()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(222.490005F, 179.871994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 280.98999F, 123.371994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_278();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_278()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(165.945999F, 151.460007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 224.445999F, 94.9600067F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_279();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_279()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(226.895004F, 181.076004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 285.39502F, 124.576004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_280();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_280()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(111.634003F, 119.896004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 170.134003F, 63.3960037F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_281();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_281()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(133.686005F, 132.977997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 192.186005F, 76.4779968F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_282();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_282()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(57.7089996F, 92.5339966F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 116.209F, 36.0339966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_283();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_283()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(207.190002F, 166.520996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 265.690002F, 110.020996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_284();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_284()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(210.496002F, 161.651993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 268.996002F, 105.151993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_285();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_285()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(144.037003F, 134.326996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 202.537003F, 77.8269958F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_286();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_286()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(114.954002F, 116.866997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 173.45401F, 60.3669968F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_287();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_287()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(145.360992F, 130.828995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 203.860992F, 74.3289948F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_288();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_288()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.151993F, 174.371994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 294.651978F, 117.871994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_289();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_289()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(213.274002F, 159.813004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 271.773987F, 103.313004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_290();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_290()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.857002F, 113.528F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 179.356995F, 57.0279999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_291();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_291()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.765999F, 108.704002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.265991F, 52.2040024F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_292();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_292()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.674004F, 109.903999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 179.174011F, 53.4039993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_293();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_293()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.924004F, 138.5F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 179.424011F, 82);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_294();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_294()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(143.597F, 204.376999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 202.097F, 147.876999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_295();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_295()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(132.613998F, 213.628006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 191.113998F, 157.128006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_296();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_296()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(134.570007F, 211.093002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 193.070007F, 154.593002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_297();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_297()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(138.149002F, 209.567993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196.649002F, 153.067993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_298();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_298()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(129.947006F, 205.373001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 188.447006F, 148.873001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_299();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_299()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(73.9449997F, 174.085999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 132.445007F, 117.585999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_300();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_300()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(41.9679985F, 154.811996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 100.468002F, 98.3119965F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_301();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_301()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(76.1240005F, 167.117004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 134.623993F, 110.617004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_302();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_302()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(57.6759987F, 155.597F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 116.175995F, 99.0970001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_303();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_303()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.358002F, 187.886993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.858002F, 131.386993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_304();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_304()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(79.052002F, 165.279999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 137.552002F, 108.779999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_305();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_305()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(78.5400009F, 164.294006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 137.040009F, 107.794006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_306();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_306()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(77.1610031F, 161.587006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 135.661011F, 105.087006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_307();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_307()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(121.591003F, 185.173996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 180.091003F, 128.673996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_308();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_308()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(65.1320038F, 151.035004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 123.632004F, 94.5350037F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_309();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_309()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(117.074997F, 179.931F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 175.574997F, 123.431F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_310();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_310()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(83.7740021F, 161.156006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 142.274002F, 104.656006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_311();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_311()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(50.5810013F, 146.348999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 109.081001F, 89.848999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_312();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_312()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(105.028999F, 168.425003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 163.528992F, 111.925003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_313();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_313()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(52.6640015F, 144.156006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 111.164001F, 87.6560059F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_314();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_314()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(161.623001F, 196.753006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 220.123001F, 140.253006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_315();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_315()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(154.955994F, 193.292999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 213.455994F, 136.792999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_316();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_316()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(114.747002F, 166.912003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 173.247009F, 110.412003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_317();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_317()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(97.1989975F, 164.328995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 155.699005F, 107.828995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_318();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_318()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(55.6529999F, 141.580994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 114.153F, 85.0809937F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_319();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_319()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.306F, 171.707993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.806F, 115.207993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_320();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_320()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(38.480999F, 131.447006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 96.9810028F, 74.9470062F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_321();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_321()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(100.912003F, 162.210999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 159.412003F, 105.710999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_322();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_322()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(103.551003F, 161.895004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.050995F, 105.395004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_323();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_323()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(107.646004F, 161.162003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 166.145996F, 104.662003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_324();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_324()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(44.3050003F, 129.888F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 102.805F, 73.3880005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_325();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_325()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(121.717003F, 168.604004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 180.21701F, 112.104004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_326();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_326()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.122002F, 166.578003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.622009F, 110.078003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_327();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_327()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(49.3190002F, 128.339996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 107.819F, 71.8399963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_328();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_328()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(120.072998F, 159.699997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 178.572998F, 103.199997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_329();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_329()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(181.417999F, 189.210999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 239.917999F, 132.710999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_330();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_330()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(54.6450005F, 124.683998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 113.145004F, 68.1839981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_331();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_331()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(112.228996F, 152.824997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 170.729004F, 96.3249969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_332();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_332()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(125.348F, 158.843994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 183.847992F, 102.343994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_333();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_333()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(114.780998F, 151.296005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 173.281006F, 94.7960052F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_334();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_334()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.1360016F, 116.677002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 106.636002F, 60.177002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_335();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_335()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(86.3960037F, 132.188995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 144.895996F, 75.6889954F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_336();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_336()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(50.3250008F, 110.626999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 108.824997F, 54.1269989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_337();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_337()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(179.582993F, 172.925995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 238.082993F, 116.425995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_338();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_338()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(244.509003F, 256.859009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 303.009003F, 200.359009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_339();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_339()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(173.281006F, 227.981995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 231.781006F, 171.481995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_340();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_340()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(234.617004F, 257.798004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.117004F, 201.298004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_341();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_341()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(178.216995F, 227.561996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 236.716995F, 171.061996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_342();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_342()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.516006F, 223.052002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 230.016006F, 166.552002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_343();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_343()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.242004F, 216.057999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 229.742004F, 159.557999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_344();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_344()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(175.311005F, 216.639999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 233.811005F, 160.139999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_345();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_345()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(190.875F, 221.735001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 249.375F, 165.235001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_346();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_346()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(229.774994F, 239.589996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 288.274994F, 183.089996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_347();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_347()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(222.289001F, 228.895996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 280.789001F, 172.395996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_348();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_348()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.847F, 233.395004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 295.346985F, 176.895004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_349();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_349()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(194.128998F, 217.686005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.628998F, 161.186005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_350();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_350()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(178.768997F, 209.203995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 237.268997F, 152.703995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_351();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_351()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(247.483994F, 240.296005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 305.984009F, 183.796005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_352();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_352()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(197.395996F, 217.223999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 255.895996F, 160.723999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_353();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_353()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(200.884003F, 216);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.384003F, 159.5F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_354();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_354()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.966003F, 213.505997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 252.466003F, 157.005997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_355();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_355()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(204.496994F, 215.134003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.997009F, 158.634003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_356();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_356()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(185.291F, 203.554001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 243.791F, 147.054001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_357();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_357()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(231.641998F, 216.488007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 290.141998F, 159.988007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_358();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_358()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(217.554001F, 215.389999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 276.054016F, 158.889999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_359();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_359()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(218.488007F, 212.781998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 276.988007F, 156.281998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_360();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_360()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(218.565994F, 209.727005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 277.065979F, 153.227005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_361();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_361()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(235.098007F, 208.195007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.598022F, 151.695007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_362();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_362()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(209.681F, 194.548996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 268.181F, 138.048996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_363();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_363()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(234.854004F, 187.194F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 293.354004F, 130.694F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_364();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_364()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(236.781998F, 175.916F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 295.281982F, 119.416F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_365();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_365()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(179.369003F, 233.792007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 237.869003F, 177.292007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_366();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_366()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(183.453003F, 234.787994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 241.953003F, 178.287994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_367();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_367()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(108.878998F, 197.393005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 167.378998F, 140.893005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_368();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_368()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.093994F, 241.796997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.593994F, 185.296997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_369();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_369()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.313995F, 237.399994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 251.813995F, 180.899994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_370();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_370()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(75.7040024F, 176.026993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 134.20401F, 119.526993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_371();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_371()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(203.136993F, 238.578995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 261.636993F, 182.078995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_372();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_372()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(102.228996F, 187.123993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 160.729004F, 130.623993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_373();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_373()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(29.3910007F, 143.636002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 87.8909988F, 87.1360016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_374();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_374()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(203.686005F, 230.093002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 262.186005F, 173.593002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_375();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_375()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(200.787994F, 228.156006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.287994F, 171.656006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_376();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_376()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(263.355988F, 255.042007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 321.855988F, 198.542007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_377();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_377()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(274.960999F, 261.516998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 333.460999F, 205.016998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_378();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_378()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(215.830994F, 228.807999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 274.330994F, 172.307999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_379();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_379()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(206.087006F, 222.356995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 264.587006F, 165.856995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_380();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_380()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(266.256012F, 252.416F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 324.756012F, 195.916F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_381();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_381()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(219.675995F, 226.065994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 278.175995F, 169.565994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_382();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_382()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(266.821991F, 244.811996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 325.321991F, 188.311996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_383();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_383()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(84.7990036F, 143.233002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 143.299011F, 86.7330017F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_384();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_384()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(267.229004F, 237.151993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 325.729004F, 180.651993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_385();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_385()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(264.244995F, 232.979996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 322.744995F, 176.479996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_386();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_386()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.4980011F, 140.244995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 146.998001F, 83.7449951F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_387();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_387()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(199.457993F, 186.177994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 257.958008F, 129.677994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_388();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_388()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(216.643997F, 190.662994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 275.143982F, 134.162994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_389();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_389()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(122.549004F, 146.154007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.049011F, 89.654007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_390();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_390()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(117.307999F, 144.707993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 175.807999F, 88.2079926F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_391();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_391()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(200.949997F, 183.082001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 259.450012F, 126.582001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_392();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_392()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(199.830994F, 177.009995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 258.330994F, 120.509995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_393();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_393()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(215.039001F, 187.639008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 273.539001F, 131.139008F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_394();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_394()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(57.9420013F, 106.612999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 116.442001F, 50.112999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_395();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_395()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(128.302994F, 141.841003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 186.802994F, 85.3410034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_396();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_396()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(219.035004F, 178.774002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 277.535004F, 122.274002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_397();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_397()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(124.362F, 135.179001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 182.862F, 78.6790009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_398();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_398()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(283.636993F, 212.214005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 342.136993F, 155.714005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_399();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_399()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(281.432007F, 207.686005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 339.932007F, 151.186005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_400();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_400()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(217.098007F, 172.261993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 275.598022F, 115.761993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_401();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_401()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.486F, 111.727997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.985992F, 55.2279968F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_402();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_402()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.113998F, 42.7200012F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 229.613998F, -13.7799988F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_403();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_403()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(19.0249996F, 61.5480003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 77.5250015F, 5.04800034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_404();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_404()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(30.625F, 66.0999985F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 89.125F, 9.59999847F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_405();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_405()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(172.382996F, 81.5759964F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 230.882996F, 25.0759964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_406();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_406()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(114.149002F, 83.8769989F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 172.649002F, 27.3769989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_407();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_407()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.750999F, 84.836998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 182.251007F, 28.336998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_408();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_408()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(175.009003F, 88.9899979F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 233.509003F, 32.4899979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_409();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_409()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(153.994003F, 92.9940033F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 212.494003F, 36.4940033F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_410();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_410()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(66.6289978F, 93.8789978F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 125.128998F, 37.3789978F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_411();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_411()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(150.376007F, 99.6650009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 208.876007F, 43.1650009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_412();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_412()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.269997F, 96.9990005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.769989F, 40.4990005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_413();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_413()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(102.552002F, 102.004997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 161.052002F, 45.5049973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_414();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_414()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(147.651001F, 105.412003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 206.151001F, 48.9120026F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_415();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_415()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(102.981003F, 106.838997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 161.481003F, 50.3389969F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_416();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_416()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(141.959F, 113.222F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.459F, 56.7220001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_417();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_417()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(147.070007F, 118.030998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 205.570007F, 61.5309982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_418();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_418()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(143.936005F, 117.783997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 202.436005F, 61.2839966F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_419();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_419()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(129.279999F, 82.0800018F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 187.779999F, 25.5800018F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_420();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_420()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(164.233002F, 30.9029999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 222.733002F, -25.5970001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_421();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_421()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(134.139999F, 36.0680008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 192.639999F, -20.4319992F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_422();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_422()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(48.7630005F, 35.0719986F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 107.263F, -21.4280014F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_423();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_423()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(59.1669998F, 34.8709984F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 117.667F, -21.6290016F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_424();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_424()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.260002F, 41.9729996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.76001F, -14.5270004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_425();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_425()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(145.841003F, 34.9799995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 204.341003F, -21.5200005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_426();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_426()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.323997F, 37.7120018F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 176.824005F, -18.7879982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_427();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_427()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(142.427994F, 39.7960014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.927994F, -16.7039986F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_428();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_428()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(139.203003F, 41.6520004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 197.703003F, -14.8479996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_429();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_429()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(134.352997F, 45.5730019F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 192.852997F, -10.9269981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_430();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_430()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.249001F, 45.0660019F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.748993F, -11.4339981F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_431();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_431()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(112.582001F, 48.5279999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.082001F, -7.97200012F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_432();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_432()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.557999F, 55.3390007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 178.057999F, -1.1609993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_433();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_433()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(28.0960007F, 56.7420006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 86.5960007F, 0.24200058F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_434();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_434()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(133.063995F, 58.8689995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 191.563995F, 2.36899948F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_435();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_435()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.401001F, 59.3899994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.901001F, 2.88999939F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_436();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_436()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(130.143005F, 62.5489998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 188.643005F, 6.04899979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_437();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_437()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(175.210007F, 68.7160034F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 233.710007F, 12.2160034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_438();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_438()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(38.5320015F, 75.8730011F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 97.0319977F, 19.3730011F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_439();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_439()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.914993F, 53.7369995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 230.414993F, -2.76300049F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_440();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_440()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(169.154999F, 59.9239998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 227.654999F, 3.42399979F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_441();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_441()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.480003F, 73.9660034F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.980011F, 17.4660034F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_442();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_442()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(130.639008F, 72.1190033F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 189.139008F, 15.6190033F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_443();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_443()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.705002F, 82.0449982F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.205002F, 25.5449982F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_444();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_444()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.771004F, 88.7649994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.270996F, 32.2649994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_445();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_445()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(139.772995F, 117.264F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 198.272995F, 60.7639999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_446();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_446()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(97.2669983F, 257.269989F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 155.766998F, 200.769989F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_447();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_447()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(52.6940002F, 236.785004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 111.194F, 180.285004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_448();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_448()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(60.6349983F, 238.955002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 119.134995F, 182.455002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_449();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_449()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(57.6500015F, 237.259003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 116.150002F, 180.759003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_450();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_450()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.970001F, 269.338013F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.470001F, 212.838013F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_451();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_451()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(42.625F, 225.292007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 101.125F, 168.792007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_452();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_452()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(55.7019997F, 230.533997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 114.201996F, 174.033997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_453();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_453()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(62.6049995F, 231.645004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 121.104996F, 175.145004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_454();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_454()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(127.552002F, 257.981995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 186.052002F, 201.481995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_455();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_455()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(53.1349983F, 220.621994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 111.634995F, 164.121994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_456();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_456()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(66.8379974F, 226.442993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 125.337997F, 169.942993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_457();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_457()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(130.266998F, 253.529007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 188.766998F, 197.029007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_458();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_458()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(125.160004F, 251.748001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 183.660004F, 195.248001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_459();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_459()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(111.399002F, 246.722F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 169.899002F, 190.222F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_460();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_460()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(115.691002F, 245.238007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 174.19101F, 188.738007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_461();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_461()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(74.3990021F, 219.998001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 132.899002F, 163.498001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_462();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_462()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(117.183998F, 242.216995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 175.68399F, 185.716995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_463();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_463()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(63.6839981F, 215.561005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 122.183998F, 159.061005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_464();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_464()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(129.856003F, 246.304993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 188.356003F, 189.804993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_465();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_465()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(127.309998F, 243.929993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.809998F, 187.429993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_466();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_466()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(140.761993F, 245.867996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 199.261993F, 189.367996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_467();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_467()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(139.324005F, 244.001999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 197.824005F, 187.501999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_468();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_468()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(140.996002F, 242.134003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 199.496002F, 185.634003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_469();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_469()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(132.113007F, 234.774994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 190.613007F, 178.274994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_470();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_470()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(151.684998F, 240.533997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 210.184998F, 184.033997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_471();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_471()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(136.380997F, 222.613998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 194.880997F, 166.113998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_472();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_472()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(138.054993F, 219.257004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196.554993F, 162.757004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_473();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_473()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(162.886002F, 227.520996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 221.386002F, 171.020996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_474();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_474()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(106.486F, 191.332001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 164.985992F, 134.832001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_475();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_475()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(116.572998F, 189.697998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 175.072998F, 133.197998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_476();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_476()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(97.5589981F, 181.787994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 156.05899F, 125.287994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_477();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_477()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(153.046005F, 192.983994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 211.546005F, 136.483994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_478();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_478()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(27.8500004F, 127.653999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 86.3499985F, 71.1539993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_479();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_479()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(19.7360001F, 122.334F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 78.2360001F, 65.8339996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_480();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_480()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.043999F, 168.356003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 177.544006F, 111.856003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_481();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_481()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(138.462006F, 167.184006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196.962006F, 110.684006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_482();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_482()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.794998F, 165.078995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.294998F, 108.578995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_483();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_483()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(124.443001F, 165.069F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 182.942993F, 108.569F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_484();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_484()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(152.608994F, 178.813995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 211.108994F, 122.313995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_485();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_485()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(75.1839981F, 139.910995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 133.68399F, 83.4109955F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_486();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_486()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(158.641006F, 180.464996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 217.141006F, 123.964996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_487();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_487()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(31.0109997F, 114.603996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 89.5110016F, 58.1039963F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_488();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_488()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(131.660004F, 160.533997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 190.160004F, 104.033997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_489();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_489()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(136.184998F, 153.867004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 194.684998F, 97.3670044F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_490();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_490()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(45.1850014F, 116.450996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 103.684998F, 59.9509964F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_491();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_491()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(46.9959984F, 111.661003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 105.496002F, 55.1610031F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_492();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_492()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.315994F, 171.283997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 229.815994F, 114.783997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_493();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_493()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(139.990997F, 151.348007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 198.490997F, 94.8480072F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_494();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_494()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(44.5830002F, 212.369003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 103.083F, 155.869003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_495();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_495()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(29.5419998F, 225.037003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 88.0419998F, 168.537003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_496();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_496()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(32.2210007F, 221.565994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 90.7210007F, 165.065994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_497();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_497()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(37.1220016F, 219.477997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 95.6220016F, 162.977997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_498();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_498()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(25.8920002F, 213.733994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 84.3919983F, 157.233994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_499();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_499()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(69.2639999F, 201.931F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 127.764F, 145.431F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_500();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_500()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(60.1349983F, 197.192001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 118.634995F, 140.692001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_501();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_501()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(96.3700027F, 191.602997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 154.869995F, 135.102997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_502();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_502()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(19.5939999F, 150.022003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 78.0940018F, 93.5220032F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_503();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_503()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.8570023F, 169.304001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 152.356995F, 112.804001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_504();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_504()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(182.759995F, 284.234009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 241.259995F, 227.734009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_505();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_505()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(85.2289963F, 244.690994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 143.729004F, 188.190994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_506();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_506()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(169.216003F, 285.518005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 227.716003F, 229.018005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_507();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_507()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(91.9869995F, 244.117996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 150.487F, 187.617996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_508();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_508()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(82.8119965F, 237.940994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 141.311996F, 181.440994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_509();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_509()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(82.435997F, 228.363998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 140.936005F, 171.863998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_510();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_510()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(88.0080032F, 229.162003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 146.507996F, 172.662003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_511();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_511()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(109.32F, 236.138F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 167.820007F, 179.638F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_512();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_512()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(162.585007F, 260.584991F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 221.085007F, 204.084991F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_513();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_513()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(152.335007F, 245.944F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 210.835007F, 189.444F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_514();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_514()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(172.266998F, 252.104004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 230.766998F, 195.604004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_515();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_515()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.774002F, 230.593002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 172.274002F, 174.093002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_516();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_516()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.7419968F, 218.979004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 151.242004F, 162.479004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_517();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_517()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(118.247002F, 229.960999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 176.747009F, 173.460999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_518();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_518()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.025002F, 228.283997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.524994F, 171.783997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_519();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_519()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(113.552002F, 224.869995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 172.052002F, 168.369995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_520();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_520()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(127.971001F, 227.100006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 186.471008F, 170.600006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_521();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_521()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(101.672997F, 211.242004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 160.173004F, 154.742004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_522();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_522()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(165.141998F, 228.953003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 223.641998F, 172.453003F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_523();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_523()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(145.850006F, 227.449997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 204.350006F, 170.949997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_524();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_524()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(147.130005F, 223.880005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 205.630005F, 167.380005F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_525();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_525()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(147.235992F, 219.695007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 205.735992F, 163.195007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_526();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_526()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(169.871994F, 217.598007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 228.371994F, 161.098007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_527();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_527()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(135.070007F, 198.912994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 193.570007F, 142.412994F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_528();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_528()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(169.539001F, 188.841995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 228.039001F, 132.341995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_529();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_529()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(172.179993F, 173.397995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 230.679993F, 116.897995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_530();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_530()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.564003F, 252.647995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 152.063995F, 196.147995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_531();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_531()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(99.1579971F, 254.011002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 157.65799F, 197.511002F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_532();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_532()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.310997F, 263.609009F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.811005F, 207.109009F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_533();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_533()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(112.658997F, 257.587006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.158997F, 201.087006F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_534();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_534()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.110001F, 259.201996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 184.610001F, 202.701996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_535();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_535()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(126.861F, 247.582001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 185.360992F, 191.082001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_536();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_536()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(122.892998F, 244.929993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.393005F, 188.429993F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_537();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_537()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(143.492996F, 245.822998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 201.992996F, 189.322998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_538();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_538()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(130.149002F, 236.988998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 188.649002F, 180.488998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_539();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_539()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(148.755997F, 242.070007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 207.255997F, 185.570007F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_540();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_540()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(121.072998F, 187.449997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 179.572998F, 130.949997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_541();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_541()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(144.604996F, 193.591995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 203.104996F, 137.091995F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_542();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_542()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(123.115997F, 183.210999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 181.615997F, 126.710999F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_543();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_543()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(121.583F, 174.895996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 180.083008F, 118.395996F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_544();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_544()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(142.406006F, 189.449997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 200.906006F, 132.949997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_545();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_545()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(23.6389999F, 126.740997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 82.1389999F, 70.2409973F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_546();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_546()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(147.878006F, 177.313004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 206.378006F, 120.813004F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_547();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_547()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(18.2439995F, 117.617996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 76.7440033F, 61.1179962F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_548();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_548()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(145.225998F, 168.393997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 203.725998F, 111.893997F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_549();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_549()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(17.0440006F, 85.5059967F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 75.5439987F, 29.0059967F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_550();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_550()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(272.42099F, 254.110001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 330.92099F, 197.610001F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_551();
                 return result;
             }
 
+            // Layer (Shape): Paint_splatter Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_551()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(290.53299F, 218.684998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 349.03299F, 162.184998F);
                 result.FillBrush = _colorBrush_AlmostMediumOrchid_FFC338B3;
                 result.Geometry = PathGeometry_552();
                 return result;
             }
 
+            // Layer (Shape): Paintbrush Outlines
             CompositionSpriteShape SpriteShape_552()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.8649979F, 18.0030003F);
+                result.TransformMatrix = new Matrix3x2(0.739056468F, -0.421088904F, 0.697771966F, 1.22466505F, 137.56546F, 109.766617F);
                 result.FillBrush = ColorBrush_AlmostDarkMagenta_FF992B9A();
                 result.Geometry = PathGeometry_553();
                 return result;
             }
 
+            // Layer (Shape): Paintbrush Outlines 2
             CompositionSpriteShape SpriteShape_553()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.8649979F, 18.0030003F);
+                result.TransformMatrix = new Matrix3x2(0.57795167F, -0.170900866F, 0.399682701F, 1.35164499F, 216.520081F, 72.5066757F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
                 result.Geometry = _pathGeometry_553;
                 return result;
             }
 
+            // Layer (Shape): Paintbrush Outlines 3
             CompositionSpriteShape SpriteShape_554()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.8649979F, 18.0030003F);
+                result.TransformMatrix = new Matrix3x2(0.517035484F, 0.118673392F, -0.315318465F, 1.37377739F, 287.849213F, 61.884964F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
                 result.Geometry = _pathGeometry_553;
                 return result;
             }
 
+            // Layer (Shape): Paintbrush Outlines 4
             CompositionSpriteShape SpriteShape_555()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(92.8649979F, 18.0030003F);
+                result.TransformMatrix = new Matrix3x2(-0.136763766F, -0.434473038F, -1.34446359F, 0.423211306F, 339.5159F, 106.760201F);
                 result.FillBrush = _colorBrush_AlmostDarkMagenta_FF992B9A;
                 result.Geometry = _pathGeometry_553;
                 return result;
             }
 
+            // Layer (Shape): Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_556()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(103.086998F, 103.945999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -21.840004F, -19.4409943F);
                 result.FillBrush = ColorBrush_AlmostGainsboro_FFE4E4E4();
                 result.Geometry = PathGeometry_554();
                 return result;
             }
 
+            // Layer (Shape): Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_557()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(98.0400009F, 98.0410004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -26.887001F, -25.345993F);
                 result.FillBrush = ColorBrush_AlmostWhiteSmoke_FFF1F1F1();
                 result.Geometry = PathGeometry_555();
                 return result;
             }
 
+            // Layer (Shape): Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_558()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(160.029999F, 83.586998F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 35.1029968F, -39.7999954F);
                 result.FillBrush = _colorBrush_AlmostGainsboro_FFE4E4E4;
                 result.Geometry = PathGeometry_556();
                 return result;
             }
 
+            // Layer (Shape): Layer 1 Outlines
             // Path 1
             CompositionSpriteShape SpriteShape_559()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(162.625F, 85.5289993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 37.697998F, -37.8579941F);
                 result.FillBrush = ColorBrush_White();
                 result.Geometry = PathGeometry_557();
                 return result;
@@ -25161,7 +26141,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_560()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(20.8220005F, 18.8449993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 20.8220005F, 18.8449993F);
                 result.FillBrush = ColorBrush_AlmostForestGreen_FF10873D();
                 result.Geometry = PathGeometry_558();
                 return result;
@@ -25172,7 +26152,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_561()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(15.3629999F, 16.1730003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostSpringGreen_FF01CC69();
                 result.Geometry = PathGeometry_559();
                 return result;
@@ -25183,7 +26163,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_562()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(20.8220005F, 18.8460007F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 20.8220005F, 18.8460007F);
                 result.FillBrush = ColorBrush_AlmostCrimson_FFD03438();
                 result.Geometry = PathGeometry_560();
                 return result;
@@ -25194,7 +26174,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_563()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(15.3620005F, 16.1730003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 15.3620005F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostTomato_FFFD4342();
                 result.Geometry = PathGeometry_561();
                 return result;
@@ -25205,7 +26185,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_564()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(20.8209991F, 18.8449993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 20.8209991F, 18.8449993F);
                 result.FillBrush = ColorBrush_AlmostDarkOrange_FFFD8B00();
                 result.Geometry = PathGeometry_562();
                 return result;
@@ -25216,7 +26196,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_565()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(15.3629999F, 16.1730003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostOrange_FFFFB902();
                 result.Geometry = PathGeometry_563();
                 return result;
@@ -25227,7 +26207,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_566()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(20.8220005F, 18.8439999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 20.8220005F, 18.8439999F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF0062B0();
                 result.Geometry = PathGeometry_564();
                 return result;
@@ -25238,7 +26218,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_567()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(15.3629999F, 16.1730003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 15.3629999F, 16.1730003F);
                 result.FillBrush = ColorBrush_AlmostDodgerBlue_FF0278D9();
                 result.Geometry = PathGeometry_565();
                 return result;
@@ -25256,11 +26236,11 @@ namespace AnimatedVisuals
             }
 
             // Transforms: Brush Tip
-            //   Transforms: Brush Tip 2
             // Path 1
             CompositionSpriteShape SpriteShape_569()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(1.01800001F, 0, 0, 1.01800001F, -0.0396360122F, -1.27022445F);
                 result.FillBrush = AnimatedColorBrush_AlmostOrange_FFFFBA01_to_AlmostDarkMagenta_FF9A008A();
                 result.Geometry = PathGeometry_567();
                 return result;
@@ -25271,7 +26251,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_570()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(-26.7699986F, 100.078003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -26.7699986F, 100.078003F);
                 result.FillBrush = _colorBrush_AlmostDarkOrange_FFFD8B00;
                 result.Geometry = PathGeometry_568();
                 return result;
@@ -25282,7 +26262,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_571()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(-26.7699986F, 100.078003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -26.7699986F, 100.078003F);
                 result.FillBrush = _colorBrush_AlmostDarkOrange_FFFD8B00;
                 result.Geometry = PathGeometry_569();
                 return result;
@@ -25293,7 +26273,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_572()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(133.901993F, 69.6750031F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 133.901993F, 69.6750031F);
                 result.FillBrush = ColorBrush_AlmostChocolate_FFC85011();
                 result.Geometry = PathGeometry_570();
                 return result;
@@ -25304,7 +26284,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_573()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(71.2809982F, 127.908997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 71.2809982F, 127.908997F);
                 result.FillBrush = ColorBrush_AlmostSlateGray_FF69797D();
                 result.Geometry = PathGeometry_571();
                 return result;
@@ -25315,7 +26295,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_574()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(93.9560013F, 108.473F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 93.9560013F, 108.473F);
                 result.FillBrush = ColorBrush_AlmostLightGray_FFCCCCCC();
                 result.Geometry = PathGeometry_572();
                 return result;
@@ -25326,7 +26306,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_575()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(119.796997F, 49.7350006F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 119.796997F, 49.7350006F);
                 result.FillBrush = ColorBrush_AlmostOrangeRed_FFF6610E();
                 result.Geometry = PathGeometry_573();
                 return result;
@@ -25337,7 +26317,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_576()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(61.5620003F, 118.191002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 61.5620003F, 118.191002F);
                 result.FillBrush = ColorBrush_AlmostLightSlateGray_FF859499();
                 result.Geometry = PathGeometry_574();
                 return result;
@@ -25348,23 +26328,16 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_577()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(80.9990005F, 95.5149994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 80.9990005F, 95.5149994F);
                 result.FillBrush = _colorBrush_AlmostGainsboro_FFE4E4E4;
                 result.Geometry = PathGeometry_575();
                 return result;
             }
 
-            StepEasingFunction StepEasingFunction_0()
+            StepEasingFunction StepThenHoldEasingFunction()
             {
-                var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame  = true;
-                return result;
-            }
-
-            StepEasingFunction StepEasingFunction_1()
-            {
-                var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame  = true;
+                var result = _stepThenHoldEasingFunction = _c.CreateStepEasingFunction();
+                result.IsInitialStepSingleFrame = true;
                 return result;
             }
 
@@ -25374,21 +26347,21 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-16.0699997F, -44.3889999F), _linearEasingFunction);
-                result.InsertKeyFrame(0.666666687F, new Vector2(-16.0699997F, -44.3889999F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(-16.0699997F, -44.3889999F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.666666687F, new Vector2(-16.0699997F, -44.3889999F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, new Vector2(-16.0699997F, -74.3889999F), _cubicBezierEasingFunction_01);
                 return result;
             }
 
-            // Position
+            // Offset
             Vector2KeyFrameAnimation Vector2Animation_01()
             {
                 var result = _vector2Animation_01 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(150, 150), _linearEasingFunction);
-                result.InsertKeyFrame(0.333333343F, new Vector2(150, 220), CubicBezierEasingFunction_03());
-                result.InsertKeyFrame(0.5F, new Vector2(150, 220), CubicBezierEasingFunction_04());
-                result.InsertKeyFrame(0.983333349F, new Vector2(150, 150), CubicBezierEasingFunction_05());
+                result.InsertKeyFrame(0, new Vector2(150, 150), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.333333343F, new Vector2(150, 220), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, new Vector2(150, 220), _cubicBezierEasingFunction_04);
+                result.InsertKeyFrame(0.983333349F, new Vector2(150, 150), _cubicBezierEasingFunction_05);
                 return result;
             }
 
@@ -25397,9 +26370,9 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_02 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.333333343F, new Vector2(0.699999988F, 0.699999988F), _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.5F, new Vector2(0.699999988F, 0.699999988F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0.5F, new Vector2(0.699999988F, 0.699999988F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_06);
                 return result;
             }
@@ -25411,12 +26384,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(66.6080017F, 150.429001F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t3, 3) * Vector2(66.608,150.429)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(66.95261,151.5166)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(68.3314,155.8674)) + (Pow(_.t3, 3) * Vector2(68.676,156.955))", StepEasingFunction_1());
-                result.InsertKeyFrame(0.166666672F, new Vector2(68.6760025F, 156.955002F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(66.6080017F, 150.429001F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t3, 3) * Vector2(66.608,150.429)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(66.95261,151.5166)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(68.3314,155.8674)) + (Pow(_.t3, 3) * Vector2(68.676,156.955))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.166666672F, new Vector2(68.6760025F, 156.955002F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.666666687F, new Vector2(68.6760025F, 156.955002F), CubicBezierEasingFunction_08());
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t3, 3) * Vector2(68.676,156.955)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(68.3314,155.8674)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(66.95261,151.5166)) + (Pow(_.t3, 3) * Vector2(66.608,150.429))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(66.6080017F, 150.429001F), _stepEasingFunction_1);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t3, 3) * Vector2(68.676,156.955)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(68.3314,155.8674)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(66.95261,151.5166)) + (Pow(_.t3, 3) * Vector2(66.608,150.429))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(66.6080017F, 150.429001F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25427,12 +26400,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(39.7260017F, 98.1959991F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t5, 3) * Vector2(39.726,98.196)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(40.0706,99.28359)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(41.4484,103.6344)) + (Pow(_.t5, 3) * Vector2(41.793,104.722))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.166666672F, new Vector2(41.7929993F, 104.722F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(39.7260017F, 98.1959991F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t5, 3) * Vector2(39.726,98.196)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(40.0706,99.28359)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(41.4484,103.6344)) + (Pow(_.t5, 3) * Vector2(41.793,104.722))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.166666672F, new Vector2(41.7929993F, 104.722F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.666666687F, new Vector2(41.7929993F, 104.722F), _cubicBezierEasingFunction_08);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t5, 3) * Vector2(41.793,104.722)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(41.4484,103.6344)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(40.0706,99.28359)) + (Pow(_.t5, 3) * Vector2(39.726,98.196))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(39.7260017F, 98.1959991F), _stepEasingFunction_1);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t5, 3) * Vector2(41.793,104.722)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(41.4484,103.6344)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(40.0706,99.28359)) + (Pow(_.t5, 3) * Vector2(39.726,98.196))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(39.7260017F, 98.1959991F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25441,9 +26414,9 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_05 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.166666672F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.5F, new Vector2(1, 0.902939975F), _cubicBezierEasingFunction_03);
+                result.InsertKeyFrame(0.5F, new Vector2(1, 0.902939975F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), _cubicBezierEasingFunction_03);
                 return result;
             }
@@ -25455,12 +26428,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(74.052002F, 46.5970001F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t7, 3) * Vector2(74.052,46.597)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(74.39661,47.6846)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(75.7754,52.0354)) + (Pow(_.t7, 3) * Vector2(76.12,53.123))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.166666672F, new Vector2(76.1200027F, 53.1230011F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(74.052002F, 46.5970001F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t7, 3) * Vector2(74.052,46.597)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(74.39661,47.6846)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(75.7754,52.0354)) + (Pow(_.t7, 3) * Vector2(76.12,53.123))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.166666672F, new Vector2(76.1200027F, 53.1230011F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.666666687F, new Vector2(76.1200027F, 53.1230011F), _cubicBezierEasingFunction_08);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t7, 3) * Vector2(76.12,53.123)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(75.7754,52.0354)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(74.39661,47.6846)) + (Pow(_.t7, 3) * Vector2(74.052,46.597))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(74.052002F, 46.5970001F), _stepEasingFunction_1);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t7, 3) * Vector2(76.12,53.123)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(75.7754,52.0354)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(74.39661,47.6846)) + (Pow(_.t7, 3) * Vector2(74.052,46.597))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(74.052002F, 46.5970001F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25471,12 +26444,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(129.477005F, 52.6360016F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t9, 3) * Vector2(129.477,52.636)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(129.8216,53.7236)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(131.1994,58.0734)) + (Pow(_.t9, 3) * Vector2(131.544,59.161))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.166666672F, new Vector2(131.544006F, 59.1609993F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(129.477005F, 52.6360016F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t9, 3) * Vector2(129.477,52.636)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(129.8216,53.7236)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(131.1994,58.0734)) + (Pow(_.t9, 3) * Vector2(131.544,59.161))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.166666672F, new Vector2(131.544006F, 59.1609993F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.666666687F, new Vector2(131.544006F, 59.1609993F), _cubicBezierEasingFunction_08);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t9, 3) * Vector2(131.544,59.161)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(131.1994,58.0734)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(129.8216,53.7236)) + (Pow(_.t9, 3) * Vector2(129.477,52.636))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(129.477005F, 52.6360016F), _stepEasingFunction_1);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t9, 3) * Vector2(131.544,59.161)) + (3 * Square(1 - _.t9) * _.t9 * Vector2(131.1994,58.0734)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2(129.8216,53.7236)) + (Pow(_.t9, 3) * Vector2(129.477,52.636))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(129.477005F, 52.6360016F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25487,14 +26460,14 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t11, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(239.7967,227.144)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(183.7503,127.5004)) + (Pow(_.t11, 3) * Vector2(170.63,161.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t11, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(170.63,160.5607)) + (Pow(_.t11, 3) * Vector2(170.63,158.894))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t11, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(170.63,157.2273)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(156.63,195.394)) + (Pow(_.t11, 3) * Vector2(156.63,195.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t11, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(90.63,205.394)) + (Pow(_.t11, 3) * Vector2(90.63,205.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t11, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(2.830559,108.9219)) + (Pow(_.t11, 3) * Vector2(55.149,94.211))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t11, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(94.12527,270.5968)) + (Pow(_.t11, 3) * Vector2(101.13,266.394))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t11, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(239.7967,227.144)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(183.7503,127.5004)) + (Pow(_.t11, 3) * Vector2(170.63,161.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t11, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(170.63,160.5607)) + (Pow(_.t11, 3) * Vector2(170.63,158.894))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t11, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(170.63,157.2273)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(156.63,195.394)) + (Pow(_.t11, 3) * Vector2(156.63,195.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t11, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(90.63,205.394)) + (Pow(_.t11, 3) * Vector2(90.63,205.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t11, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(2.830559,108.9219)) + (Pow(_.t11, 3) * Vector2(55.149,94.211))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t11, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t11) * _.t11 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t11) * Square(_.t11) * Vector2(94.12527,270.5968)) + (Pow(_.t11, 3) * Vector2(101.13,266.394))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25503,11 +26476,11 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_09 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(1, 1), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.166666672F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_15());
-                result.InsertKeyFrame(0.5F, new Vector2(0.600000024F, 0.600000024F), CubicBezierEasingFunction_16());
-                result.InsertKeyFrame(0.666666687F, new Vector2(0.300000012F, 0.300000012F), CubicBezierEasingFunction_17());
-                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), CubicBezierEasingFunction_18());
+                result.InsertKeyFrame(0.5F, new Vector2(0.600000024F, 0.600000024F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.666666687F, new Vector2(0.300000012F, 0.300000012F), CubicBezierEasingFunction_16());
+                result.InsertKeyFrame(0.983333349F, new Vector2(1, 1), CubicBezierEasingFunction_17());
                 return result;
             }
 
@@ -25517,14 +26490,14 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t12, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(239.7967,227.144)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(183.7503,127.5004)) + (Pow(_.t12, 3) * Vector2(170.63,161.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t12, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(170.63,160.5607)) + (Pow(_.t12, 3) * Vector2(170.63,158.894))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t12, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(170.63,157.2273)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(156.63,195.394)) + (Pow(_.t12, 3) * Vector2(156.63,195.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t12, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(90.63,205.394)) + (Pow(_.t12, 3) * Vector2(90.63,205.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t12, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(2.830559,108.9219)) + (Pow(_.t12, 3) * Vector2(55.149,94.211))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t12, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(94.12527,270.5968)) + (Pow(_.t12, 3) * Vector2(101.13,266.394))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t12, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(239.7967,227.144)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(183.7503,127.5004)) + (Pow(_.t12, 3) * Vector2(170.63,161.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t12, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(170.63,160.5607)) + (Pow(_.t12, 3) * Vector2(170.63,158.894))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t12, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(170.63,157.2273)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(156.63,195.394)) + (Pow(_.t12, 3) * Vector2(156.63,195.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t12, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(90.63,205.394)) + (Pow(_.t12, 3) * Vector2(90.63,205.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t12, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(2.830559,108.9219)) + (Pow(_.t12, 3) * Vector2(55.149,94.211))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t12, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t12) * _.t12 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t12) * Square(_.t12) * Vector2(94.12527,270.5968)) + (Pow(_.t12, 3) * Vector2(101.13,266.394))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25534,14 +26507,14 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t13, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(239.7967,227.144)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(183.7503,127.5004)) + (Pow(_.t13, 3) * Vector2(170.63,161.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t13, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(170.63,160.5607)) + (Pow(_.t13, 3) * Vector2(170.63,158.894))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t13, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(170.63,157.2273)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(156.63,195.394)) + (Pow(_.t13, 3) * Vector2(156.63,195.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t13, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(90.63,205.394)) + (Pow(_.t13, 3) * Vector2(90.63,205.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t13, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(2.830559,108.9219)) + (Pow(_.t13, 3) * Vector2(55.149,94.211))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t13, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(94.12527,270.5968)) + (Pow(_.t13, 3) * Vector2(101.13,266.394))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t13, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(239.7967,227.144)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(183.7503,127.5004)) + (Pow(_.t13, 3) * Vector2(170.63,161.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t13, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(170.63,160.5607)) + (Pow(_.t13, 3) * Vector2(170.63,158.894))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t13, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(170.63,157.2273)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(156.63,195.394)) + (Pow(_.t13, 3) * Vector2(156.63,195.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t13, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(90.63,205.394)) + (Pow(_.t13, 3) * Vector2(90.63,205.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t13, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(2.830559,108.9219)) + (Pow(_.t13, 3) * Vector2(55.149,94.211))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t13, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t13) * _.t13 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t13) * Square(_.t13) * Vector2(94.12527,270.5968)) + (Pow(_.t13, 3) * Vector2(101.13,266.394))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25551,14 +26524,14 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t14, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(239.7967,227.144)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(183.7503,127.5004)) + (Pow(_.t14, 3) * Vector2(170.63,161.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t14, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(170.63,160.5607)) + (Pow(_.t14, 3) * Vector2(170.63,158.894))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t14, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(170.63,157.2273)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(156.63,195.394)) + (Pow(_.t14, 3) * Vector2(156.63,195.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t14, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(90.63,205.394)) + (Pow(_.t14, 3) * Vector2(90.63,205.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t14, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(2.830559,108.9219)) + (Pow(_.t14, 3) * Vector2(55.149,94.211))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t14, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(94.12527,270.5968)) + (Pow(_.t14, 3) * Vector2(101.13,266.394))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t14, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(239.7967,227.144)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(183.7503,127.5004)) + (Pow(_.t14, 3) * Vector2(170.63,161.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t14, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(170.63,160.5607)) + (Pow(_.t14, 3) * Vector2(170.63,158.894))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t14, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(170.63,157.2273)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(156.63,195.394)) + (Pow(_.t14, 3) * Vector2(156.63,195.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t14, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(90.63,205.394)) + (Pow(_.t14, 3) * Vector2(90.63,205.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t14, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(2.830559,108.9219)) + (Pow(_.t14, 3) * Vector2(55.149,94.211))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t14, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t14) * _.t14 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t14) * Square(_.t14) * Vector2(94.12527,270.5968)) + (Pow(_.t14, 3) * Vector2(101.13,266.394))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25569,14 +26542,14 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t15, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(239.7967,227.144)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(183.7503,127.5004)) + (Pow(_.t15, 3) * Vector2(170.63,161.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t15, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(170.63,160.5607)) + (Pow(_.t15, 3) * Vector2(170.63,158.894))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t15, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(170.63,157.2273)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(156.63,195.394)) + (Pow(_.t15, 3) * Vector2(156.63,195.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t15, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(90.63,205.394)) + (Pow(_.t15, 3) * Vector2(90.63,205.394))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t15, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(2.830559,108.9219)) + (Pow(_.t15, 3) * Vector2(55.149,94.211))", _stepEasingFunction_1);
-                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t15, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(94.12527,270.5968)) + (Pow(_.t15, 3) * Vector2(101.13,266.394))", _stepEasingFunction_1);
-                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepEasingFunction_1);
+                result.InsertKeyFrame(0, new Vector2(101.129997F, 266.394012F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.166666567F, "(Pow(1 - _.t15, 3) * Vector2(101.13,266.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(239.7967,227.144)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(183.7503,127.5004)) + (Pow(_.t15, 3) * Vector2(170.63,161.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.249999896F, "(Pow(1 - _.t15, 3) * Vector2(170.63,161.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(157.5097,195.2876)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(170.63,160.5607)) + (Pow(_.t15, 3) * Vector2(170.63,158.894))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.333333224F, "(Pow(1 - _.t15, 3) * Vector2(170.63,158.894)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(170.63,157.2273)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(156.63,195.394)) + (Pow(_.t15, 3) * Vector2(156.63,195.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t15, 3) * Vector2(156.63,195.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(116.7503,149.0004)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(90.63,205.394)) + (Pow(_.t15, 3) * Vector2(90.63,205.394))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.666666567F, "(Pow(1 - _.t15, 3) * Vector2(90.63,205.394)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(127.7503,170.7504)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(2.830559,108.9219)) + (Pow(_.t15, 3) * Vector2(55.149,94.211))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.98333323F, "(Pow(1 - _.t15, 3) * Vector2(55.149,94.211)) + (3 * Square(1 - _.t15) * _.t15 * Vector2(454.5807,(-12.83203))) + (3 * (1 - _.t15) * Square(_.t15) * Vector2(94.12527,270.5968)) + (Pow(_.t15, 3) * Vector2(101.13,266.394))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.983333349F, new Vector2(101.129997F, 266.394012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -25586,21 +26559,34 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector3KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector3(1, 1, 1), _linearEasingFunction);
-                result.InsertKeyFrame(0.666666687F, new Vector3(1, 1, 1), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector3(1, 1, 1), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.666666687F, new Vector3(1, 1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, new Vector3(1.38999999F, 1.38999999F, 1), CubicBezierEasingFunction_02());
                 return result;
             }
 
             // Transforms for Null 102
-            // Scale
+            // Offset
             Vector3KeyFrameAnimation Vector3KeyFrameAnimation_1()
             {
                 var result = _c.CreateVector3KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector3(1, 1, 1), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector3(150, 150, 0), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.333333343F, new Vector3(150, 220, 0), CubicBezierEasingFunction_03());
+                result.InsertKeyFrame(0.5F, new Vector3(150, 220, 0), CubicBezierEasingFunction_04());
+                result.InsertKeyFrame(0.983333349F, new Vector3(150, 150, 0), CubicBezierEasingFunction_05());
+                return result;
+            }
+
+            // Transforms for Null 102
+            // Scale
+            Vector3KeyFrameAnimation Vector3KeyFrameAnimation_2()
+            {
+                var result = _c.CreateVector3KeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0, new Vector3(1, 1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.333333343F, new Vector3(0.699999988F, 0.699999988F, 1), _cubicBezierEasingFunction_03);
-                result.InsertKeyFrame(0.5F, new Vector3(0.699999988F, 0.699999988F, 1), _stepEasingFunction_0);
+                result.InsertKeyFrame(0.5F, new Vector3(0.699999988F, 0.699999988F, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.983333349F, new Vector3(1, 1, 1), CubicBezierEasingFunction_06());
                 return result;
             }

@@ -24,7 +24,7 @@ namespace AnimatedVisuals
             {
                 return null;
             }
-            return new Composition(compositor);
+            return new AnimatedVisual(compositor);
         }
 
         static bool IsRuntimeCompatible()
@@ -36,7 +36,7 @@ namespace AnimatedVisuals
             return true;
         }
 
-        sealed class Composition : IAnimatedVisual
+        sealed class AnimatedVisual : IAnimatedVisual
         {
             const long c_durationTicks = 126000000;
             readonly Compositor _c;
@@ -56,7 +56,8 @@ namespace AnimatedVisuals
             CompositionPath _compositionPath_17;
             CubicBezierEasingFunction _cubicBezierEasingFunction_00;
             CubicBezierEasingFunction _cubicBezierEasingFunction_01;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_05;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_04;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_10;
             CubicBezierEasingFunction _cubicBezierEasingFunction_11;
             CubicBezierEasingFunction _cubicBezierEasingFunction_12;
             CubicBezierEasingFunction _cubicBezierEasingFunction_13;
@@ -64,10 +65,10 @@ namespace AnimatedVisuals
             CubicBezierEasingFunction _cubicBezierEasingFunction_15;
             CubicBezierEasingFunction _cubicBezierEasingFunction_16;
             CubicBezierEasingFunction _cubicBezierEasingFunction_17;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_18;
-            CubicBezierEasingFunction _cubicBezierEasingFunction_20;
+            CubicBezierEasingFunction _cubicBezierEasingFunction_19;
             CompositionEllipseGeometry _ellipse_22p3_2;
             CompositionEllipseGeometry _ellipse_28p117_0;
+            StepEasingFunction _holdThenStepEasingFunction;
             LinearEasingFunction _linearEasingFunction;
             CompositionPathGeometry _pathGeometry_11;
             CompositionPathGeometry _pathGeometry_21;
@@ -75,7 +76,6 @@ namespace AnimatedVisuals
             CompositionPathGeometry _pathGeometry_23;
             CompositionPathGeometry _pathGeometry_24;
             ContainerVisual _root;
-            ScalarKeyFrameAnimation _scalarAnimation_0_to_0;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_2;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_5;
             ScalarKeyFrameAnimation _scalarAnimation_0p349_to_0p448_1;
@@ -88,11 +88,11 @@ namespace AnimatedVisuals
             ScalarKeyFrameAnimation _scalarAnimation_1_to_0_6;
             ScalarKeyFrameAnimation _scalarAnimation_1_to_0_7;
             ScalarKeyFrameAnimation _scalarAnimation_1_to_0_8;
-            ScalarKeyFrameAnimation _scalarAnimation_1_to_1;
             ScalarKeyFrameAnimation _scalarAnimation_84p9_to_m181p4;
+            ScalarKeyFrameAnimation _scalarAnimation_to_0;
+            ScalarKeyFrameAnimation _scalarAnimation_to_1;
             ExpressionAnimation _scalarExpressionAnimation;
-            StepEasingFunction _stepEasingFunction_0;
-            StepEasingFunction _stepEasingFunction_1;
+            StepEasingFunction _stepThenHoldEasingFunction;
             Vector2KeyFrameAnimation _vector2Animation_09;
             Vector2KeyFrameAnimation _vector2Animation_13;
             Vector2KeyFrameAnimation _vector2Animation_16;
@@ -125,7 +125,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateColorKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 // AlmostDarkTurquoise_FF00D1C1
-                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _linearEasingFunction);
+                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _stepThenHoldEasingFunction);
                 // AlmostDarkTurquoise_FF00D1C1
                 result.InsertKeyFrame(0.354497343F, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _linearEasingFunction);
                 // TransparentAlmostDarkTurquoise_0000D1C1
@@ -139,7 +139,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateColorKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 // AlmostDarkTurquoise_FF00D1C1
-                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _linearEasingFunction);
+                result.InsertKeyFrame(0, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _stepThenHoldEasingFunction);
                 // AlmostDarkTurquoise_FF00D1C1
                 result.InsertKeyFrame(0.470899463F, Color.FromArgb(0xFF, 0x00, 0xD1, 0xC1), _linearEasingFunction);
                 // TransparentAlmostDarkTurquoise_0000D1C1
@@ -216,7 +216,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateContainerShape();
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_001());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_0_to_0());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_to_0());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -236,14 +236,14 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_002());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_03());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -265,14 +265,14 @@ namespace AnimatedVisuals
                 var controller = result.TryGetAnimationController("Anchor");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_02());
                 controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - my.Anchor";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -282,7 +282,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateContainerShape();
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_004());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_0_to_0);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_0);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -302,14 +302,14 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_01());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_04());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -319,7 +319,7 @@ namespace AnimatedVisuals
                 var result = _c.CreateContainerShape();
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_006());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_0_to_0);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_0);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -339,14 +339,14 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_02());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_05());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -376,36 +376,25 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_009());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_03());
                 result.StartAnimation("Position", Vector2Animation_06());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Trail -LB
-            CompositionContainerShape ContainerShape_009()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(146.615005F, 210.395004F);
-                result.Scale = new Vector2(0.202020004F, 0.20194F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_03());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Trail 2 -LB
-            CompositionContainerShape ContainerShape_010()
+            CompositionContainerShape ContainerShape_009()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_011());
+                shapes.Add(ContainerShape_010());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_0);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -417,7 +406,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_011()
+            CompositionContainerShape ContainerShape_010()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -425,36 +414,25 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(165.615005F, 264.614014F);
                 result.Scale = new Vector2(4.95001984F, 4.95195007F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_012());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_04());
                 result.StartAnimation("Position", Vector2Animation_07());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Trail 2 -LB
-            CompositionContainerShape ContainerShape_012()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(146.615005F, 210.395004F);
-                result.Scale = new Vector2(0.202020004F, 0.20194F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_04());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(165.615,264.614)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): Circle2-LB
-            CompositionContainerShape ContainerShape_013()
+            CompositionContainerShape ContainerShape_011()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_014());
+                shapes.Add(ContainerShape_012());
                 result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_1());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -466,7 +444,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_014()
+            CompositionContainerShape ContainerShape_012()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -474,20 +452,20 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_015());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(ContainerShape_013());
                 result.StartAnimation("Position", Vector2Animation_09());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Transforms for Circle2-LB
-            CompositionContainerShape ContainerShape_015()
+            CompositionContainerShape ContainerShape_013()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -496,18 +474,56 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(0.86631F, 0.86631F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_05());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_08());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): O1-DB
+            CompositionContainerShape ContainerShape_014()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_015());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_015()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(0.87221998F, 0.872560024F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_06());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): T2-DB
             CompositionContainerShape ContainerShape_016()
             {
                 var result = _c.CreateContainerShape();
@@ -533,44 +549,57 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_018());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_07());
                 result.StartAnimation("Position", _vector2Animation_09);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Layer (Shape): T1-LB
             CompositionContainerShape ContainerShape_018()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_019());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms: N3
-            // Transforms for O1-DB
             CompositionContainerShape ContainerShape_019()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.Scale = new Vector2(-1.00590003F, 1.00590003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_06());
+                shapes.Add(SpriteShape_08());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): T2-DB
+            // Layer (Shape): O2-LB
             CompositionContainerShape ContainerShape_020()
             {
                 var result = _c.CreateContainerShape();
@@ -596,51 +625,26 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_022());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_09());
                 result.StartAnimation("Position", _vector2Animation_09);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Layer (Shape): Trail-LB
             CompositionContainerShape ContainerShape_022()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_023());
-                return result;
-            }
-
-            // Transforms: N3
-            // Transforms for T2-DB
-            CompositionContainerShape ContainerShape_023()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_07());
-                return result;
-            }
-
-            // Layer (Shape): T1-LB
-            CompositionContainerShape ContainerShape_024()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_025());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                shapes.Add(ContainerShape_023());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_2());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -651,7 +655,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_025()
+            CompositionContainerShape ContainerShape_023()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -659,51 +663,98 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_026());
+                shapes.Add(ContainerShape_024());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
+                return result;
+            }
+
+            // Transforms for Trail-LB
+            CompositionContainerShape ContainerShape_024()
+            {
+                var result = _c.CreateContainerShape();
+                result.CenterPoint = new Vector2(196.791F, 266.503998F);
+                result.Offset = new Vector2(-125.076004F, -206.192993F);
+                result.RotationAngleInDegrees = 59.2000008F;
+                result.Scale = new Vector2(-5.9000001F, 5.9000001F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_10());
+                result.StartAnimation("RotationAngleInDegrees", ScalarAnimation_59p2_to_m192p8());
+                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Layer (Shape): Trail-LB
+            CompositionContainerShape ContainerShape_025()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_026());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_2);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_026()
             {
                 var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
                 result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
+                result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_027());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms: N3
-            // Transforms for T1-LB
+            // Transforms for Trail-LB
             CompositionContainerShape ContainerShape_027()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.CenterPoint = new Vector2(196.791F, 266.503998F);
+                result.Offset = new Vector2(-125.076004F, -206.192993F);
+                result.RotationAngleInDegrees = 84.9000015F;
+                result.Scale = new Vector2(-5.9000001F, 5.9000001F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_08());
+                shapes.Add(SpriteShape_11());
+                result.StartAnimation("RotationAngleInDegrees", ScalarAnimation_84p9_to_m117p5());
+                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): O2-LB
+            // Layer (Shape): Trail-LB
             CompositionContainerShape ContainerShape_028()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_029());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_3());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -723,192 +774,19 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_030());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", _vector2Animation_09);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Transforms for Trail-LB
             CompositionContainerShape ContainerShape_030()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_031());
-                return result;
-            }
-
-            // Transforms: N3
-            // Transforms for O2-LB
-            CompositionContainerShape ContainerShape_031()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.Scale = new Vector2(-1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_09());
-                return result;
-            }
-
-            // Layer (Shape): Trail-LB
-            CompositionContainerShape ContainerShape_032()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_033());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_2());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_033()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.87221998F, 0.872560024F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_034());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Trail-LB
-            CompositionContainerShape ContainerShape_034()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-125.076004F, -206.192993F);
-                result.RotationAngleInDegrees = 59.2000008F;
-                result.Scale = new Vector2(-5.9000001F, 5.9000001F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_10());
-                result.StartAnimation("RotationAngleInDegrees", ScalarAnimation_59p2_to_m192p8());
-                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail-LB
-            CompositionContainerShape ContainerShape_035()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_036());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_2);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_036()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.87221998F, 0.872560024F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_037());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Trail-LB
-            CompositionContainerShape ContainerShape_037()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-125.076004F, -206.192993F);
-                result.RotationAngleInDegrees = 84.9000015F;
-                result.Scale = new Vector2(-5.9000001F, 5.9000001F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_11());
-                result.StartAnimation("RotationAngleInDegrees", ScalarAnimation_84p9_to_m117p5());
-                var controller = result.TryGetAnimationController("RotationAngleInDegrees");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail-LB
-            CompositionContainerShape ContainerShape_038()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_039());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_3());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_039()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.87221998F, 0.872560024F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_040());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for Trail-LB
-            CompositionContainerShape ContainerShape_040()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
@@ -925,12 +803,12 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Trail-LB
-            CompositionContainerShape ContainerShape_041()
+            CompositionContainerShape ContainerShape_031()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_042());
+                shapes.Add(ContainerShape_032());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_3);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -942,7 +820,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_042()
+            CompositionContainerShape ContainerShape_032()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -950,20 +828,20 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.87221998F, 0.872560024F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_043());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(ContainerShape_033());
                 result.StartAnimation("Position", _vector2Animation_09);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Transforms for Trail-LB
-            CompositionContainerShape ContainerShape_043()
+            CompositionContainerShape ContainerShape_033()
             {
                 var result = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(196.791F, 266.503998F);
@@ -980,13 +858,207 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): L-DB
+            CompositionContainerShape ContainerShape_034()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_035());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_035()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(0.87221998F, 0.872560024F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_14());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): L-LB
+            CompositionContainerShape ContainerShape_036()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_037());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_037()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(0.87221998F, 0.872560024F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_15());
+                result.StartAnimation("Position", _vector2Animation_09);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Circle-LB
+            CompositionContainerShape ContainerShape_038()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_039());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_4());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_039()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_040());
+                result.StartAnimation("Position", Vector2Animation_13());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Bounce
+            CompositionContainerShape ContainerShape_040()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(66.9589996F, 52.9179993F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(0.092249997F, 0.092249997F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_041());
+                result.StartAnimation("Position", Vector2Animation_12());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for Circle-LB
+            CompositionContainerShape ContainerShape_041()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-1010, -37));
+                result.CenterPoint = new Vector2(40, -210);
+                result.Scale = new Vector2(1.54200006F, 1.54200006F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_16());
+                result.StartAnimation("Position", Vector2Animation_11());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): O-DB
+            CompositionContainerShape ContainerShape_042()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_043());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            CompositionContainerShape ContainerShape_043()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_17());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): O-LB
             CompositionContainerShape ContainerShape_044()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_045());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1001,55 +1073,68 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.87221998F, 0.872560024F);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_046());
+                shapes.Add(SpriteShape_18());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Layer (Shape): E-DB
             CompositionContainerShape ContainerShape_046()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_047());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms: N3
-            // Transforms for L-DB
             CompositionContainerShape ContainerShape_047()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_14());
+                shapes.Add(SpriteShape_19());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): L-LB
+            // Layer (Shape): E-LB
             CompositionContainerShape ContainerShape_048()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_049());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1064,55 +1149,30 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(131.468994F, 237.981995F));
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.87221998F, 0.872560024F);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_050());
+                shapes.Add(SpriteShape_20());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_09);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for N3
+            // Layer (Shape): I-DB
             CompositionContainerShape ContainerShape_050()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(451.880005F, -106.466003F);
-                result.Scale = new Vector2(5.9000001F, 5.9000001F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_051());
-                return result;
-            }
-
-            // Transforms: N3
-            // Transforms for L-LB
-            CompositionContainerShape ContainerShape_051()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_15());
-                return result;
-            }
-
-            // Layer (Shape): Circle-LB
-            CompositionContainerShape ContainerShape_052()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_053());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_4());
+                shapes.Add(ContainerShape_051());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1123,7 +1183,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_053()
+            CompositionContainerShape ContainerShape_051()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1131,68 +1191,106 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_054());
+                shapes.Add(ContainerShape_052());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_13());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Bounce
+            // Transforms for I-DB
+            CompositionContainerShape ContainerShape_052()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(64.5660019F, 108.344002F));
+                result.CenterPoint = new Vector2(277.697998F, 247.257996F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var shapes = result.Shapes;
+                shapes.Add(SpriteShape_21());
+                result.StartAnimation("Position", Vector2Animation_14());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): I-LB
+            CompositionContainerShape ContainerShape_053()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_054());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_054()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(66.9589996F, 52.9179993F));
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
                 result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(0.092249997F, 0.092249997F);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_055());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_12());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Circle-LB
+            // Transforms for I-LB
             CompositionContainerShape ContainerShape_055()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-1010, -37));
-                result.CenterPoint = new Vector2(40, -210);
-                result.Scale = new Vector2(1.54200006F, 1.54200006F);
+                propertySet.InsertVector2("Position", new Vector2(64.5660019F, 99.1439972F));
+                result.CenterPoint = new Vector2(277.697998F, 247.257996F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_16());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_11());
+                shapes.Add(SpriteShape_22());
+                result.StartAnimation("Position", Vector2Animation_15());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): O-DB
+            // Layer (Shape): T-DB
             CompositionContainerShape ContainerShape_056()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_057());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_5());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1211,37 +1309,25 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_058());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_23());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for O-DB
+            // Layer (Shape): T-DB
             CompositionContainerShape ContainerShape_058()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_17());
-                return result;
-            }
-
-            // Layer (Shape): O-LB
-            CompositionContainerShape ContainerShape_059()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_060());
+                shapes.Add(ContainerShape_059());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -1253,7 +1339,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_060()
+            CompositionContainerShape ContainerShape_059()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1261,39 +1347,64 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_061());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_24());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for O-LB
+            // Layer (Shape): T-LB
+            CompositionContainerShape ContainerShape_060()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_061());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_061()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.RotationAngleInDegrees = -170;
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_18());
+                shapes.Add(SpriteShape_25());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): E-DB
+            // Layer (Shape): Trail 5-LB
             CompositionContainerShape ContainerShape_062()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_063());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_6());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1312,38 +1423,26 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_064());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_26());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for E-DB
+            // Layer (Shape): Trail 7-LB
             CompositionContainerShape ContainerShape_064()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Offset = new Vector2(-221.666992F, -188.575012F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_19());
-                return result;
-            }
-
-            // Layer (Shape): E-LB
-            CompositionContainerShape ContainerShape_065()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_066());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                shapes.Add(ContainerShape_065());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1354,7 +1453,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_066()
+            CompositionContainerShape ContainerShape_065()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1362,38 +1461,64 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_067());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_27());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for E-LB
+            // Layer (Shape): Trail 6-LB
+            CompositionContainerShape ContainerShape_066()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_067());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_067()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Offset = new Vector2(-221.666992F, -188.575012F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_20());
+                shapes.Add(SpriteShape_28());
+                result.StartAnimation("Position", _vector2Animation_13);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): I-DB
+            // Layer (Shape): Trail 8-LB
             CompositionContainerShape ContainerShape_068()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_069());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1412,47 +1537,26 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_070());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_29());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for I-DB
-            CompositionContainerShape ContainerShape_070()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(64.5660019F, 108.344002F));
-                result.CenterPoint = new Vector2(277.697998F, 247.257996F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_21());
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_14());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): I-LB
-            CompositionContainerShape ContainerShape_071()
+            // Layer (Shape): Trail 9-LB
+            CompositionContainerShape ContainerShape_070()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_072());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                shapes.Add(ContainerShape_071());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1463,7 +1567,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_072()
+            CompositionContainerShape ContainerShape_071()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -1471,47 +1575,64 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_073());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(SpriteShape_30());
                 result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for I-LB
+            // Layer (Shape): Trail 10-LB
+            CompositionContainerShape ContainerShape_072()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_073());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
             CompositionContainerShape ContainerShape_073()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(64.5660019F, 99.1439972F));
-                result.CenterPoint = new Vector2(277.697998F, 247.257996F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
+                result.CenterPoint = new Vector2(60, 60);
+                result.Scale = new Vector2(8.12277031F, 8.12594032F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_22());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(277.698,247.258)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_15());
+                shapes.Add(SpriteShape_31());
+                result.StartAnimation("Position", _vector2Animation_13);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): T-DB
+            // Layer (Shape): I-DB
             CompositionContainerShape ContainerShape_074()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_075());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_5());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_7());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1526,42 +1647,51 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_076());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                result.StartAnimation("Position", Vector2Animation_17());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for T-DB
+            // Transforms for I-DB
             CompositionContainerShape ContainerShape_076()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
+                result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_23());
+                shapes.Add(SpriteShape_32());
+                result.StartAnimation("Position", Vector2Animation_16());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): T-DB
+            // Layer (Shape): I-LB
             CompositionContainerShape ContainerShape_077()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_078());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1576,239 +1706,247 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_079());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                result.StartAnimation("Position", Vector2Animation_19());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for T-DB
+            // Transforms for I-DB
             CompositionContainerShape ContainerShape_079()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
+                result.CenterPoint = new Vector2(303.802002F, 282.182007F);
                 result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_24());
+                shapes.Add(ContainerShape_080());
+                result.StartAnimation("Position", _vector2Animation_16);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): T-LB
+            // Transforms for I-LB
             CompositionContainerShape ContainerShape_080()
             {
                 var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(303.21701F, 291.73999F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_081());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_4);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                shapes.Add(SpriteShape_33());
+                result.StartAnimation("Position", Vector2Animation_18());
+                var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
+            // Layer (Shape): E-LB
             CompositionContainerShape ContainerShape_081()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_082());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
-                var controller = result.TryGetAnimationController("Position");
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for T-LB
             CompositionContainerShape ContainerShape_082()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_25());
+                shapes.Add(ContainerShape_083());
+                result.StartAnimation("Position", Vector2Animation_21());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Trail 5-LB
+            // Transforms for E-LB
             CompositionContainerShape ContainerShape_083()
             {
                 var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
+                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_084());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_6());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                shapes.Add(SpriteShape_34());
+                result.StartAnimation("Position", Vector2Animation_20());
+                var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
+            // Layer (Shape): E-DB
             CompositionContainerShape ContainerShape_084()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_085());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
-                var controller = result.TryGetAnimationController("Position");
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 5-LB
             CompositionContainerShape ContainerShape_085()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_26());
+                shapes.Add(ContainerShape_086());
+                result.StartAnimation("Position", Vector2Animation_23());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Trail 7-LB
+            // Transforms for E-DB
             CompositionContainerShape ContainerShape_086()
             {
                 var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
+                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_087());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                shapes.Add(SpriteShape_35());
+                result.StartAnimation("Position", Vector2Animation_22());
+                var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
+            // Layer (Shape): E-DB
             CompositionContainerShape ContainerShape_087()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_088());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
-                var controller = result.TryGetAnimationController("Position");
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 7-LB
             CompositionContainerShape ContainerShape_088()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_27());
-                return result;
-            }
-
-            // Layer (Shape): Trail 6-LB
-            CompositionContainerShape ContainerShape_089()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_090());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_090()
-            {
-                var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_091());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                shapes.Add(ContainerShape_089());
+                result.StartAnimation("Position", Vector2Animation_25());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 6-LB
-            CompositionContainerShape ContainerShape_091()
+            // Transforms for E-DB
+            CompositionContainerShape ContainerShape_089()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
+                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_28());
+                shapes.Add(SpriteShape_36());
+                result.StartAnimation("Position", Vector2Animation_24());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): Trail 8-LB
-            CompositionContainerShape ContainerShape_092()
+            // Layer (Shape): E-LB
+            CompositionContainerShape ContainerShape_090()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_093());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
+                shapes.Add(ContainerShape_091());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1819,45 +1957,74 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            CompositionContainerShape ContainerShape_091()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_092());
+                result.StartAnimation("Position", Vector2Animation_27());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for E-DB
+            CompositionContainerShape ContainerShape_092()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
+                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_093());
+                result.StartAnimation("Position", _vector2Animation_24);
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for E-LB
             CompositionContainerShape ContainerShape_093()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(392.847992F, 237.932007F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_094());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                shapes.Add(SpriteShape_37());
+                result.StartAnimation("Position", Vector2Animation_26());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 8-LB
+            // Layer (Shape): E-DB
             CompositionContainerShape ContainerShape_094()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_29());
-                return result;
-            }
-
-            // Layer (Shape): Trail 9-LB
-            CompositionContainerShape ContainerShape_095()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_096());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
+                shapes.Add(ContainerShape_095());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1868,45 +2035,55 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            CompositionContainerShape ContainerShape_095()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_096());
+                result.StartAnimation("Position", Vector2Animation_29());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for E-DB
             CompositionContainerShape ContainerShape_096()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
+                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_097());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                shapes.Add(SpriteShape_38());
+                result.StartAnimation("Position", Vector2Animation_28());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 9-LB
+            // Layer (Shape): E-LB
             CompositionContainerShape ContainerShape_097()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_30());
-                return result;
-            }
-
-            // Layer (Shape): Trail 10-LB
-            CompositionContainerShape ContainerShape_098()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_099());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_6);
+                shapes.Add(ContainerShape_098());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1917,45 +2094,74 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            CompositionContainerShape ContainerShape_098()
+            {
+                var result = _c.CreateContainerShape();
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
+                result.CenterPoint = new Vector2(46, 60);
+                result.Scale = new Vector2(4.53347015F, 4.53523016F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_099());
+                result.StartAnimation("Position", Vector2Animation_31());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Transforms for E-DB
             CompositionContainerShape ContainerShape_099()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(835.752014F, 537.963013F));
-                result.CenterPoint = new Vector2(60, 60);
-                result.Scale = new Vector2(8.12277031F, 8.12594032F);
+                propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
+                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
+                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_100());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_13);
+                result.StartAnimation("Position", _vector2Animation_28);
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for Trail 10-LB
+            // Transforms for E-LB
             CompositionContainerShape ContainerShape_100()
             {
                 var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(43.6549988F, -11.9379997F);
-                result.Scale = new Vector2(0.123109996F, 0.123060003F);
+                var propertySet = result.Properties;
+                propertySet.InsertVector2("Position", new Vector2(370.312012F, 214.841995F));
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_31());
+                shapes.Add(SpriteShape_39());
+                result.StartAnimation("Position", Vector2Animation_30());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): I-DB
+            // Layer (Shape): E-DB
             CompositionContainerShape ContainerShape_101()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_102());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_7());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -1974,47 +2180,44 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_103());
+                shapes.Add(SpriteShape_40());
+                result.StartAnimation("Position", Vector2Animation_32());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_17());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for I-DB
+            // Layer (Shape): Trail 14-LB
             CompositionContainerShape ContainerShape_103()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
-                result.CenterPoint = new Vector2(303.802002F, 282.182007F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_32());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_16());
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(SpriteShape_41());
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_8());
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): I-LB
+            // Layer (Shape): Trail 15-LB
             CompositionContainerShape ContainerShape_104()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_105());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
+                shapes.Add(SpriteShape_42());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -2025,73 +2228,85 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            // Layer (Shape): Trail 16-LB
             CompositionContainerShape ContainerShape_105()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_106());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_19());
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(SpriteShape_43());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for I-DB
+            // Layer (Shape): Trail 17-LB
             CompositionContainerShape ContainerShape_106()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(90.723999F, 128.910004F));
-                result.CenterPoint = new Vector2(303.802002F, 282.182007F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_107());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_16);
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(SpriteShape_44());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Transforms for I-LB
+            // Layer (Shape): Trail 18-LB
             CompositionContainerShape ContainerShape_107()
             {
                 var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(303.21701F, 291.73999F));
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(SpriteShape_33());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(303.802,282.182)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_18());
-                var controller = result.TryGetAnimationController("Position");
+                shapes.Add(SpriteShape_45());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
                 return result;
             }
 
-            // Layer (Shape): E-LB
+            // Layer (Shape): Trail 19-LB
             CompositionContainerShape ContainerShape_108()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_109());
+                shapes.Add(SpriteShape_46());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): T-DB
+            CompositionContainerShape ContainerShape_109()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_110());
                 result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
@@ -2103,7 +2318,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            CompositionContainerShape ContainerShape_109()
+            CompositionContainerShape ContainerShape_110()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -2111,40 +2326,19 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(46, 60);
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_110());
+                shapes.Add(SpriteShape_47());
+                result.StartAnimation("Position", Vector2Animation_33());
+                var controller = result.TryGetAnimationController("Position");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 _reusableExpressionAnimation.ClearAllParameters();
                 _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
                 _reusableExpressionAnimation.SetReferenceParameter("my", result);
                 result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_21());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
                 return result;
             }
 
-            // Transforms for E-LB
-            CompositionContainerShape ContainerShape_110()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
-                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_34());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_20());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-DB
+            // Layer (Shape): Circle-LB
             CompositionContainerShape ContainerShape_111()
             {
                 var result = _c.CreateContainerShape();
@@ -2171,626 +2365,19 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(4.53347015F, 4.53523016F);
                 var shapes = result.Shapes;
                 shapes.Add(ContainerShape_113());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_23());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_113()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(174.274002F, 73.3669968F));
-                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_35());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(345.124,261.801)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_22());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-DB
-            CompositionContainerShape ContainerShape_114()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_115());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_115()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_116());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_25());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_116()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_36());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_24());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-LB
-            CompositionContainerShape ContainerShape_117()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_118());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_118()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_119());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_27());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_119()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(182.610001F, 49.3569984F));
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_120());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_24);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-LB
-            CompositionContainerShape ContainerShape_120()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(392.847992F, 237.932007F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_37());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(332.05,237.932)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_26());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-DB
-            CompositionContainerShape ContainerShape_121()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_122());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_122()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_123());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_29());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_123()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
-                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_38());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_28());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-LB
-            CompositionContainerShape ContainerShape_124()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_125());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_125()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_126());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_31());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_126()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(160.595993F, 26.1310005F));
-                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_127());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", _vector2Animation_28);
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-LB
-            CompositionContainerShape ContainerShape_127()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(370.312012F, 214.841995F));
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_39());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.672,214.842)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_30());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E-DB
-            CompositionContainerShape ContainerShape_128()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_129());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_129()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_130());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_32());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for E-DB
-            CompositionContainerShape ContainerShape_130()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_40());
-                return result;
-            }
-
-            // Layer (Shape): Trail 14-LB
-            CompositionContainerShape ContainerShape_131()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_41());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_8());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 15-LB
-            CompositionContainerShape ContainerShape_132()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_42());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 16-LB
-            CompositionContainerShape ContainerShape_133()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_43());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 17-LB
-            CompositionContainerShape ContainerShape_134()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_135());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 17-LB
-            CompositionContainerShape ContainerShape_135()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.1139984F, 325.384003F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_136());
-                return result;
-            }
-
-            // Transforms for Trail 17-LB
-            CompositionContainerShape ContainerShape_136()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(160, 568);
-                result.Offset = new Vector2(-66.9329987F, -485.403992F);
-                result.Scale = new Vector2(-1, 1);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_44());
-                return result;
-            }
-
-            // Layer (Shape): Trail 18-LB
-            CompositionContainerShape ContainerShape_137()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_138());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 18-LB
-            CompositionContainerShape ContainerShape_138()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.1139984F, 325.384003F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_139());
-                return result;
-            }
-
-            // Transforms for Trail 18-LB
-            CompositionContainerShape ContainerShape_139()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(172, 580);
-                result.Offset = new Vector2(-89.3430023F, -485.903992F);
-                result.Scale = new Vector2(-1, 1);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_45());
-                return result;
-            }
-
-            // Layer (Shape): Trail 19-LB
-            CompositionContainerShape ContainerShape_140()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_141());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_8);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): Trail 19-LB
-            CompositionContainerShape ContainerShape_141()
-            {
-                var result = _c.CreateContainerShape();
-                result.Offset = new Vector2(34.1139984F, 325.384003F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_142());
-                return result;
-            }
-
-            // Transforms for Trail 19-LB
-            CompositionContainerShape ContainerShape_142()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(180, 552);
-                result.Offset = new Vector2(-104.167999F, -486.403992F);
-                result.Scale = new Vector2(-1, 1);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_46());
-                return result;
-            }
-
-            // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_143()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_144());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_144()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_145());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
-                result.StartAnimation("Position", Vector2Animation_33());
-                var controller = result.TryGetAnimationController("Position");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                return result;
-            }
-
-            // Transforms for T-DB
-            CompositionContainerShape ContainerShape_145()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
-                var shapes = result.Shapes;
-                shapes.Add(SpriteShape_47());
-                return result;
-            }
-
-            // Layer (Shape): Circle-LB
-            CompositionContainerShape ContainerShape_146()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_147());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_0_7);
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            CompositionContainerShape ContainerShape_147()
-            {
-                var result = _c.CreateContainerShape();
-                var propertySet = result.Properties;
-                propertySet.InsertVector2("Position", new Vector2(-106.908997F, 364.079987F));
-                result.CenterPoint = new Vector2(46, 60);
-                result.Scale = new Vector2(4.53347015F, 4.53523016F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_148());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_37());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(46,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Transforms for N5
-            CompositionContainerShape ContainerShape_148()
+            CompositionContainerShape ContainerShape_113()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -2798,20 +2385,20 @@ namespace AnimatedVisuals
                 result.CenterPoint = new Vector2(60, 60);
                 result.Scale = new Vector2(0.165289998F, 0.165289998F);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_149());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(ContainerShape_114());
                 result.StartAnimation("Position", Vector2Animation_36());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Transforms for Circle-LB
-            CompositionContainerShape ContainerShape_149()
+            CompositionContainerShape ContainerShape_114()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -2820,67 +2407,25 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(1.02170002F, 1.02170002F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_48());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_35());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Layer (Shape): E3-LB
-            CompositionContainerShape ContainerShape_150()
+            CompositionContainerShape ContainerShape_115()
             {
                 var result = _c.CreateContainerShape();
                 result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_151());
-                result.StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_1());
-                var controller = result.TryGetAnimationController("TransformMatrix._11");
-                controller.Pause();
-                controller.StartAnimation("Progress", _scalarExpressionAnimation);
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
-                return result;
-            }
-
-            // Layer (Shape): E3-LB
-            CompositionContainerShape ContainerShape_151()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_152());
-                return result;
-            }
-
-            // Transforms for E3-LB
-            CompositionContainerShape ContainerShape_152()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(303.802002F, 282.182007F);
-                result.Offset = new Vector2(-210.764008F, -188.313004F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_49());
-                return result;
-            }
-
-            // Layer (Shape): E3-DB
-            CompositionContainerShape ContainerShape_153()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_154());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", ScalarAnimation_to_1());
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -2892,37 +2437,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): E3-DB
-            CompositionContainerShape ContainerShape_154()
+            CompositionContainerShape ContainerShape_116()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_155());
-                return result;
-            }
-
-            // Transforms for E3-DB
-            CompositionContainerShape ContainerShape_155()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(345.123993F, 261.800995F);
-                result.Offset = new Vector2(-210.519989F, -188.43399F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_50());
-                return result;
-            }
-
-            // Layer (Shape): E2-LB
-            CompositionContainerShape ContainerShape_156()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_157());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -2934,37 +2455,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): E2-LB
-            CompositionContainerShape ContainerShape_157()
+            CompositionContainerShape ContainerShape_117()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_158());
-                return result;
-            }
-
-            // Transforms for E2-LB
-            CompositionContainerShape ContainerShape_158()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Offset = new Vector2(-210.596985F, -188.575012F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_51());
-                return result;
-            }
-
-            // Layer (Shape): E2-DB
-            CompositionContainerShape ContainerShape_159()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_160());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -2976,37 +2473,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): E2-DB
-            CompositionContainerShape ContainerShape_160()
+            CompositionContainerShape ContainerShape_118()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_161());
-                return result;
-            }
-
-            // Transforms for E2-DB
-            CompositionContainerShape ContainerShape_161()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(332.049988F, 237.932007F);
-                result.Offset = new Vector2(-210.596985F, -188.575012F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_52());
-                return result;
-            }
-
-            // Layer (Shape): E1-LB
-            CompositionContainerShape ContainerShape_162()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_163());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3018,37 +2491,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): E1-LB
-            CompositionContainerShape ContainerShape_163()
+            CompositionContainerShape ContainerShape_119()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_164());
-                return result;
-            }
-
-            // Transforms for E1-LB
-            CompositionContainerShape ContainerShape_164()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
-                result.Offset = new Vector2(-210.522003F, -188.710999F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_53());
-                return result;
-            }
-
-            // Layer (Shape): E1-DB
-            CompositionContainerShape ContainerShape_165()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_166());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3060,37 +2509,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): E1-DB
-            CompositionContainerShape ContainerShape_166()
+            CompositionContainerShape ContainerShape_120()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_167());
-                return result;
-            }
-
-            // Transforms for E1-DB
-            CompositionContainerShape ContainerShape_167()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(344.671997F, 214.841995F);
-                result.Offset = new Vector2(-210.522003F, -188.710999F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_54());
-                return result;
-            }
-
-            // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_168()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_169());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3102,37 +2527,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_169()
+            CompositionContainerShape ContainerShape_121()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_170());
-                return result;
-            }
-
-            // Transforms for T-DB
-            CompositionContainerShape ContainerShape_170()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_55());
-                return result;
-            }
-
-            // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_171()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_172());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3144,37 +2545,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_172()
+            CompositionContainerShape ContainerShape_122()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_173());
-                return result;
-            }
-
-            // Transforms for T-DB
-            CompositionContainerShape ContainerShape_173()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_56());
-                return result;
-            }
-
-            // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_174()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_175());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3186,37 +2563,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): T-DB
-            CompositionContainerShape ContainerShape_175()
+            CompositionContainerShape ContainerShape_123()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_176());
-                return result;
-            }
-
-            // Transforms for T-DB
-            CompositionContainerShape ContainerShape_176()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_57());
-                return result;
-            }
-
-            // Layer (Shape): T-LB
-            CompositionContainerShape ContainerShape_177()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_178());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3228,37 +2581,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): T-LB
-            CompositionContainerShape ContainerShape_178()
+            CompositionContainerShape ContainerShape_124()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_179());
-                return result;
-            }
-
-            // Transforms for T-LB
-            CompositionContainerShape ContainerShape_179()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_58());
-                return result;
-            }
-
-            // Layer (Shape): O-LB
-            CompositionContainerShape ContainerShape_180()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_181());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3270,37 +2599,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): O-LB
-            CompositionContainerShape ContainerShape_181()
+            CompositionContainerShape ContainerShape_125()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_182());
-                return result;
-            }
-
-            // Transforms for O-LB
-            CompositionContainerShape ContainerShape_182()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_59());
-                return result;
-            }
-
-            // Layer (Shape): O-DB
-            CompositionContainerShape ContainerShape_183()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_184());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3312,38 +2617,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): O-DB
-            CompositionContainerShape ContainerShape_184()
+            CompositionContainerShape ContainerShape_126()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_185());
-                return result;
-            }
-
-            // Transforms for O-DB
-            CompositionContainerShape ContainerShape_185()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(196.791F, 266.503998F);
-                result.Offset = new Vector2(-211.395004F, -188.406006F);
-                result.RotationAngleInDegrees = -36;
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_60());
-                return result;
-            }
-
-            // Layer (Shape): T-LB
-            CompositionContainerShape ContainerShape_186()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_187());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3355,37 +2635,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): T-LB
-            CompositionContainerShape ContainerShape_187()
+            CompositionContainerShape ContainerShape_127()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_188());
-                return result;
-            }
-
-            // Transforms for T-LB
-            CompositionContainerShape ContainerShape_188()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_61());
-                return result;
-            }
-
-            // Layer (Shape): L-LB
-            CompositionContainerShape ContainerShape_189()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_190());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3397,37 +2653,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): L-LB
-            CompositionContainerShape ContainerShape_190()
+            CompositionContainerShape ContainerShape_128()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_191());
-                return result;
-            }
-
-            // Transforms for L-LB
-            CompositionContainerShape ContainerShape_191()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_62());
-                return result;
-            }
-
-            // Layer (Shape): L-DB
-            CompositionContainerShape ContainerShape_192()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_193());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3439,37 +2671,13 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): L-DB
-            CompositionContainerShape ContainerShape_193()
+            CompositionContainerShape ContainerShape_129()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_194());
-                return result;
-            }
-
-            // Transforms for L-DB
-            CompositionContainerShape ContainerShape_194()
-            {
-                var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(250, 250);
-                result.Offset = new Vector2(-211.080994F, -188.503998F);
-                result.Scale = new Vector2(1.00590003F, 1.00590003F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_63());
-                return result;
-            }
-
-            // Layer (Shape): Circle-LB
-            CompositionContainerShape ContainerShape_195()
-            {
-                var result = _c.CreateContainerShape();
-                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
-                var shapes = result.Shapes;
-                shapes.Add(ContainerShape_196());
-                result.StartAnimation("TransformMatrix._11", _scalarAnimation_1_to_1);
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
                 var controller = result.TryGetAnimationController("TransformMatrix._11");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
@@ -3481,38 +2689,54 @@ namespace AnimatedVisuals
             }
 
             // Layer (Shape): Circle-LB
-            CompositionContainerShape ContainerShape_196()
+            CompositionContainerShape ContainerShape_130()
             {
                 var result = _c.CreateContainerShape();
-                result.CenterPoint = new Vector2(60, 60);
-                result.Offset = new Vector2(100.358002F, 183.128006F);
-                result.Scale = new Vector2(0.749329984F, 0.749629974F);
+                result.TransformMatrix = new Matrix3x2(0, 0, 0, 0, 0, 0);
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_197());
+                shapes.Add(ContainerShape_131());
+                result.StartAnimation("TransformMatrix._11", _scalarAnimation_to_1);
+                var controller = result.TryGetAnimationController("TransformMatrix._11");
+                controller.Pause();
+                controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.TransformMatrix._11";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("TransformMatrix._22", _reusableExpressionAnimation);
+                return result;
+            }
+
+            // Layer (Shape): Circle-LB
+            CompositionContainerShape ContainerShape_131()
+            {
+                var result = _c.CreateContainerShape();
+                result.TransformMatrix = new Matrix3x2(0.749329984F, 0, 0, 0.749629974F, 115.398201F, 198.150208F);
+                var shapes = result.Shapes;
+                shapes.Add(ContainerShape_132());
                 return result;
             }
 
             // Transforms for N7
-            CompositionContainerShape ContainerShape_197()
+            CompositionContainerShape ContainerShape_132()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
                 propertySet.InsertVector2("Position", new Vector2(164.770004F, 73.5979996F));
                 var shapes = result.Shapes;
-                shapes.Add(ContainerShape_198());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
+                shapes.Add(ContainerShape_133());
                 result.StartAnimation("Position", Vector2Animation_39());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(60,60)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
             // Transforms for Circle-LB
-            CompositionContainerShape ContainerShape_198()
+            CompositionContainerShape ContainerShape_133()
             {
                 var result = _c.CreateContainerShape();
                 var propertySet = result.Properties;
@@ -3521,14 +2745,14 @@ namespace AnimatedVisuals
                 result.Scale = new Vector2(0.172700003F, 0.172700003F);
                 var shapes = result.Shapes;
                 shapes.Add(SpriteShape_64());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_38());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(40,(-210))";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -3546,182 +2770,171 @@ namespace AnimatedVisuals
             //   Anchor
             CubicBezierEasingFunction CubicBezierEasingFunction_02()
             {
-                return _c.CreateCubicBezierEasingFunction(new Vector2(0.333000004F, 0.333000004F), new Vector2(0.666999996F, 0.666999996F));
-            }
-
-            // Transforms: Circle-LB
-            //   Anchor
-            CubicBezierEasingFunction CubicBezierEasingFunction_03()
-            {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0), new Vector2(0.666999996F, 1));
             }
 
             // Transforms: Circle-LB
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_04()
+            CubicBezierEasingFunction CubicBezierEasingFunction_03()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.507000029F, 0.0710000023F), new Vector2(0.833000004F, 0.833000004F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_05()
+            CubicBezierEasingFunction CubicBezierEasingFunction_04()
             {
-                return _cubicBezierEasingFunction_05 = _c.CreateCubicBezierEasingFunction(new Vector2(0.333000004F, 0), new Vector2(0.833000004F, 0.833000004F));
+                return _cubicBezierEasingFunction_04 = _c.CreateCubicBezierEasingFunction(new Vector2(0.333000004F, 0), new Vector2(0.833000004F, 0.833000004F));
             }
 
-            // Transforms: N3
-            //   Transforms: O2-LB
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
-            //         TrimEnd
-            CubicBezierEasingFunction CubicBezierEasingFunction_06()
+            // Ellipse Path 1
+            //   Ellipse Path 1.EllipseGeometry
+            //     TrimEnd
+            CubicBezierEasingFunction CubicBezierEasingFunction_05()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.666999996F, 0.879000008F));
             }
 
-            // Transforms: N3
-            //   Transforms: O2-LB
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
-            //         TrimEnd
-            CubicBezierEasingFunction CubicBezierEasingFunction_07()
+            // Ellipse Path 1
+            //   Ellipse Path 1.EllipseGeometry
+            //     TrimEnd
+            CubicBezierEasingFunction CubicBezierEasingFunction_06()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.333000004F, 0.335999995F), new Vector2(0.833000004F, 0.833000004F));
             }
 
             // Transforms: Bounce
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_08()
+            CubicBezierEasingFunction CubicBezierEasingFunction_07()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0, 1));
             }
 
             // Transforms: Bounce
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_09()
+            CubicBezierEasingFunction CubicBezierEasingFunction_08()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(1, 0), new Vector2(0.833000004F, 0.833000004F));
             }
 
             // Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_10()
+            CubicBezierEasingFunction CubicBezierEasingFunction_09()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.148000002F, 1), new Vector2(0.493999988F, 1));
             }
 
+            CubicBezierEasingFunction CubicBezierEasingFunction_10()
+            {
+                return _cubicBezierEasingFunction_10 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.370000005F, 1));
+            }
+
             CubicBezierEasingFunction CubicBezierEasingFunction_11()
             {
-                return _cubicBezierEasingFunction_11 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.370000005F, 1));
+                return _cubicBezierEasingFunction_11 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.513000011F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_12()
             {
-                return _cubicBezierEasingFunction_12 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.513000011F, 1));
+                return _cubicBezierEasingFunction_12 = _c.CreateCubicBezierEasingFunction(new Vector2(0.56400001F, 0), new Vector2(0.226999998F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_13()
             {
-                return _cubicBezierEasingFunction_13 = _c.CreateCubicBezierEasingFunction(new Vector2(0.56400001F, 0), new Vector2(0.226999998F, 1));
+                return _cubicBezierEasingFunction_13 = _c.CreateCubicBezierEasingFunction(new Vector2(0.529999971F, 0), new Vector2(0.331999987F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_14()
             {
-                return _cubicBezierEasingFunction_14 = _c.CreateCubicBezierEasingFunction(new Vector2(0.529999971F, 0), new Vector2(0.331999987F, 1));
+                return _cubicBezierEasingFunction_14 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.836000025F, 0.949000001F));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_15()
             {
-                return _cubicBezierEasingFunction_15 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.836000025F, 0.949000001F));
+                return _cubicBezierEasingFunction_15 = _c.CreateCubicBezierEasingFunction(new Vector2(0.381999999F, 0.966000021F), new Vector2(0.82099998F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_16()
             {
-                return _cubicBezierEasingFunction_16 = _c.CreateCubicBezierEasingFunction(new Vector2(0.381999999F, 0.966000021F), new Vector2(0.82099998F, 1));
+                return _cubicBezierEasingFunction_16 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.666999996F, 1));
             }
 
             CubicBezierEasingFunction CubicBezierEasingFunction_17()
             {
-                return _cubicBezierEasingFunction_17 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.666999996F, 1));
-            }
-
-            CubicBezierEasingFunction CubicBezierEasingFunction_18()
-            {
-                return _cubicBezierEasingFunction_18 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.289999992F, 1));
+                return _cubicBezierEasingFunction_17 = _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.289999992F, 1));
             }
 
             // Transforms: Circle-LB
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_19()
+            CubicBezierEasingFunction CubicBezierEasingFunction_18()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.419999987F, 0.333000004F), new Vector2(0.829999983F, 0.824000001F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_20()
+            CubicBezierEasingFunction CubicBezierEasingFunction_19()
             {
-                return _cubicBezierEasingFunction_20 = _c.CreateCubicBezierEasingFunction(new Vector2(0.629999995F, 0), new Vector2(0.833000004F, 0.833000004F));
+                return _cubicBezierEasingFunction_19 = _c.CreateCubicBezierEasingFunction(new Vector2(0.629999995F, 0), new Vector2(0.833000004F, 0.833000004F));
             }
 
             // Transforms: N5
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_21()
+            CubicBezierEasingFunction CubicBezierEasingFunction_20()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.200000003F, 1));
             }
 
             // Transforms: N5
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_22()
+            CubicBezierEasingFunction CubicBezierEasingFunction_21()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.800000012F, 0), new Vector2(0.833000004F, 0.833000004F));
             }
 
             // Transforms: Circle-LB
             //   Position
-            CubicBezierEasingFunction CubicBezierEasingFunction_23()
+            CubicBezierEasingFunction CubicBezierEasingFunction_22()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.681999981F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_24()
+            CubicBezierEasingFunction CubicBezierEasingFunction_23()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.191F, 0), new Vector2(0.833000004F, 0.82099998F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_25()
+            CubicBezierEasingFunction CubicBezierEasingFunction_24()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.188999996F), new Vector2(0.649999976F, 0.806999981F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_26()
+            CubicBezierEasingFunction CubicBezierEasingFunction_25()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.458000004F, 0.449000001F), new Vector2(0.800999999F, 0.805000007F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_27()
+            CubicBezierEasingFunction CubicBezierEasingFunction_26()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.456F, 0.293000013F), new Vector2(0.833000004F, 0.809000015F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_28()
+            CubicBezierEasingFunction CubicBezierEasingFunction_27()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.182999998F), new Vector2(0.519999981F, 0.639999986F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_29()
+            CubicBezierEasingFunction CubicBezierEasingFunction_28()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.456999987F, 0.425000012F), new Vector2(0.833000004F, 0.845000029F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_30()
+            CubicBezierEasingFunction CubicBezierEasingFunction_29()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.166999996F, 0.166999996F), new Vector2(0.833000004F, 0.915000021F));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_31()
+            CubicBezierEasingFunction CubicBezierEasingFunction_30()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.156000003F, 0.0890000015F), new Vector2(0.776000023F, 1));
             }
 
-            CubicBezierEasingFunction CubicBezierEasingFunction_32()
+            CubicBezierEasingFunction CubicBezierEasingFunction_31()
             {
                 return _c.CreateCubicBezierEasingFunction(new Vector2(0.727999985F, 0.379000008F), new Vector2(0.833000004F, 0.833000004F));
             }
@@ -3810,9 +3023,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O1-DB
-            //     Ellipse Path 1
+            // Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_22p3_0()
             {
@@ -3827,9 +3038,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O2-LB
-            //     Ellipse Path 1
+            // Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_22p3_1()
             {
@@ -3853,8 +3062,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: O-LB
-            //   Ellipse Path 1
+            // Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_22p3_3()
             {
@@ -3869,7 +3077,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: O-DB
+            // Layer (Shape): O-DB
             //   Ellipse Path 1
             // Ellipse Path 1.EllipseGeometry
             CompositionEllipseGeometry Ellipse_22p3_4()
@@ -4261,6 +3469,13 @@ namespace AnimatedVisuals
                 return result;
             }
 
+            StepEasingFunction HoldThenStepEasingFunction()
+            {
+                var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
+                result.IsFinalStepSingleFrame = true;
+                return result;
+            }
+
             LinearEasingFunction LinearEasingFunction()
             {
                 return _linearEasingFunction = _c.CreateLinearEasingFunction();
@@ -4344,9 +3559,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T2-DB
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_04()
             {
@@ -4360,9 +3573,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T1-LB
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_05()
             {
@@ -4391,9 +3602,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-DB
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_07()
             {
@@ -4406,9 +3615,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-LB
-            //     Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_08()
             {
@@ -4421,8 +3628,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-DB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_09()
             {
@@ -4436,8 +3642,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-LB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_10()
             {
@@ -4458,8 +3663,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_12()
             {
@@ -4472,8 +3676,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_13()
             {
@@ -4486,8 +3689,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_14()
             {
@@ -4688,8 +3890,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-DB
-            //   Path 1
+            // Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_25()
             {
@@ -4863,7 +4064,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E3-LB
+            // Layer (Shape): E3-LB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_32()
@@ -4877,7 +4078,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E3-DB
+            // Layer (Shape): E3-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_33()
@@ -4891,7 +4092,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E2-LB
+            // Layer (Shape): E2-LB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_34()
@@ -4906,7 +4107,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E2-DB
+            // Layer (Shape): E2-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_35()
@@ -4921,7 +4122,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E1-DB
+            // Layer (Shape): E1-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_36()
@@ -4936,7 +4137,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_37()
@@ -4955,7 +4156,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_38()
@@ -4965,7 +4166,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_39()
@@ -4979,7 +4180,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_40()
@@ -4994,7 +4195,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: L-LB
+            // Layer (Shape): L-LB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_41()
@@ -5004,7 +4205,7 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: L-DB
+            // Layer (Shape): L-DB
             //   Path 1
             // Path 1.PathGeometry
             CompositionPathGeometry PathGeometry_42()
@@ -5139,14 +4340,6 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            ScalarKeyFrameAnimation ScalarAnimation_0_to_0()
-            {
-                var result = _scalarAnimation_0_to_0 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.134920642F, 0, StepEasingFunction_1());
-                return result;
-            }
-
             // Path 1
             //   Path 1.PathGeometry
             // TrimEnd
@@ -5154,9 +4347,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.0132275131F, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.134920642F, 0.600000024F, CubicBezierEasingFunction_05());
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.0132275131F, 0, LinearEasingFunction());
+                result.InsertKeyFrame(0.134920642F, 0.600000024F, CubicBezierEasingFunction_04());
                 return result;
             }
 
@@ -5167,21 +4360,20 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0449735448F, 0, _linearEasingFunction);
-                result.InsertKeyFrame(0.156084657F, 0.600000024F, _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.156084657F, 0.600000024F, _cubicBezierEasingFunction_04);
                 return result;
             }
 
-            // Transforms: T-DB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0_to_1_0()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.306878299F, 0, _linearEasingFunction);
                 result.InsertKeyFrame(0.375661373F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -5191,17 +4383,17 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0476191491F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0476191491F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0622723885F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.0622724891F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0622724891F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0855131298F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.0855132267F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0855132267F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.101039581F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.101039678F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.101039678F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.117788263F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.11778836F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.11778836F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.140772387F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.140772492F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.140772492F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.16402106F, 1, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5210,13 +4402,13 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_2 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0370371379F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0370371379F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0860845596F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.0860846564F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.0860846564F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.107222125F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.107222222F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.107222222F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.155436411F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.155436516F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.155436516F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.16402106F, 1, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5225,22 +4417,22 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.134920746F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.147375569F, 1, CubicBezierEasingFunction_24());
-                result.InsertKeyFrame(0.147375673F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.134920746F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.147375569F, 1, CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0.147375673F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.157394081F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.157394186F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.169312075F, 1, CubicBezierEasingFunction_25());
-                result.InsertKeyFrame(0.169312179F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.19047609F, 1, CubicBezierEasingFunction_26());
-                result.InsertKeyFrame(0.190476194F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.205849111F, 1, CubicBezierEasingFunction_27());
-                result.InsertKeyFrame(0.205849215F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.157394186F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.169312075F, 1, CubicBezierEasingFunction_24());
+                result.InsertKeyFrame(0.169312179F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.19047609F, 1, CubicBezierEasingFunction_25());
+                result.InsertKeyFrame(0.190476194F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.205849111F, 1, CubicBezierEasingFunction_26());
+                result.InsertKeyFrame(0.205849215F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.216854393F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.216854498F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.230158627F, 1, CubicBezierEasingFunction_28());
-                result.InsertKeyFrame(0.230158731F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.246031642F, 1, CubicBezierEasingFunction_29());
+                result.InsertKeyFrame(0.216854498F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.230158627F, 1, CubicBezierEasingFunction_27());
+                result.InsertKeyFrame(0.230158731F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.246031642F, 1, CubicBezierEasingFunction_28());
                 return result;
             }
 
@@ -5248,11 +4440,11 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.248677358F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.248677358F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.279854387F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.279854476F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.279854476F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.346560746F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.346560836F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.346560836F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206239F, 1, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5261,10 +4453,10 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_5 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.37301597F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.445216835F, 1, CubicBezierEasingFunction_30());
-                result.InsertKeyFrame(0.445216924F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526454926F, 1, CubicBezierEasingFunction_31());
+                result.InsertKeyFrame(0.37301597F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.445216835F, 1, CubicBezierEasingFunction_29());
+                result.InsertKeyFrame(0.445216924F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526454926F, 1, CubicBezierEasingFunction_30());
                 return result;
             }
 
@@ -5272,7 +4464,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.526455164F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.526455164F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.568782985F, 1, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5281,14 +4473,14 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.494709074F, 0, _stepEasingFunction_0);
+                result.InsertKeyFrame(0.494709074F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.534391463F, 1, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.534391582F, 0, _stepEasingFunction_0);
-                result.InsertKeyFrame(0.568782985F, 1, CubicBezierEasingFunction_32());
+                result.InsertKeyFrame(0.534391582F, 0, _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.568782985F, 1, CubicBezierEasingFunction_31());
                 return result;
             }
 
-            // Transforms: E2-LB
+            // Layer (Shape): E2-LB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimStart
@@ -5296,41 +4488,39 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.0930000022F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.0930000022F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.0930000022F, _linearEasingFunction);
-                result.InsertKeyFrame(0.648148119F, 0, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.648148119F, 0, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: E-DB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p122_to_0_0()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.122000001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.122000001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.298941791F, 0.122000001F, _linearEasingFunction);
-                result.InsertKeyFrame(0.40476191F, 0, CubicBezierEasingFunction_11());
+                result.InsertKeyFrame(0.40476191F, 0, CubicBezierEasingFunction_10());
                 return result;
             }
 
-            // Transforms: E-LB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p122_to_0_1()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.122000001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.122000001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.335978836F, 0.122000001F, _linearEasingFunction);
-                result.InsertKeyFrame(0.441798955F, 0, _cubicBezierEasingFunction_11);
+                result.InsertKeyFrame(0.441798955F, 0, _cubicBezierEasingFunction_10);
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimStart
@@ -5338,25 +4528,23 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.126000002F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.126000002F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.126000002F, _linearEasingFunction);
-                result.InsertKeyFrame(0.624338627F, 0, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.624338627F, 0, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O2-LB
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
+            // Ellipse Path 1
+            //   Ellipse Path 1.EllipseGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p135_to_1()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.135000005F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.135000005F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.135000005F, _linearEasingFunction);
-                result.InsertKeyFrame(0.166666672F, 0.347000003F, CubicBezierEasingFunction_06());
-                result.InsertKeyFrame(0.41534391F, 1, CubicBezierEasingFunction_07());
+                result.InsertKeyFrame(0.166666672F, 0.347000003F, CubicBezierEasingFunction_05());
+                result.InsertKeyFrame(0.41534391F, 1, CubicBezierEasingFunction_06());
                 return result;
             }
 
@@ -5365,7 +4553,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.199000001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.199000001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.199000001F, _linearEasingFunction);
                 result.InsertKeyFrame(0.148148149F, 0.282629997F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.158730164F, 0.349999994F, _cubicBezierEasingFunction_00);
@@ -5380,13 +4568,13 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.199000001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.199000001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.199000001F, _linearEasingFunction);
                 result.InsertKeyFrame(0.158730164F, 0.387329996F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: E1-DB
+            // Layer (Shape): E1-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimStart
@@ -5394,13 +4582,13 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.221000001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.221000001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.221000001F, _linearEasingFunction);
-                result.InsertKeyFrame(0.624338627F, 0.167999998F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.624338627F, 0.167999998F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: O-DB
+            // Layer (Shape): O-DB
             //   Ellipse Path 1
             //     Ellipse Path 1.EllipseGeometry
             // TrimEnd
@@ -5408,13 +4596,13 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.234999999F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.234999999F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.234999999F, _linearEasingFunction);
-                result.InsertKeyFrame(0.626984119F, 0.405000001F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.626984119F, 0.405000001F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: L-DB
+            // Layer (Shape): L-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimStart
@@ -5422,27 +4610,26 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.25999999F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.25999999F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.25999999F, _linearEasingFunction);
-                result.InsertKeyFrame(0.634920657F, 0.287F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.634920657F, 0.287F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: E-DB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimStart
             ScalarKeyFrameAnimation ScalarAnimation_0p262_to_0()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.261999995F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.261999995F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.373015881F, 0.261999995F, _linearEasingFunction);
-                result.InsertKeyFrame(0.558201075F, 0, _cubicBezierEasingFunction_11);
+                result.InsertKeyFrame(0.558201075F, 0, _cubicBezierEasingFunction_10);
                 return result;
             }
 
-            // Transforms: E3-DB
+            // Layer (Shape): E3-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5450,29 +4637,28 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.284000009F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.284000009F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.284000009F, _linearEasingFunction);
-                result.InsertKeyFrame(0.611111104F, 0.316000015F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.611111104F, 0.316000015F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: T-LB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p311_to_0p933()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.31099999F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.31099999F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.248677254F, 0.31099999F, _linearEasingFunction);
                 result.InsertKeyFrame(0.269841284F, 0.442999989F, _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.351851851F, 0.906000018F, _cubicBezierEasingFunction_15);
-                result.InsertKeyFrame(0.391534388F, 0.933000028F, _cubicBezierEasingFunction_16);
+                result.InsertKeyFrame(0.351851851F, 0.906000018F, _cubicBezierEasingFunction_14);
+                result.InsertKeyFrame(0.391534388F, 0.933000028F, _cubicBezierEasingFunction_15);
                 return result;
             }
 
-            // Transforms: E2-DB
+            // Layer (Shape): E2-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimStart
@@ -5480,22 +4666,20 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.340999991F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.340999991F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.340999991F, _linearEasingFunction);
-                result.InsertKeyFrame(0.597883582F, 0.312999994F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.597883582F, 0.312999994F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O1-DB
-            //     Ellipse Path 1
-            //       Ellipse Path 1.EllipseGeometry
+            // Ellipse Path 1
+            //   Ellipse Path 1.EllipseGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p347_to_1()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.347000003F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.347000003F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.347000003F, _linearEasingFunction);
                 result.InsertKeyFrame(0.169312164F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -5506,9 +4690,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.349000007F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.349000007F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.187830687F, 0.349000007F, _linearEasingFunction);
-                result.InsertKeyFrame(0.208994716F, 0.199000001F, _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.208994716F, 0.199000001F, _cubicBezierEasingFunction_04);
                 result.InsertKeyFrame(0.227513224F, 0.448329985F, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5518,9 +4702,9 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0p349_to_0p448_1 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.349000007F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.349000007F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.187830687F, 0.349000007F, _linearEasingFunction);
-                result.InsertKeyFrame(0.208994716F, 0.387329996F, _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.208994716F, 0.387329996F, _cubicBezierEasingFunction_04);
                 result.InsertKeyFrame(0.227513224F, 0.448329985F, _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -5530,22 +4714,21 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.349000007F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.349000007F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.187830687F, 0.349000007F, _linearEasingFunction);
-                result.InsertKeyFrame(0.208994716F, 0.252999991F, _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.208994716F, 0.252999991F, _cubicBezierEasingFunction_04);
                 result.InsertKeyFrame(0.227513224F, 0.448329985F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: O-LB
-            //   Ellipse Path 1
-            //     Ellipse Path 1.EllipseGeometry
+            // Ellipse Path 1
+            //   Ellipse Path 1.EllipseGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p366_to_0p649()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.365999997F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.365999997F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.248677254F, 0.365999997F, _linearEasingFunction);
                 result.InsertKeyFrame(0.253968269F, 0.398000002F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.306878299F, 0.648999989F, _cubicBezierEasingFunction_00);
@@ -5557,44 +4740,40 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.387329996F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.387329996F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.387329996F, _linearEasingFunction);
                 result.InsertKeyFrame(0.148148149F, 0.343589991F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.158730164F, 0.349999994F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T2-DB
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p39_to_0p624_0()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.389999986F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.389999986F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.105820104F, 0.389999986F, _linearEasingFunction);
                 result.InsertKeyFrame(0.264550269F, 0.624000013F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T1-LB
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p39_to_0p624_1()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.389999986F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.389999986F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.389999986F, _linearEasingFunction);
                 result.InsertKeyFrame(0.338624328F, 0.624000013F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: E3-LB
+            // Layer (Shape): E3-LB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5602,42 +4781,40 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.428000003F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.428000003F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.428000003F, _linearEasingFunction);
-                result.InsertKeyFrame(0.629629612F, 0.456999987F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.629629612F, 0.456999987F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: T-DB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p443_to_0p933()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.442999989F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.442999989F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.248677254F, 0.442999989F, _linearEasingFunction);
-                result.InsertKeyFrame(0.330687821F, 0.906000018F, CubicBezierEasingFunction_15());
-                result.InsertKeyFrame(0.370370358F, 0.933000028F, CubicBezierEasingFunction_16());
+                result.InsertKeyFrame(0.330687821F, 0.906000018F, CubicBezierEasingFunction_14());
+                result.InsertKeyFrame(0.370370358F, 0.933000028F, CubicBezierEasingFunction_15());
                 return result;
             }
 
-            // Transforms: E-DB
-            //   Path 1
-            //     Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p475_to_0p665()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.474999994F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.474999994F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.373015881F, 0.474999994F, _linearEasingFunction);
-                result.InsertKeyFrame(0.558201075F, 0.665000021F, _cubicBezierEasingFunction_11);
+                result.InsertKeyFrame(0.558201075F, 0.665000021F, _cubicBezierEasingFunction_10);
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5645,13 +4822,13 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.617999971F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.617999971F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.617999971F, _linearEasingFunction);
-                result.InsertKeyFrame(0.624338627F, 0.665000021F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.624338627F, 0.665000021F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
-            // Transforms: L-DB
+            // Layer (Shape): L-DB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5659,9 +4836,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.649999976F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.649999976F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.649999976F, _linearEasingFunction);
-                result.InsertKeyFrame(0.634920657F, 0.734000027F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.634920657F, 0.734000027F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
@@ -5670,7 +4847,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.759000003F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.759000003F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.759000003F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.328999996F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5682,7 +4859,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.759000003F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.759000003F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.759000003F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.469999999F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5694,7 +4871,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.765999973F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.765999973F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.765999973F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.50999999F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5706,14 +4883,14 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.786000013F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.786000013F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.786000013F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.519999981F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5721,9 +4898,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.790000021F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.790000021F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.790000021F, _linearEasingFunction);
-                result.InsertKeyFrame(0.624338627F, 1, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.624338627F, 1, _cubicBezierEasingFunction_16);
                 return result;
             }
 
@@ -5732,7 +4909,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.79400003F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.79400003F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.79400003F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.349999994F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5744,7 +4921,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.809000015F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.809000015F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.809000015F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.361999989F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5756,7 +4933,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.81400001F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.81400001F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.81400001F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.49000001F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5768,38 +4945,34 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.814999998F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.814999998F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.814999998F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.569999993F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-DB
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p817_to_1_0()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.816999972F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.816999972F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.103174604F, 0.816999972F, _linearEasingFunction);
                 result.InsertKeyFrame(0.248677254F, 1, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-LB
-            //     Path 1
-            //       Path 1.PathGeometry
+            // Path 1
+            //   Path 1.PathGeometry
             // TrimEnd
             ScalarKeyFrameAnimation ScalarAnimation_0p817_to_1_1()
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.816999972F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.816999972F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 0.816999972F, _linearEasingFunction);
                 result.InsertKeyFrame(0.280423284F, 1, _cubicBezierEasingFunction_00);
                 return result;
@@ -5810,14 +4983,14 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.82099998F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.82099998F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.82099998F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.344999999F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             //   Path 1
             //     Path 1.PathGeometry
             // TrimEnd
@@ -5825,9 +4998,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.822000027F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.822000027F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.46825397F, 0.822000027F, _linearEasingFunction);
-                result.InsertKeyFrame(0.626984119F, 0.903999984F, _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0.626984119F, 0.903999984F, _cubicBezierEasingFunction_16);
                 return result;
             }
 
@@ -5836,7 +5009,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.825999975F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.825999975F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.825999975F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.550000012F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5848,7 +5021,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.828000009F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.828000009F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.828000009F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.395000011F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5860,7 +5033,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.851000011F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.851000011F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.851000011F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.467000008F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5872,7 +5045,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.880999982F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.880999982F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.880999982F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.5625F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5884,7 +5057,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.897000015F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.897000015F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.897000015F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.492500007F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5896,7 +5069,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.899999976F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.899999976F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.899999976F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.510500014F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5908,7 +5081,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.910000026F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.910000026F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.910000026F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.53549999F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5920,7 +5093,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.915000021F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.915000021F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.915000021F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.492500007F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5932,7 +5105,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.915000021F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.915000021F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.915000021F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.594500005F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5944,7 +5117,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.922999978F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.922999978F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.922999978F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.510500014F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5956,7 +5129,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.925999999F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.925999999F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.925999999F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.631500006F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5968,7 +5141,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.927999973F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.927999973F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.465608478F, 0.927999973F, _linearEasingFunction);
                 result.InsertKeyFrame(0.470899463F, 0.594500005F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.489418F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5980,7 +5153,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.92900002F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.92900002F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.92900002F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.425500005F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -5992,7 +5165,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.93599999F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.93599999F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.93599999F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.538500011F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -6004,7 +5177,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.938000023F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.938000023F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.349206358F, 0.938000023F, _linearEasingFunction);
                 result.InsertKeyFrame(0.354497343F, 0.457500011F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.375661373F, 0.200000003F, _cubicBezierEasingFunction_00);
@@ -6016,7 +5189,7 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0p943_to_0p035 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 0.943000019F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 0.943000019F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0317460336F, 0.943000019F, _linearEasingFunction);
                 result.InsertKeyFrame(0.0476190485F, 0.289999992F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.0608465597F, 0.0350000001F, _cubicBezierEasingFunction_00);
@@ -6027,8 +5200,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_0 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.0317460336F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.0634920672F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.0317460336F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.0634920672F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6036,8 +5209,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_1 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.134920642F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.248677254F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.134920642F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.248677254F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6045,8 +5218,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_2 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.134920642F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.161375657F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.134920642F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.161375657F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6054,8 +5227,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_3 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.187830687F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.232804239F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.187830687F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.232804239F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6063,8 +5236,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_4 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.248677254F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.373015881F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.248677254F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.373015881F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6073,8 +5246,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.306878299F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.373015881F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.306878299F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.373015881F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6082,8 +5255,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_6 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.349206358F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.373015881F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.349206358F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.373015881F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6091,8 +5264,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_7 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.373015881F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.526455045F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.373015881F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.526455045F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6100,8 +5273,8 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_1_to_0_8 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.465608478F, 1, _stepEasingFunction_1);
-                result.InsertKeyFrame(0.497354507F, 0, _stepEasingFunction_1);
+                result.InsertKeyFrame(0.465608478F, 1, _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.497354507F, 0, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6110,7 +5283,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 1, _linearEasingFunction);
+                result.InsertKeyFrame(0, 1, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0317460336F, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.0476190485F, 0.449000001F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.0608465597F, 0.0350000001F, _cubicBezierEasingFunction_00);
@@ -6122,18 +5295,10 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 1, _linearEasingFunction);
+                result.InsertKeyFrame(0, 1, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.0317460336F, 1, _linearEasingFunction);
                 result.InsertKeyFrame(0.0476190485F, 0.372999996F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.0608465597F, 0.0350000001F, _cubicBezierEasingFunction_00);
-                return result;
-            }
-
-            ScalarKeyFrameAnimation ScalarAnimation_1_to_1()
-            {
-                var result = _scalarAnimation_1_to_1 = _c.CreateScalarKeyFrameAnimation();
-                result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.526455045F, 1, _stepEasingFunction_1);
                 return result;
             }
 
@@ -6143,7 +5308,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 59.2000008F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 59.2000008F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 59.2000008F, _linearEasingFunction);
                 result.InsertKeyFrame(0.148148149F, -74.5439987F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.158730164F, -192.800003F, _cubicBezierEasingFunction_00);
@@ -6156,7 +5321,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 84.9000015F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 84.9000015F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.134920642F, 84.9000015F, _linearEasingFunction);
                 result.InsertKeyFrame(0.148148149F, -27.5440006F, _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.158730164F, -117.5F, _cubicBezierEasingFunction_00);
@@ -6168,10 +5333,26 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_84p9_to_m181p4 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, 84.9000015F, _linearEasingFunction);
+                result.InsertKeyFrame(0, 84.9000015F, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.187830687F, 84.9000015F, _linearEasingFunction);
-                result.InsertKeyFrame(0.208994716F, -27.5440006F, _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0.208994716F, -27.5440006F, _cubicBezierEasingFunction_04);
                 result.InsertKeyFrame(0.227513224F, -181.399994F, _cubicBezierEasingFunction_00);
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarAnimation_to_0()
+            {
+                var result = _scalarAnimation_to_0 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.134920642F, 0, _holdThenStepEasingFunction);
+                return result;
+            }
+
+            ScalarKeyFrameAnimation ScalarAnimation_to_1()
+            {
+                var result = _scalarAnimation_to_1 = _c.CreateScalarKeyFrameAnimation();
+                result.Duration = TimeSpan.FromTicks(c_durationTicks);
+                result.InsertKeyFrame(0.526455045F, 1, _holdThenStepEasingFunction);
                 return result;
             }
 
@@ -6197,127 +5378,127 @@ namespace AnimatedVisuals
                 // Layer (Shape): Trail -LB
                 shapes.Add(ContainerShape_007());
                 // Layer (Shape): Trail 2 -LB
-                shapes.Add(ContainerShape_010());
+                shapes.Add(ContainerShape_009());
                 // Layer (Shape): Circle2-LB
-                shapes.Add(ContainerShape_013());
+                shapes.Add(ContainerShape_011());
                 // Layer (Shape): O1-DB
-                shapes.Add(ContainerShape_016());
+                shapes.Add(ContainerShape_014());
                 // Layer (Shape): T2-DB
-                shapes.Add(ContainerShape_020());
+                shapes.Add(ContainerShape_016());
                 // Layer (Shape): T1-LB
-                shapes.Add(ContainerShape_024());
+                shapes.Add(ContainerShape_018());
                 // Layer (Shape): O2-LB
+                shapes.Add(ContainerShape_020());
+                // Layer (Shape): Trail-LB
+                shapes.Add(ContainerShape_022());
+                // Layer (Shape): Trail-LB
+                shapes.Add(ContainerShape_025());
+                // Layer (Shape): Trail-LB
                 shapes.Add(ContainerShape_028());
                 // Layer (Shape): Trail-LB
-                shapes.Add(ContainerShape_032());
-                // Layer (Shape): Trail-LB
-                shapes.Add(ContainerShape_035());
-                // Layer (Shape): Trail-LB
+                shapes.Add(ContainerShape_031());
+                // Layer (Shape): L-DB
+                shapes.Add(ContainerShape_034());
+                // Layer (Shape): L-LB
+                shapes.Add(ContainerShape_036());
+                // Layer (Shape): Circle-LB
                 shapes.Add(ContainerShape_038());
-                // Layer (Shape): Trail-LB
-                shapes.Add(ContainerShape_041());
-                // Layer (Shape): L-DB
+                // Layer (Shape): O-DB
+                shapes.Add(ContainerShape_042());
+                // Layer (Shape): O-LB
                 shapes.Add(ContainerShape_044());
-                // Layer (Shape): L-LB
+                // Layer (Shape): E-DB
+                shapes.Add(ContainerShape_046());
+                // Layer (Shape): E-LB
                 shapes.Add(ContainerShape_048());
-                // Layer (Shape): Circle-LB
-                shapes.Add(ContainerShape_052());
-                // Layer (Shape): O-DB
+                // Layer (Shape): I-DB
+                shapes.Add(ContainerShape_050());
+                // Layer (Shape): I-LB
+                shapes.Add(ContainerShape_053());
+                // Layer (Shape): T-DB
                 shapes.Add(ContainerShape_056());
-                // Layer (Shape): O-LB
-                shapes.Add(ContainerShape_059());
-                // Layer (Shape): E-DB
-                shapes.Add(ContainerShape_062());
-                // Layer (Shape): E-LB
-                shapes.Add(ContainerShape_065());
-                // Layer (Shape): I-DB
-                shapes.Add(ContainerShape_068());
-                // Layer (Shape): I-LB
-                shapes.Add(ContainerShape_071());
                 // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_074());
-                // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_077());
+                shapes.Add(ContainerShape_058());
                 // Layer (Shape): T-LB
-                shapes.Add(ContainerShape_080());
+                shapes.Add(ContainerShape_060());
                 // Layer (Shape): Trail 5-LB
-                shapes.Add(ContainerShape_083());
+                shapes.Add(ContainerShape_062());
                 // Layer (Shape): Trail 7-LB
-                shapes.Add(ContainerShape_086());
+                shapes.Add(ContainerShape_064());
                 // Layer (Shape): Trail 6-LB
-                shapes.Add(ContainerShape_089());
+                shapes.Add(ContainerShape_066());
                 // Layer (Shape): Trail 8-LB
-                shapes.Add(ContainerShape_092());
+                shapes.Add(ContainerShape_068());
                 // Layer (Shape): Trail 9-LB
-                shapes.Add(ContainerShape_095());
+                shapes.Add(ContainerShape_070());
                 // Layer (Shape): Trail 10-LB
-                shapes.Add(ContainerShape_098());
+                shapes.Add(ContainerShape_072());
                 // Layer (Shape): I-DB
-                shapes.Add(ContainerShape_101());
+                shapes.Add(ContainerShape_074());
                 // Layer (Shape): I-LB
-                shapes.Add(ContainerShape_104());
+                shapes.Add(ContainerShape_077());
                 // Layer (Shape): E-LB
-                shapes.Add(ContainerShape_108());
+                shapes.Add(ContainerShape_081());
                 // Layer (Shape): E-DB
-                shapes.Add(ContainerShape_111());
+                shapes.Add(ContainerShape_084());
                 // Layer (Shape): E-DB
-                shapes.Add(ContainerShape_114());
+                shapes.Add(ContainerShape_087());
                 // Layer (Shape): E-LB
-                shapes.Add(ContainerShape_117());
+                shapes.Add(ContainerShape_090());
                 // Layer (Shape): E-DB
-                shapes.Add(ContainerShape_121());
+                shapes.Add(ContainerShape_094());
                 // Layer (Shape): E-LB
-                shapes.Add(ContainerShape_124());
+                shapes.Add(ContainerShape_097());
                 // Layer (Shape): E-DB
-                shapes.Add(ContainerShape_128());
+                shapes.Add(ContainerShape_101());
                 // Layer (Shape): Trail 14-LB
-                shapes.Add(ContainerShape_131());
+                shapes.Add(ContainerShape_103());
                 // Layer (Shape): Trail 15-LB
-                shapes.Add(ContainerShape_132());
+                shapes.Add(ContainerShape_104());
                 // Layer (Shape): Trail 16-LB
-                shapes.Add(ContainerShape_133());
+                shapes.Add(ContainerShape_105());
                 // Layer (Shape): Trail 17-LB
-                shapes.Add(ContainerShape_134());
+                shapes.Add(ContainerShape_106());
                 // Layer (Shape): Trail 18-LB
-                shapes.Add(ContainerShape_137());
+                shapes.Add(ContainerShape_107());
                 // Layer (Shape): Trail 19-LB
-                shapes.Add(ContainerShape_140());
+                shapes.Add(ContainerShape_108());
                 // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_143());
+                shapes.Add(ContainerShape_109());
                 // Layer (Shape): Circle-LB
-                shapes.Add(ContainerShape_146());
+                shapes.Add(ContainerShape_111());
                 // Layer (Shape): E3-LB
-                shapes.Add(ContainerShape_150());
+                shapes.Add(ContainerShape_115());
                 // Layer (Shape): E3-DB
-                shapes.Add(ContainerShape_153());
+                shapes.Add(ContainerShape_116());
                 // Layer (Shape): E2-LB
-                shapes.Add(ContainerShape_156());
+                shapes.Add(ContainerShape_117());
                 // Layer (Shape): E2-DB
-                shapes.Add(ContainerShape_159());
+                shapes.Add(ContainerShape_118());
                 // Layer (Shape): E1-LB
-                shapes.Add(ContainerShape_162());
+                shapes.Add(ContainerShape_119());
                 // Layer (Shape): E1-DB
-                shapes.Add(ContainerShape_165());
+                shapes.Add(ContainerShape_120());
                 // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_168());
+                shapes.Add(ContainerShape_121());
                 // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_171());
+                shapes.Add(ContainerShape_122());
                 // Layer (Shape): T-DB
-                shapes.Add(ContainerShape_174());
+                shapes.Add(ContainerShape_123());
                 // Layer (Shape): T-LB
-                shapes.Add(ContainerShape_177());
+                shapes.Add(ContainerShape_124());
                 // Layer (Shape): O-LB
-                shapes.Add(ContainerShape_180());
+                shapes.Add(ContainerShape_125());
                 // Layer (Shape): O-DB
-                shapes.Add(ContainerShape_183());
+                shapes.Add(ContainerShape_126());
                 // Layer (Shape): T-LB
-                shapes.Add(ContainerShape_186());
+                shapes.Add(ContainerShape_127());
                 // Layer (Shape): L-LB
-                shapes.Add(ContainerShape_189());
+                shapes.Add(ContainerShape_128());
                 // Layer (Shape): L-DB
-                shapes.Add(ContainerShape_192());
+                shapes.Add(ContainerShape_129());
                 // Layer (Shape): Circle-LB
-                shapes.Add(ContainerShape_195());
+                shapes.Add(ContainerShape_130());
                 return result;
             }
 
@@ -6326,7 +5507,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_00()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40, -210);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 40, -210);
                 result.FillBrush = ColorBrush_AlmostDarkTurquoise_FF00D1C1();
                 result.Geometry = Ellipse_28p117x42p017();
                 return result;
@@ -6336,7 +5517,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_01()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 166.029007F, 270.643005F);
                 result.Geometry = PathGeometry_00();
                 result.StrokeBrush = ColorBrush_AlmostTeal_FF007A87();
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6351,7 +5532,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_02()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 166.029007F, 270.643005F);
                 result.Geometry = PathGeometry_01();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6362,11 +5543,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail -LB
             // Path 1
             CompositionSpriteShape SpriteShape_03()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.202020004F, 0, 0, 0.20194F, 146.615005F, 210.395004F);
                 result.Geometry = PathGeometry_02();
                 result.StrokeBrush = ColorBrush_AlmostMediumTurquoise_FF33CEC1();
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6377,11 +5558,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 2 -LB
             // Path 1
             CompositionSpriteShape SpriteShape_04()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.202020004F, 0, 0, 0.20194F, 146.615005F, 210.395004F);
                 result.Geometry = PathGeometry_03();
                 result.StrokeBrush = _colorBrush_AlmostMediumTurquoise_FF33CEC1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6397,19 +5578,17 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_05()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40, -210);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 40, -210);
                 result.FillBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.Geometry = Ellipse_28p117_0();
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O1-DB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_06()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(-5.93481016F, 0, 0, 5.93481016F, 76.4106445F, 63.2557373F);
                 result.Geometry = Ellipse_22p3_0();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6420,13 +5599,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T2-DB
             // Path 1
             CompositionSpriteShape SpriteShape_07()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(5.93481016F, 0, 0, 5.93481016F, 255.019287F, -130.37085F);
                 result.Geometry = PathGeometry_04();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6437,13 +5614,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: T1-LB
             // Path 1
             CompositionSpriteShape SpriteShape_08()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(5.93481016F, 0, 0, 5.93481016F, 255.019287F, -130.37085F);
                 result.Geometry = PathGeometry_05();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6454,13 +5629,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: O2-LB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_09()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(-5.93481016F, 0, 0, 5.93481016F, 76.4106445F, 63.2557373F);
                 result.Geometry = Ellipse_22p3_1();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6488,7 +5661,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_11()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196, 267);
                 result.Geometry = Ellipse_16p95();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6504,7 +5677,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_12()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196, 267);
                 result.Geometry = Ellipse_16p7();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6520,7 +5693,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_13()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 196, 267);
                 result.Geometry = Ellipse_15p5();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6531,13 +5704,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-DB
             // Path 1
             CompositionSpriteShape SpriteShape_14()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(5.93481016F, 0, 0, 5.93481016F, -110.849792F, 84.8728027F);
                 result.Geometry = PathGeometry_07();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6548,13 +5719,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: N3
-            //   Transforms: L-LB
             // Path 1
             CompositionSpriteShape SpriteShape_15()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(5.93481016F, 0, 0, 5.93481016F, -110.849792F, 84.8728027F);
                 result.Geometry = PathGeometry_08();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6570,18 +5739,17 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_16()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40, -210);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 40, -210);
                 result.FillBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.Geometry = Ellipse_28p117_1();
                 return result;
             }
 
-            // Transforms: O-DB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_17()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, -15.3996735F, 78.5969238F);
                 result.Geometry = Ellipse_22p3_2();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeMiterLimit = 4;
@@ -6589,12 +5757,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: O-LB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_18()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(-0.99061811F, -0.174672827F, 0.174672827F, -0.99061811F, -13.7337799F, 77.744812F);
                 result.Geometry = Ellipse_22p3_3();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6605,12 +5772,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-DB
             // Path 1
             CompositionSpriteShape SpriteShape_19()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 109.99472F, 49.5662079F);
                 result.Geometry = PathGeometry_09();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6621,12 +5787,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-LB
             // Path 1
             CompositionSpriteShape SpriteShape_20()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 109.99472F, 49.5662079F);
                 result.Geometry = PathGeometry_10();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6642,7 +5807,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_21()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 277.697998F, 247.257996F);
                 result.Geometry = PathGeometry_11();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6658,7 +5823,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_22()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 277.697998F, 247.257996F);
                 result.Geometry = _pathGeometry_11;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6669,12 +5834,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_23()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(242.755997F, 265.580994F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 31.6322632F, 77.1689148F);
                 result.Geometry = PathGeometry_12();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6686,12 +5850,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_24()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 16.4643097F, 45.7788086F);
                 result.Geometry = PathGeometry_13();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6702,12 +5865,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
             // Path 1
             CompositionSpriteShape SpriteShape_25()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 16.4643097F, 45.7788086F);
                 result.Geometry = PathGeometry_14();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6718,11 +5880,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 5-LB
             // Path 1
             CompositionSpriteShape SpriteShape_26()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_15();
                 result.StrokeBrush = AnimatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0();
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6733,11 +5895,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 7-LB
             // Path 1
             CompositionSpriteShape SpriteShape_27()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_16();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6748,11 +5910,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 6-LB
             // Path 1
             CompositionSpriteShape SpriteShape_28()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_17();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6763,11 +5925,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 8-LB
             // Path 1
             CompositionSpriteShape SpriteShape_29()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_18();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6778,11 +5940,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 9-LB
             // Path 1
             CompositionSpriteShape SpriteShape_30()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_19();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6793,11 +5955,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 10-LB
             // Path 1
             CompositionSpriteShape SpriteShape_31()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.123109996F, 0, 0, 0.123060003F, 43.6549988F, -11.9379997F);
                 result.Geometry = PathGeometry_20();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_0;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6813,7 +5975,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_32()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(304.13501F, 282.408997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 304.13501F, 282.408997F);
                 result.Geometry = PathGeometry_21();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -6829,7 +5991,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_33()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(304.13501F, 282.408997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 304.13501F, 282.408997F);
                 result.Geometry = _pathGeometry_21;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -6845,7 +6007,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_34()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.674011F, 261.877014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 344.674011F, 261.877014F);
                 result.Geometry = PathGeometry_22();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6861,7 +6023,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_35()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.674011F, 261.877014F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 344.674011F, 261.877014F);
                 result.Geometry = _pathGeometry_22;
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6877,7 +6039,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_36()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 331.664001F, 238.139999F);
                 result.Geometry = PathGeometry_23();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6893,7 +6055,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_37()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 331.664001F, 238.139999F);
                 result.Geometry = _pathGeometry_23;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6909,7 +6071,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_38()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 344.671997F, 214.841995F);
                 result.Geometry = PathGeometry_24();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6925,7 +6087,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_39()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 344.671997F, 214.841995F);
                 result.Geometry = _pathGeometry_24;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6936,11 +6098,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E-DB
             // Path 1
             CompositionSpriteShape SpriteShape_40()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, -212.556F, -189.979004F);
                 result.Geometry = PathGeometry_25();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6956,7 +6118,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_41()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(-97.2859955F, -162.019989F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -97.2859955F, -162.019989F);
                 result.Geometry = PathGeometry_26();
                 result.StrokeBrush = AnimatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1();
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6972,7 +6134,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_42()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(-97.2859955F, -162.019989F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -97.2859955F, -162.019989F);
                 result.Geometry = PathGeometry_27();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6988,7 +6150,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_43()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(-97.2859955F, -162.02002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, -97.2859955F, -162.02002F);
                 result.Geometry = PathGeometry_28();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -6999,11 +6161,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 17-LB
+            // Layer (Shape): Trail 17-LB
             // Path 1
             CompositionSpriteShape SpriteShape_44()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(-1, 0, 0, 1, 287.181F, -160.019989F);
                 result.Geometry = PathGeometry_29();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7014,11 +6177,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 18-LB
+            // Layer (Shape): Trail 18-LB
             // Path 1
             CompositionSpriteShape SpriteShape_45()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(-1, 0, 0, 1, 288.770996F, -160.519989F);
                 result.Geometry = PathGeometry_30();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7029,11 +6193,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: Trail 19-LB
+            // Layer (Shape): Trail 19-LB
             // Path 1
             CompositionSpriteShape SpriteShape_46()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(-1, 0, 0, 1, 289.945984F, -161.019989F);
                 result.Geometry = PathGeometry_31();
                 result.StrokeBrush = _animatedColorBrush_AlmostDarkTurquoise_FF00D1C1_to_TransparentAlmostDarkTurquoise_0000D1C1_1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7044,12 +6209,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_47()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
+                result.TransformMatrix = new Matrix3x2(1.00590003F, 0, 0, 1.00590003F, 66.780426F, 58.7378235F);
                 result.Geometry = _pathGeometry_11;
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -7065,18 +6229,18 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_48()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40, -210);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 40, -210);
                 result.FillBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.Geometry = Ellipse_28p117_2();
                 return result;
             }
 
-            // Transforms: E3-LB
+            // Layer (Shape): E3-LB
             // Path 1
             CompositionSpriteShape SpriteShape_49()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(304.13501F, 282.408997F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 185.365356F, 268.688385F);
                 result.Geometry = PathGeometry_32();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -7087,12 +6251,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E3-DB
+            // Layer (Shape): E3-DB
             // Path 1
             CompositionSpriteShape SpriteShape_50()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.674011F, 261.877014F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 215.921844F, 253.205643F);
                 result.Geometry = PathGeometry_33();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7103,12 +6267,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E2-LB
+            // Layer (Shape): E2-LB
             // Path 1
             CompositionSpriteShape SpriteShape_51()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 206.115631F, 235.306534F);
                 result.Geometry = PathGeometry_34();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7119,12 +6283,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E2-DB
+            // Layer (Shape): E2-DB
             // Path 1
             CompositionSpriteShape SpriteShape_52()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(331.664001F, 238.139999F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 206.115631F, 235.306534F);
                 result.Geometry = PathGeometry_35();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7135,12 +6299,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E1-LB
+            // Layer (Shape): E1-LB
             // Path 1
             CompositionSpriteShape SpriteShape_53()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 215.920807F, 217.738785F);
                 result.Geometry = _pathGeometry_24;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7151,12 +6315,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: E1-DB
+            // Layer (Shape): E1-DB
             // Path 1
             CompositionSpriteShape SpriteShape_54()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(344.671997F, 214.841995F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 215.920807F, 217.738785F);
                 result.Geometry = PathGeometry_36();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7167,11 +6331,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_55()
             {
                 var result = _c.CreateSpriteShape();
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, -43.8763809F, 55.7362518F);
                 result.Geometry = PathGeometry_37();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7182,12 +6347,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_56()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(277.697998F, 247.257996F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 165.438782F, 242.181839F);
                 result.Geometry = _pathGeometry_11;
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Square;
@@ -7198,12 +6363,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-DB
+            // Layer (Shape): T-DB
             // Path 1
             CompositionSpriteShape SpriteShape_57()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 127.73539F, 232.467377F);
                 result.Geometry = PathGeometry_38();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7214,12 +6379,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             // Path 1
             CompositionSpriteShape SpriteShape_58()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(242.755997F, 265.580994F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 139.101196F, 255.998352F);
                 result.Geometry = PathGeometry_39();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7231,12 +6396,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: O-LB
+            // Layer (Shape): O-LB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_59()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 103.858757F, 257.068817F);
                 result.Geometry = _ellipse_22p3_2;
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeMiterLimit = 4;
@@ -7244,12 +6409,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: O-DB
+            // Layer (Shape): O-DB
             // Ellipse Path 1
             CompositionSpriteShape SpriteShape_60()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(196, 267);
+                result.TransformMatrix = new Matrix3x2(0.609797418F, -0.443221152F, 0.443043768F, 0.610041499F, 104.192413F, 257.347961F);
                 result.Geometry = Ellipse_22p3_4();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7260,12 +6425,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: T-LB
+            // Layer (Shape): T-LB
             // Path 1
             CompositionSpriteShape SpriteShape_61()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(227.677002F, 234.375F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 127.73539F, 232.467377F);
                 result.Geometry = PathGeometry_40();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7276,12 +6441,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: L-LB
+            // Layer (Shape): L-LB
             // Path 1
             CompositionSpriteShape SpriteShape_62()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 81.268158F, 259.815369F);
                 result.Geometry = PathGeometry_41();
                 result.StrokeBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7292,12 +6457,12 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            // Transforms: L-DB
+            // Layer (Shape): L-DB
             // Path 1
             CompositionSpriteShape SpriteShape_63()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(166.029007F, 270.643005F);
+                result.TransformMatrix = new Matrix3x2(0.75375104F, 0, 0, 0.754052818F, 81.268158F, 259.815369F);
                 result.Geometry = PathGeometry_42();
                 result.StrokeBrush = _colorBrush_AlmostTeal_FF007A87;
                 result.StrokeDashCap = CompositionStrokeCap.Round;
@@ -7313,23 +6478,16 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_64()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(40, -210);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 40, -210);
                 result.FillBrush = _colorBrush_AlmostDarkTurquoise_FF00D1C1;
                 result.Geometry = _ellipse_28p117_0;
                 return result;
             }
 
-            StepEasingFunction StepEasingFunction_0()
+            StepEasingFunction StepThenHoldEasingFunction()
             {
-                var result = _stepEasingFunction_0 = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame  = true;
-                return result;
-            }
-
-            StepEasingFunction StepEasingFunction_1()
-            {
-                var result = _stepEasingFunction_1 = _c.CreateStepEasingFunction();
-                result.IsFinalStepSingleFrame  = true;
+                var result = _stepThenHoldEasingFunction = _c.CreateStepEasingFunction();
+                result.IsInitialStepSingleFrame = true;
                 return result;
             }
 
@@ -7341,8 +6499,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(28.1170006F, 42.0169983F), LinearEasingFunction());
-                result.InsertKeyFrame(0.0449735448F, new Vector2(28.1170006F, 42.0169983F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(28.1170006F, 42.0169983F), StepThenHoldEasingFunction());
+                result.InsertKeyFrame(0.0449735448F, new Vector2(28.1170006F, 42.0169983F), HoldThenStepEasingFunction());
                 result.InsertKeyFrame(0.0502645485F, new Vector2(28.1170006F, 28.1170006F), CubicBezierEasingFunction_00());
                 return result;
             }
@@ -7353,13 +6511,13 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(40, -210), _linearEasingFunction);
-                result.InsertKeyFrame(0.0449735448F, new Vector2(40, -210), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(40, -210), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.0449735448F, new Vector2(40, -210), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0582010597F, new Vector2(49.5999985F, -210), CubicBezierEasingFunction_01());
                 result.InsertKeyFrame(0.0846560821F, new Vector2(40, -210), _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.113756612F, new Vector2(40, -210), CubicBezierEasingFunction_02());
+                result.InsertKeyFrame(0.113756612F, new Vector2(40, -210), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.126984134F, new Vector2(52.2000008F, -164.300003F), _cubicBezierEasingFunction_01);
-                result.InsertKeyFrame(0.140211642F, new Vector2(52.2000008F, -210), CubicBezierEasingFunction_03());
+                result.InsertKeyFrame(0.140211642F, new Vector2(52.2000008F, -210), CubicBezierEasingFunction_02());
                 return result;
             }
 
@@ -7370,15 +6528,15 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(151.039001F, 86.2699966F), _linearEasingFunction);
-                result.InsertKeyFrame(0.0476190485F, new Vector2(151.182999F, 215.664993F), CubicBezierEasingFunction_04());
-                result.InsertExpressionKeyFrame(0.0622723885F, "(Pow(1 - _.t0, 3) * Vector2(151.183,215.665)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(151.183,215.665)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(152.3022,218.2585)) + (Pow(_.t0, 3) * Vector2(149.526,243.382))", StepEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.0855131298F, "(Pow(1 - _.t0, 3) * Vector2(149.526,243.382)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(146.7498,268.5056)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(141.351,286.676)) + (Pow(_.t0, 3) * Vector2(141.351,286.676))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.101039581F, "(Pow(1 - _.t0, 3) * Vector2(141.351,286.676)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(141.351,286.676)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(129.0357,310.2725)) + (Pow(_.t0, 3) * Vector2(120.158,294.548))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.117788263F, "(Pow(1 - _.t0, 3) * Vector2(120.158,294.548)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(111.2803,278.8235)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(123.8171,271.5963)) + (Pow(_.t0, 3) * Vector2(131.663,272.749))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.140772387F, "(Pow(1 - _.t0, 3) * Vector2(131.663,272.749)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(142.31,274.3133)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(153.6631,286.6255)) + (Pow(_.t0, 3) * Vector2(167.691,296.667))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t0, 3) * Vector2(167.691,296.667)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(181.7189,306.7085)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(193.2231,310.7192)) + (Pow(_.t0, 3) * Vector2(208.564,311.2))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(208.563995F, 311.200012F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(151.039001F, 86.2699966F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.0476190485F, new Vector2(151.182999F, 215.664993F), CubicBezierEasingFunction_03());
+                result.InsertExpressionKeyFrame(0.0622723885F, "(Pow(1 - _.t0, 3) * Vector2(151.183,215.665)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(151.183,215.665)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(152.3022,218.2585)) + (Pow(_.t0, 3) * Vector2(149.526,243.382))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.0855131298F, "(Pow(1 - _.t0, 3) * Vector2(149.526,243.382)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(146.7498,268.5056)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(141.351,286.676)) + (Pow(_.t0, 3) * Vector2(141.351,286.676))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.101039581F, "(Pow(1 - _.t0, 3) * Vector2(141.351,286.676)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(141.351,286.676)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(129.0357,310.2725)) + (Pow(_.t0, 3) * Vector2(120.158,294.548))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.117788263F, "(Pow(1 - _.t0, 3) * Vector2(120.158,294.548)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(111.2803,278.8235)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(123.8171,271.5963)) + (Pow(_.t0, 3) * Vector2(131.663,272.749))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.140772387F, "(Pow(1 - _.t0, 3) * Vector2(131.663,272.749)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(142.31,274.3133)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(153.6631,286.6255)) + (Pow(_.t0, 3) * Vector2(167.691,296.667))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t0, 3) * Vector2(167.691,296.667)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(181.7189,306.7085)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(193.2231,310.7192)) + (Pow(_.t0, 3) * Vector2(208.564,311.2))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(208.563995F, 311.200012F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7388,13 +6546,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0370370373F, new Vector2(230.862F, 559.564026F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t1, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(230.862,559.564)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(256.0035,274.5165)) + (Pow(_.t1, 3) * Vector2(269.283,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t1, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(389.4969,133.9358)) + (Pow(_.t1, 3) * Vector2(375.689,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t1, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(189.9877,111.4235)) + (Pow(_.t1, 3) * Vector2(53.475,110.345))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t1, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(7.982,110.093)) + (Pow(_.t1, 3) * Vector2(7.982,110.093))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t1, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(230.862,559.564)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(256.0035,274.5165)) + (Pow(_.t1, 3) * Vector2(269.283,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t1, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(389.4969,133.9358)) + (Pow(_.t1, 3) * Vector2(375.689,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t1, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(189.9877,111.4235)) + (Pow(_.t1, 3) * Vector2(53.475,110.345))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t1, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t1) * _.t1 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(7.982,110.093)) + (Pow(_.t1, 3) * Vector2(7.982,110.093))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7404,13 +6562,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0370370373F, new Vector2(230.862F, 559.564026F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t2, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(230.862,559.564)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(256.0035,274.5165)) + (Pow(_.t2, 3) * Vector2(269.283,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t2, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(389.4969,133.9358)) + (Pow(_.t2, 3) * Vector2(375.689,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t2, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(189.9877,111.4235)) + (Pow(_.t2, 3) * Vector2(53.475,110.345))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t2, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t2) * _.t2 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(7.982,110.093)) + (Pow(_.t2, 3) * Vector2(7.982,110.093))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t2, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(230.862,559.564)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(256.0035,274.5165)) + (Pow(_.t2, 3) * Vector2(269.283,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t2, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(389.4969,133.9358)) + (Pow(_.t2, 3) * Vector2(375.689,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t2, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(189.9877,111.4235)) + (Pow(_.t2, 3) * Vector2(53.475,110.345))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t2, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t2) * _.t2 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(7.982,110.093)) + (Pow(_.t2, 3) * Vector2(7.982,110.093))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7420,13 +6578,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0370370373F, new Vector2(230.862F, 559.564026F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t3, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(230.862,559.564)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(256.0035,274.5165)) + (Pow(_.t3, 3) * Vector2(269.283,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t3, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(389.4969,133.9358)) + (Pow(_.t3, 3) * Vector2(375.689,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t3, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(189.9877,111.4235)) + (Pow(_.t3, 3) * Vector2(53.475,110.345))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t3, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(7.982,110.093)) + (Pow(_.t3, 3) * Vector2(7.982,110.093))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t3, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(230.862,559.564)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(256.0035,274.5165)) + (Pow(_.t3, 3) * Vector2(269.283,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t3, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(389.4969,133.9358)) + (Pow(_.t3, 3) * Vector2(375.689,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t3, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(189.9877,111.4235)) + (Pow(_.t3, 3) * Vector2(53.475,110.345))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t3, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(7.982,110.093)) + (Pow(_.t3, 3) * Vector2(7.982,110.093))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7436,13 +6594,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0370370373F, new Vector2(230.862F, 559.564026F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t4, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(230.862,559.564)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(256.0035,274.5165)) + (Pow(_.t4, 3) * Vector2(269.283,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t4, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(389.4969,133.9358)) + (Pow(_.t4, 3) * Vector2(375.689,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t4, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(189.9877,111.4235)) + (Pow(_.t4, 3) * Vector2(53.475,110.345))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t4, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(7.982,110.093)) + (Pow(_.t4, 3) * Vector2(7.982,110.093))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t4, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(230.862,559.564)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(256.0035,274.5165)) + (Pow(_.t4, 3) * Vector2(269.283,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t4, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(389.4969,133.9358)) + (Pow(_.t4, 3) * Vector2(375.689,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t4, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t4) * _.t4 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(189.9877,111.4235)) + (Pow(_.t4, 3) * Vector2(53.475,110.345))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t4, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t4) * Square(_.t4) * Vector2(7.982,110.093)) + (Pow(_.t4, 3) * Vector2(7.982,110.093))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7452,13 +6610,13 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(213.832993F, 805.997009F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0370370373F, new Vector2(230.862F, 559.564026F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t5, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(230.862,559.564)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(256.0035,274.5165)) + (Pow(_.t5, 3) * Vector2(269.283,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t5, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(389.4969,133.9358)) + (Pow(_.t5, 3) * Vector2(375.689,179.31))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t5, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(189.9877,111.4235)) + (Pow(_.t5, 3) * Vector2(53.475,110.345))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t5, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(7.982,110.093)) + (Pow(_.t5, 3) * Vector2(7.982,110.093))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.0860845596F, "(Pow(1 - _.t5, 3) * Vector2(230.862,559.564)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(230.862,559.564)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(256.0035,274.5165)) + (Pow(_.t5, 3) * Vector2(269.283,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.107222125F, "(Pow(1 - _.t5, 3) * Vector2(269.283,179.31)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(281.2723,93.35297)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(389.4969,133.9358)) + (Pow(_.t5, 3) * Vector2(375.689,179.31))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.155436411F, "(Pow(1 - _.t5, 3) * Vector2(375.689,179.31)) + (3 * Square(1 - _.t5) * _.t5 * Vector2(332.8809,319.9821)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(189.9877,111.4235)) + (Pow(_.t5, 3) * Vector2(53.475,110.345))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.16402106F, "(Pow(1 - _.t5, 3) * Vector2(53.475,110.345)) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-35.69429),109.6405)) + (3 * (1 - _.t5) * Square(_.t5) * Vector2(7.982,110.093)) + (Pow(_.t5, 3) * Vector2(7.982,110.093))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.164021164F, new Vector2(7.98199987F, 110.093002F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7469,17 +6627,17 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-27.0639992F, 44.3839989F), _linearEasingFunction);
-                result.InsertKeyFrame(0.134920642F, new Vector2(-27.0639992F, 44.3839989F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.147375569F, "(Pow(1 - _.t6, 3) * Vector2((-27.064),44.384)) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-27.71791),78.96326)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-17.42105),154.1979)) + (Pow(_.t6, 3) * Vector2(63.032,163.934))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.157394081F, "(Pow(1 - _.t6, 3) * Vector2(63.032,163.934)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(143.4851,173.6701)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(176.6321,88.35896)) + (Pow(_.t6, 3) * Vector2(174.786,55.646))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.169312075F, "(Pow(1 - _.t6, 3) * Vector2(174.786,55.646)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(172.9399,22.93304)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(138.5146,(-35.52294))) + (Pow(_.t6, 3) * Vector2(76.027,(-43.113)))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.19047609F, "(Pow(1 - _.t6, 3) * Vector2(76.027,(-43.113))) + (3 * Square(1 - _.t6) * _.t6 * Vector2(13.53944,(-50.70306))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-25.41008),7.804737)) + (Pow(_.t6, 3) * Vector2((-27.064),44.384))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.205849111F, "(Pow(1 - _.t6, 3) * Vector2((-27.064),44.384)) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-28.71791),80.96326)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-17.42105),154.1979)) + (Pow(_.t6, 3) * Vector2(63.032,163.934))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.216854393F, "(Pow(1 - _.t6, 3) * Vector2(63.032,163.934)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(143.4851,173.6701)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(176.6321,88.35896)) + (Pow(_.t6, 3) * Vector2(174.786,55.646))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.230158627F, "(Pow(1 - _.t6, 3) * Vector2(174.786,55.646)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(172.9399,22.93304)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(138.5146,(-35.52294))) + (Pow(_.t6, 3) * Vector2(76.027,(-43.113)))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.246031642F, "(Pow(1 - _.t6, 3) * Vector2(76.027,(-43.113))) + (3 * Square(1 - _.t6) * _.t6 * Vector2(13.53944,(-50.70306))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-26.08422),11.25764)) + (Pow(_.t6, 3) * Vector2((-27.064),44.384))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.246031746F, new Vector2(-27.0639992F, 44.3839989F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-27.0639992F, 44.3839989F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.134920642F, new Vector2(-27.0639992F, 44.3839989F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.147375569F, "(Pow(1 - _.t6, 3) * Vector2((-27.064),44.384)) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-27.71791),78.96326)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-17.42105),154.1979)) + (Pow(_.t6, 3) * Vector2(63.032,163.934))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.157394081F, "(Pow(1 - _.t6, 3) * Vector2(63.032,163.934)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(143.4851,173.6701)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(176.6321,88.35896)) + (Pow(_.t6, 3) * Vector2(174.786,55.646))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.169312075F, "(Pow(1 - _.t6, 3) * Vector2(174.786,55.646)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(172.9399,22.93304)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(138.5146,(-35.52294))) + (Pow(_.t6, 3) * Vector2(76.027,(-43.113)))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.19047609F, "(Pow(1 - _.t6, 3) * Vector2(76.027,(-43.113))) + (3 * Square(1 - _.t6) * _.t6 * Vector2(13.53944,(-50.70306))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-25.41008),7.804737)) + (Pow(_.t6, 3) * Vector2((-27.064),44.384))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.205849111F, "(Pow(1 - _.t6, 3) * Vector2((-27.064),44.384)) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-28.71791),80.96326)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-17.42105),154.1979)) + (Pow(_.t6, 3) * Vector2(63.032,163.934))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.216854393F, "(Pow(1 - _.t6, 3) * Vector2(63.032,163.934)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(143.4851,173.6701)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(176.6321,88.35896)) + (Pow(_.t6, 3) * Vector2(174.786,55.646))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.230158627F, "(Pow(1 - _.t6, 3) * Vector2(174.786,55.646)) + (3 * Square(1 - _.t6) * _.t6 * Vector2(172.9399,22.93304)) + (3 * (1 - _.t6) * Square(_.t6) * Vector2(138.5146,(-35.52294))) + (Pow(_.t6, 3) * Vector2(76.027,(-43.113)))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.246031642F, "(Pow(1 - _.t6, 3) * Vector2(76.027,(-43.113))) + (3 * Square(1 - _.t6) * _.t6 * Vector2(13.53944,(-50.70306))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-26.08422),11.25764)) + (Pow(_.t6, 3) * Vector2((-27.064),44.384))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.246031746F, new Vector2(-27.0639992F, 44.3839989F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7488,8 +6646,8 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_09 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(131.468994F, 237.981995F), _linearEasingFunction);
-                result.InsertKeyFrame(0.134920642F, new Vector2(131.468994F, 237.981995F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(131.468994F, 237.981995F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.134920642F, new Vector2(131.468994F, 237.981995F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.246031746F, new Vector2(131.468994F, 267.96701F), _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -7502,8 +6660,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(28.1170006F, 28.1170006F), _linearEasingFunction);
-                result.InsertKeyFrame(0.346560836F, new Vector2(28.1170006F, 28.1170006F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(28.1170006F, 28.1170006F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.346560836F, new Vector2(28.1170006F, 28.1170006F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.349206358F, new Vector2(28.1170006F, 22.8169994F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.351851851F, new Vector2(28.1170006F, 28.1170006F), _cubicBezierEasingFunction_00);
                 return result;
@@ -7516,12 +6674,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-1010, -37), _linearEasingFunction);
-                result.InsertKeyFrame(0.248677254F, new Vector2(-1010, -37), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.279854387F, "(Pow(1 - _.t7, 3) * Vector2((-1010),(-37))) + (3 * Square(1 - _.t7) * _.t7 * Vector2((-1010),(-37))) + (3 * (1 - _.t7) * Square(_.t7) * Vector2((-910.6052),(-203.0425))) + (Pow(_.t7, 3) * Vector2((-699.345),(-205.308)))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.346560746F, "(Pow(1 - _.t7, 3) * Vector2((-699.345),(-205.308))) + (3 * Square(1 - _.t7) * _.t7 * Vector2((-488.0848),(-207.5735))) + (3 * (1 - _.t7) * Square(_.t7) * Vector2((-523.3317),(-2.246128))) + (Pow(_.t7, 3) * Vector2(29.052,56.461))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.349206239F, "(Pow(1 - _.t7, 3) * Vector2(29.052,56.461)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(39.52296,57.57385)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(49.48428,50.86613)) + (Pow(_.t7, 3) * Vector2(60,51.996))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.349206328F, new Vector2(60, 51.9959984F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-1010, -37), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.248677254F, new Vector2(-1010, -37), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.279854387F, "(Pow(1 - _.t7, 3) * Vector2((-1010),(-37))) + (3 * Square(1 - _.t7) * _.t7 * Vector2((-1010),(-37))) + (3 * (1 - _.t7) * Square(_.t7) * Vector2((-910.6052),(-203.0425))) + (Pow(_.t7, 3) * Vector2((-699.345),(-205.308)))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.346560746F, "(Pow(1 - _.t7, 3) * Vector2((-699.345),(-205.308))) + (3 * Square(1 - _.t7) * _.t7 * Vector2((-488.0848),(-207.5735))) + (3 * (1 - _.t7) * Square(_.t7) * Vector2((-523.3317),(-2.246128))) + (Pow(_.t7, 3) * Vector2(29.052,56.461))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.349206239F, "(Pow(1 - _.t7, 3) * Vector2(29.052,56.461)) + (3 * Square(1 - _.t7) * _.t7 * Vector2(39.52296,57.57385)) + (3 * (1 - _.t7) * Square(_.t7) * Vector2(49.48428,50.86613)) + (Pow(_.t7, 3) * Vector2(60,51.996))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.349206328F, new Vector2(60, 51.9959984F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7531,15 +6689,15 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(66.9589996F, 52.9179993F), _linearEasingFunction);
-                result.InsertKeyFrame(0.248677254F, new Vector2(66.9589996F, 52.9179993F), _linearEasingFunction);
-                result.InsertKeyFrame(0.280423284F, new Vector2(66.9589996F, 47.9959984F), CubicBezierEasingFunction_08());
-                result.InsertKeyFrame(0.304232806F, new Vector2(66.9589996F, 52.9179993F), CubicBezierEasingFunction_09());
+                result.InsertKeyFrame(0, new Vector2(66.9589996F, 52.9179993F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.248677254F, new Vector2(66.9589996F, 52.9179993F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.280423284F, new Vector2(66.9589996F, 47.9959984F), CubicBezierEasingFunction_07());
+                result.InsertKeyFrame(0.304232806F, new Vector2(66.9589996F, 52.9179993F), CubicBezierEasingFunction_08());
                 result.InsertKeyFrame(0.309523821F, new Vector2(66.9589996F, 51.5340004F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.320105821F, new Vector2(66.9589996F, 52.9179993F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.328042328F, new Vector2(66.9589996F, 51.8110008F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.333333343F, new Vector2(66.9589996F, 52.9179993F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.349206358F, new Vector2(66.9589996F, 52.9179993F), _cubicBezierEasingFunction_00);
+                result.InsertKeyFrame(0.349206358F, new Vector2(66.9589996F, 52.9179993F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.367724866F, new Vector2(69.7259979F, 3.10299993F), _cubicBezierEasingFunction_00);
                 return result;
             }
@@ -7549,10 +6707,10 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_13 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(835.752014F, 537.963013F), _linearEasingFunction);
-                result.InsertKeyFrame(0.248677254F, new Vector2(835.752014F, 537.963013F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(835.752014F, 537.963013F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.248677254F, new Vector2(835.752014F, 537.963013F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.354497343F, new Vector2(26.4720001F, 413.04599F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.370370358F, new Vector2(14.4829998F, 413.04599F), CubicBezierEasingFunction_10());
+                result.InsertKeyFrame(0.370370358F, new Vector2(14.4829998F, 413.04599F), CubicBezierEasingFunction_09());
                 return result;
             }
 
@@ -7562,12 +6720,12 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(64.5660019F, 108.344002F), _linearEasingFunction);
-                result.InsertKeyFrame(0.343915343F, new Vector2(64.5660019F, 108.344002F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(64.5660019F, 108.344002F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.343915343F, new Vector2(64.5660019F, 108.344002F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.349206358F, new Vector2(65.1200027F, 90.2279968F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.380952388F, new Vector2(66.9649963F, 56.2470016F), CubicBezierEasingFunction_12());
-                result.InsertKeyFrame(0.40476191F, new Vector2(66.6569977F, 62.1430016F), CubicBezierEasingFunction_13());
-                result.InsertKeyFrame(0.439153433F, new Vector2(66.8909988F, 57.2439995F), CubicBezierEasingFunction_14());
+                result.InsertKeyFrame(0.380952388F, new Vector2(66.9649963F, 56.2470016F), CubicBezierEasingFunction_11());
+                result.InsertKeyFrame(0.40476191F, new Vector2(66.6569977F, 62.1430016F), CubicBezierEasingFunction_12());
+                result.InsertKeyFrame(0.439153433F, new Vector2(66.8909988F, 57.2439995F), CubicBezierEasingFunction_13());
                 result.InsertKeyFrame(0.489418F, new Vector2(66.7799988F, 58.737999F), _cubicBezierEasingFunction_01);
                 return result;
             }
@@ -7578,12 +6736,12 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(64.5660019F, 99.1439972F), _linearEasingFunction);
-                result.InsertKeyFrame(0.343915343F, new Vector2(64.5660019F, 99.1439972F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(64.5660019F, 99.1439972F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.343915343F, new Vector2(64.5660019F, 99.1439972F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.349206358F, new Vector2(65.1200027F, 90.2279968F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.380952388F, new Vector2(66.9649963F, 56.2470016F), _cubicBezierEasingFunction_12);
-                result.InsertKeyFrame(0.40476191F, new Vector2(66.6569977F, 62.1430016F), _cubicBezierEasingFunction_13);
-                result.InsertKeyFrame(0.439153433F, new Vector2(66.8909988F, 57.2439995F), _cubicBezierEasingFunction_14);
+                result.InsertKeyFrame(0.380952388F, new Vector2(66.9649963F, 56.2470016F), _cubicBezierEasingFunction_11);
+                result.InsertKeyFrame(0.40476191F, new Vector2(66.6569977F, 62.1430016F), _cubicBezierEasingFunction_12);
+                result.InsertKeyFrame(0.439153433F, new Vector2(66.8909988F, 57.2439995F), _cubicBezierEasingFunction_13);
                 result.InsertKeyFrame(0.489418F, new Vector2(66.7799988F, 58.737999F), _cubicBezierEasingFunction_01);
                 return result;
             }
@@ -7593,10 +6751,10 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_16 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(90.723999F, 128.910004F), _linearEasingFunction);
-                result.InsertKeyFrame(0.455026448F, new Vector2(90.723999F, 128.910004F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(90.723999F, 128.910004F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.455026448F, new Vector2(90.723999F, 128.910004F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.465608478F, new Vector2(92.2300034F, 106.485001F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.484126985F, new Vector2(93.038002F, 90.5630035F), CubicBezierEasingFunction_17());
+                result.InsertKeyFrame(0.484126985F, new Vector2(93.038002F, 90.5630035F), CubicBezierEasingFunction_16());
                 result.InsertKeyFrame(0.497354507F, new Vector2(93.038002F, 93.8690033F), _cubicBezierEasingFunction_01);
                 return result;
             }
@@ -7607,11 +6765,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t8, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t8) * _.t8 * Vector2((-106.909),364.08)) + (3 * (1 - _.t8) * Square(_.t8) * Vector2((-106.1597),323.8406)) + (Pow(_.t8, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t8, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t8) * _.t8 * Vector2((-113.884),299.956)) + (3 * (1 - _.t8) * Square(_.t8) * Vector2((-160.861),299.103)) + (Pow(_.t8, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t8, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t8) * _.t8 * Vector2((-106.909),364.08)) + (3 * (1 - _.t8) * Square(_.t8) * Vector2((-106.1597),323.8406)) + (Pow(_.t8, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t8, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t8) * _.t8 * Vector2((-113.884),299.956)) + (3 * (1 - _.t8) * Square(_.t8) * Vector2((-160.861),299.103)) + (Pow(_.t8, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7621,9 +6779,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(303.21701F, 291.73999F), _linearEasingFunction);
-                result.InsertKeyFrame(0.46825397F, new Vector2(303.21701F, 291.73999F), _linearEasingFunction);
-                result.InsertKeyFrame(0.484126985F, new Vector2(303.802002F, 282.182007F), _cubicBezierEasingFunction_17);
+                result.InsertKeyFrame(0, new Vector2(303.21701F, 291.73999F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.46825397F, new Vector2(303.21701F, 291.73999F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.484126985F, new Vector2(303.802002F, 282.182007F), _cubicBezierEasingFunction_16);
                 return result;
             }
 
@@ -7633,11 +6791,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t9, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t9) * _.t9 * Vector2((-106.909),364.08)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2((-106.1597),323.8406)) + (Pow(_.t9, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t9, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t9) * _.t9 * Vector2((-113.884),299.956)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2((-160.861),299.103)) + (Pow(_.t9, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t9, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t9) * _.t9 * Vector2((-106.909),364.08)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2((-106.1597),323.8406)) + (Pow(_.t9, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t9, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t9) * _.t9 * Vector2((-113.884),299.956)) + (3 * (1 - _.t9) * Square(_.t9) * Vector2((-160.861),299.103)) + (Pow(_.t9, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7647,9 +6805,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(174.274002F, 73.3669968F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(174.274002F, 73.3669968F), _linearEasingFunction);
-                result.InsertKeyFrame(0.441798955F, new Vector2(134.604004F, 73.3669968F), CubicBezierEasingFunction_18());
+                result.InsertKeyFrame(0, new Vector2(174.274002F, 73.3669968F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(174.274002F, 73.3669968F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.441798955F, new Vector2(134.604004F, 73.3669968F), CubicBezierEasingFunction_17());
                 return result;
             }
 
@@ -7659,11 +6817,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t10, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t10) * _.t10 * Vector2((-106.909),364.08)) + (3 * (1 - _.t10) * Square(_.t10) * Vector2((-106.1597),323.8406)) + (Pow(_.t10, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t10, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t10) * _.t10 * Vector2((-113.884),299.956)) + (3 * (1 - _.t10) * Square(_.t10) * Vector2((-160.861),299.103)) + (Pow(_.t10, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t10, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t10) * _.t10 * Vector2((-106.909),364.08)) + (3 * (1 - _.t10) * Square(_.t10) * Vector2((-106.1597),323.8406)) + (Pow(_.t10, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t10, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t10) * _.t10 * Vector2((-113.884),299.956)) + (3 * (1 - _.t10) * Square(_.t10) * Vector2((-160.861),299.103)) + (Pow(_.t10, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7673,9 +6831,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(174.274002F, 73.3669968F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(174.274002F, 73.3669968F), _linearEasingFunction);
-                result.InsertKeyFrame(0.526455045F, new Vector2(134.604004F, 73.3669968F), _cubicBezierEasingFunction_18);
+                result.InsertKeyFrame(0, new Vector2(174.274002F, 73.3669968F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(174.274002F, 73.3669968F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(134.604004F, 73.3669968F), _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7685,11 +6843,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t11, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t11) * _.t11 * Vector2((-106.909),364.08)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2((-106.1597),323.8406)) + (Pow(_.t11, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t11, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t11) * _.t11 * Vector2((-113.884),299.956)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2((-160.861),299.103)) + (Pow(_.t11, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t11, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t11) * _.t11 * Vector2((-106.909),364.08)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2((-106.1597),323.8406)) + (Pow(_.t11, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t11, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t11) * _.t11 * Vector2((-113.884),299.956)) + (3 * (1 - _.t11) * Square(_.t11) * Vector2((-160.861),299.103)) + (Pow(_.t11, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7698,9 +6856,9 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_24 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(182.610001F, 49.3569984F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(182.610001F, 49.3569984F), _linearEasingFunction);
-                result.InsertKeyFrame(0.428571433F, new Vector2(121.453003F, 49.3569984F), _cubicBezierEasingFunction_18);
+                result.InsertKeyFrame(0, new Vector2(182.610001F, 49.3569984F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(182.610001F, 49.3569984F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.428571433F, new Vector2(121.453003F, 49.3569984F), _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7710,11 +6868,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t12, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t12) * _.t12 * Vector2((-106.909),364.08)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2((-106.1597),323.8406)) + (Pow(_.t12, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t12, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t12) * _.t12 * Vector2((-113.884),299.956)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2((-160.861),299.103)) + (Pow(_.t12, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t12, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t12) * _.t12 * Vector2((-106.909),364.08)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2((-106.1597),323.8406)) + (Pow(_.t12, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t12, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t12) * _.t12 * Vector2((-113.884),299.956)) + (3 * (1 - _.t12) * Square(_.t12) * Vector2((-160.861),299.103)) + (Pow(_.t12, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7724,9 +6882,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(392.847992F, 237.932007F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(392.847992F, 237.932007F), _linearEasingFunction);
-                result.InsertKeyFrame(0.608465612F, new Vector2(332.049988F, 237.932007F), _cubicBezierEasingFunction_18);
+                result.InsertKeyFrame(0, new Vector2(392.847992F, 237.932007F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(392.847992F, 237.932007F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.608465612F, new Vector2(332.049988F, 237.932007F), _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7736,11 +6894,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t13, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t13) * _.t13 * Vector2((-106.909),364.08)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2((-106.1597),323.8406)) + (Pow(_.t13, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t13, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t13) * _.t13 * Vector2((-113.884),299.956)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2((-160.861),299.103)) + (Pow(_.t13, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t13, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t13) * _.t13 * Vector2((-106.909),364.08)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2((-106.1597),323.8406)) + (Pow(_.t13, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t13, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t13) * _.t13 * Vector2((-113.884),299.956)) + (3 * (1 - _.t13) * Square(_.t13) * Vector2((-160.861),299.103)) + (Pow(_.t13, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7749,9 +6907,9 @@ namespace AnimatedVisuals
             {
                 var result = _vector2Animation_28 = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(160.595993F, 26.1310005F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(160.595993F, 26.1310005F), _linearEasingFunction);
-                result.InsertKeyFrame(0.412698418F, new Vector2(134.149994F, 26.1310005F), _cubicBezierEasingFunction_18);
+                result.InsertKeyFrame(0, new Vector2(160.595993F, 26.1310005F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(160.595993F, 26.1310005F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.412698418F, new Vector2(134.149994F, 26.1310005F), _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7761,11 +6919,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t14, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t14) * _.t14 * Vector2((-106.909),364.08)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2((-106.1597),323.8406)) + (Pow(_.t14, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t14, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t14) * _.t14 * Vector2((-113.884),299.956)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2((-160.861),299.103)) + (Pow(_.t14, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t14, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t14) * _.t14 * Vector2((-106.909),364.08)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2((-106.1597),323.8406)) + (Pow(_.t14, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t14, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t14) * _.t14 * Vector2((-113.884),299.956)) + (3 * (1 - _.t14) * Square(_.t14) * Vector2((-160.861),299.103)) + (Pow(_.t14, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7775,9 +6933,9 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(370.312012F, 214.841995F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(370.312012F, 214.841995F), _linearEasingFunction);
-                result.InsertKeyFrame(0.693121672F, new Vector2(344.020996F, 214.841995F), _cubicBezierEasingFunction_18);
+                result.InsertKeyFrame(0, new Vector2(370.312012F, 214.841995F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(370.312012F, 214.841995F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.693121672F, new Vector2(344.020996F, 214.841995F), _cubicBezierEasingFunction_17);
                 return result;
             }
 
@@ -7787,11 +6945,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t15, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t15) * _.t15 * Vector2((-106.909),364.08)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2((-106.1597),323.8406)) + (Pow(_.t15, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t15, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t15) * _.t15 * Vector2((-113.884),299.956)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2((-160.861),299.103)) + (Pow(_.t15, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t15, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t15) * _.t15 * Vector2((-106.909),364.08)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2((-106.1597),323.8406)) + (Pow(_.t15, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t15, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t15) * _.t15 * Vector2((-113.884),299.956)) + (3 * (1 - _.t15) * Square(_.t15) * Vector2((-160.861),299.103)) + (Pow(_.t15, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7801,11 +6959,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t16, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t16) * _.t16 * Vector2((-106.909),364.08)) + (3 * (1 - _.t16) * Square(_.t16) * Vector2((-106.1597),323.8406)) + (Pow(_.t16, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t16, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t16) * _.t16 * Vector2((-113.884),299.956)) + (3 * (1 - _.t16) * Square(_.t16) * Vector2((-160.861),299.103)) + (Pow(_.t16, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t16, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t16) * _.t16 * Vector2((-106.909),364.08)) + (3 * (1 - _.t16) * Square(_.t16) * Vector2((-106.1597),323.8406)) + (Pow(_.t16, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t16, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t16) * _.t16 * Vector2((-113.884),299.956)) + (3 * (1 - _.t16) * Square(_.t16) * Vector2((-160.861),299.103)) + (Pow(_.t16, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7815,11 +6973,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t17, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t17) * _.t17 * Vector2((-106.909),364.08)) + (3 * (1 - _.t17) * Square(_.t17) * Vector2((-106.1597),323.8406)) + (Pow(_.t17, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t17, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t17) * _.t17 * Vector2((-113.884),299.956)) + (3 * (1 - _.t17) * Square(_.t17) * Vector2((-160.861),299.103)) + (Pow(_.t17, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t17, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t17) * _.t17 * Vector2((-106.909),364.08)) + (3 * (1 - _.t17) * Square(_.t17) * Vector2((-106.1597),323.8406)) + (Pow(_.t17, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t17, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t17) * _.t17 * Vector2((-113.884),299.956)) + (3 * (1 - _.t17) * Square(_.t17) * Vector2((-160.861),299.103)) + (Pow(_.t17, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7831,8 +6989,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(28.1170006F, 28.1170006F), _linearEasingFunction);
-                result.InsertKeyFrame(0.462962955F, new Vector2(28.1170006F, 28.1170006F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(28.1170006F, 28.1170006F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.462962955F, new Vector2(28.1170006F, 28.1170006F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.465608478F, new Vector2(28.1170006F, 21.0170002F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.46825397F, new Vector2(28.1170006F, 28.1170006F), _cubicBezierEasingFunction_00);
                 return result;
@@ -7845,17 +7003,17 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-184.132996F, -369.832001F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-184.132996F, -369.832001F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(-184.132996F, -369.832001F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-184.132996F, -369.832001F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.399470896F, new Vector2(-26.8829994F, -150.332001F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.412698418F, new Vector2(-123.133003F, -66.8320007F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.424338639F, new Vector2(-184.716995F, -59.4980011F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.439153433F, new Vector2(-246.300003F, -10.165F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.465608478F, new Vector2(-141.292007F, 161.335007F), CubicBezierEasingFunction_19());
+                result.InsertKeyFrame(0.465608478F, new Vector2(-141.292007F, 161.335007F), CubicBezierEasingFunction_18());
                 result.InsertKeyFrame(0.494708985F, new Vector2(27.8670006F, 80.1679993F), _cubicBezierEasingFunction_00);
                 result.InsertKeyFrame(0.526455045F, new Vector2(187.139999F, 79.2490005F), _cubicBezierEasingFunction_00);
-                result.InsertExpressionKeyFrame(0.568782985F, "(Pow(1 - _.t18, 3) * Vector2(187.14,79.249)) + (3 * Square(1 - _.t18) * _.t18 * Vector2(187.14,79.249)) + (3 * (1 - _.t18) * Square(_.t18) * Vector2(269.3565,104.9595)) + (Pow(_.t18, 3) * Vector2(301.367,134.918))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.568783104F, new Vector2(301.367004F, 134.917999F), _stepEasingFunction_0);
+                result.InsertExpressionKeyFrame(0.568782985F, "(Pow(1 - _.t18, 3) * Vector2(187.14,79.249)) + (3 * Square(1 - _.t18) * _.t18 * Vector2(187.14,79.249)) + (3 * (1 - _.t18) * Square(_.t18) * Vector2(269.3565,104.9595)) + (Pow(_.t18, 3) * Vector2(301.367,134.918))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.568783104F, new Vector2(301.367004F, 134.917999F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7865,18 +7023,18 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(127.278F, 60.6500015F), _linearEasingFunction);
-                result.InsertKeyFrame(0.412698418F, new Vector2(127.278F, 60.6500015F), _linearEasingFunction);
-                result.InsertKeyFrame(0.42592594F, new Vector2(127.278F, 56.0209999F), _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.439153433F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_20());
-                result.InsertKeyFrame(0.465608478F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.481481493F, new Vector2(127.278F, 51.723999F), _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.494708985F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_20);
-                result.InsertKeyFrame(0.505290985F, new Vector2(127.278F, 58.3349991F), _cubicBezierEasingFunction_11);
-                result.InsertKeyFrame(0.515873015F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_20);
-                result.InsertKeyFrame(0.526455045F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_00);
-                result.InsertKeyFrame(0.544973552F, new Vector2(127.278F, 57.3440018F), CubicBezierEasingFunction_21());
-                result.InsertKeyFrame(0.568783045F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_22());
+                result.InsertKeyFrame(0, new Vector2(127.278F, 60.6500015F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.412698418F, new Vector2(127.278F, 60.6500015F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.42592594F, new Vector2(127.278F, 56.0209999F), _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.439153433F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_19());
+                result.InsertKeyFrame(0.465608478F, new Vector2(127.278F, 60.6500015F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.481481493F, new Vector2(127.278F, 51.723999F), _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.494708985F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_19);
+                result.InsertKeyFrame(0.505290985F, new Vector2(127.278F, 58.3349991F), _cubicBezierEasingFunction_10);
+                result.InsertKeyFrame(0.515873015F, new Vector2(127.278F, 60.6500015F), _cubicBezierEasingFunction_19);
+                result.InsertKeyFrame(0.526455045F, new Vector2(127.278F, 60.6500015F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.544973552F, new Vector2(127.278F, 57.3440018F), CubicBezierEasingFunction_20());
+                result.InsertKeyFrame(0.568783045F, new Vector2(127.278F, 60.6500015F), CubicBezierEasingFunction_21());
                 return result;
             }
 
@@ -7886,11 +7044,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t19, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t19) * _.t19 * Vector2((-106.909),364.08)) + (3 * (1 - _.t19) * Square(_.t19) * Vector2((-106.1597),323.8406)) + (Pow(_.t19, 3) * Vector2((-110.281),311.097))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t19, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t19) * _.t19 * Vector2((-113.884),299.956)) + (3 * (1 - _.t19) * Square(_.t19) * Vector2((-160.861),299.103)) + (Pow(_.t19, 3) * Vector2((-160.861),299.103))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(-106.908997F, 364.079987F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.373015881F, new Vector2(-106.908997F, 364.079987F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.445216835F, "(Pow(1 - _.t19, 3) * Vector2((-106.909),364.08)) + (3 * Square(1 - _.t19) * _.t19 * Vector2((-106.909),364.08)) + (3 * (1 - _.t19) * Square(_.t19) * Vector2((-106.1597),323.8406)) + (Pow(_.t19, 3) * Vector2((-110.281),311.097))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.526454926F, "(Pow(1 - _.t19, 3) * Vector2((-110.281),311.097)) + (3 * Square(1 - _.t19) * _.t19 * Vector2((-113.884),299.956)) + (3 * (1 - _.t19) * Square(_.t19) * Vector2((-160.861),299.103)) + (Pow(_.t19, 3) * Vector2((-160.861),299.103))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.526455045F, new Vector2(-160.860992F, 299.102997F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -7901,12 +7059,12 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(33.3129997F, 49.9490013F), _linearEasingFunction);
-                result.InsertKeyFrame(0.494708985F, new Vector2(33.3129997F, 49.9490013F), _linearEasingFunction);
-                result.InsertExpressionKeyFrame(0.534391463F, "(Pow(1 - _.t20, 3) * Vector2(33.313,49.949)) + (3 * Square(1 - _.t20) * _.t20 * Vector2(33.313,49.949)) + (3 * (1 - _.t20) * Square(_.t20) * Vector2(37.20797,49.99824)) + (Pow(_.t20, 3) * Vector2(45.658,49.949))", _stepEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.568782985F, "(Pow(1 - _.t20, 3) * Vector2(45.658,49.949)) + (3 * Square(1 - _.t20) * _.t20 * Vector2(54.10804,49.89976)) + (3 * (1 - _.t20) * Square(_.t20) * Vector2(56.795,60)) + (Pow(_.t20, 3) * Vector2(56.795,60))", _stepEasingFunction_0);
-                result.InsertKeyFrame(0.568783104F, new Vector2(56.7949982F, 60), _stepEasingFunction_0);
-                result.InsertKeyFrame(0.634920657F, new Vector2(62.0410004F, 60.0509987F), CubicBezierEasingFunction_23());
+                result.InsertKeyFrame(0, new Vector2(33.3129997F, 49.9490013F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.494708985F, new Vector2(33.3129997F, 49.9490013F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.534391463F, "(Pow(1 - _.t20, 3) * Vector2(33.313,49.949)) + (3 * Square(1 - _.t20) * _.t20 * Vector2(33.313,49.949)) + (3 * (1 - _.t20) * Square(_.t20) * Vector2(37.20797,49.99824)) + (Pow(_.t20, 3) * Vector2(45.658,49.949))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.568782985F, "(Pow(1 - _.t20, 3) * Vector2(45.658,49.949)) + (3 * Square(1 - _.t20) * _.t20 * Vector2(54.10804,49.89976)) + (3 * (1 - _.t20) * Square(_.t20) * Vector2(56.795,60)) + (Pow(_.t20, 3) * Vector2(56.795,60))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.568783104F, new Vector2(56.7949982F, 60), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.634920657F, new Vector2(62.0410004F, 60.0509987F), CubicBezierEasingFunction_22());
                 return result;
             }
 
@@ -7916,14 +7074,14 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(164.770004F, 73.5979996F), _linearEasingFunction);
-                result.InsertKeyFrame(0.568783045F, new Vector2(164.770004F, 73.5979996F), _linearEasingFunction);
-                result.InsertKeyFrame(0.58465606F, new Vector2(164.770004F, 72.7229996F), _cubicBezierEasingFunction_17);
-                result.InsertKeyFrame(0.600529075F, new Vector2(164.770004F, 73.5979996F), _cubicBezierEasingFunction_05);
+                result.InsertKeyFrame(0, new Vector2(164.770004F, 73.5979996F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.568783045F, new Vector2(164.770004F, 73.5979996F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.58465606F, new Vector2(164.770004F, 72.7229996F), _cubicBezierEasingFunction_16);
+                result.InsertKeyFrame(0.600529075F, new Vector2(164.770004F, 73.5979996F), _cubicBezierEasingFunction_04);
                 return result;
             }
 
-            internal Composition(Compositor compositor)
+            internal AnimatedVisual(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();

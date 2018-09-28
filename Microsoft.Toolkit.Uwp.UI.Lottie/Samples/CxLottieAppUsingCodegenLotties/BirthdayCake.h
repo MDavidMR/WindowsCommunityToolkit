@@ -8,12 +8,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Compositions
+namespace AnimatedVisuals
 {
-    ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::ICompositionSource
+    ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisualSource
     {
     public:
-        virtual Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ TryCreateInstance(
+        virtual Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ TryCreateInstance(
             Windows::UI::Composition::Compositor^ compositor,
             Platform::Object^* diagnostics);
     };

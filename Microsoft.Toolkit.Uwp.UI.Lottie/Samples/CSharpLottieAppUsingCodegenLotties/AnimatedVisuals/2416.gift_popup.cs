@@ -24,7 +24,7 @@ namespace AnimatedVisuals
             {
                 return null;
             }
-            return new Composition(compositor);
+            return new AnimatedVisual(compositor);
         }
 
         static bool IsRuntimeCompatible()
@@ -36,7 +36,7 @@ namespace AnimatedVisuals
             return true;
         }
 
-        sealed class Composition : IAnimatedVisual
+        sealed class AnimatedVisual : IAnimatedVisual
         {
             const long c_durationTicks = 23330000;
             readonly Compositor _c;
@@ -48,11 +48,11 @@ namespace AnimatedVisuals
             CompositionColorBrush _colorBrush_AlmostSlateGray_FF677C7E;
             CompositionColorBrush _colorBrush_AlmostSlateGray_FF6C8488;
             CubicBezierEasingFunction _cubicBezierEasingFunction_0;
-            LinearEasingFunction _linearEasingFunction;
+            StepEasingFunction _holdThenStepEasingFunction;
             ContainerVisual _root;
             ScalarKeyFrameAnimation _scalarAnimation_0_to_1_0;
             ExpressionAnimation _scalarExpressionAnimation;
-            StepEasingFunction _stepEasingFunction;
+            StepEasingFunction _stepThenHoldEasingFunction;
 
             // Layer (Shape): gift Outlines
             //   Path 1
@@ -156,14 +156,14 @@ namespace AnimatedVisuals
                 shapes.Add(SpriteShape_01());
                 shapes.Add(SpriteShape_02());
                 shapes.Add(SpriteShape_03());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.219,390.696)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_0());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", ScalarExpressionAnimation());
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(344.219,390.696)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -179,14 +179,14 @@ namespace AnimatedVisuals
                 shapes.Add(SpriteShape_04());
                 shapes.Add(SpriteShape_05());
                 shapes.Add(SpriteShape_06());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(86.445,115.357)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_1());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(86.445,115.357)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", Vector2Animation_2());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -215,14 +215,14 @@ namespace AnimatedVisuals
                 shapes.Add(SpriteShape_16());
                 shapes.Add(SpriteShape_17());
                 shapes.Add(SpriteShape_18());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(201.17,232.363)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_3());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(201.17,232.363)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Scale", Vector2Animation_4());
                 controller = result.TryGetAnimationController("Scale");
                 controller.Pause();
@@ -241,14 +241,14 @@ namespace AnimatedVisuals
                 shapes.Add(SpriteShape_20());
                 shapes.Add(SpriteShape_21());
                 shapes.Add(SpriteShape_22());
-                _reusableExpressionAnimation.ClearAllParameters();
-                _reusableExpressionAnimation.Expression = "my.Position - Vector2(388.775,142.97)";
-                _reusableExpressionAnimation.SetReferenceParameter("my", result);
-                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 result.StartAnimation("Position", Vector2Animation_5());
                 var controller = result.TryGetAnimationController("Position");
                 controller.Pause();
                 controller.StartAnimation("Progress", _scalarExpressionAnimation);
+                _reusableExpressionAnimation.ClearAllParameters();
+                _reusableExpressionAnimation.Expression = "my.Position - Vector2(388.775,142.97)";
+                _reusableExpressionAnimation.SetReferenceParameter("my", result);
+                result.StartAnimation("Offset", _reusableExpressionAnimation);
                 return result;
             }
 
@@ -717,9 +717,11 @@ namespace AnimatedVisuals
                 return result;
             }
 
-            LinearEasingFunction LinearEasingFunction()
+            StepEasingFunction HoldThenStepEasingFunction()
             {
-                return _linearEasingFunction = _c.CreateLinearEasingFunction();
+                var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
+                result.IsFinalStepSingleFrame = true;
+                return result;
             }
 
             // Layer (Shape): boxBack Outlines
@@ -961,13 +963,11 @@ namespace AnimatedVisuals
             {
                 var result = _scalarAnimation_0_to_1_0 = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.357142955F, 0, _stepEasingFunction);
-                result.InsertKeyFrame(0.399999887F, 1, _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.442857236F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.442857236F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.471428484F, 1, _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.471428573F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.471428573F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.499999911F, 1, _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.528571546F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.528571546F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.557142735F, 1, _cubicBezierEasingFunction_0);
                 return result;
             }
@@ -976,7 +976,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.157142967F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.157142967F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.199999899F, 1, _cubicBezierEasingFunction_0);
                 return result;
             }
@@ -985,12 +985,8 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateScalarKeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0.314285815F, 0, _stepEasingFunction);
+                result.InsertKeyFrame(0.314285815F, 0, _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.357142746F, 1, _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.814285815F, 0, _stepEasingFunction);
-                result.InsertKeyFrame(0.857142746F, 1, _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.857142866F, 0, _stepEasingFunction);
-                result.InsertKeyFrame(0.928571343F, 1, _cubicBezierEasingFunction_0);
                 return result;
             }
 
@@ -1023,7 +1019,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_00()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(343.742004F, 236.535995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 343.742004F, 236.535995F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF404F51();
                 result.Geometry = PathGeometry_00();
                 return result;
@@ -1034,7 +1030,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_01()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(214.934006F, 311.109985F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 214.934006F, 311.109985F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF374346();
                 result.Geometry = PathGeometry_01();
                 return result;
@@ -1045,7 +1041,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_02()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(171.996994F, 118.389999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 171.996994F, 118.389999F);
                 result.FillBrush = ColorBrush_AlmostSlateGray_FF6C8488();
                 result.Geometry = PathGeometry_02();
                 return result;
@@ -1056,7 +1052,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_03()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(515.922974F, 159.341003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 515.922974F, 159.341003F);
                 result.FillBrush = ColorBrush_AlmostSlateGray_FF677C7E();
                 result.Geometry = PathGeometry_03();
                 return result;
@@ -1067,7 +1063,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_04()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(94.6790009F, 108.216003F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 94.6790009F, 108.216003F);
                 result.FillBrush = ColorBrush_AlmostDarkKhaki_FFD2BE6A();
                 result.Geometry = PathGeometry_04();
                 return result;
@@ -1078,7 +1074,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_05()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(78.1470032F, 115.390999F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 78.1470032F, 115.390999F);
                 result.FillBrush = ColorBrush_AlmostKhaki_FFF4E879();
                 result.Geometry = PathGeometry_05();
                 return result;
@@ -1088,7 +1084,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_06()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(81.2929993F, 118.5F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 81.2929993F, 118.5F);
                 result.FillBrush = ColorBrush_White();
                 result.Geometry = PathGeometry_06();
                 return result;
@@ -1099,7 +1095,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_07()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(100.739998F, 290.161987F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 100.739998F, 290.161987F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF2C4653();
                 result.Geometry = PathGeometry_07();
                 return result;
@@ -1110,7 +1106,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_08()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(301.205994F, 290.162994F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 301.205994F, 290.162994F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF2B3D51();
                 result.Geometry = PathGeometry_08();
                 return result;
@@ -1121,7 +1117,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_09()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.227997F, 116.497002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 201.227997F, 116.497002F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF3D5A71();
                 result.Geometry = PathGeometry_09();
                 return result;
@@ -1132,7 +1128,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_10()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(100.737999F, 290.164001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 100.737999F, 290.164001F);
                 result.FillBrush = ColorBrush_AlmostMediumSeaGreen_FF22A281();
                 result.Geometry = PathGeometry_10();
                 return result;
@@ -1143,7 +1139,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_11()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.567993F, 116.130997F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 201.567993F, 116.130997F);
                 result.FillBrush = ColorBrush_AlmostLightSeaGreen_FF23BC9C();
                 result.Geometry = PathGeometry_11();
                 return result;
@@ -1154,7 +1150,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_12()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(301.175995F, 290.164001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 301.175995F, 290.164001F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF1E9579();
                 result.Geometry = PathGeometry_12();
                 return result;
@@ -1165,7 +1161,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_13()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(201.567001F, 116.132004F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 201.567001F, 116.132004F);
                 result.FillBrush = _colorBrush_AlmostLightSeaGreen_FF23BC9C;
                 result.Geometry = PathGeometry_13();
                 return result;
@@ -1176,7 +1172,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_14()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(137.014008F, 34.4360008F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 137.014008F, 34.4360008F);
                 result.FillBrush = ColorBrush_AlmostDarkSlateGray_FF485A5E();
                 result.Geometry = PathGeometry_14();
                 return result;
@@ -1187,7 +1183,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_15()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(129.378998F, 81.802002F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 129.378998F, 81.802002F);
                 result.FillBrush = ColorBrush_AlmostDarkCyan_FF1F9B7C();
                 result.Geometry = PathGeometry_15();
                 return result;
@@ -1198,7 +1194,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_16()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(229.876999F, 139.647995F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 229.876999F, 139.647995F);
                 result.FillBrush = _colorBrush_AlmostDarkCyan_FF1F9B7C;
                 result.Geometry = PathGeometry_16();
                 return result;
@@ -1209,7 +1205,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_17()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(162.516006F, 70.4800034F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 162.516006F, 70.4800034F);
                 result.FillBrush = _colorBrush_AlmostLightSeaGreen_FF23BC9C;
                 result.Geometry = PathGeometry_17();
                 return result;
@@ -1220,7 +1216,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_18()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(249.294998F, 117.417F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 249.294998F, 117.417F);
                 result.FillBrush = _colorBrush_AlmostLightSeaGreen_FF23BC9C;
                 result.Geometry = PathGeometry_18();
                 return result;
@@ -1231,7 +1227,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_19()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(258.290009F, 223.304001F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 258.290009F, 223.304001F);
                 result.FillBrush = _colorBrush_AlmostDarkSlateGray_FF485A5E;
                 result.Geometry = PathGeometry_19();
                 return result;
@@ -1242,7 +1238,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_20()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(516.336975F, 223.304993F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 516.336975F, 223.304993F);
                 result.FillBrush = _colorBrush_AlmostDarkSlateGray_FF374346;
                 result.Geometry = PathGeometry_20();
                 return result;
@@ -1253,7 +1249,7 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_21()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(193.781998F, 83.1480026F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 193.781998F, 83.1480026F);
                 result.FillBrush = _colorBrush_AlmostSlateGray_FF677C7E;
                 result.Geometry = PathGeometry_21();
                 return result;
@@ -1264,16 +1260,16 @@ namespace AnimatedVisuals
             CompositionSpriteShape SpriteShape_22()
             {
                 var result = _c.CreateSpriteShape();
-                result.Offset = new Vector2(582.31897F, 110.931F);
+                result.TransformMatrix = new Matrix3x2(1, 0, 0, 1, 582.31897F, 110.931F);
                 result.FillBrush = _colorBrush_AlmostSlateGray_FF6C8488;
                 result.Geometry = PathGeometry_22();
                 return result;
             }
 
-            StepEasingFunction StepEasingFunction()
+            StepEasingFunction StepThenHoldEasingFunction()
             {
-                var result = _stepEasingFunction = _c.CreateStepEasingFunction();
-                result.IsInitialStepSingleFrame  = true;
+                var result = _stepThenHoldEasingFunction = _c.CreateStepEasingFunction();
+                result.IsInitialStepSingleFrame = true;
                 return result;
             }
 
@@ -1284,18 +1280,17 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(540.01001F, 895.005005F), LinearEasingFunction());
-                result.InsertKeyFrame(0.314285725F, new Vector2(540.01001F, 895.005005F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(540.01001F, 895.005005F), StepThenHoldEasingFunction());
+                result.InsertKeyFrame(0.314285725F, new Vector2(540.01001F, 895.005005F), HoldThenStepEasingFunction());
                 result.InsertKeyFrame(0.357142866F, new Vector2(540.01001F, 916.098999F), CubicBezierEasingFunction_0());
-                result.InsertExpressionKeyFrame(0.399999887F, "(Pow(1 - _.t0, 3) * Vector2(540.01,916.099)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(540.01,916.099)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(540.01,898.5206)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", StepEasingFunction());
-                result.InsertKeyFrame(0.399999976F, new Vector2(540.01001F, 895.005005F), _stepEasingFunction);
+                result.InsertKeyFrame(0.400000006F, new Vector2(540.01001F, 895.005005F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.442857146F, new Vector2(540.01001F, 895.005005F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t0, 3) * Vector2(540.01,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(541.5725,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(549.7756,895.005)) + (Pow(_.t0, 3) * Vector2(549.385,895.005))", _stepEasingFunction);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t0, 3) * Vector2(549.385,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(548.9944,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(536.8848,895.005)) + (Pow(_.t0, 3) * Vector2(537.666,895.005))", _stepEasingFunction);
-                result.InsertKeyFrame(0.5F, new Vector2(537.666016F, 895.005005F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t0, 3) * Vector2(540.01,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(541.5725,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(549.7756,895.005)) + (Pow(_.t0, 3) * Vector2(549.385,895.005))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t0, 3) * Vector2(549.385,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(548.9944,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(536.8848,895.005)) + (Pow(_.t0, 3) * Vector2(537.666,895.005))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.5F, new Vector2(537.666016F, 895.005005F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.528571427F, new Vector2(554.072021F, 895.005005F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t0, 3) * Vector2(554.072,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(554.4626,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(542.3538,895.005)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", _stepEasingFunction);
-                result.InsertKeyFrame(0.557142854F, new Vector2(540.01001F, 895.005005F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t0, 3) * Vector2(554.072,895.005)) + (3 * Square(1 - _.t0) * _.t0 * Vector2(554.4626,895.005)) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(542.3538,895.005)) + (Pow(_.t0, 3) * Vector2(540.01,895.005))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.557142854F, new Vector2(540.01001F, 895.005005F), _stepThenHoldEasingFunction);
                 return result;
             }
 
@@ -1306,11 +1301,11 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(538.924988F, 399.328003F), _linearEasingFunction);
-                result.InsertKeyFrame(0.0714285746F, new Vector2(538.924988F, 399.328003F), _linearEasingFunction);
-                result.InsertKeyFrame(0.157142863F, new Vector2(538.924988F, 399.328003F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.199999899F, "(Pow(1 - _.t1, 3) * Vector2(538.925,399.328)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(538.925,418.5362)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(538.925,324.5087)) + (Pow(_.t1, 3) * Vector2(538.925,361.496))", _stepEasingFunction);
-                result.InsertKeyFrame(0.200000003F, new Vector2(538.924988F, 361.496002F), _stepEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(538.924988F, 399.328003F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.0714285746F, new Vector2(538.924988F, 399.328003F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.157142863F, new Vector2(538.924988F, 399.328003F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.199999899F, "(Pow(1 - _.t1, 3) * Vector2(538.925,399.328)) + (3 * Square(1 - _.t1) * _.t1 * Vector2(538.925,418.5362)) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(538.925,324.5087)) + (Pow(_.t1, 3) * Vector2(538.925,361.496))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.200000003F, new Vector2(538.924988F, 361.496002F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.314285725F, new Vector2(538.924988F, 1060.26599F), CubicBezierEasingFunction_1());
                 return result;
             }
@@ -1321,7 +1316,7 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(0, 0), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(0, 0), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.0535714291F, new Vector2(1, 1), _cubicBezierEasingFunction_0);
                 return result;
             }
@@ -1333,18 +1328,17 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(539.692017F, 1032.44299F), _linearEasingFunction);
-                result.InsertKeyFrame(0.314285725F, new Vector2(539.692017F, 1032.44299F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.357142746F, "(Pow(1 - _.t2, 3) * Vector2(539.692,1032.443)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(539.692,1032.443)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(539.692,1059.397)) + (Pow(_.t2, 3) * Vector2(539.692,1048.068))", _stepEasingFunction);
-                result.InsertKeyFrame(0.357142836F, new Vector2(539.692017F, 1048.06799F), _stepEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(539.692017F, 1032.44299F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.314285725F, new Vector2(539.692017F, 1032.44299F), _holdThenStepEasingFunction);
+                result.InsertExpressionKeyFrame(0.357142746F, "(Pow(1 - _.t2, 3) * Vector2(539.692,1032.443)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(539.692,1032.443)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(539.692,1059.397)) + (Pow(_.t2, 3) * Vector2(539.692,1048.068))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.357142836F, new Vector2(539.692017F, 1048.06799F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.485714287F, new Vector2(539.692017F, 1020.72498F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.54285717F, new Vector2(539.692017F, 919.942993F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.628571451F, new Vector2(539.692017F, 694.942993F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.671428561F, new Vector2(539.692017F, 720.724976F), _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.814285696F, new Vector2(539.692017F, 720.724976F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.857142746F, "(Pow(1 - _.t2, 3) * Vector2(539.692,720.725)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(539.692,720.725)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(539.692,710.1779)) + (Pow(_.t2, 3) * Vector2(539.692,680.881))", _stepEasingFunction);
-                result.InsertExpressionKeyFrame(0.928571343F, "(Pow(1 - _.t2, 3) * Vector2(539.692,680.881)) + (3 * Square(1 - _.t2) * _.t2 * Vector2(539.692,680.881)) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(539.692,863.3024)) + (Pow(_.t2, 3) * Vector2(539.692,919.943))", _stepEasingFunction);
-                result.InsertKeyFrame(0.928571463F, new Vector2(539.692017F, 919.942993F), _stepEasingFunction);
+                result.InsertKeyFrame(0.814285696F, new Vector2(539.692017F, 720.724976F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.857142866F, new Vector2(539.692017F, 680.880981F), _cubicBezierEasingFunction_0);
+                result.InsertKeyFrame(0.928571403F, new Vector2(539.692017F, 919.942993F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.982142866F, new Vector2(539.692017F, 1020.72498F), _cubicBezierEasingFunction_0);
                 return result;
             }
@@ -1355,10 +1349,10 @@ namespace AnimatedVisuals
             {
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(0.620000005F, 0.620000005F), _linearEasingFunction);
-                result.InsertKeyFrame(0.485714287F, new Vector2(0.620000005F, 0.620000005F), _cubicBezierEasingFunction_0);
+                result.InsertKeyFrame(0, new Vector2(0.620000005F, 0.620000005F), _holdThenStepEasingFunction);
+                result.InsertKeyFrame(0.485714287F, new Vector2(0.620000005F, 0.620000005F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.54285717F, new Vector2(1, 1), _cubicBezierEasingFunction_0);
-                result.InsertKeyFrame(0.928571403F, new Vector2(1, 1), _cubicBezierEasingFunction_0);
+                result.InsertKeyFrame(0.928571403F, new Vector2(1, 1), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.982142866F, new Vector2(0.620000005F, 0.620000005F), _cubicBezierEasingFunction_0);
                 return result;
             }
@@ -1370,22 +1364,21 @@ namespace AnimatedVisuals
                 var result = _c.CreateVector2KeyFrameAnimation();
                 result.SetReferenceParameter("_", _root);
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
-                result.InsertKeyFrame(0, new Vector2(542.405029F, 882.914978F), _linearEasingFunction);
-                result.InsertKeyFrame(0.314285725F, new Vector2(542.405029F, 882.914978F), _linearEasingFunction);
+                result.InsertKeyFrame(0, new Vector2(542.405029F, 882.914978F), _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.314285725F, new Vector2(542.405029F, 882.914978F), _holdThenStepEasingFunction);
                 result.InsertKeyFrame(0.357142866F, new Vector2(542.405029F, 904.008972F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.399999887F, "(Pow(1 - _.t3, 3) * Vector2(542.405,904.009)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(542.405,904.009)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(542.405,886.4306)) + (Pow(_.t3, 3) * Vector2(542.405,882.915))", _stepEasingFunction);
-                result.InsertKeyFrame(0.399999976F, new Vector2(542.405029F, 882.914978F), _stepEasingFunction);
+                result.InsertKeyFrame(0.400000006F, new Vector2(542.405029F, 882.914978F), _cubicBezierEasingFunction_0);
                 result.InsertKeyFrame(0.442857146F, new Vector2(542.405029F, 882.914978F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t3, 3) * Vector2(542.405,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(543.9675,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(552.1707,882.915)) + (Pow(_.t3, 3) * Vector2(551.78,882.915))", _stepEasingFunction);
-                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t3, 3) * Vector2(551.78,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(551.3894,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(539.2797,882.915)) + (Pow(_.t3, 3) * Vector2(540.061,882.915))", _stepEasingFunction);
-                result.InsertKeyFrame(0.5F, new Vector2(540.060974F, 882.914978F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.471428484F, "(Pow(1 - _.t3, 3) * Vector2(542.405,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(543.9675,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(552.1707,882.915)) + (Pow(_.t3, 3) * Vector2(551.78,882.915))", _stepThenHoldEasingFunction);
+                result.InsertExpressionKeyFrame(0.499999911F, "(Pow(1 - _.t3, 3) * Vector2(551.78,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(551.3894,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(539.2797,882.915)) + (Pow(_.t3, 3) * Vector2(540.061,882.915))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.5F, new Vector2(540.060974F, 882.914978F), _stepThenHoldEasingFunction);
                 result.InsertKeyFrame(0.528571427F, new Vector2(556.46698F, 882.914978F), _cubicBezierEasingFunction_0);
-                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t3, 3) * Vector2(556.467,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(556.8576,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(544.7488,882.915)) + (Pow(_.t3, 3) * Vector2(542.405,882.915))", _stepEasingFunction);
-                result.InsertKeyFrame(0.557142854F, new Vector2(542.405029F, 882.914978F), _stepEasingFunction);
+                result.InsertExpressionKeyFrame(0.557142735F, "(Pow(1 - _.t3, 3) * Vector2(556.467,882.915)) + (3 * Square(1 - _.t3) * _.t3 * Vector2(556.8576,882.915)) + (3 * (1 - _.t3) * Square(_.t3) * Vector2(544.7488,882.915)) + (Pow(_.t3, 3) * Vector2(542.405,882.915))", _stepThenHoldEasingFunction);
+                result.InsertKeyFrame(0.557142854F, new Vector2(542.405029F, 882.914978F), _stepThenHoldEasingFunction);
                 return result;
             }
 
-            internal Composition(Compositor compositor)
+            internal AnimatedVisual(Compositor compositor)
             {
                 _c = compositor;
                 _reusableExpressionAnimation = compositor.CreateExpressionAnimation();

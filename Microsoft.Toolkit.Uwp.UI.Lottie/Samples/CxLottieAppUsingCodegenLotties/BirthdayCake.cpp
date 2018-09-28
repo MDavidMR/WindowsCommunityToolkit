@@ -33,7 +33,7 @@ namespace
 
     public:
         GeoSource(ID2D1Geometry* pGeometry)
-            : _cRef(0)
+            : _cRef(1)
             , _cpGeometry(pGeometry)
         { }
 
@@ -101,7 +101,7 @@ namespace
         return true;
     }
 
-    ref class Comp sealed : public Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition
+    ref class AnimatedVisual sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual
     {
         ComPtr<ID2D1Factory> _d2dFactory;
         const int64_t c_durationTicks = 20000000L;
@@ -135,9 +135,10 @@ namespace
         CubicBezierEasingFunction^ _cubicBezierEasingFunction_03;
         CubicBezierEasingFunction^ _cubicBezierEasingFunction_04;
         CubicBezierEasingFunction^ _cubicBezierEasingFunction_05;
-        CubicBezierEasingFunction^ _cubicBezierEasingFunction_08;
+        CubicBezierEasingFunction^ _cubicBezierEasingFunction_07;
+        CubicBezierEasingFunction^ _cubicBezierEasingFunction_09;
         CubicBezierEasingFunction^ _cubicBezierEasingFunction_10;
-        CubicBezierEasingFunction^ _cubicBezierEasingFunction_11;
+        StepEasingFunction^ _holdThenStepEasingFunction;
         InsetClip^ _insetClip;
         LinearEasingFunction^ _linearEasingFunction;
         CompositionPathGeometry^ _pathGeometry_46;
@@ -161,8 +162,7 @@ namespace
         ScalarKeyFrameAnimation^ _scalarAnimation_0_to_3_14;
         ScalarKeyFrameAnimation^ _scalarAnimation_0_to_3_23;
         ExpressionAnimation^ _scalarExpressionAnimation;
-        StepEasingFunction^ _stepEasingFunction_0;
-        StepEasingFunction^ _stepEasingFunction_1;
+        StepEasingFunction^ _stepThenHoldEasingFunction;
         Vector2KeyFrameAnimation^ _vector2Animation_0;
 
         CompositionColorBrush^ ColorBrush_AlmostDarkCyan_FF0063B0()
@@ -170,7 +170,8 @@ namespace
             return _colorBrush_AlmostDarkCyan_FF0063B0 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x00, 0x63, 0xB0));
         }
 
-        // Path 1
+        // Layer (Shape): Cake
+        //   Path 1
         CompositionColorBrush^ ColorBrush_AlmostDarkKhaki_FFB88F66()
         {
             return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xB8, 0x8F, 0x66));
@@ -186,7 +187,8 @@ namespace
             return _colorBrush_AlmostDodgerBlue_FF0177D9 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0x01, 0x77, 0xD9));
         }
 
-        // Path 1
+        // Layer (Shape): Flame
+        //   Path 1
         CompositionColorBrush^ ColorBrush_AlmostKhaki_FFFFD579()
         {
             return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xD5, 0x79));
@@ -208,19 +210,22 @@ namespace
             return _colorBrush_AlmostOrange_FFFFB901 = _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xB9, 0x01));
         }
 
-        // Path 1
+        // Layer (Shape): Cake 2
+        //   Path 1
         CompositionColorBrush^ ColorBrush_AlmostOrange_FFFFBA01()
         {
             return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xFF, 0xBA, 0x01));
         }
 
-        // Path 1
+        // Layer (Shape): Cake 2
+        //   Path 1
         CompositionColorBrush^ ColorBrush_AlmostOrangeRed_FFDA4100()
         {
             return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xDA, 0x41, 0x00));
         }
 
-        // Path 1
+        // Layer (Shape): Cake 2
+        //   Path 1
         CompositionColorBrush^ ColorBrush_AlmostOrangeRed_FFF7630B()
         {
             return _c->CreateColorBrush(ColorHelper::FromArgb(0xFF, 0xF7, 0x63, 0x0B));
@@ -347,7 +352,7 @@ namespace
         CompositionContainerShape^ ContainerShape_001()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 83.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 83.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_00());
             return result;
@@ -375,7 +380,7 @@ namespace
         CompositionContainerShape^ ContainerShape_003()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 83.875F, 64.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 83.875F, 64.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_01());
             return result;
@@ -403,30 +408,19 @@ namespace
         CompositionContainerShape^ ContainerShape_005()
         {
             auto result = _c->CreateContainerShape();
-            result->CenterPoint = { -38.25F, -19.625F };
-            result->Offset = { 56.5F, 59.25F };
-            result->RotationAngleInDegrees = 35;
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_006());
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_006()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { -0.125F, 0 };
+            result->TransformMatrix = { 0.819152057F, 0.57357645F, -0.57357645F, 0.819152057F, 38.223732F, 77.5684662F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_02());
             return result;
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_007()
+        CompositionContainerShape^ ContainerShape_006()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_008());
+            shapes->Append(ContainerShape_007());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_03());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -439,22 +433,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_008()
+        CompositionContainerShape^ ContainerShape_007()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 83.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 83.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_03());
             return result;
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_009()
+        CompositionContainerShape^ ContainerShape_008()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_010());
+            shapes->Append(ContainerShape_009());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_04());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -467,22 +461,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_010()
+        CompositionContainerShape^ ContainerShape_009()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 71.375F, 61.75F };
+            result->TransformMatrix = { 1, 0, 0, 1, 71.375F, 61.75F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_04());
             return result;
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_011()
+        CompositionContainerShape^ ContainerShape_010()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_012());
+            shapes->Append(ContainerShape_011());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_05());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -495,22 +489,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_012()
+        CompositionContainerShape^ ContainerShape_011()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 66.375F, 64.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 66.375F, 64.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_05());
             return result;
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_013()
+        CompositionContainerShape^ ContainerShape_012()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_014());
+            shapes->Append(ContainerShape_013());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_07());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -523,22 +517,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_014()
+        CompositionContainerShape^ ContainerShape_013()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_06());
             return result;
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_015()
+        CompositionContainerShape^ ContainerShape_014()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_016());
+            shapes->Append(ContainerShape_015());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_08());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -551,22 +545,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_016()
+        CompositionContainerShape^ ContainerShape_015()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_07());
             return result;
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_017()
+        CompositionContainerShape^ ContainerShape_016()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_018());
+            shapes->Append(ContainerShape_017());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_09());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -579,22 +573,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_018()
+        CompositionContainerShape^ ContainerShape_017()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_08());
             return result;
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_019()
+        CompositionContainerShape^ ContainerShape_018()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_020());
+            shapes->Append(ContainerShape_019());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_10());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -607,22 +601,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_020()
+        CompositionContainerShape^ ContainerShape_019()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_09());
             return result;
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_021()
+        CompositionContainerShape^ ContainerShape_020()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_022());
+            shapes->Append(ContainerShape_021());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_11());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -635,22 +629,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_022()
+        CompositionContainerShape^ ContainerShape_021()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_10());
             return result;
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_023()
+        CompositionContainerShape^ ContainerShape_022()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_024());
+            shapes->Append(ContainerShape_023());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_12());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -663,22 +657,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_024()
+        CompositionContainerShape^ ContainerShape_023()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_11());
             return result;
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_025()
+        CompositionContainerShape^ ContainerShape_024()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_026());
+            shapes->Append(ContainerShape_025());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_13());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -691,22 +685,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_026()
+        CompositionContainerShape^ ContainerShape_025()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_12());
             return result;
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_027()
+        CompositionContainerShape^ ContainerShape_026()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_028());
+            shapes->Append(ContainerShape_027());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_14());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -719,22 +713,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_028()
+        CompositionContainerShape^ ContainerShape_027()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_13());
             return result;
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_029()
+        CompositionContainerShape^ ContainerShape_028()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_030());
+            shapes->Append(ContainerShape_029());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_15());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -747,22 +741,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_030()
+        CompositionContainerShape^ ContainerShape_029()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_14());
             return result;
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_031()
+        CompositionContainerShape^ ContainerShape_030()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_032());
+            shapes->Append(ContainerShape_031());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_16());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -775,10 +769,10 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_032()
+        CompositionContainerShape^ ContainerShape_031()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_15());
             shapes->Append(SpriteShape_16());
@@ -786,12 +780,12 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_033()
+        CompositionContainerShape^ ContainerShape_032()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_034());
+            shapes->Append(ContainerShape_033());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_17());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -804,22 +798,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_034()
+        CompositionContainerShape^ ContainerShape_033()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_17());
             return result;
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_035()
+        CompositionContainerShape^ ContainerShape_034()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_036());
+            shapes->Append(ContainerShape_035());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_18());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -832,22 +826,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_036()
+        CompositionContainerShape^ ContainerShape_035()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 73.875F, 69.25F };
+            result->TransformMatrix = { 1, 0, 0, 1, 73.875F, 69.25F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_18());
             return result;
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_037()
+        CompositionContainerShape^ ContainerShape_036()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_038());
+            shapes->Append(ContainerShape_037());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_20());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -860,22 +854,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_038()
+        CompositionContainerShape^ ContainerShape_037()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_19());
             return result;
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_039()
+        CompositionContainerShape^ ContainerShape_038()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_040());
+            shapes->Append(ContainerShape_039());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_21());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -888,22 +882,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_040()
+        CompositionContainerShape^ ContainerShape_039()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_20());
             return result;
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_041()
+        CompositionContainerShape^ ContainerShape_040()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_042());
+            shapes->Append(ContainerShape_041());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_22());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -916,22 +910,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_042()
+        CompositionContainerShape^ ContainerShape_041()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_21());
             return result;
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_043()
+        CompositionContainerShape^ ContainerShape_042()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_044());
+            shapes->Append(ContainerShape_043());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_23());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -944,22 +938,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_044()
+        CompositionContainerShape^ ContainerShape_043()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_22());
             return result;
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_045()
+        CompositionContainerShape^ ContainerShape_044()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_046());
+            shapes->Append(ContainerShape_045());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_24());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -972,22 +966,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_046()
+        CompositionContainerShape^ ContainerShape_045()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_23());
             return result;
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_047()
+        CompositionContainerShape^ ContainerShape_046()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_048());
+            shapes->Append(ContainerShape_047());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_25());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1000,22 +994,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_048()
+        CompositionContainerShape^ ContainerShape_047()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_24());
             return result;
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_049()
+        CompositionContainerShape^ ContainerShape_048()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_050());
+            shapes->Append(ContainerShape_049());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_26());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1028,22 +1022,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_050()
+        CompositionContainerShape^ ContainerShape_049()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_25());
             return result;
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_051()
+        CompositionContainerShape^ ContainerShape_050()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_052());
+            shapes->Append(ContainerShape_051());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_27());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1056,22 +1050,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_052()
+        CompositionContainerShape^ ContainerShape_051()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_26());
             return result;
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_053()
+        CompositionContainerShape^ ContainerShape_052()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_054());
+            shapes->Append(ContainerShape_053());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_28());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1084,22 +1078,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_054()
+        CompositionContainerShape^ ContainerShape_053()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_27());
             return result;
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_055()
+        CompositionContainerShape^ ContainerShape_054()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_056());
+            shapes->Append(ContainerShape_055());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_29());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1112,10 +1106,10 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_056()
+        CompositionContainerShape^ ContainerShape_055()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_28());
             shapes->Append(SpriteShape_29());
@@ -1123,12 +1117,12 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_057()
+        CompositionContainerShape^ ContainerShape_056()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_058());
+            shapes->Append(ContainerShape_057());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_30());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1141,22 +1135,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_058()
+        CompositionContainerShape^ ContainerShape_057()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_30());
             return result;
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_059()
+        CompositionContainerShape^ ContainerShape_058()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_060());
+            shapes->Append(ContainerShape_059());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_31());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1169,22 +1163,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_060()
+        CompositionContainerShape^ ContainerShape_059()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_31());
             return result;
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_061()
+        CompositionContainerShape^ ContainerShape_060()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_062());
+            shapes->Append(ContainerShape_061());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_33());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1197,22 +1191,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 9
-        CompositionContainerShape^ ContainerShape_062()
+        CompositionContainerShape^ ContainerShape_061()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_32());
             return result;
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_063()
+        CompositionContainerShape^ ContainerShape_062()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_064());
+            shapes->Append(ContainerShape_063());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_34());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1225,22 +1219,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 8
-        CompositionContainerShape^ ContainerShape_064()
+        CompositionContainerShape^ ContainerShape_063()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_33());
             return result;
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_065()
+        CompositionContainerShape^ ContainerShape_064()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_066());
+            shapes->Append(ContainerShape_065());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_35());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1253,22 +1247,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 7
-        CompositionContainerShape^ ContainerShape_066()
+        CompositionContainerShape^ ContainerShape_065()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_34());
             return result;
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_067()
+        CompositionContainerShape^ ContainerShape_066()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_068());
+            shapes->Append(ContainerShape_067());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_36());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1281,22 +1275,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 6
-        CompositionContainerShape^ ContainerShape_068()
+        CompositionContainerShape^ ContainerShape_067()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_35());
             return result;
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_069()
+        CompositionContainerShape^ ContainerShape_068()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_070());
+            shapes->Append(ContainerShape_069());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_37());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1309,22 +1303,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 5
-        CompositionContainerShape^ ContainerShape_070()
+        CompositionContainerShape^ ContainerShape_069()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_36());
             return result;
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_071()
+        CompositionContainerShape^ ContainerShape_070()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_072());
+            shapes->Append(ContainerShape_071());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_38());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1337,22 +1331,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 4
-        CompositionContainerShape^ ContainerShape_072()
+        CompositionContainerShape^ ContainerShape_071()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_37());
             return result;
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_073()
+        CompositionContainerShape^ ContainerShape_072()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_074());
+            shapes->Append(ContainerShape_073());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_39());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1365,22 +1359,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 12
-        CompositionContainerShape^ ContainerShape_074()
+        CompositionContainerShape^ ContainerShape_073()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_38());
             return result;
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_075()
+        CompositionContainerShape^ ContainerShape_074()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_076());
+            shapes->Append(ContainerShape_075());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_40());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1393,22 +1387,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 11
-        CompositionContainerShape^ ContainerShape_076()
+        CompositionContainerShape^ ContainerShape_075()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_39());
             return result;
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_077()
+        CompositionContainerShape^ ContainerShape_076()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_078());
+            shapes->Append(ContainerShape_077());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_41());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1421,22 +1415,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 10
-        CompositionContainerShape^ ContainerShape_078()
+        CompositionContainerShape^ ContainerShape_077()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_40());
             return result;
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_079()
+        CompositionContainerShape^ ContainerShape_078()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_080());
+            shapes->Append(ContainerShape_079());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_42());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1449,10 +1443,10 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 3
-        CompositionContainerShape^ ContainerShape_080()
+        CompositionContainerShape^ ContainerShape_079()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_41());
             shapes->Append(SpriteShape_42());
@@ -1460,12 +1454,12 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_081()
+        CompositionContainerShape^ ContainerShape_080()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_082());
+            shapes->Append(ContainerShape_081());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_43());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1478,22 +1472,22 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 2
-        CompositionContainerShape^ ContainerShape_082()
+        CompositionContainerShape^ ContainerShape_081()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_43());
             return result;
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_083()
+        CompositionContainerShape^ ContainerShape_082()
         {
             auto result = _c->CreateContainerShape();
             result->TransformMatrix = { 0, 0, 0, 0, 0, 0 };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_084());
+            shapes->Append(ContainerShape_083());
             result->StartAnimation("TransformMatrix._11", ScalarAnimation_1_to_0_44());
             auto controller = result->TryGetAnimationController("TransformMatrix._11");
             controller->Pause();
@@ -1506,23 +1500,25 @@ namespace
         }
 
         // Layer (Shape): Shape Layer 1
-        CompositionContainerShape^ ContainerShape_084()
+        CompositionContainerShape^ ContainerShape_083()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { 47.875F, 48 };
+            result->TransformMatrix = { 1, 0, 0, 1, 47.875F, 48 };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_44());
             return result;
         }
 
         // Layer (Shape): Cake
-        CompositionContainerShape^ ContainerShape_085()
+        CompositionContainerShape^ ContainerShape_084()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_086());
+            shapes->Append(SpriteShape_45());
+            shapes->Append(SpriteShape_46());
+            shapes->Append(SpriteShape_47());
             result->StartAnimation("Scale", Vector2Animation_0());
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -1530,215 +1526,25 @@ namespace
             return result;
         }
 
-        // Layer (Shape): Cake
-        CompositionContainerShape^ ContainerShape_086()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { -48.5F, -91.25F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_45());
-            shapes->Append(SpriteShape_46());
-            shapes->Append(SpriteShape_47());
-            shapes->Append(ContainerShape_087());
-            shapes->Append(ContainerShape_088());
-            shapes->Append(ContainerShape_089());
-            shapes->Append(ContainerShape_090());
-            shapes->Append(ContainerShape_091());
-            shapes->Append(ContainerShape_092());
-            shapes->Append(ContainerShape_093());
-            shapes->Append(ContainerShape_094());
-            shapes->Append(ContainerShape_096());
-            shapes->Append(ContainerShape_098());
-            shapes->Append(ContainerShape_100());
-            shapes->Append(ContainerShape_102());
-            shapes->Append(ContainerShape_104());
-            shapes->Append(ContainerShape_106());
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_087()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_088()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_089()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_090()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_091()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_092()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_093()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // ShapeGroup: Group 7
-        CompositionContainerShape^ ContainerShape_094()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            result->Scale = { 0.873979986F, 0.873979986F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_095());
-            return result;
-        }
-
-        // ShapeGroup: Group 7
-        CompositionContainerShape^ ContainerShape_095()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 6
-        CompositionContainerShape^ ContainerShape_096()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            result->Scale = { 0.867699981F, 0.867699981F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_097());
-            return result;
-        }
-
-        // ShapeGroup: Group 6
-        CompositionContainerShape^ ContainerShape_097()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 5
-        CompositionContainerShape^ ContainerShape_098()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            result->Scale = { 0.880330026F, 0.880330026F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_099());
-            return result;
-        }
-
-        // ShapeGroup: Group 5
-        CompositionContainerShape^ ContainerShape_099()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 4
-        CompositionContainerShape^ ContainerShape_100()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            result->Scale = { 0.85777998F, 0.85777998F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_101());
-            return result;
-        }
-
-        // ShapeGroup: Group 4
-        CompositionContainerShape^ ContainerShape_101()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 3
-        CompositionContainerShape^ ContainerShape_102()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            result->Scale = { 0.827109993F, 0.827109993F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_103());
-            return result;
-        }
-
-        // ShapeGroup: Group 3
-        CompositionContainerShape^ ContainerShape_103()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 2
-        CompositionContainerShape^ ContainerShape_104()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            result->Scale = { 0.850629985F, 0.850629985F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_105());
-            return result;
-        }
-
-        // ShapeGroup: Group 2
-        CompositionContainerShape^ ContainerShape_105()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 1
-        CompositionContainerShape^ ContainerShape_106()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
-            result->Scale = { 0.865750015F, 0.865750015F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_107());
-            return result;
-        }
-
-        // ShapeGroup: Group 1
-        CompositionContainerShape^ ContainerShape_107()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
         // Layer (Shape): Cake 2
-        CompositionContainerShape^ ContainerShape_108()
+        CompositionContainerShape^ ContainerShape_085()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_109());
+            shapes->Append(SpriteShape_48());
+            shapes->Append(SpriteShape_49());
+            shapes->Append(SpriteShape_50());
+            shapes->Append(SpriteShape_51());
+            shapes->Append(SpriteShape_52());
+            shapes->Append(SpriteShape_53());
+            shapes->Append(SpriteShape_54());
+            shapes->Append(SpriteShape_55());
+            shapes->Append(SpriteShape_56());
+            shapes->Append(SpriteShape_57());
+            shapes->Append(SpriteShape_58());
+            shapes->Append(SpriteShape_59());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -1746,152 +1552,14 @@ namespace
             return result;
         }
 
-        // Layer (Shape): Cake 2
-        CompositionContainerShape^ ContainerShape_109()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { -48.5F, -91.25F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_48());
-            shapes->Append(SpriteShape_49());
-            shapes->Append(SpriteShape_50());
-            shapes->Append(SpriteShape_51());
-            shapes->Append(SpriteShape_52());
-            shapes->Append(ContainerShape_110());
-            shapes->Append(ContainerShape_111());
-            shapes->Append(ContainerShape_112());
-            shapes->Append(ContainerShape_113());
-            shapes->Append(ContainerShape_114());
-            shapes->Append(ContainerShape_115());
-            shapes->Append(ContainerShape_116());
-            shapes->Append(ContainerShape_117());
-            shapes->Append(ContainerShape_118());
-            shapes->Append(ContainerShape_119());
-            shapes->Append(ContainerShape_120());
-            shapes->Append(ContainerShape_121());
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_110()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_111()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_112()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_113()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_114()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // ShapeGroup: Group 7
-        CompositionContainerShape^ ContainerShape_115()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            result->Scale = { 0.873979986F, 0.873979986F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_53());
-            return result;
-        }
-
-        // ShapeGroup: Group 6
-        CompositionContainerShape^ ContainerShape_116()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            result->Scale = { 0.867699981F, 0.867699981F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_54());
-            return result;
-        }
-
-        // ShapeGroup: Group 5
-        CompositionContainerShape^ ContainerShape_117()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            result->Scale = { 0.880330026F, 0.880330026F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_55());
-            return result;
-        }
-
-        // ShapeGroup: Group 4
-        CompositionContainerShape^ ContainerShape_118()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            result->Scale = { 0.85777998F, 0.85777998F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_56());
-            return result;
-        }
-
-        // ShapeGroup: Group 3
-        CompositionContainerShape^ ContainerShape_119()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            result->Scale = { 0.827109993F, 0.827109993F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_57());
-            return result;
-        }
-
-        // ShapeGroup: Group 2
-        CompositionContainerShape^ ContainerShape_120()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            result->Scale = { 0.850629985F, 0.850629985F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_58());
-            return result;
-        }
-
-        // ShapeGroup: Group 1
-        CompositionContainerShape^ ContainerShape_121()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
-            result->Scale = { 0.865750015F, 0.865750015F };
-            auto shapes = result->Shapes;
-            shapes->Append(SpriteShape_59());
-            return result;
-        }
-
         // Layer (Shape): Sprinkles 2
-        CompositionContainerShape^ ContainerShape_122()
+        CompositionContainerShape^ ContainerShape_086()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_123());
+            shapes->Append(ContainerShape_087());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -1900,176 +1568,32 @@ namespace
         }
 
         // Transforms for Sprinkles 2
-        CompositionContainerShape^ ContainerShape_123()
+        CompositionContainerShape^ ContainerShape_087()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { 13.2340002F, -66.8209991F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_124());
-            shapes->Append(ContainerShape_125());
-            shapes->Append(ContainerShape_126());
-            shapes->Append(ContainerShape_127());
-            shapes->Append(ContainerShape_128());
-            shapes->Append(ContainerShape_129());
-            shapes->Append(ContainerShape_130());
-            shapes->Append(ContainerShape_131());
-            shapes->Append(ContainerShape_132());
-            shapes->Append(ContainerShape_133());
-            shapes->Append(ContainerShape_134());
-            shapes->Append(ContainerShape_135());
-            shapes->Append(ContainerShape_136());
             shapes->Append(SpriteShape_60());
-            shapes->Append(ContainerShape_137());
-            shapes->Append(ContainerShape_138());
-            shapes->Append(ContainerShape_139());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(61.734,24.429)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_1());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_124()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_125()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_126()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_127()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_128()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_129()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_130()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_131()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_132()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_133()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_134()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_135()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_136()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_137()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_138()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 2
-        CompositionContainerShape^ ContainerShape_139()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(61.734,24.429)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 3
-        CompositionContainerShape^ ContainerShape_140()
+        CompositionContainerShape^ ContainerShape_088()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_141());
+            shapes->Append(ContainerShape_089());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2078,176 +1602,32 @@ namespace
         }
 
         // Transforms for Sprinkles 3
-        CompositionContainerShape^ ContainerShape_141()
+        CompositionContainerShape^ ContainerShape_089()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { 28.9080009F, -56.9640007F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_142());
-            shapes->Append(ContainerShape_143());
-            shapes->Append(ContainerShape_144());
-            shapes->Append(ContainerShape_145());
-            shapes->Append(ContainerShape_146());
-            shapes->Append(ContainerShape_147());
-            shapes->Append(ContainerShape_148());
-            shapes->Append(ContainerShape_149());
-            shapes->Append(ContainerShape_150());
-            shapes->Append(ContainerShape_151());
-            shapes->Append(ContainerShape_152());
-            shapes->Append(ContainerShape_153());
             shapes->Append(SpriteShape_61());
-            shapes->Append(ContainerShape_154());
-            shapes->Append(ContainerShape_155());
-            shapes->Append(ContainerShape_156());
-            shapes->Append(ContainerShape_157());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(77.408,34.286)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_2());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_142()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_143()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_144()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_145()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_146()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_147()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_148()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_149()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_150()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_151()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_152()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_153()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_154()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_155()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_156()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 3
-        CompositionContainerShape^ ContainerShape_157()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(77.408,34.286)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 4
-        CompositionContainerShape^ ContainerShape_158()
+        CompositionContainerShape^ ContainerShape_090()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_159());
+            shapes->Append(ContainerShape_091());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2256,176 +1636,32 @@ namespace
         }
 
         // Transforms for Sprinkles 4
-        CompositionContainerShape^ ContainerShape_159()
+        CompositionContainerShape^ ContainerShape_091()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { 16.1739998F, -42.2700005F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_160());
-            shapes->Append(ContainerShape_161());
-            shapes->Append(ContainerShape_162());
-            shapes->Append(ContainerShape_163());
-            shapes->Append(ContainerShape_164());
-            shapes->Append(ContainerShape_165());
-            shapes->Append(ContainerShape_166());
-            shapes->Append(ContainerShape_167());
-            shapes->Append(ContainerShape_168());
-            shapes->Append(ContainerShape_169());
-            shapes->Append(ContainerShape_170());
             shapes->Append(SpriteShape_62());
-            shapes->Append(ContainerShape_171());
-            shapes->Append(ContainerShape_172());
-            shapes->Append(ContainerShape_173());
-            shapes->Append(ContainerShape_174());
-            shapes->Append(ContainerShape_175());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(64.674,48.98)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_3());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_160()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_161()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_162()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_163()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_164()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_165()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_166()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_167()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_168()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_169()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_170()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_171()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_172()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_173()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_174()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 4
-        CompositionContainerShape^ ContainerShape_175()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(64.674,48.98)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 5
-        CompositionContainerShape^ ContainerShape_176()
+        CompositionContainerShape^ ContainerShape_092()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_177());
+            shapes->Append(ContainerShape_093());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2434,176 +1670,32 @@ namespace
         }
 
         // Transforms for Sprinkles 5
-        CompositionContainerShape^ ContainerShape_177()
+        CompositionContainerShape^ ContainerShape_093()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { -0.477999985F, -36.3909988F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_178());
-            shapes->Append(ContainerShape_179());
-            shapes->Append(ContainerShape_180());
-            shapes->Append(ContainerShape_181());
-            shapes->Append(ContainerShape_182());
-            shapes->Append(ContainerShape_183());
-            shapes->Append(ContainerShape_184());
-            shapes->Append(ContainerShape_185());
-            shapes->Append(ContainerShape_186());
-            shapes->Append(ContainerShape_187());
             shapes->Append(SpriteShape_63());
-            shapes->Append(ContainerShape_188());
-            shapes->Append(ContainerShape_189());
-            shapes->Append(ContainerShape_190());
-            shapes->Append(ContainerShape_191());
-            shapes->Append(ContainerShape_192());
-            shapes->Append(ContainerShape_193());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(48.022,54.859)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_4());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_178()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_179()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_180()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_181()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_182()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_183()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_184()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_185()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_186()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_187()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_188()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_189()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_190()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_191()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_192()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 5
-        CompositionContainerShape^ ContainerShape_193()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(48.022,54.859)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 6
-        CompositionContainerShape^ ContainerShape_194()
+        CompositionContainerShape^ ContainerShape_094()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_195());
+            shapes->Append(ContainerShape_095());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2612,176 +1704,32 @@ namespace
         }
 
         // Transforms for Sprinkles 6
-        CompositionContainerShape^ ContainerShape_195()
+        CompositionContainerShape^ ContainerShape_095()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { -20.5620003F, -42.7589989F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_196());
-            shapes->Append(ContainerShape_197());
-            shapes->Append(ContainerShape_198());
-            shapes->Append(ContainerShape_199());
-            shapes->Append(ContainerShape_200());
-            shapes->Append(ContainerShape_201());
-            shapes->Append(ContainerShape_202());
-            shapes->Append(ContainerShape_203());
-            shapes->Append(ContainerShape_204());
-            shapes->Append(ContainerShape_205());
-            shapes->Append(ContainerShape_206());
-            shapes->Append(ContainerShape_207());
-            shapes->Append(ContainerShape_208());
-            shapes->Append(ContainerShape_209());
             shapes->Append(SpriteShape_64());
-            shapes->Append(ContainerShape_210());
-            shapes->Append(ContainerShape_211());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(27.938,48.491)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_5());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_196()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_197()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_198()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_199()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_200()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_201()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_202()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_203()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_204()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_205()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_206()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_207()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_208()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_209()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_210()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 6
-        CompositionContainerShape^ ContainerShape_211()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(27.938,48.491)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 7
-        CompositionContainerShape^ ContainerShape_212()
+        CompositionContainerShape^ ContainerShape_096()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_213());
+            shapes->Append(ContainerShape_097());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2790,176 +1738,32 @@ namespace
         }
 
         // Transforms for Sprinkles 7
-        CompositionContainerShape^ ContainerShape_213()
+        CompositionContainerShape^ ContainerShape_097()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { -34.276001F, -56.473999F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_214());
-            shapes->Append(ContainerShape_215());
-            shapes->Append(ContainerShape_216());
-            shapes->Append(ContainerShape_217());
-            shapes->Append(ContainerShape_218());
-            shapes->Append(ContainerShape_219());
-            shapes->Append(ContainerShape_220());
-            shapes->Append(ContainerShape_221());
-            shapes->Append(ContainerShape_222());
-            shapes->Append(ContainerShape_223());
-            shapes->Append(ContainerShape_224());
-            shapes->Append(ContainerShape_225());
-            shapes->Append(ContainerShape_226());
-            shapes->Append(ContainerShape_227());
-            shapes->Append(ContainerShape_228());
             shapes->Append(SpriteShape_65());
-            shapes->Append(ContainerShape_229());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(14.224,34.776)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_6());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_214()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_215()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_216()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_217()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_218()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_219()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_220()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_221()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_222()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_223()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_224()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_225()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_226()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_227()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_228()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 7
-        CompositionContainerShape^ ContainerShape_229()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(14.224,34.776)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Sprinkles 8
-        CompositionContainerShape^ ContainerShape_230()
+        CompositionContainerShape^ ContainerShape_098()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_231());
+            shapes->Append(ContainerShape_099());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -2968,392 +1772,34 @@ namespace
         }
 
         // Transforms for Sprinkles 8
-        CompositionContainerShape^ ContainerShape_231()
+        CompositionContainerShape^ ContainerShape_099()
         {
             auto result = _c->CreateContainerShape();
             auto propertySet = result->Properties;
             propertySet->InsertVector2("Position", { -13.7040005F, -67.25F });
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_232());
-            shapes->Append(ContainerShape_233());
-            shapes->Append(ContainerShape_234());
-            shapes->Append(ContainerShape_235());
-            shapes->Append(ContainerShape_236());
-            shapes->Append(ContainerShape_237());
-            shapes->Append(ContainerShape_238());
-            shapes->Append(ContainerShape_239());
-            shapes->Append(ContainerShape_240());
-            shapes->Append(ContainerShape_241());
-            shapes->Append(ContainerShape_242());
-            shapes->Append(ContainerShape_243());
-            shapes->Append(ContainerShape_244());
-            shapes->Append(ContainerShape_245());
-            shapes->Append(ContainerShape_246());
-            shapes->Append(ContainerShape_247());
             shapes->Append(SpriteShape_66());
-            _reusableExpressionAnimation->ClearAllParameters();
-            _reusableExpressionAnimation->Expression = "my.Position - Vector2(34.796,24)";
-            _reusableExpressionAnimation->SetReferenceParameter("my", result);
-            result->StartAnimation("Offset", _reusableExpressionAnimation);
             result->StartAnimation("Position", Vector2Animation_7());
             auto controller = result->TryGetAnimationController("Position");
             controller->Pause();
             controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_232()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_233()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_234()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_235()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_236()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_237()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_238()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_239()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_240()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_241()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_242()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_243()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_244()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_245()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_246()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            return result;
-        }
-
-        // Transforms: Sprinkles 8
-        CompositionContainerShape^ ContainerShape_247()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
+            _reusableExpressionAnimation->ClearAllParameters();
+            _reusableExpressionAnimation->Expression = "my.Position - Vector2(34.796,24)";
+            _reusableExpressionAnimation->SetReferenceParameter("my", result);
+            result->StartAnimation("Offset", _reusableExpressionAnimation);
             return result;
         }
 
         // Layer (Shape): Candle
-        CompositionContainerShape^ ContainerShape_248()
+        CompositionContainerShape^ ContainerShape_100()
         {
             auto result = _c->CreateContainerShape();
             result->Offset = { 48.5F, 91.25F };
             result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_249());
-            result->StartAnimation("Scale", _vector2Animation_0);
-            auto controller = result->TryGetAnimationController("Scale");
-            controller->Pause();
-            controller->StartAnimation("Progress", _scalarExpressionAnimation);
-            return result;
-        }
-
-        // Layer (Shape): Candle
-        CompositionContainerShape^ ContainerShape_249()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { -48.5F, -91.25F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_250());
-            shapes->Append(ContainerShape_251());
-            shapes->Append(ContainerShape_252());
-            shapes->Append(ContainerShape_253());
-            shapes->Append(ContainerShape_254());
             shapes->Append(SpriteShape_67());
             shapes->Append(SpriteShape_68());
             shapes->Append(SpriteShape_69());
-            shapes->Append(ContainerShape_255());
-            shapes->Append(ContainerShape_256());
-            shapes->Append(ContainerShape_257());
-            shapes->Append(ContainerShape_259());
-            shapes->Append(ContainerShape_261());
-            shapes->Append(ContainerShape_263());
-            shapes->Append(ContainerShape_265());
-            shapes->Append(ContainerShape_267());
-            shapes->Append(ContainerShape_269());
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_250()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_251()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_252()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_253()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_254()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_255()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.026001F, 9.3210001F };
-            return result;
-        }
-
-        CompositionContainerShape^ ContainerShape_256()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
-            return result;
-        }
-
-        // ShapeGroup: Group 7
-        CompositionContainerShape^ ContainerShape_257()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.0209999F, 54.762001F };
-            result->Scale = { 0.873979986F, 0.873979986F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_258());
-            return result;
-        }
-
-        // ShapeGroup: Group 7
-        CompositionContainerShape^ ContainerShape_258()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 6
-        CompositionContainerShape^ ContainerShape_259()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 64.7710037F, 48.882F };
-            result->Scale = { 0.867699981F, 0.867699981F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_260());
-            return result;
-        }
-
-        // ShapeGroup: Group 6
-        CompositionContainerShape^ ContainerShape_260()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 5
-        CompositionContainerShape^ ContainerShape_261()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
-            result->Scale = { 0.880330026F, 0.880330026F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_262());
-            return result;
-        }
-
-        // ShapeGroup: Group 5
-        CompositionContainerShape^ ContainerShape_262()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 4
-        CompositionContainerShape^ ContainerShape_263()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
-            result->Scale = { 0.85777998F, 0.85777998F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_264());
-            return result;
-        }
-
-        // ShapeGroup: Group 4
-        CompositionContainerShape^ ContainerShape_264()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 3
-        CompositionContainerShape^ ContainerShape_265()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
-            result->Scale = { 0.827109993F, 0.827109993F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_266());
-            return result;
-        }
-
-        // ShapeGroup: Group 3
-        CompositionContainerShape^ ContainerShape_266()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 2
-        CompositionContainerShape^ ContainerShape_267()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 14.224F, 34.6780014F };
-            result->Scale = { 0.850629985F, 0.850629985F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_268());
-            return result;
-        }
-
-        // ShapeGroup: Group 2
-        CompositionContainerShape^ ContainerShape_268()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // ShapeGroup: Group 1
-        CompositionContainerShape^ ContainerShape_269()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
-            result->Scale = { 0.865750015F, 0.865750015F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_270());
-            return result;
-        }
-
-        // ShapeGroup: Group 1
-        CompositionContainerShape^ ContainerShape_270()
-        {
-            auto result = _c->CreateContainerShape();
-            return result;
-        }
-
-        // Layer (Shape): Flame
-        CompositionContainerShape^ ContainerShape_271()
-        {
-            auto result = _c->CreateContainerShape();
-            result->Offset = { 48.5F, 91.25F };
-            result->Scale = { 0.949999988F, 0.949999988F };
-            auto shapes = result->Shapes;
-            shapes->Append(ContainerShape_272());
             result->StartAnimation("Scale", _vector2Animation_0);
             auto controller = result->TryGetAnimationController("Scale");
             controller->Pause();
@@ -3362,13 +1808,18 @@ namespace
         }
 
         // Layer (Shape): Flame
-        CompositionContainerShape^ ContainerShape_272()
+        CompositionContainerShape^ ContainerShape_101()
         {
             auto result = _c->CreateContainerShape();
-            result->Offset = { -48.5F, -91.25F };
+            result->Offset = { 48.5F, 91.25F };
+            result->Scale = { 0.949999988F, 0.949999988F };
             auto shapes = result->Shapes;
             shapes->Append(SpriteShape_70());
             shapes->Append(SpriteShape_71());
+            result->StartAnimation("Scale", _vector2Animation_0);
+            auto controller = result->TryGetAnimationController("Scale");
+            controller->Pause();
+            controller->StartAnimation("Progress", _scalarExpressionAnimation);
             return result;
         }
 
@@ -3388,9 +1839,7 @@ namespace
         ContainerVisual^ ContainerVisual_02()
         {
             auto result = _c->CreateContainerVisual();
-            result->CenterPoint = { 48, 48, 0 };
-            result->Offset = { 102, 93.5F, 0 };
-            result->Scale = { 2.79999995F, 2.79999995F, 1 };
+            result->TransformMatrix = { 2.79999995F, 0, 0, 0, 0, 2.79999995F, 0, 0, 0, 0, 1, 0, 15.6000061F, 7.1000061F, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ContainerVisual_03());
             children->InsertAtTop(ContainerVisual_07());
@@ -3433,7 +1882,7 @@ namespace
         ContainerVisual^ ContainerVisual_05()
         {
             auto result = _c->CreateContainerVisual();
-            result->Offset = { 48, 48, 0 };
+            result->TransformMatrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ContainerVisual_06());
             return result;
@@ -3444,9 +1893,7 @@ namespace
         ContainerVisual^ ContainerVisual_06()
         {
             auto result = _c->CreateContainerVisual();
-            result->CenterPoint = { 48, 48, 0 };
-            result->Offset = { -36.25F, -56.25F, 0 };
-            result->Scale = { 1.20000005F, 1.20000005F, 1 };
+            result->TransformMatrix = { 1.20000005F, 0, 0, 0, 0, 1.20000005F, 0, 0, 0, 0, 1, 0, -45.8500023F, -65.8500061F, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ShapeVisual_0());
             return result;
@@ -3485,7 +1932,7 @@ namespace
         ContainerVisual^ ContainerVisual_09()
         {
             auto result = _c->CreateContainerVisual();
-            result->Offset = { 48, 48, 0 };
+            result->TransformMatrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ContainerVisual_10());
             return result;
@@ -3496,10 +1943,7 @@ namespace
         ContainerVisual^ ContainerVisual_10()
         {
             auto result = _c->CreateContainerVisual();
-            result->CenterPoint = { 48, 48, 0 };
-            result->Offset = { -68.75F, -63.75F, 0 };
-            result->RotationAngleInDegrees = -31;
-            result->Scale = { 1.21000004F, 1.21000004F, 1 };
+            result->TransformMatrix = { 1.03717244F, -0.623196065F, 0, 0, 0.623196065F, 1.03717244F, 0, 0, 0, 0, 1, 0, -100.447693F, -35.6208649F, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ShapeVisual_1());
             return result;
@@ -3538,7 +1982,7 @@ namespace
         ContainerVisual^ ContainerVisual_13()
         {
             auto result = _c->CreateContainerVisual();
-            result->Offset = { 48, 48, 0 };
+            result->TransformMatrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ContainerVisual_14());
             return result;
@@ -3549,10 +1993,8 @@ namespace
         ContainerVisual^ ContainerVisual_14()
         {
             auto result = _c->CreateContainerVisual();
-            result->CenterPoint = { 48, 48, 0 };
             result->Clip = GeometricClip();
-            result->Offset = { -39.75F, -37.25F, 0 };
-            result->Scale = { -1, 1, 1 };
+            result->TransformMatrix = { -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 56.25F, -37.25F, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ShapeVisual_2());
             return result;
@@ -3591,7 +2033,7 @@ namespace
         ContainerVisual^ ContainerVisual_17()
         {
             auto result = _c->CreateContainerVisual();
-            result->Offset = { 48, 48, 0 };
+            result->TransformMatrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 48, 48, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ContainerVisual_18());
             return result;
@@ -3602,7 +2044,7 @@ namespace
         ContainerVisual^ ContainerVisual_18()
         {
             auto result = _c->CreateContainerVisual();
-            result->Offset = { -48, -48, 0 };
+            result->TransformMatrix = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -48, -48, 0, 1 };
             auto children = result->Children;
             children->InsertAtTop(ShapeVisual_3());
             return result;
@@ -3641,36 +2083,31 @@ namespace
         // Scale
         CubicBezierEasingFunction^ CubicBezierEasingFunction_06()
         {
-            return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.150000006F, 1 });
-        }
-
-        // Scale
-        CubicBezierEasingFunction^ CubicBezierEasingFunction_07()
-        {
             return _c->CreateCubicBezierEasingFunction({ 1, 0 }, { 0.75F, 1 });
         }
 
-        CubicBezierEasingFunction^ CubicBezierEasingFunction_08()
+        CubicBezierEasingFunction^ CubicBezierEasingFunction_07()
         {
-            return _cubicBezierEasingFunction_08 = _c->CreateCubicBezierEasingFunction({ 0.349999994F, 0 }, { 0.349999994F, 1 });
+            return _cubicBezierEasingFunction_07 = _c->CreateCubicBezierEasingFunction({ 0.349999994F, 0 }, { 0.349999994F, 1 });
         }
 
-        // Path 1
-        //   Path 1.PathGeometry
-        //     Path
-        CubicBezierEasingFunction^ CubicBezierEasingFunction_09()
+        // Layer (Shape): Cake 2
+        //   Path 1
+        //     Path 1.PathGeometry
+        //       Path
+        CubicBezierEasingFunction^ CubicBezierEasingFunction_08()
         {
             return _c->CreateCubicBezierEasingFunction({ 0.166999996F, 0.166999996F }, { 0.833000004F, 1 });
         }
 
-        CubicBezierEasingFunction^ CubicBezierEasingFunction_10()
+        CubicBezierEasingFunction^ CubicBezierEasingFunction_09()
         {
-            return _cubicBezierEasingFunction_10 = _c->CreateCubicBezierEasingFunction({ 0.349999994F, 0 }, { 0.75F, 1 });
+            return _cubicBezierEasingFunction_09 = _c->CreateCubicBezierEasingFunction({ 0.349999994F, 0 }, { 0.75F, 1 });
         }
 
-        CubicBezierEasingFunction^ CubicBezierEasingFunction_11()
+        CubicBezierEasingFunction^ CubicBezierEasingFunction_10()
         {
-            return _cubicBezierEasingFunction_11 = _c->CreateCubicBezierEasingFunction({ 0.850000024F, 0 }, { 0.75F, 1 });
+            return _cubicBezierEasingFunction_10 = _c->CreateCubicBezierEasingFunction({ 0.850000024F, 0 }, { 0.75F, 1 });
         }
 
         // Transforms for Null 130
@@ -3694,7 +2131,9 @@ namespace
             sink->AddLine({ -9.625F, -28.5F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3709,7 +2148,9 @@ namespace
             sink->AddLine({ -12.625F, -39.375F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3724,7 +2165,9 @@ namespace
             sink->AddLine({ -43.75F, -18.875F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3739,7 +2182,9 @@ namespace
             sink->AddLine({ -12.875F, -15.625F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3754,7 +2199,9 @@ namespace
             sink->AddLine({ -19.125F, -42.5F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3769,7 +2216,9 @@ namespace
             sink->AddLine({ -39.25F, -32.875F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3784,7 +2233,9 @@ namespace
             sink->AddLine({ -45.375F, -20.75F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3799,7 +2250,9 @@ namespace
             sink->AddLine({ -17.625F, -7.625F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3814,7 +2267,9 @@ namespace
             sink->AddLine({ -8.375F, -11.875F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3829,7 +2284,9 @@ namespace
             sink->AddLine({ -41.875F, -19.625F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3844,7 +2301,9 @@ namespace
             sink->AddLine({ -12.25F, -9 });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3859,7 +2318,9 @@ namespace
             sink->AddLine({ -34.875F, -9.875F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3882,7 +2343,9 @@ namespace
             sink->AddLine({ 13.75F, -5 });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3902,7 +2365,9 @@ namespace
             sink->AddLine({ 47.0209999F, -10.1879997F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3921,7 +2386,9 @@ namespace
             sink->AddBezier({ { -25.9890003F, -23.5100002F }, { -47.0209999F, -12.9960003F }, { -47.0209999F, -0.00100000005F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3941,7 +2408,9 @@ namespace
             sink->AddLine({ 44.0810013F, 4.98899984F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -3988,7 +2457,9 @@ namespace
             sink->AddLine({ -47.0209999F, -23.4750004F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4035,7 +2506,9 @@ namespace
             sink->AddBezier({ { 47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4082,7 +2555,9 @@ namespace
             sink->AddBezier({ { 47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4129,7 +2604,9 @@ namespace
             sink->AddBezier({ { 47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F }, { -47.0209999F, -23.4750004F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4152,7 +2629,9 @@ namespace
             sink->AddBezier({ { 2.29299998F, 4.03299999F }, { 2.12700009F, 4.05499983F }, { 1.95899999F, 4.05499983F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4174,7 +2653,9 @@ namespace
             sink->AddBezier({ { -1.01800001F, 3.84599996F }, { -1.52699995F, 4.05700016F }, { -2.05699992F, 4.05700016F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4196,7 +2677,9 @@ namespace
             sink->AddBezier({ { 2.99799991F, 3.84500003F }, { 2.48900008F, 4.05700016F }, { 1.95899999F, 4.05700016F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4219,7 +2702,9 @@ namespace
             sink->AddBezier({ { -1.82099998F, 4.04500008F }, { -1.93900001F, 4.05600023F }, { -2.05699992F, 4.05600023F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4241,7 +2726,9 @@ namespace
             sink->AddBezier({ { -1.50600004F, 4.33599997F }, { -2.0150001F, 4.54699993F }, { -2.546F, 4.54699993F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4263,7 +2750,9 @@ namespace
             sink->AddBezier({ { 3.48799992F, 4.33599997F }, { 2.97900009F, 4.546F }, { 2.44899988F, 4.546F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4285,7 +2774,9 @@ namespace
             sink->AddBezier({ { -1.50600004F, 4.33599997F }, { -2.0150001F, 4.54699993F }, { -2.546F, 4.546F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4307,7 +2798,9 @@ namespace
             sink->AddBezier({ { -1.01800001F, 3.84599996F }, { -1.52699995F, 4.05700016F }, { -2.05699992F, 4.05600023F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4329,7 +2822,9 @@ namespace
             sink->AddBezier({ { 2.99699998F, 3.8440001F }, { 2.48900008F, 4.05499983F }, { 1.95899999F, 4.05499983F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4348,7 +2843,9 @@ namespace
             sink->AddLine({ -3.91799998F, -9.83100033F });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4367,7 +2864,9 @@ namespace
             sink->AddBezier({ { -3.91799998F, -2.16499996F }, { -2.16400003F, -3.91899991F }, { 0, -3.91899991F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4387,7 +2886,9 @@ namespace
             sink->AddBezier({ { -0.00999999978F, -7.3210001F }, { 4.8920002F, 1.68799996F }, { 4.8920002F, 4.39300013F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4407,7 +2908,9 @@ namespace
             sink->AddBezier({ { -0.00999999978F, -7.3210001F }, { 4.8920002F, 1.68799996F }, { 4.8920002F, 4.39300013F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4427,7 +2930,9 @@ namespace
             sink->AddBezier({ { -0.224000007F, -6.47700024F }, { 3.56800008F, -4.9460001F }, { 4.79799986F, 4.41099977F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4447,7 +2952,9 @@ namespace
             sink->AddBezier({ { -0.379999995F, -7.3210001F }, { 4.204F, 1.75100005F }, { 4.204F, 4.45599985F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4467,7 +2974,9 @@ namespace
             sink->AddBezier({ { -0.598999977F, -5.53999996F }, { 2.75500011F, -5.0710001F }, { 4.8920002F, 4.40199995F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4487,7 +2996,9 @@ namespace
             sink->AddBezier({ { -1.31799996F, -6.3210001F }, { 3.41199994F, -3.74099994F }, { 4.8920002F, 4.16099977F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4507,7 +3018,9 @@ namespace
             sink->AddBezier({ { -0.349000007F, -5.2579999F }, { 1.72399998F, -6.28999996F }, { 4.829F, 4.00500011F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4527,7 +3040,9 @@ namespace
             sink->AddBezier({ { -0.317999989F, -6.5710001F }, { 2.97399998F, -3.67799997F }, { 4.454F, 4.22399998F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4547,7 +3062,9 @@ namespace
             sink->AddBezier({ { 0.681999981F, -5.72700024F }, { 2.03699994F, -6.44700003F }, { 4.6420002F, 3.60299993F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4567,7 +3084,9 @@ namespace
             sink->AddBezier({ { -0.254999995F, -5.7579999F }, { 1.91199994F, -3.6329999F }, { 3.89199996F, 2.97399998F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4587,7 +3106,9 @@ namespace
             sink->AddBezier({ { 0.214000002F, -6.28999996F }, { 1.84899998F, -7.38399982F }, { 4.79799986F, 3.0539999F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4607,7 +3128,9 @@ namespace
             sink->AddBezier({ { 0.370000005F, -6.5079999F }, { 2.97399998F, -4.75899982F }, { 4.829F, 2.94700003F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4627,7 +3150,9 @@ namespace
             sink->AddBezier({ { -0.0289999992F, -6.38700008F }, { 2.75500011F, -4.78999996F }, { 4.72900009F, 3.67600012F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4647,7 +3172,9 @@ namespace
             sink->AddBezier({ { 0.495000005F, -7.1329999F }, { 2.22399998F, -3.3829999F }, { 4.704F, 3.13499999F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4666,7 +3193,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07500005F, 4.01399994F }, { -0.00100000005F, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4685,7 +3214,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07500005F, 4.01399994F }, { -0.00100000005F, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4704,7 +3235,9 @@ namespace
             sink->AddBezier({ { 2.38800001F, 3.14599991F }, { 1.07500005F, 4.01399994F }, { -0.00100000005F, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4723,7 +3256,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07599998F, 4.01399994F }, { 0, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4742,7 +3277,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07500005F, 4.01399994F }, { -0.00100000005F, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4761,7 +3298,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.13800001F, 2.88899994F }, { 0.061999999F, 2.88800001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4780,7 +3319,9 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07599998F, 3.38899994F }, { 0, 3.38800001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
             return result;
         }
 
@@ -4799,7 +3340,16 @@ namespace
             sink->AddBezier({ { 1.95099998F, 3.14599991F }, { 1.07500005F, 4.01399994F }, { -0.00100000005F, 4.01300001F } });
             sink->EndFigure(D2D1_FIGURE_END_OPEN);
             FFHR(sink->Close());
-            result = new GeoSource(path.Get());
+            GeoSource* rawResult = new GeoSource(path.Get());
+            result = rawResult;
+            rawResult->Release();
+            return result;
+        }
+
+        StepEasingFunction^ HoldThenStepEasingFunction()
+        {
+            auto result = _holdThenStepEasingFunction = _c->CreateStepEasingFunction();
+            result->IsFinalStepSingleFrame = true;
             return result;
         }
 
@@ -6015,7 +4565,8 @@ namespace
             return result;
         }
 
-        // Path 1
+        // Layer (Shape): Cake 2
+        //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_49()
         {
@@ -6027,7 +4578,7 @@ namespace
             return result;
         }
 
-        // ShapeGroup: Group 7
+        // Layer (Shape): Cake 2
         //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_50()
@@ -6050,7 +4601,7 @@ namespace
             return result;
         }
 
-        // ShapeGroup: Group 4
+        // Layer (Shape): Cake 2
         //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_53()
@@ -6098,7 +4649,8 @@ namespace
             return result;
         }
 
-        // Path 1
+        // Layer (Shape): Candle
+        //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_59()
         {
@@ -6113,7 +4665,8 @@ namespace
             return result;
         }
 
-        // Path 1
+        // Layer (Shape): Flame
+        //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_61()
         {
@@ -6125,7 +4678,8 @@ namespace
             return result;
         }
 
-        // Path 1
+        // Layer (Shape): Flame
+        //   Path 1
         // Path 1.PathGeometry
         CompositionPathGeometry^ PathGeometry_62()
         {
@@ -6137,22 +4691,24 @@ namespace
             return result;
         }
 
-        // Path 1
-        //   Path 1.PathGeometry
+        // Layer (Shape): Cake 2
+        //   Path 1
+        //     Path 1.PathGeometry
         // Path
         PathKeyFrameAnimation^ PathKeyFrameAnimation_0()
         {
             auto result = _c->CreatePathKeyFrameAnimation();
             result->Duration = { c_durationTicks };
             result->InsertKeyFrame(0, CompositionPath_17(), _linearEasingFunction);
-            result->InsertKeyFrame(0.583333313F, ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_18())), CubicBezierEasingFunction_09());
-            result->InsertKeyFrame(0.75F, ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_19())), CubicBezierEasingFunction_10());
-            result->InsertKeyFrame(0.983333349F, _compositionPath_17, _cubicBezierEasingFunction_08);
+            result->InsertKeyFrame(0.583333313F, ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_18())), CubicBezierEasingFunction_08());
+            result->InsertKeyFrame(0.75F, ref new CompositionPath(CanvasGeometryToIGeometrySource2D(Geometry_19())), CubicBezierEasingFunction_09());
+            result->InsertKeyFrame(0.983333349F, _compositionPath_17, _cubicBezierEasingFunction_07);
             return result;
         }
 
-        // Path 1
-        //   Path 1.PathGeometry
+        // Layer (Shape): Flame
+        //   Path 1
+        //     Path 1.PathGeometry
         // Path
         PathKeyFrameAnimation^ PathKeyFrameAnimation_1()
         {
@@ -6174,8 +4730,9 @@ namespace
             return result;
         }
 
-        // Path 1
-        //   Path 1.PathGeometry
+        // Layer (Shape): Flame
+        //   Path 1
+        //     Path 1.PathGeometry
         // Path
         PathKeyFrameAnimation^ PathKeyFrameAnimation_2()
         {
@@ -6248,8 +4805,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, LinearEasingFunction());
-            result->InsertKeyFrame(0.583333313F, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, StepThenHoldEasingFunction());
+            result->InsertKeyFrame(0.583333313F, 0, LinearEasingFunction());
             result->InsertKeyFrame(0.649999976F, 1, CubicBezierEasingFunction_00());
             return result;
         }
@@ -6259,7 +4816,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.649999976F, 1, CubicBezierEasingFunction_01());
             return result;
@@ -6270,7 +4827,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.466666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6281,7 +4838,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6292,7 +4849,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6303,7 +4860,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6314,7 +4871,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6325,7 +4882,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6336,7 +4893,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.5F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6347,7 +4904,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6358,7 +4915,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6369,7 +4926,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6380,7 +4937,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6391,7 +4948,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6402,7 +4959,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6413,7 +4970,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6424,7 +4981,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6435,7 +4992,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6446,7 +5003,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.483333319F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6457,7 +5014,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.483333319F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6468,7 +5025,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.466666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6479,7 +5036,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6490,7 +5047,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6501,7 +5058,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6512,7 +5069,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.5F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6523,7 +5080,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6534,7 +5091,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.649999976F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6545,7 +5102,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.649999976F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6556,7 +5113,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6567,7 +5124,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6578,7 +5135,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_30 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6589,7 +5146,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_31 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6600,7 +5157,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.550000012F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6611,7 +5168,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.550000012F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6622,7 +5179,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_00);
             return result;
@@ -6633,7 +5190,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6644,7 +5201,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, CubicBezierEasingFunction_03());
             return result;
@@ -6655,7 +5212,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6666,7 +5223,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, CubicBezierEasingFunction_04());
             return result;
@@ -6677,7 +5234,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6688,7 +5245,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.283333331F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6699,7 +5256,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6710,7 +5267,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6721,7 +5278,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6732,7 +5289,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6743,7 +5300,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.25F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6754,7 +5311,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.283333331F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.349999994F, 1, _cubicBezierEasingFunction_02);
             return result;
@@ -6765,7 +5322,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.349999994F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6776,7 +5333,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6787,7 +5344,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6798,7 +5355,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_04);
             return result;
@@ -6809,7 +5366,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6820,7 +5377,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_04);
             return result;
@@ -6831,7 +5388,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6842,7 +5399,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_54 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.416666657F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6853,7 +5410,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_55 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.416666657F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6864,7 +5421,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.316666663F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6875,7 +5432,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6886,7 +5443,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6897,7 +5454,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6908,7 +5465,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6919,7 +5476,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6930,7 +5487,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.25F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_04);
             return result;
@@ -6941,7 +5498,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6952,7 +5509,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.13333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6963,7 +5520,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6974,7 +5531,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -6985,7 +5542,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0666666701F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -6996,7 +5553,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -7007,7 +5564,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.100000001F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7018,7 +5575,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.13333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_02);
             return result;
@@ -7029,7 +5586,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7040,7 +5597,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -7051,7 +5608,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7062,7 +5619,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.25F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.316666663F, 1, _cubicBezierEasingFunction_04);
             return result;
@@ -7073,7 +5630,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.316666663F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7084,7 +5641,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.283333331F, 1, _cubicBezierEasingFunction_04);
             return result;
@@ -7095,7 +5652,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.283333331F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7106,7 +5663,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_78 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -7117,7 +5674,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_79 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7128,7 +5685,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.166666672F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.300000012F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -7139,7 +5696,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.300000012F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7150,7 +5707,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_03);
             return result;
@@ -7161,7 +5718,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 1, _cubicBezierEasingFunction_01);
             return result;
@@ -7171,9 +5728,9 @@ namespace
         {
             auto result = _scalarAnimation_0_to_1_84 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.583333433F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.749999881F, 1, CubicBezierEasingFunction_11());
-            result->InsertKeyFrame(0.816666782F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.583333433F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.749999881F, 1, CubicBezierEasingFunction_10());
+            result->InsertKeyFrame(0.816666782F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7182,9 +5739,9 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.600000143F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_11);
-            result->InsertKeyFrame(0.833333433F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.600000143F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_10);
+            result->InsertKeyFrame(0.833333433F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7193,9 +5750,9 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.616666794F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_11);
-            result->InsertKeyFrame(0.850000143F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.616666794F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_10);
+            result->InsertKeyFrame(0.850000143F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7204,9 +5761,9 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.583333433F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.749999881F, 1, _cubicBezierEasingFunction_11);
-            result->InsertKeyFrame(0.816666782F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.583333433F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.749999881F, 1, _cubicBezierEasingFunction_10);
+            result->InsertKeyFrame(0.816666782F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7215,9 +5772,9 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.600000143F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_11);
-            result->InsertKeyFrame(0.833333433F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.600000143F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.766666591F, 1, _cubicBezierEasingFunction_10);
+            result->InsertKeyFrame(0.833333433F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.899999917F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7226,9 +5783,9 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.616666794F, 0, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_11);
-            result->InsertKeyFrame(0.850000143F, 0, _stepEasingFunction_1);
+            result->InsertKeyFrame(0.616666794F, 0, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.783333242F, 1, _cubicBezierEasingFunction_10);
+            result->InsertKeyFrame(0.850000143F, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.916666567F, 1, _cubicBezierEasingFunction_05);
             return result;
         }
@@ -7239,7 +5796,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7251,7 +5808,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7263,7 +5820,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7275,7 +5832,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.666666687F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7287,7 +5844,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7299,7 +5856,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.550000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.649999976F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7311,7 +5868,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.516666651F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7322,7 +5879,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_2_07 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.600000024F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7334,7 +5891,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.550000012F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7346,7 +5903,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7358,7 +5915,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7370,7 +5927,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 2, _cubicBezierEasingFunction_02);
             return result;
@@ -7382,7 +5939,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.566666663F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.649999976F, 3, CubicBezierEasingFunction_02());
             return result;
@@ -7394,7 +5951,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.533333361F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.583333313F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7406,7 +5963,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.483333319F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.566666663F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7418,7 +5975,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.449999988F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7430,7 +5987,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.616666675F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7442,7 +5999,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.400000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.483333319F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7454,7 +6011,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.433333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7466,7 +6023,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.416666657F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.533333361F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7478,7 +6035,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7490,7 +6047,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.349999994F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.516666651F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7502,7 +6059,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.25F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7514,7 +6071,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.349999994F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7526,7 +6083,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.366666675F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7538,7 +6095,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.333333343F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7549,7 +6106,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_3_14 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.300000012F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.416666657F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7561,7 +6118,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.266666681F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.433333337F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7573,7 +6130,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.400000006F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7585,7 +6142,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7597,7 +6154,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.200000003F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.383333325F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7609,7 +6166,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.100000001F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.25F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7621,7 +6178,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7633,7 +6190,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.316666663F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7645,7 +6202,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.183333337F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.283333331F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7656,7 +6213,7 @@ namespace
         {
             auto result = _scalarAnimation_0_to_3_23 = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.150000006F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7668,7 +6225,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.116666667F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.300000012F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7680,7 +6237,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.266666681F, 3, _cubicBezierEasingFunction_02);
             return result;
@@ -7692,7 +6249,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.233333334F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.466666669F, 5, _cubicBezierEasingFunction_02);
             return result;
@@ -7704,7 +6261,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.216666669F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 5, _cubicBezierEasingFunction_02);
             return result;
@@ -7716,7 +6273,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0833333358F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.333333343F, 5, _cubicBezierEasingFunction_02);
             return result;
@@ -7728,7 +6285,7 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, 0, _linearEasingFunction);
+            result->InsertKeyFrame(0, 0, _stepThenHoldEasingFunction);
             result->InsertKeyFrame(0.0666666701F, 0, _linearEasingFunction);
             result->InsertKeyFrame(0.200000003F, 5, _cubicBezierEasingFunction_02);
             return result;
@@ -7739,8 +6296,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.566666663F, 1, StepEasingFunction_0());
-            result->InsertKeyFrame(0.649999976F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.566666663F, 1, HoldThenStepEasingFunction());
+            result->InsertKeyFrame(0.649999976F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7749,8 +6306,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7759,8 +6316,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.516666651F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.583333313F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.516666651F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.583333313F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7769,8 +6326,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.533333361F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.533333361F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7779,8 +6336,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.566666663F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.566666663F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7789,8 +6346,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.533333361F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.533333361F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7798,8 +6355,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.433333337F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.933333337F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.433333337F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.933333337F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7808,8 +6365,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.666666687F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7818,8 +6375,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.533333361F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.683333337F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.533333361F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.683333337F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7828,8 +6385,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.633333325F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.633333325F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7838,8 +6395,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.400000006F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.5F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.400000006F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.5F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7848,8 +6405,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.433333337F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.433333337F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7858,8 +6415,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7868,8 +6425,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.600000024F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.600000024F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7878,8 +6435,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.550000012F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.666666687F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.550000012F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.666666687F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7888,8 +6445,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.516666651F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.633333325F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.516666651F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.633333325F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7898,8 +6455,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.483333319F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.616666675F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.483333319F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.616666675F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7908,8 +6465,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.449999988F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.550000012F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.449999988F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.550000012F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7918,8 +6475,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.416666657F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.516666651F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.416666657F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.516666651F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7927,8 +6484,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.400000006F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.899999976F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.400000006F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.899999976F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7937,8 +6494,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.516666651F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.516666651F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7947,8 +6504,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.349999994F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.533333361F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.349999994F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.533333361F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7957,8 +6514,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.483333319F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.483333319F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7967,8 +6524,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.349999994F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.349999994F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7977,8 +6534,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.25F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.25F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7987,8 +6544,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.366666675F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.366666675F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -7997,8 +6554,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.416666657F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.416666657F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8007,8 +6564,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.366666675F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.483333319F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.366666675F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.483333319F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8017,8 +6574,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.333333343F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.449999988F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.333333343F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.449999988F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8027,8 +6584,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.300000012F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.433333337F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.300000012F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.433333337F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8037,8 +6594,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.266666681F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.433333337F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.266666681F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.433333337F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8047,8 +6604,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.233333334F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.233333334F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8056,8 +6613,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.716666639F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.716666639F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8066,8 +6623,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.383333325F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.383333325F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8076,8 +6633,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.200000003F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.400000006F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.200000003F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.400000006F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8086,8 +6643,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.349999994F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.349999994F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8096,8 +6653,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.0666666701F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.216666669F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.0666666701F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.216666669F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8106,8 +6663,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.100000001F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.100000001F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8116,8 +6673,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.216666669F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.216666669F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8126,8 +6683,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8136,8 +6693,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.216666669F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.333333343F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.216666669F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.333333343F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8146,8 +6703,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.183333337F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.300000012F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.183333337F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.300000012F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8156,8 +6713,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.150000006F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.283333331F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.150000006F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.283333331F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8166,8 +6723,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.116666667F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.300000012F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.116666667F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.300000012F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8176,8 +6733,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.0833333358F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.266666681F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.0833333358F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.266666681F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8185,8 +6742,8 @@ namespace
         {
             auto result = _c->CreateScalarKeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0.0666666701F, 1, _stepEasingFunction_0);
-            result->InsertKeyFrame(0.566666663F, 0, _stepEasingFunction_0);
+            result->InsertKeyFrame(0.0666666701F, 1, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.566666663F, 0, _holdThenStepEasingFunction);
             return result;
         }
 
@@ -8212,11 +6769,11 @@ namespace
             // Layer (Shape): Shape Layer 12
             shapes->Append(ContainerShape_004());
             // Layer (Shape): Shape Layer 11
-            shapes->Append(ContainerShape_007());
+            shapes->Append(ContainerShape_006());
             // Layer (Shape): Shape Layer 2
-            shapes->Append(ContainerShape_009());
+            shapes->Append(ContainerShape_008());
             // Layer (Shape): Shape Layer 1
-            shapes->Append(ContainerShape_011());
+            shapes->Append(ContainerShape_010());
             return result;
         }
 
@@ -8228,29 +6785,29 @@ namespace
             result->Size = { 96, 96 };
             auto shapes = result->Shapes;
             // Layer (Shape): Shape Layer 9
-            shapes->Append(ContainerShape_013());
+            shapes->Append(ContainerShape_012());
             // Layer (Shape): Shape Layer 8
-            shapes->Append(ContainerShape_015());
+            shapes->Append(ContainerShape_014());
             // Layer (Shape): Shape Layer 7
-            shapes->Append(ContainerShape_017());
+            shapes->Append(ContainerShape_016());
             // Layer (Shape): Shape Layer 6
-            shapes->Append(ContainerShape_019());
+            shapes->Append(ContainerShape_018());
             // Layer (Shape): Shape Layer 5
-            shapes->Append(ContainerShape_021());
+            shapes->Append(ContainerShape_020());
             // Layer (Shape): Shape Layer 4
-            shapes->Append(ContainerShape_023());
+            shapes->Append(ContainerShape_022());
             // Layer (Shape): Shape Layer 12
-            shapes->Append(ContainerShape_025());
+            shapes->Append(ContainerShape_024());
             // Layer (Shape): Shape Layer 11
-            shapes->Append(ContainerShape_027());
+            shapes->Append(ContainerShape_026());
             // Layer (Shape): Shape Layer 10
-            shapes->Append(ContainerShape_029());
+            shapes->Append(ContainerShape_028());
             // Layer (Shape): Shape Layer 3
-            shapes->Append(ContainerShape_031());
+            shapes->Append(ContainerShape_030());
             // Layer (Shape): Shape Layer 2
-            shapes->Append(ContainerShape_033());
+            shapes->Append(ContainerShape_032());
             // Layer (Shape): Shape Layer 1
-            shapes->Append(ContainerShape_035());
+            shapes->Append(ContainerShape_034());
             return result;
         }
 
@@ -8262,29 +6819,29 @@ namespace
             result->Size = { 96, 96 };
             auto shapes = result->Shapes;
             // Layer (Shape): Shape Layer 9
-            shapes->Append(ContainerShape_037());
+            shapes->Append(ContainerShape_036());
             // Layer (Shape): Shape Layer 8
-            shapes->Append(ContainerShape_039());
+            shapes->Append(ContainerShape_038());
             // Layer (Shape): Shape Layer 7
-            shapes->Append(ContainerShape_041());
+            shapes->Append(ContainerShape_040());
             // Layer (Shape): Shape Layer 6
-            shapes->Append(ContainerShape_043());
+            shapes->Append(ContainerShape_042());
             // Layer (Shape): Shape Layer 5
-            shapes->Append(ContainerShape_045());
+            shapes->Append(ContainerShape_044());
             // Layer (Shape): Shape Layer 4
-            shapes->Append(ContainerShape_047());
+            shapes->Append(ContainerShape_046());
             // Layer (Shape): Shape Layer 12
-            shapes->Append(ContainerShape_049());
+            shapes->Append(ContainerShape_048());
             // Layer (Shape): Shape Layer 11
-            shapes->Append(ContainerShape_051());
+            shapes->Append(ContainerShape_050());
             // Layer (Shape): Shape Layer 10
-            shapes->Append(ContainerShape_053());
+            shapes->Append(ContainerShape_052());
             // Layer (Shape): Shape Layer 3
-            shapes->Append(ContainerShape_055());
+            shapes->Append(ContainerShape_054());
             // Layer (Shape): Shape Layer 2
-            shapes->Append(ContainerShape_057());
+            shapes->Append(ContainerShape_056());
             // Layer (Shape): Shape Layer 1
-            shapes->Append(ContainerShape_059());
+            shapes->Append(ContainerShape_058());
             return result;
         }
 
@@ -8296,29 +6853,29 @@ namespace
             result->Size = { 96, 96 };
             auto shapes = result->Shapes;
             // Layer (Shape): Shape Layer 9
-            shapes->Append(ContainerShape_061());
+            shapes->Append(ContainerShape_060());
             // Layer (Shape): Shape Layer 8
-            shapes->Append(ContainerShape_063());
+            shapes->Append(ContainerShape_062());
             // Layer (Shape): Shape Layer 7
-            shapes->Append(ContainerShape_065());
+            shapes->Append(ContainerShape_064());
             // Layer (Shape): Shape Layer 6
-            shapes->Append(ContainerShape_067());
+            shapes->Append(ContainerShape_066());
             // Layer (Shape): Shape Layer 5
-            shapes->Append(ContainerShape_069());
+            shapes->Append(ContainerShape_068());
             // Layer (Shape): Shape Layer 4
-            shapes->Append(ContainerShape_071());
+            shapes->Append(ContainerShape_070());
             // Layer (Shape): Shape Layer 12
-            shapes->Append(ContainerShape_073());
+            shapes->Append(ContainerShape_072());
             // Layer (Shape): Shape Layer 11
-            shapes->Append(ContainerShape_075());
+            shapes->Append(ContainerShape_074());
             // Layer (Shape): Shape Layer 10
-            shapes->Append(ContainerShape_077());
+            shapes->Append(ContainerShape_076());
             // Layer (Shape): Shape Layer 3
-            shapes->Append(ContainerShape_079());
+            shapes->Append(ContainerShape_078());
             // Layer (Shape): Shape Layer 2
-            shapes->Append(ContainerShape_081());
+            shapes->Append(ContainerShape_080());
             // Layer (Shape): Shape Layer 1
-            shapes->Append(ContainerShape_083());
+            shapes->Append(ContainerShape_082());
             return result;
         }
 
@@ -8330,27 +6887,27 @@ namespace
             result->Size = { 96, 96 };
             auto shapes = result->Shapes;
             // Layer (Shape): Cake
-            shapes->Append(ContainerShape_085());
+            shapes->Append(ContainerShape_084());
             // Layer (Shape): Cake 2
-            shapes->Append(ContainerShape_108());
+            shapes->Append(ContainerShape_085());
             // Layer (Shape): Sprinkles 2
-            shapes->Append(ContainerShape_122());
+            shapes->Append(ContainerShape_086());
             // Layer (Shape): Sprinkles 3
-            shapes->Append(ContainerShape_140());
+            shapes->Append(ContainerShape_088());
             // Layer (Shape): Sprinkles 4
-            shapes->Append(ContainerShape_158());
+            shapes->Append(ContainerShape_090());
             // Layer (Shape): Sprinkles 5
-            shapes->Append(ContainerShape_176());
+            shapes->Append(ContainerShape_092());
             // Layer (Shape): Sprinkles 6
-            shapes->Append(ContainerShape_194());
+            shapes->Append(ContainerShape_094());
             // Layer (Shape): Sprinkles 7
-            shapes->Append(ContainerShape_212());
+            shapes->Append(ContainerShape_096());
             // Layer (Shape): Sprinkles 8
-            shapes->Append(ContainerShape_230());
+            shapes->Append(ContainerShape_098());
             // Layer (Shape): Candle
-            shapes->Append(ContainerShape_248());
+            shapes->Append(ContainerShape_100());
             // Layer (Shape): Flame
-            shapes->Append(ContainerShape_271());
+            shapes->Append(ContainerShape_101());
             return result;
         }
 
@@ -9209,151 +7766,166 @@ namespace
             return result;
         }
 
+        // Layer (Shape): Cake
         // Path 1
         CompositionSpriteShape^ SpriteShape_45()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -8.83399963F };
             result->FillBrush = ColorBrush_AlmostLightGray_FFCCCCCC();
             result->Geometry = PathGeometry_46();
             return result;
         }
 
+        // Layer (Shape): Cake
         // Path 1
         CompositionSpriteShape^ SpriteShape_46()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -22.6780014F };
             result->FillBrush = ColorBrush_AlmostWhiteSmoke_FFF1F1F1();
             result->Geometry = PathGeometry_47();
             return result;
         }
 
+        // Layer (Shape): Cake
         // Path 1
         CompositionSpriteShape^ SpriteShape_47()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479999542F, -27.1220016F };
             result->FillBrush = ColorBrush_AlmostDarkKhaki_FFB88F66();
             result->Geometry = PathGeometry_48();
             return result;
         }
 
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_48()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 82.4160004F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -8.83399963F };
             result->FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
             result->Geometry = _pathGeometry_46;
             return result;
         }
 
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_49()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 68.5719986F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -22.6780014F };
             result->FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
             result->Geometry = _pathGeometry_47;
             return result;
         }
 
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_50()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0200005F, 64.1279984F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479999542F, -27.1220016F };
             result->FillBrush = ColorBrush_AlmostOrange_FFFFBA01();
             result->Geometry = _pathGeometry_48;
             return result;
         }
 
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_51()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 62.7290001F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -28.5209999F };
             result->FillBrush = ColorBrush_AlmostOrangeRed_FFDA4100();
             result->Geometry = PathGeometry_49();
             return result;
         }
 
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_52()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -52.0660019F };
             result->FillBrush = ColorBrush_AlmostOrangeRed_FFF7630B();
             result->Geometry = _pathGeometry_47;
             return result;
         }
 
-        // ShapeGroup: Group 7
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_53()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.873979986F, 0, 0, 0.873979986F, -0.479000092F, -36.487999F };
             result->FillBrush = ColorBrush_AlmostDarkOliveGreen_FF613D30();
             result->Geometry = PathGeometry_50();
             return result;
         }
 
-        // ShapeGroup: Group 6
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_54()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.867699981F, 0, 0, 0.867699981F, 16.2710037F, -42.368F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_51();
             return result;
         }
 
-        // ShapeGroup: Group 5
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_55()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.880330026F, 0, 0, 0.880330026F, 28.9079971F, -57.0610008F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_52();
             return result;
         }
 
-        // ShapeGroup: Group 4
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_56()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.85777998F, 0, 0, 0.85777998F, 13.3320007F, -66.9179993F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_53();
             return result;
         }
 
-        // ShapeGroup: Group 3
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_57()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.827109993F, 0, 0, 0.827109993F, -20.4640007F, -42.8569984F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_54();
             return result;
         }
 
-        // ShapeGroup: Group 2
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_58()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.850629985F, 0, 0, 0.850629985F, -34.276001F, -56.5719986F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_55();
             return result;
         }
 
-        // ShapeGroup: Group 1
+        // Layer (Shape): Cake 2
         // Path 1
         CompositionSpriteShape^ SpriteShape_59()
         {
             auto result = _c->CreateSpriteShape();
+            result->TransformMatrix = { 0.865750015F, 0, 0, 0.865750015F, -13.6069984F, -67.3470001F };
             result->FillBrush = _colorBrush_AlmostDarkOliveGreen_FF613D30;
             result->Geometry = PathGeometry_56();
             return result;
@@ -9364,7 +7936,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_60()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 61.8320007F, 24.3320007F };
+            result->TransformMatrix = { 1, 0, 0, 1, 61.8320007F, 24.3320007F };
             result->FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
             result->Geometry = PathGeometry_57();
             return result;
@@ -9375,7 +7947,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_61()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 77.4079971F, 34.1889992F };
+            result->TransformMatrix = { 1, 0, 0, 1, 77.4079971F, 34.1889992F };
             result->FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
             result->Geometry = _pathGeometry_52;
             return result;
@@ -9386,7 +7958,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_62()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 64.7710037F, 48.882F };
+            result->TransformMatrix = { 1, 0, 0, 1, 64.7710037F, 48.882F };
             result->FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
             result->Geometry = _pathGeometry_51;
             return result;
@@ -9397,7 +7969,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_63()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 54.762001F };
+            result->TransformMatrix = { 1, 0, 0, 1, 48.0209999F, 54.762001F };
             result->FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
             result->Geometry = PathGeometry_58();
             return result;
@@ -9408,7 +7980,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_64()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 28.0359993F, 48.3930016F };
+            result->TransformMatrix = { 1, 0, 0, 1, 28.0359993F, 48.3930016F };
             result->FillBrush = _colorBrush_AlmostLightGray_FFCCCCCC;
             result->Geometry = _pathGeometry_54;
             return result;
@@ -9419,7 +7991,7 @@ namespace
         CompositionSpriteShape^ SpriteShape_65()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 14.224F, 34.6780014F };
+            result->TransformMatrix = { 1, 0, 0, 1, 14.224F, 34.6780014F };
             result->FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
             result->Geometry = _pathGeometry_55;
             return result;
@@ -9430,72 +8002,70 @@ namespace
         CompositionSpriteShape^ SpriteShape_66()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 34.8930016F, 23.9029999F };
+            result->TransformMatrix = { 1, 0, 0, 1, 34.8930016F, 23.9029999F };
             result->FillBrush = _colorBrush_AlmostWhiteSmoke_FFF1F1F1;
             result->Geometry = _pathGeometry_56;
             return result;
         }
 
+        // Layer (Shape): Candle
         // Path 1
         CompositionSpriteShape^ SpriteShape_67()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0200005F, 29.4230003F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479999542F, -61.8269997F };
             result->FillBrush = ColorBrush_AlmostDarkCyan_FF0063B0();
             result->Geometry = PathGeometry_59();
             return result;
         }
 
+        // Layer (Shape): Candle
         // Path 1
         CompositionSpriteShape^ SpriteShape_68()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 39.1839981F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -52.0660019F };
             result->FillBrush = _colorBrush_AlmostDarkCyan_FF0063B0;
             result->Geometry = PathGeometry_60();
             return result;
         }
 
+        // Layer (Shape): Candle
         // Path 1
         CompositionSpriteShape^ SpriteShape_69()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 19.5919991F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -71.6580048F };
             result->FillBrush = _colorBrush_AlmostDodgerBlue_FF0177D9;
             result->Geometry = _pathGeometry_60;
             return result;
         }
 
+        // Layer (Shape): Flame
         // Path 1
         CompositionSpriteShape^ SpriteShape_70()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.026001F, 9.3210001F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.473999023F, -81.9290009F };
             result->FillBrush = _colorBrush_AlmostTomato_FFFD4341;
             result->Geometry = PathGeometry_61();
             return result;
         }
 
+        // Layer (Shape): Flame
         // Path 1
         CompositionSpriteShape^ SpriteShape_71()
         {
             auto result = _c->CreateSpriteShape();
-            result->Offset = { 48.0209999F, 11.6599998F };
+            result->TransformMatrix = { 1, 0, 0, 1, -0.479000092F, -79.5899963F };
             result->FillBrush = ColorBrush_AlmostKhaki_FFFFD579();
             result->Geometry = PathGeometry_62();
             return result;
         }
 
-        StepEasingFunction^ StepEasingFunction_0()
+        StepEasingFunction^ StepThenHoldEasingFunction()
         {
-            auto result = _stepEasingFunction_0 = _c->CreateStepEasingFunction();
-            result->IsFinalStepSingleFrame = true;
-            return result;
-        }
-
-        StepEasingFunction^ StepEasingFunction_1()
-        {
-            auto result = _stepEasingFunction_1 = _c->CreateStepEasingFunction();
+            auto result = _stepThenHoldEasingFunction = _c->CreateStepEasingFunction();
             result->IsInitialStepSingleFrame = true;
             return result;
         }
@@ -9505,11 +8075,11 @@ namespace
         {
             auto result = _vector2Animation_0 = _c->CreateVector2KeyFrameAnimation();
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { 0.949999988F, 0.949999988F }, _linearEasingFunction);
+            result->InsertKeyFrame(0, { 0.949999988F, 0.949999988F }, _holdThenStepEasingFunction);
             result->InsertKeyFrame(0.416666657F, { 0.75F, 0.75F }, CubicBezierEasingFunction_05());
-            result->InsertKeyFrame(0.583333313F, { 0.75F, 0.75F }, CubicBezierEasingFunction_06());
-            result->InsertKeyFrame(0.75F, { 1, 1 }, CubicBezierEasingFunction_07());
-            result->InsertKeyFrame(0.983333349F, { 0.949999988F, 0.949999988F }, CubicBezierEasingFunction_08());
+            result->InsertKeyFrame(0.583333313F, { 0.75F, 0.75F }, _holdThenStepEasingFunction);
+            result->InsertKeyFrame(0.75F, { 1, 1 }, CubicBezierEasingFunction_06());
+            result->InsertKeyFrame(0.983333349F, { 0.949999988F, 0.949999988F }, CubicBezierEasingFunction_07());
             return result;
         }
 
@@ -9520,13 +8090,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { 13.2340002F, -66.8209991F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.583333313F, { 13.2340002F, -66.8209991F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-66.821))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-67.65434))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-72.00237))) + (Pow(_.t0, 3) * Vector2(13.234,(-71.821)))", StepEasingFunction_1());
-            result->InsertKeyFrame(0.75F, { 13.2340002F, -71.8209991F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.816666663F, { 13.2340002F, -65.7330017F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.900000036F, { 13.2340002F, -66.8209991F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { 13.2340002F, -66.8209991F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.583333313F, { 13.2340002F, -66.8209991F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-66.821))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-67.65434))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-72.00237))) + (Pow(_.t0, 3) * Vector2(13.234,(-71.821)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.75F, { 13.2340002F, -71.8209991F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.816666663F, { 13.2340002F, -65.7330017F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t0, 3) * Vector2(13.234,(-65.733))) + (3 * Square(1 - _.t0) * _.t0 * Vector2(13.234,(-64.89967))) + (3 * (1 - _.t0) * Square(_.t0) * Vector2(13.234,(-66.63963))) + (Pow(_.t0, 3) * Vector2(13.234,(-66.821)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.900000036F, { 13.2340002F, -66.8209991F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9537,13 +8107,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { 28.9080009F, -56.9640007F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.600000024F, { 28.9080009F, -56.9640007F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.964))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-57.79733))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-62.04015))) + (Pow(_.t1, 3) * Vector2(28.908,(-61.964)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.76666671F, { 28.9080009F, -61.9640007F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.833333313F, { 28.9080009F, -56.507F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.507))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-55.67367))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-56.88785))) + (Pow(_.t1, 3) * Vector2(28.908,(-56.964)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.916666687F, { 28.9080009F, -56.9640007F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { 28.9080009F, -56.9640007F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.600000024F, { 28.9080009F, -56.9640007F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.964))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-57.79733))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-62.04015))) + (Pow(_.t1, 3) * Vector2(28.908,(-61.964)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.76666671F, { 28.9080009F, -61.9640007F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.833333313F, { 28.9080009F, -56.507F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t1, 3) * Vector2(28.908,(-56.507))) + (3 * Square(1 - _.t1) * _.t1 * Vector2(28.908,(-55.67367))) + (3 * (1 - _.t1) * Square(_.t1) * Vector2(28.908,(-56.88785))) + (Pow(_.t1, 3) * Vector2(28.908,(-56.964)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.916666687F, { 28.9080009F, -56.9640007F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9554,13 +8124,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { 16.1739998F, -42.2700005F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.616666675F, { 16.1739998F, -42.2700005F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-42.27))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-43.10333))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-47.36807))) + (Pow(_.t2, 3) * Vector2(16.174,(-47.27)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.783333361F, { 16.1739998F, -47.2700005F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.850000024F, { 16.1739998F, -41.6809998F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-41.681))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-40.84767))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-42.17193))) + (Pow(_.t2, 3) * Vector2(16.174,(-42.27)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.900000036F, { 16.1739998F, -42.2700005F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { 16.1739998F, -42.2700005F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.616666675F, { 16.1739998F, -42.2700005F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-42.27))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-43.10333))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-47.36807))) + (Pow(_.t2, 3) * Vector2(16.174,(-47.27)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.783333361F, { 16.1739998F, -47.2700005F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.850000024F, { 16.1739998F, -41.6809998F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t2, 3) * Vector2(16.174,(-41.681))) + (3 * Square(1 - _.t2) * _.t2 * Vector2(16.174,(-40.84767))) + (3 * (1 - _.t2) * Square(_.t2) * Vector2(16.174,(-42.17193))) + (Pow(_.t2, 3) * Vector2(16.174,(-42.27)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.900000036F, { 16.1739998F, -42.2700005F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9571,13 +8141,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { -0.477999985F, -36.3909988F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.583333313F, { -0.477999985F, -36.3909988F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-36.391))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-37.22433))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-41.4878))) + (Pow(_.t3, 3) * Vector2((-0.478),(-41.391)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.75F, { -0.477999985F, -41.3909988F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.816666663F, { -0.477999985F, -35.8110008F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-35.811))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-34.97767))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-36.29419))) + (Pow(_.t3, 3) * Vector2((-0.478),(-36.391)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.916666687F, { -0.477999985F, -36.3909988F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { -0.477999985F, -36.3909988F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.583333313F, { -0.477999985F, -36.3909988F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-36.391))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-37.22433))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-41.4878))) + (Pow(_.t3, 3) * Vector2((-0.478),(-41.391)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.75F, { -0.477999985F, -41.3909988F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.816666663F, { -0.477999985F, -35.8110008F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t3, 3) * Vector2((-0.478),(-35.811))) + (3 * Square(1 - _.t3) * _.t3 * Vector2((-0.478),(-34.97767))) + (3 * (1 - _.t3) * Square(_.t3) * Vector2((-0.478),(-36.29419))) + (Pow(_.t3, 3) * Vector2((-0.478),(-36.391)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.916666687F, { -0.477999985F, -36.3909988F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9588,13 +8158,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { -20.5620003F, -42.7589989F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.600000024F, { -20.5620003F, -42.7589989F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.759))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-43.59233))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-47.85645))) + (Pow(_.t4, 3) * Vector2((-20.562),(-47.759)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.76666671F, { -20.5620003F, -47.7589989F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.833333313F, { -20.5620003F, -42.1739998F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.174))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-41.34067))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-42.66155))) + (Pow(_.t4, 3) * Vector2((-20.562),(-42.759)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.900000036F, { -20.5620003F, -42.7589989F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { -20.5620003F, -42.7589989F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.600000024F, { -20.5620003F, -42.7589989F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.766666591F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.759))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-43.59233))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-47.85645))) + (Pow(_.t4, 3) * Vector2((-20.562),(-47.759)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.76666671F, { -20.5620003F, -47.7589989F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.833333313F, { -20.5620003F, -42.1739998F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t4, 3) * Vector2((-20.562),(-42.174))) + (3 * Square(1 - _.t4) * _.t4 * Vector2((-20.562),(-41.34067))) + (3 * (1 - _.t4) * Square(_.t4) * Vector2((-20.562),(-42.66155))) + (Pow(_.t4, 3) * Vector2((-20.562),(-42.759)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.900000036F, { -20.5620003F, -42.7589989F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9605,13 +8175,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { -34.276001F, -56.473999F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.616666675F, { -34.276001F, -56.473999F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-56.474))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-57.30733))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-61.59352))) + (Pow(_.t5, 3) * Vector2((-34.276),(-61.474)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.783333361F, { -34.276001F, -61.473999F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.850000024F, { -34.276001F, -55.757F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-55.757))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-54.92367))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-56.35448))) + (Pow(_.t5, 3) * Vector2((-34.276),(-56.474)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.916666687F, { -34.276001F, -56.473999F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { -34.276001F, -56.473999F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.616666675F, { -34.276001F, -56.473999F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.783333242F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-56.474))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-57.30733))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-61.59352))) + (Pow(_.t5, 3) * Vector2((-34.276),(-61.474)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.783333361F, { -34.276001F, -61.473999F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.850000024F, { -34.276001F, -55.757F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.916666567F, "(Pow(1 - _.t5, 3) * Vector2((-34.276),(-55.757))) + (3 * Square(1 - _.t5) * _.t5 * Vector2((-34.276),(-54.92367))) + (3 * (1 - _.t5) * Square(_.t5) * Vector2((-34.276),(-56.35448))) + (Pow(_.t5, 3) * Vector2((-34.276),(-56.474)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.916666687F, { -34.276001F, -56.473999F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9622,13 +8192,13 @@ namespace
             auto result = _c->CreateVector2KeyFrameAnimation();
             result->SetReferenceParameter("_", _root);
             result->Duration = { c_durationTicks };
-            result->InsertKeyFrame(0, { -13.7040005F, -67.25F }, _linearEasingFunction);
-            result->InsertKeyFrame(0.583333313F, { -13.7040005F, -67.25F }, _linearEasingFunction);
-            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-67.25))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-68.08334))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-72.36794))) + (Pow(_.t6, 3) * Vector2((-13.704),(-72.25)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.75F, { -13.7040005F, -72.25F }, _stepEasingFunction_1);
-            result->InsertKeyFrame(0.816666663F, { -13.7040005F, -66.5419998F }, _cubicBezierEasingFunction_10);
-            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-66.542))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-65.70866))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-67.13206))) + (Pow(_.t6, 3) * Vector2((-13.704),(-67.25)))", _stepEasingFunction_1);
-            result->InsertKeyFrame(0.900000036F, { -13.7040005F, -67.25F }, _stepEasingFunction_1);
+            result->InsertKeyFrame(0, { -13.7040005F, -67.25F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.583333313F, { -13.7040005F, -67.25F }, _holdThenStepEasingFunction);
+            result->InsertExpressionKeyFrame(0.749999881F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-67.25))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-68.08334))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-72.36794))) + (Pow(_.t6, 3) * Vector2((-13.704),(-72.25)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.75F, { -13.7040005F, -72.25F }, _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.816666663F, { -13.7040005F, -66.5419998F }, _cubicBezierEasingFunction_09);
+            result->InsertExpressionKeyFrame(0.899999917F, "(Pow(1 - _.t6, 3) * Vector2((-13.704),(-66.542))) + (3 * Square(1 - _.t6) * _.t6 * Vector2((-13.704),(-65.70866))) + (3 * (1 - _.t6) * Square(_.t6) * Vector2((-13.704),(-67.13206))) + (Pow(_.t6, 3) * Vector2((-13.704),(-67.25)))", _stepThenHoldEasingFunction);
+            result->InsertKeyFrame(0.900000036F, { -13.7040005F, -67.25F }, _stepThenHoldEasingFunction);
             return result;
         }
 
@@ -9647,13 +8217,14 @@ namespace
         }
 
     public:
-        Comp(Compositor^ compositor)
+        AnimatedVisual(Compositor^ compositor)
             : _c(compositor)
             , _reusableExpressionAnimation(compositor->CreateExpressionAnimation())
         {
             FFHR(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _d2dFactory.GetAddressOf()));
             Root();
         }
+        virtual ~AnimatedVisual() { }
 
         property Windows::Foundation::TimeSpan Duration
         {
@@ -9670,12 +8241,10 @@ namespace
             virtual Windows::Foundation::Numerics::float2 get() { return { 300, 300 }; }
         }
 
-        virtual void Unload() {  }
-
     };
 } // end namespace
 
-Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ Compositions::BirthdayCake::TryCreateInstance(
+Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::BirthdayCake::TryCreateInstance(
     Compositor^ compositor,
     Object^* diagnostics)
 {
@@ -9684,5 +8253,5 @@ Microsoft::UI::Xaml::Controls::CompositionPlayer::IComposition^ Compositions::Bi
     {
         return nullptr;
     }
-    return ref new Comp(compositor);
+    return ref new AnimatedVisual(compositor);
 }
