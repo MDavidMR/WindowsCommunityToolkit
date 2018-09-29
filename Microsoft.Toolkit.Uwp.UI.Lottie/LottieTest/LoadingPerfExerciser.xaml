@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LottieTest"
     xmlns:lottie="using:Lottie"
-    xmlns:compPlayer="using:Microsoft.UI.Xaml.Controls.CompositionPlayer"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -13,9 +13,9 @@
     <Grid Background="Yellow">
         <StackPanel>
             <Button Content="Start"  HorizontalAlignment="Stretch" Click="Button_Click"/>
-            <compPlayer:CompositionPlayer Stretch="UniformToFill" x:Name="player">
+            <winui:AnimatedVisualPlayer Stretch="UniformToFill" x:Name="player">
                 <!--<lottie:LottieCompositionSource x:Name="lottieSource"/>-->
-            </compPlayer:CompositionPlayer>
+            </winui:AnimatedVisualPlayer>
         </StackPanel>
     </Grid>
 

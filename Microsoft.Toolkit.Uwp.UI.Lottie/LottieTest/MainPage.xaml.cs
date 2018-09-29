@@ -1,7 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,13 +63,13 @@ namespace LottieTest
 
 
         // Test reparenting of the player.
-        CompositionPlayer m_player;
+        AnimatedVisualPlayer m_player;
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (TheBorder.Child != null)
             {
-                m_player = (CompositionPlayer)TheBorder.Child;
+                m_player = (AnimatedVisualPlayer)TheBorder.Child;
                 TheBorder.Child = null;
             }
             else

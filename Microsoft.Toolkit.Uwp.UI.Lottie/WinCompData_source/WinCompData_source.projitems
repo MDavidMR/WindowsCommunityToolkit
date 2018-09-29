@@ -48,7 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\BinaryExpression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\Boolean.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\Cubed.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\CubicBezierFunction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\CubicBezierFunction2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\Divide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\Expression.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinCompData\Expressions\ExpressionType.cs" />

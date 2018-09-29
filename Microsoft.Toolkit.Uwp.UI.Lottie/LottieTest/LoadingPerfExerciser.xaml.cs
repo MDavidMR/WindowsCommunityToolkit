@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+﻿using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -37,7 +37,7 @@ namespace LottieTest
             {
                 // Wait for the load. This does not wait for the instantiation.
                 //                await lottieSource.SetSourceAsync(new Uri("ms-appx:///assets/LottieLogo1.json"));
-                player.Source = new Compositions.Empty_box();
+                player.Source = new AnimatedVisuals.Empty_box();
 
                 // Wait for the lottie to load.
                 await WaitForCompositionLoadChange(true);
@@ -55,7 +55,7 @@ namespace LottieTest
         {
             var currentTaskSource = new TaskCompletionSource<bool>();
 
-            if (player.IsCompositionLoaded == loadState)
+            if (player.IsAnimatedVisualLoaded == loadState)
             {
                 currentTaskSource.SetResult(loadState);
             }
@@ -63,14 +63,14 @@ namespace LottieTest
             {
                 // Register to get loading callbacks from the player.
                 long token = 0;
-                token = player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, Callback);
+                token = player.RegisterPropertyChangedCallback(AnimatedVisualPlayer.IsAnimatedVisualLoadedProperty, Callback);
 
                 void Callback(DependencyObject dObj, DependencyProperty dProp)
                 {
-                    if (player.IsCompositionLoaded == loadState)
+                    if (player.IsAnimatedVisualLoaded == loadState)
                     {
                         currentTaskSource.SetResult(loadState);
-                        player.UnregisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, token);
+                        player.UnregisterPropertyChangedCallback(AnimatedVisualPlayer.IsAnimatedVisualLoadedProperty, token);
                     }
                 }
             }

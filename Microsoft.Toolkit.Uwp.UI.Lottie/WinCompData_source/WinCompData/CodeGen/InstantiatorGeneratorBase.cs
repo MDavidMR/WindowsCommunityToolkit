@@ -40,7 +40,9 @@ namespace WinCompData.CodeGen
         readonly HashSet<(ObjectData, ObjectData)> _factoriesAlreadyCalled = new HashSet<(ObjectData, ObjectData)>();
         readonly ObjectData _rootNode;
         readonly ApiCompatibility _apiCompatibility;
-        TimeSpan _compositionDuration;
+        readonly TimeSpan _compositionDuration;
+        // Holds the node for which a factory is currently being written.
+        ObjectData _currentObjectFactoryNode;
 
         protected InstantiatorGeneratorBase(
             CompositionObject graphRoot,
@@ -317,19 +319,9 @@ namespace WinCompData.CodeGen
         /// <summary>
         /// Returns the code to call the factory for the given object.
         /// </summary>
-        protected string CallFactoryFor(CompositionObject obj)
-        {
-            var node = NodeFor(obj);
-            return node.FactoryCall();
-        }
-
-        /// <summary>
-        /// Returns the code to call the factory for the given object.
-        /// </summary>
         protected string CallFactoryFor(CanvasGeometry obj)
         {
-            var node = NodeFor(obj);
-            return node.FactoryCall();
+            return CallFactoryFromFor(_currentObjectFactoryNode, obj);
         }
 
         // Returns the code to call the factory for the given node from the given node.
@@ -1295,7 +1287,7 @@ namespace WinCompData.CodeGen
         void WriteSimpleObjectFactory(CodeBuilder builder, ObjectData node, string createCallText)
         {
             builder.WriteComment(node.LongComment);
-            WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name);
+            WriteObjectFactoryStartWithoutCache(builder, node);
             if (node.RequiresStorage)
             {
                 builder.WriteLine($"return {node.FieldName} = {createCallText};");
@@ -1311,12 +1303,14 @@ namespace WinCompData.CodeGen
         void WriteObjectFactoryStart(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
             builder.WriteComment(node.LongComment);
-            WriteObjectFactoryStartWithoutCache(builder, node.TypeName, node.Name, parameters);
+            WriteObjectFactoryStartWithoutCache(builder, node, parameters);
         }
 
-        void WriteObjectFactoryStartWithoutCache(CodeBuilder builder, string typeName, string methodName, IEnumerable<string> parameters = null)
+        void WriteObjectFactoryStartWithoutCache(CodeBuilder builder, ObjectData node, IEnumerable<string> parameters = null)
         {
-            builder.WriteLine($"{_stringifier.ReferenceTypeName(typeName)} {methodName}({(parameters == null ? "" : string.Join(", ", parameters))})");
+            // Save the node as the current node while the factory is being written.
+            _currentObjectFactoryNode = node;
+            builder.WriteLine($"{_stringifier.ReferenceTypeName(node.TypeName)} {node.Name}({(parameters == null ? "" : string.Join(", ", parameters))})");
             builder.OpenScope();
         }
 
@@ -1325,6 +1319,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine("return result;");
             builder.CloseScope();
             builder.WriteLine();
+            _currentObjectFactoryNode = null;
         }
 
         string Const(string value) => $"const {value}";

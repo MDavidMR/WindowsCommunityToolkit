@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LottieViewer"
     xmlns:lottie="using:Lottie"
-    xmlns:compositions="using:Compositions"
-    xmlns:compPlayer="using:Microsoft.UI.Xaml.Controls.CompositionPlayer"
+    xmlns:animatedVisuals="using:AnimatedVisuals"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -23,8 +23,8 @@
         </Storyboard>
     </UserControl.Resources>
     <Grid x:Name="_dragNDropHintContainer">
-        <compPlayer:CompositionPlayer x:Name="_dragNDropHint" AutoPlay="False">
-            <compositions:UiFeedbackAnimations/>
-        </compPlayer:CompositionPlayer>
+        <winui:AnimatedVisualPlayer x:Name="_dragNDropHint" AutoPlay="False">
+            <animatedVisuals:UiFeedbackAnimations/>
+        </winui:AnimatedVisualPlayer>
     </Grid>
 </UserControl>

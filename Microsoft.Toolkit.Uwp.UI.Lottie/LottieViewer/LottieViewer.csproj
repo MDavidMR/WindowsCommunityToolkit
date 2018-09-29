@@ -105,8 +105,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Compositions\UiFeedbackAnimations.cs" />
-    <Compile Include="Compositions\LottieLogo.cs" />
+    <Compile Include="AnimatedVisuals\UiFeedbackAnimations.cs" />
+    <Compile Include="AnimatedVisuals\LottieLogo.cs" />
     <Compile Include="FeedbackLottie.xaml.cs">
       <DependentUpon>FeedbackLottie.xaml</DependentUpon>
     </Compile>
@@ -194,8 +194,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml.Controls.CompositionPlayer">
-      <Version>0.1.1.8</Version>
+    <PackageReference Include="Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer">
+      <Version>0.2.1.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>

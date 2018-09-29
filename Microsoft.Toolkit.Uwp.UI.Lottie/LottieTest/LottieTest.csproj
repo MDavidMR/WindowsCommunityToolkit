@@ -103,8 +103,8 @@
     <Compile Include="AuditCorpus.xaml.cs">
       <DependentUpon>AuditCorpus.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Compositions\empty_box.cs" />
-    <Compile Include="Compositions\_2052_obama_caricature.cs" />
+    <Compile Include="AnimatedVisuals\empty_box.cs" />
+    <Compile Include="AnimatedVisuals\_2052_obama_caricature.cs" />
     <Compile Include="LargeComposition.xaml.cs">
       <DependentUpon>LargeComposition.xaml</DependentUpon>
     </Compile>
@@ -117,7 +117,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Compositions\MyComposition.cs" />
+    <Compile Include="AnimatedVisuals\MyComposition.cs" />
     <Compile Include="MyComposition.xaml.cs">
       <DependentUpon>MyComposition.xaml</DependentUpon>
     </Compile>
@@ -186,16 +186,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.8.2</Version>
+      <Version>1.8.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.CompositionPlayer.vcxproj">
-      <Project>{c7f59620-47aa-4101-83ad-213a6749377e}</Project>
-      <Name>Microsoft.UI.Xaml.Controls.CompositionPlayer</Name>
+    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj">
+      <Project>{aad726b1-fcde-4847-95d9-298a5a2bebf3}</Project>
+      <Name>Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624D8BBC-00E7-4BC8-8C9C-306EC058CB2B}</Project>

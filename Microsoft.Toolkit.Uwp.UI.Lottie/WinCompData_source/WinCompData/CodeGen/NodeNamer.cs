@@ -85,7 +85,10 @@ namespace WinCompData.CodeGen
 
         static (T? First, T? Last) FirstAndLastValuesFromKeyFrame<T>(KeyFrameAnimation<T> animation) where T : struct
         {
-            return (ValueFromKeyFrame(animation.KeyFrames.First()), ValueFromKeyFrame(animation.KeyFrames.Last()));
+            // If there's only one keyframe, return it as the last value and leave the first value null.
+            var first = animation.KeyFrameCount > 1 ? ValueFromKeyFrame(animation.KeyFrames.First()) : null;
+            var last = ValueFromKeyFrame(animation.KeyFrames.Last());
+            return (first, last);
         }
 
         // Returns a string for use in an identifier that describes a ColorKeyFrameAnimation, or null
@@ -99,7 +102,11 @@ namespace WinCompData.CodeGen
         static string DescribeAnimationRange(ScalarKeyFrameAnimation animation)
         {
             (var firstValue, var lastValue) = FirstAndLastValuesFromKeyFrame(animation);
-            return (firstValue.HasValue && lastValue.HasValue) ? $"{FloatId(firstValue.Value)}_to_{FloatId(lastValue.Value)}" : null;
+            return lastValue.HasValue
+                ? firstValue.HasValue
+                    ? $"{FloatId(firstValue.Value)}_to_{FloatId(lastValue.Value)}"
+                    : $"to_{FloatId(lastValue.Value)}"
+                : null;
         }
 
         static string DescribeCompositionObject(CompositionObject obj)
@@ -177,6 +184,23 @@ namespace WinCompData.CodeGen
                     else
                     {
                         result = "ExpressionAnimation";
+                    }
+                    break;
+                case CompositionObjectType.StepEasingFunction:
+                    // Recognize 2 common patterns: HoldThenStep and StepThenHold
+                    var stepEasingFunction = (StepEasingFunction)obj;
+                    if (stepEasingFunction.StepCount == 1 && stepEasingFunction.IsFinalStepSingleFrame && !stepEasingFunction.IsInitialStepSingleFrame)
+                    {
+                        result = "HoldThenStepEasingFunction";
+                    }
+                    else if (stepEasingFunction.StepCount == 1 && stepEasingFunction.IsInitialStepSingleFrame && !stepEasingFunction.IsFinalStepSingleFrame)
+                    {
+                        result = "StepThenHoldEasingFunction";
+                    }
+                    else
+                    {
+                        // Didn't recognize the pattern.
+                        goto default;
                     }
                     break;
                 default:

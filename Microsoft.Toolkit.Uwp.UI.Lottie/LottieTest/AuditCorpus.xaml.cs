@@ -182,12 +182,23 @@ namespace LottieTest
                 // Codegen the Lottie
                 var optimizedRoot = Optimizer.Optimize(wincompDataRootVisual, ignoreCommentProperties: true);
 
-                var code = CSharpInstantiatorGenerator.CreateFactoryCode(
+                var csCode = CSharpInstantiatorGenerator.CreateFactoryCode(
                     "AuditedComposition", 
                     wincompDataRootVisual, 
                     (float)lottieComposition.Width, 
                     (float)lottieComposition.Height, 
                     lottieComposition.Duration);
+
+
+                CxInstantiatorGenerator.CreateFactoryCode(
+                    "AuditedComposition",
+                    wincompDataRootVisual,
+                    (float)lottieComposition.Width,
+                    (float)lottieComposition.Height,
+                    lottieComposition.Duration,
+                    "AuditedComposition",
+                    out string cxCpp,
+                    out string cxH);
             }
 
             return lottieInfos.ToArray();

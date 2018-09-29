@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System.IO;
 using WinCompData.Tools;
 
@@ -31,10 +31,10 @@ namespace Lottie
     /// A <see cref="CompositionSource"/> for a Lottie composition. This allows
     /// a Lottie to be specified as the source of a <see cref="Composition"/>.
     /// </summary>
-    public sealed class LottieCompositionSource : DependencyObject, IDynamicCompositionSource
+    public sealed class LottieCompositionSource : DependencyObject, IDynamicAnimatedVisualSource
     {
         readonly StorageFile _storageFile;
-        EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>> _compositionInvalidatedEventTokenTable;
+        EventRegistrationTokenTable<TypedEventHandler<IDynamicAnimatedVisualSource, object>> _compositionInvalidatedEventTokenTable;
         int _loadVersion;
         Uri _uriSource;
         ContentFactory _contentFactory;
@@ -93,7 +93,7 @@ namespace Lottie
         }
 
         /// <summary>
-        /// Called by XAML to convert a string to an <see cref="ICompositionSource"/>.
+        /// Called by XAML to convert a string to an <see cref="IAnimatedVisualSource"/>.
         /// </summary>
         public static LottieCompositionSource CreateFromString(string uri)
         {
@@ -125,27 +125,26 @@ namespace Lottie
         }
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
-        //event DynamicCompositionSourceEventHandler IDynamicCompositionSource.CompositionInvalidated
-        public event TypedEventHandler<IDynamicCompositionSource, object> CompositionInvalidated
+        public event TypedEventHandler<IDynamicAnimatedVisualSource, object> AnimatedVisualInvalidated
         {
             add
             {
-                return EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
+                return EventRegistrationTokenTable<TypedEventHandler<IDynamicAnimatedVisualSource, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                    .AddEventHandler(value);
             }
 
             remove
             {
-                EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
+                EventRegistrationTokenTable<TypedEventHandler<IDynamicAnimatedVisualSource, object>>
                    .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                     .RemoveEventHandler(value);
             }
         }
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
-        public IComposition TryCreateInstance(
-        //bool ICompositionSource.TryCreateInstance(
+        public IAnimatedVisual TryCreateInstance(
+        //bool IAnimatedVisualSource.TryCreateInstance(
             Compositor compositor,
             out object diagnostics)
         {
@@ -163,7 +162,7 @@ namespace Lottie
 
         void NotifyListenersThatCompositionChanged()
         {
-            EventRegistrationTokenTable<TypedEventHandler<IDynamicCompositionSource, object>>
+            EventRegistrationTokenTable<TypedEventHandler<IDynamicAnimatedVisualSource, object>>
                 .GetOrCreateEventRegistrationTokenTable(ref _compositionInvalidatedEventTokenTable)
                 .InvocationList?.Invoke(this, null);
         }
@@ -503,7 +502,7 @@ namespace Lottie
 
         // Information from which a composition's content can be instantiated. Contains the WinCompData
         // translation of a composition and some metadata.
-        sealed class ContentFactory : ICompositionSource
+        sealed class ContentFactory : IAnimatedVisualSource
         {
             readonly LottieCompositionDiagnostics _diagnostics;
             WinCompData.Visual _wincompDataRootVisual;
@@ -547,7 +546,7 @@ namespace Lottie
                 return _diagnostics != null ? _diagnostics.Clone() : null;
             }
 
-            public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)
+            public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)
             {
                 var diags = GetDiagnosticsClone();
                 diagnostics = diags;
@@ -595,12 +594,12 @@ namespace Lottie
             return true;
         }
 
-        sealed class Comp : IComposition
+        sealed class Comp : IAnimatedVisual, IDisposable
         {
             public Visual RootVisual { get; set; }
             public TimeSpan Duration { get; set; }
             public System.Numerics.Vector2 Size { get; set; }
-            public void Unload()
+            public void Dispose()
             {
                 RootVisual?.Dispose();
             }

@@ -60,27 +60,27 @@ namespace WinCompData.CodeGen
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
             }
-            builder.WriteLine("using Microsoft.UI.Xaml.Controls.CompositionPlayer;");
+            builder.WriteLine("using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;");
             builder.WriteLine("using System;");
             builder.WriteLine("using System.Numerics;");
             builder.WriteLine("using Windows.UI;");
             builder.WriteLine("using Windows.UI.Composition;");
 
             builder.WriteLine();
-            builder.WriteLine("namespace Compositions");
+            builder.WriteLine("namespace AnimatedVisuals");
             builder.OpenScope();
-            builder.WriteLine($"sealed class {info.ClassName} : ICompositionSource");
+            builder.WriteLine($"sealed class {info.ClassName} : IAnimatedVisualSource");
             builder.OpenScope();
 
-            // Generate the method that creates an instance of the composition.
-            builder.WriteLine("public IComposition TryCreateInstance(Compositor compositor, out object diagnostics)");
+            // Generate the method that creates an instance of the animated visual.
+            builder.WriteLine("public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)");
             builder.OpenScope();
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("if (!IsRuntimeCompatible())");
             builder.OpenScope();
             builder.WriteLine("return null;");
             builder.CloseScope();
-            builder.WriteLine("return new Composition(compositor);");
+            builder.WriteLine("return new AnimatedVisual(compositor);");
             builder.CloseScope();
             builder.WriteLine();
         }
@@ -88,7 +88,7 @@ namespace WinCompData.CodeGen
         protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
         {
             // Start the instantiator class.
-            builder.WriteLine("sealed class Composition : IComposition");
+            builder.WriteLine("sealed class AnimatedVisual : IAnimatedVisual");
             builder.OpenScope();
         }
 
@@ -98,7 +98,7 @@ namespace WinCompData.CodeGen
             CodeGenInfo info)
         {
             // Write the constructor for the instantiator.
-            builder.WriteLine("internal Composition(Compositor compositor)");
+            builder.WriteLine("internal AnimatedVisual(Compositor compositor)");
             builder.OpenScope();
             builder.WriteLine("_c = compositor;");
             builder.WriteLine($"{info.ReusableExpressionAnimationFieldName} = compositor.CreateExpressionAnimation();");
@@ -106,11 +106,11 @@ namespace WinCompData.CodeGen
             builder.CloseScope();
             builder.WriteLine();
 
-            // Write the IComposition implementation.
-            builder.WriteLine("Visual IComposition.RootVisual => _root;");
-            builder.WriteLine($"TimeSpan IComposition.Duration => TimeSpan.FromTicks({info.DurationTicksFieldName});");
-            builder.WriteLine($"Vector2 IComposition.Size => {Vector2(info.CompositionDeclaredSize)};");
-            builder.WriteLine("void IComposition.Unload() => _root?.Dispose();");
+            // Write the IAnimatedVisual implementation.
+            builder.WriteLine("Visual IAnimatedVisual.RootVisual => _root;");
+            builder.WriteLine($"TimeSpan IAnimatedVisual.Duration => TimeSpan.FromTicks({info.DurationTicksFieldName});");
+            builder.WriteLine($"Vector2 IAnimatedVisual.Size => {Vector2(info.CompositionDeclaredSize)};");
+            builder.WriteLine("void IDisposable.Dispose() => _root?.Dispose();");
 
             // Close the scope for the instantiator class.
             builder.CloseScope();
@@ -144,10 +144,7 @@ namespace WinCompData.CodeGen
             builder.WriteLine($"var result = {FieldAssignment(fieldName)}CanvasGeometry.CreateEllipse(");
             builder.Indent();
             builder.WriteLine($"null,");
-            builder.WriteLine($"{Float(obj.X)},");
-            builder.WriteLine($"{Float(obj.Y)},");
-            builder.WriteLine($"{Float(obj.RadiusX)},");
-            builder.WriteLine($"{Float(obj.RadiusY)};");
+            builder.WriteLine($"{Float(obj.X)}, {Float(obj.Y)}, {Float(obj.RadiusX)}, {Float(obj.RadiusY)});");
             builder.UnIndent();
         }
 

@@ -4,17 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LottieTest"
     xmlns:lottie="using:Lottie"
-    xmlns:compositions="using:Compositions"
-    xmlns:compPlayer="using:Microsoft.UI.Xaml.Controls.CompositionPlayer"
+    xmlns:animatedVisuals="using:AnimatedVisuals"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid Background="Green">
-            <compPlayer:CompositionPlayer Stretch="UniformToFill">
-                <compositions:MyComposition/>
-            </compPlayer:CompositionPlayer>
+            <winui:AnimatedVisualPlayer Stretch="UniformToFill">
+                <animatedVisuals:MyComposition/>
+            </winui:AnimatedVisualPlayer>
         </Grid>
     </Grid>
 </Page>

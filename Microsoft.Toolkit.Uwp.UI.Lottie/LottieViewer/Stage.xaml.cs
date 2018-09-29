@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Lottie;
-using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System;
 using System.Linq;
 using Windows.Storage;
@@ -20,7 +20,7 @@ namespace LottieViewer
 
 
         public static DependencyProperty PlayerProperty =
-            DependencyProperty.Register(nameof(Player), typeof(CompositionPlayer), typeof(Stage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Player), typeof(AnimatedVisualPlayer), typeof(Stage), new PropertyMetadata(null));
 
         public static DependencyProperty PlayerHasIssuesProperty =
             DependencyProperty.Register(nameof(PlayerHasIssues), typeof(bool), typeof(Stage), new PropertyMetadata(false));
@@ -35,7 +35,7 @@ namespace LottieViewer
             SetValue(PlayerProperty, _player);
 
             // Subscribe to events from the player so we can react to loading and unloading of the composition.
-            _player.RegisterPropertyChangedCallback(CompositionPlayer.IsCompositionLoadedProperty, (dObj, dProp) => UpdateFileInfo());
+            _player.RegisterPropertyChangedCallback(AnimatedVisualPlayer.IsAnimatedVisualLoadedProperty, (dObj, dProp) => UpdateFileInfo());
 
             Reset();
         }
@@ -65,7 +65,7 @@ namespace LottieViewer
             }
         }
 
-        internal CompositionPlayer Player => _player;
+        internal AnimatedVisualPlayer Player => _player;
 
         internal bool PlayerHasIssues
         {

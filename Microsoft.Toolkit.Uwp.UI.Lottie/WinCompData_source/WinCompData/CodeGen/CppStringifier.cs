@@ -102,6 +102,13 @@ namespace WinCompData.CodeGen
 
         public string FailFastWrapper(string value) => $"FFHR({value})";
 
+        /// <summary>
+        /// Returns the code for a class that wraps an ID2D1Geometry in an IGeometrySource2DInterop
+        /// as required by CompositionPath.
+        /// This class will be included inline in every codegen so that the generated code
+        /// doesn't need to depend on another file.
+        /// The implementation is very simple - just enough to satisfy CompositionPath.
+        /// </summary>
         public string GeoSourceClass =>
 @"class GeoSource final :
     public ABI::Windows::Graphics::IGeometrySource2D,
@@ -112,7 +119,7 @@ namespace WinCompData.CodeGen
 
 public:
     GeoSource(ID2D1Geometry* pGeometry)
-        : _cRef(0)
+        : _cRef(1)
         , _cpGeometry(pGeometry)
     { }
 

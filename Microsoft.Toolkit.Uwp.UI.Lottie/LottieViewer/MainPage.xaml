@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!-- Paint palette -->
                 <Button Style="{StaticResource ControlsButtonStyle}"
-                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                        IsEnabled="{x:Bind _stage.Player.IsAnimatedVisualLoaded, Mode=OneWay}"
                         ToolTipService.ToolTip="Background color"
                         >
                     <Button.Flyout>
@@ -55,7 +55,7 @@
                 </Button>
                 <!-- Play speed -->
                 <Button Style="{StaticResource ControlsButtonStyle}"
-                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                        IsEnabled="{x:Bind _stage.Player.IsAnimatedVisualLoaded, Mode=OneWay}"
                         ToolTipService.ToolTip="Play speed"
                         >
                     <Button.Flyout>
@@ -101,7 +101,7 @@
                 </Button>
                 <!-- Save as: e792. Save: e74e-->
                 <Button Style="{StaticResource ControlsButtonStyle}" 
-                    IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                    IsEnabled="{x:Bind _stage.Player.IsAnimatedVisualLoaded, Mode=OneWay}"
                     ToolTipService.ToolTip="Save Lottie as code"
                     Click="SaveFile_Click" >&#xe74e;</Button>
 
@@ -173,7 +173,7 @@
                               RelativePanel.AlignBottomWithPanel="True"
                               Checked="_playControl_Toggled"
                               Unchecked="_playControl_Toggled"
-                              IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                              IsEnabled="{x:Bind _stage.Player.IsAnimatedVisualLoaded, Mode=OneWay}"
                               ToolTipService.ToolTip="Play/Stop"
                               >
                     <Grid>
@@ -188,7 +188,7 @@
                 <!--IsEnabled="{x:Bind _playStopButton.IsChecked, Mode=OneWay}"-->
                 <local:Scrubber x:Name="_scrubber" ValueChanged="ProgressSliderChanged"
                                 Margin="0,5,0,0"
-                        IsEnabled="{x:Bind _stage.Player.IsCompositionLoaded, Mode=OneWay}"
+                        IsEnabled="{x:Bind _stage.Player.IsAnimatedVisualLoaded, Mode=OneWay}"
                         RelativePanel.RightOf="_playStopButton"
                         RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.AlignBottomWithPanel="True" 

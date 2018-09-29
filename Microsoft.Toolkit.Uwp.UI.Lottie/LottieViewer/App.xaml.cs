@@ -1,8 +1,8 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-using Compositions;
-using Microsoft.UI.Xaml.Controls.CompositionPlayer;
+using AnimatedVisuals;
+using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -103,7 +103,7 @@ namespace LottieViewer
             var splashGrid = new Grid();
             Window.Current.Content = splashGrid;
 
-            var compositionPlayer = new CompositionPlayer
+            var player = new AnimatedVisualPlayer
             {
                 Stretch = Stretch.UniformToFill,
                 AutoPlay = false,
@@ -111,10 +111,10 @@ namespace LottieViewer
             };
 
             splashGrid.Children.Add(originalWindowContent);
-            splashGrid.Children.Add(compositionPlayer);
+            splashGrid.Children.Add(player);
 
             // Start playing.
-            await compositionPlayer.PlayAsync(fromProgress:0, toProgress:0.599, looped:false);
+            await player.PlayAsync(fromProgress:0, toProgress:0.599, looped:false);
 
             // Fade out the splash screen
             var storyboard = new Storyboard();
@@ -125,7 +125,7 @@ namespace LottieViewer
                 Duration = TimeSpan.FromSeconds(0.15),
             });
             Storyboard.SetTargetProperty(storyboard, "Opacity");
-            Storyboard.SetTarget(storyboard, compositionPlayer);
+            Storyboard.SetTarget(storyboard, player);
             storyboard.Begin();
             storyboard.Completed += (sender, e)
                 =>
@@ -137,7 +137,7 @@ namespace LottieViewer
                 //splashGrid.Children.Clear();
                 //Window.Current.Content = originalWindowContent;
 
-                splashGrid.Children.Remove(compositionPlayer);
+                splashGrid.Children.Remove(player);
             };
         }
 

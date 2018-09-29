@@ -143,7 +143,7 @@ namespace LottieViewer
         }
 
         /// <summary>
-        /// Defines a segment of a composition that can be played by the <see cref="CompositionPlayer"/>.
+        /// Defines a segment of a composition that can be played by the <see cref="AnimatedVisualPlayer"/>.
         /// </summary>
         sealed class CompositionSegment
         {

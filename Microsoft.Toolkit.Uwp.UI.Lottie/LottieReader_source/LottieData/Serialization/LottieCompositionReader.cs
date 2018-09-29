@@ -1954,8 +1954,8 @@ namespace LottieData.Serialization
 
                 T endValue = default(T);
                 // The initial keyframe has the same value as the initial value. Easing therefore doesn't
-                // matter, but might as well use linear as it's the simplest.
-                Easing easing = LinearEasing.Instance;
+                // matter, but might as well use hold as it's the simplest (it does not interpolation)
+                Easing easing = HoldEasing.Instance;
                 // Start by holding from the initial value.
                 bool isHolding = true;
                 // SpatialBeziers.

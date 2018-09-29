@@ -20,7 +20,7 @@ namespace Lottie
         Optimize = 1,
 
         /// <summary>
-        /// Sets the <see cref="CompositionPlayer.Diagnostics"/> property with information
+        /// Sets the <see cref="AnimatedVisualPlayer.Diagnostics"/> property with information
         /// about the Lottie.
         /// </summary>
         IncludeDiagnostics = 2,

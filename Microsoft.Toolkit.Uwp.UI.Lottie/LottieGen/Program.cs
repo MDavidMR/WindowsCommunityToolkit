@@ -774,7 +774,7 @@ sealed class Program
 Usage: {0} -InputFile LOTTIEFILE -Language LANG [Other options]
 
 OVERVIEW:
-       Generates source code from Lottie files for playing in the CompositionPlayer. 
+       Generates source code from Lottie files for playing in the AnimatedVisualPlayer. 
        LOTTIEFILE is a Lottie .json file. LOTTIEFILE may contain wildcards.
        LANG is one of cs, cppcx, winrtcpp, wincompxml, lottiexml, dgml, or stats.
        -Language LANG may be specified multiple times.

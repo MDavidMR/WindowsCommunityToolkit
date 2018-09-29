@@ -40,6 +40,7 @@ namespace WinCompData.CodeGen
                 CanonicalizeInsetClips();
                 CanonicalizeEllipseGeometries();
                 CanonicalizeRectangleGeometries();
+                CanonicalizeRoundedRectangleGeometries();
 
                 CanonicalizeCanvasGeometryPaths();
 
@@ -303,149 +304,172 @@ namespace WinCompData.CodeGen
                     into grouped
                     select grouped;
 
-            CanonicalizeGrouping(grouping);
-        }
+                CanonicalizeGrouping(grouping);
+            }
 
-        void CanonicalizeCompositionPathGeometries()
-        {
-            var items = GetCanonicalizableCompositionObjects<CompositionPathGeometry>(CompositionObjectType.CompositionPathGeometry);
-
-            var grouping =
-                from item in items
-                let obj = item.Object
-                let path = CanonicalObject<CompositionPath>(obj.Path)
-                group item.Node by new
-                {
-                    path,
-                    obj.TrimStart,
-                    obj.TrimEnd,
-                    obj.TrimOffset
-                } into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeCanvasGeometryPaths()
-        {
-            var items = GetCanonicalizableCanvasGeometries<CanvasGeometry.Path>(CanvasGeometry.GeometryType.Path);
-            var grouping =
-                from item in items
-                let obj = item.Object
-                group item.Node by obj into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeCompositionPaths()
-        {
-            var grouping =
-                from item in _graph.CompositionPathNodes
-                let obj = item.Object
-                let canonicalSource = CanonicalObject<CanvasGeometry>(obj.Source)
-                group item.Node by canonicalSource into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeInsetClips()
-        {
-            var items = GetCanonicalizableCompositionObjects<InsetClip>(CompositionObjectType.InsetClip);
-
-            var grouping =
-                from item in items
-                let obj = item.Object
-                group item.Node by
-                new
-                {
-                    obj.BottomInset,
-                    obj.LeftInset,
-                    obj.RightInset,
-                    obj.TopInset,
-                    obj.CenterPoint,
-                    obj.Scale,
-                }
-                into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeCubicBezierEasingFunctions()
-        {
-            var items = GetCanonicalizableCompositionObjects<CubicBezierEasingFunction>(CompositionObjectType.CubicBezierEasingFunction);
-
-            var grouping =
-                from item in items
-                let obj = item.Object
-                group item.Node by
-                new
-                {
-                    obj.ControlPoint1,
-                    obj.ControlPoint2,
-                }
-                into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeLinearEasingFunctions()
-        {
-            var items = GetCanonicalizableCompositionObjects<LinearEasingFunction>(CompositionObjectType.LinearEasingFunction);
-
-            // Every LinearEasingFunction is equivalent.
-            var grouping =
-                from item in items
-                group item.Node by true into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        void CanonicalizeStepEasingFunctions()
-        {
-            var items = GetCanonicalizableCompositionObjects<StepEasingFunction>(CompositionObjectType.StepEasingFunction);
-
-            var grouping =
-                from item in items
-                let obj = item.Object
-                group item.Node by
-                new
-                {
-                    obj.FinalStep,
-                    obj.InitialStep,
-                    obj.IsFinalStepSingleFrame,
-                    obj.IsInitialStepSingleFrame,
-                    obj.StepCount,
-                }
-                into grouped
-                select grouped;
-
-            CanonicalizeGrouping(grouping);
-        }
-
-        static void CanonicalizeGrouping<K>(IEnumerable<IGrouping<K, T>> grouping)
-        {
-            foreach (var group in grouping)
+            void CanonicalizeRoundedRectangleGeometries()
             {
-                // The canonical node is the node that appears first in the
-                // traversal of the tree.
-                var orderedGroup = group.OrderBy(n => n.Position);
-                var groupArray = orderedGroup.ToArray();
-                var canonical = groupArray[0];
+                var items = GetCanonicalizableCompositionObjects<CompositionRoundedRectangleGeometry>(CompositionObjectType.CompositionRoundedRectangleGeometry);
 
-                // Point every node to the canonical node.
-                foreach (var node in group)
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    group item.Node by new
+                    {
+                        obj.Offset,
+                        obj.Size,
+                        obj.CornerRadius,
+                        obj.TrimStart,
+                        obj.TrimEnd,
+                        obj.TrimOffset
+                    }
+                    into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+
+            void CanonicalizeCompositionPathGeometries()
+            {
+                var items = GetCanonicalizableCompositionObjects<CompositionPathGeometry>(CompositionObjectType.CompositionPathGeometry);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    let path = CanonicalObject<CompositionPath>(obj.Path)
+                    group item.Node by new
+                    {
+                        path,
+                        obj.TrimStart,
+                        obj.TrimEnd,
+                        obj.TrimOffset
+                    } into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeCanvasGeometryPaths()
+            {
+                var items = GetCanonicalizableCanvasGeometries<CanvasGeometry.Path>(CanvasGeometry.GeometryType.Path);
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    group item.Node by obj into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeCompositionPaths()
+            {
+                var grouping =
+                    from item in _graph.CompositionPathNodes
+                    let obj = item.Object
+                    let canonicalSource = CanonicalObject<CanvasGeometry>(obj.Source)
+                    group item.Node by canonicalSource into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeInsetClips()
+            {
+                var items = GetCanonicalizableCompositionObjects<InsetClip>(CompositionObjectType.InsetClip);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    group item.Node by
+                    new
+                    {
+                        obj.BottomInset,
+                        obj.LeftInset,
+                        obj.RightInset,
+                        obj.TopInset,
+                        obj.CenterPoint,
+                        obj.Scale,
+                    }
+                    into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeCubicBezierEasingFunctions()
+            {
+                var items = GetCanonicalizableCompositionObjects<CubicBezierEasingFunction>(CompositionObjectType.CubicBezierEasingFunction);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    group item.Node by
+                    new
+                    {
+                        obj.ControlPoint1,
+                        obj.ControlPoint2,
+                    }
+                    into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeLinearEasingFunctions()
+            {
+                var items = GetCanonicalizableCompositionObjects<LinearEasingFunction>(CompositionObjectType.LinearEasingFunction);
+
+                // Every LinearEasingFunction is equivalent.
+                var grouping =
+                    from item in items
+                    group item.Node by true into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            void CanonicalizeStepEasingFunctions()
+            {
+                var items = GetCanonicalizableCompositionObjects<StepEasingFunction>(CompositionObjectType.StepEasingFunction);
+
+                var grouping =
+                    from item in items
+                    let obj = item.Object
+                    group item.Node by
+                    new
+                    {
+                        obj.FinalStep,
+                        obj.InitialStep,
+                        obj.IsFinalStepSingleFrame,
+                        obj.IsInitialStepSingleFrame,
+                        obj.StepCount,
+                    }
+                    into grouped
+                    select grouped;
+
+                CanonicalizeGrouping(grouping);
+            }
+
+            static void CanonicalizeGrouping<K>(IEnumerable<IGrouping<K, T>> grouping)
+            {
+                foreach (var group in grouping)
                 {
-                    node.Canonical = canonical;
-                    node.NodesInGroup = groupArray;
+                    // The canonical node is the node that appears first in the
+                    // traversal of the tree.
+                    var orderedGroup = group.OrderBy(n => n.Position);
+                    var groupArray = orderedGroup.ToArray();
+                    var canonical = groupArray[0];
+
+                    // Point every node to the canonical node.
+                    foreach (var node in group)
+                    {
+                        node.Canonical = canonical;
+                        node.NodesInGroup = groupArray;
+                    }
                 }
             }
-        }
 
+        }
     }
-}
 }

@@ -34,7 +34,7 @@ using System.Linq;
 using Sn = System.Numerics;
 using WinCompData;
 using Expr = WinCompData.Expressions.Expression;
-using CubicBezierFunction = WinCompData.Expressions.CubicBezierFunction;
+using CubicBezierFunction2 = WinCompData.Expressions.CubicBezierFunction2;
 using TypeConstraint = WinCompData.Expressions.TypeConstraint;
 using ExpressionType = WinCompData.Expressions.ExpressionType;
 using WinCompData.Mgcg;
@@ -476,11 +476,12 @@ namespace LottieToWinComp
                 {
                     // Set initial value to be non-visible (default is visible).
                     visibilityNode.TransformMatrix = new Sn.Matrix3x2();
-                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
+                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldThenStepEasingFunction());
                 }
+
                 if (outProgress < 1)
                 {
-                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
+                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldThenStepEasingFunction());
                 }
                 visibilityAnimation.Duration = _lc.Duration;
                 StartKeyframeAnimation(visibilityNode, "TransformMatrix._11", visibilityAnimation);
@@ -590,11 +591,11 @@ namespace LottieToWinComp
                 {
                     // Set initial value to be non-visible.
                     visibilityNode.Opacity = 0;
-                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldStepEasingFunction());
+                    visibilityAnimation.InsertKeyFrame(inProgress, 1, CreateHoldThenStepEasingFunction());
                 }
                 if (outProgress < 1)
                 {
-                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldStepEasingFunction());
+                    visibilityAnimation.InsertKeyFrame(outProgress, 0, CreateHoldThenStepEasingFunction());
                 }
                 visibilityAnimation.Duration = _lc.Duration;
                 StartKeyframeAnimation(visibilityNode, "Opacity", visibilityAnimation);
@@ -711,7 +712,7 @@ namespace LottieToWinComp
                                 Fill = new SolidColorFill(
                                     null, null,
                                     SolidColorFill.PathFillType.EvenOdd,
-                                    new Animatable<Color>(lgf.GradientStops.InitialValue.Items.First().Color, null),
+                                    new Animatable<Color>(GradientStop.GetFirstColor(lgf.GradientStops.InitialValue.Items), null),
                                     lgf.OpacityPercent);
                             }
                             break;
@@ -724,7 +725,7 @@ namespace LottieToWinComp
                                 Fill = new SolidColorFill(
                                     null, null,
                                     SolidColorFill.PathFillType.EvenOdd,
-                                    new Animatable<Color>(rgf.GradientStops.InitialValue.Items.First().Color, null),
+                                    new Animatable<Color>(GradientStop.GetFirstColor(rgf.GradientStops.InitialValue.Items), null),
                                     rgf.OpacityPercent);
                             }
                             break;
@@ -1136,6 +1137,10 @@ namespace LottieToWinComp
                             TranslateAndApplyTransformToContainerShape(context, transform, result);
                         }
                         break;
+                    case ShapeContentType.Repeater:
+                        // TODO - handle all cases. Not clear whether this is valid. Seen on 0605.traffic_light.
+                        _unsupported.Repeater();
+                        break;
                     default:
                     case ShapeContentType.SolidColorStroke:
                     case ShapeContentType.LinearGradientStroke:
@@ -1145,7 +1150,6 @@ namespace LottieToWinComp
                     case ShapeContentType.RadialGradientFill:
                     case ShapeContentType.TrimPath:
                     case ShapeContentType.RoundedCorner:
-                    case ShapeContentType.Repeater:
                         throw new InvalidOperationException();
                 }
             }
@@ -2095,23 +2099,7 @@ namespace LottieToWinComp
             var initialAnchor = Vector2(anchor.InitialValue);
             var initialPosition = Vector2(position.InitialValue);
 
-
-            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
-            if (position.IsAnimated)
-            {
-                container.Properties.InsertVector2("Position", initialPosition);
-
-                if (position is AnimatableXYZ xyzPosition)
-                {
-                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
-                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
-                }
-                else
-                {
-                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
-                }
-            }
+            var positionIsAnimated = position.IsAnimated;
 
             // The Lottie Anchor is the centerpoint of the object and is used for rotation and scaling.
             if (anchor.IsAnimated)
@@ -2147,9 +2135,35 @@ namespace LottieToWinComp
             else if (position.IsAnimated)
             {
                 // Only position is animated.
-                offsetExpression = CreateExpressionAnimation(Expr.Vector3(
-                                        Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar(initialAnchor.X)),
-                                        Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar(initialAnchor.Y))));
+                if (initialAnchor == Sn.Vector2.Zero)
+                {
+                    // Position and Offset are equivalent because the Anchor is not animated and is 0.
+                    // We don't need to animate a Position property - we can animate Offset directly.
+                    positionIsAnimated = false;
+
+                    if (position is AnimatableXYZ xyzPosition)
+                    {
+                        // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                        ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Offset.X");
+                        ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Offset.Y");
+                    }
+                    else
+                    {
+                        // TODO - when we support spatial bezier CubicBezierFunction3, we can enable this. For now this
+                        //        may result in a CubicBezierFunction2 being applied to the Vector3 Offset property.
+                        //ApplyVector3KeyFrameAnimation(context, (AnimatableVector3)position, container, "Offset");
+                        offsetExpression = CreateExpressionAnimation(Expr.Vector3(
+                                                Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar(initialAnchor.X)),
+                                                Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar(initialAnchor.Y))));
+                        positionIsAnimated = true;
+                    }
+                }
+                else
+                {
+                    offsetExpression = CreateExpressionAnimation(Expr.Vector3(
+                                            Expr.Subtract(Expr.Scalar("my.Position.X"), Expr.Scalar(initialAnchor.X)),
+                                            Expr.Subtract(Expr.Scalar("my.Position.Y"), Expr.Scalar(initialAnchor.Y))));
+                }
             }
             else if (anchor.IsAnimated)
             {
@@ -2164,6 +2178,23 @@ namespace LottieToWinComp
                 container.Offset = Vector3DefaultIsZero(initialPosition - initialAnchor);
             }
 
+            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
+            if (positionIsAnimated)
+            {
+                container.Properties.InsertVector2("Position", initialPosition);
+
+                if (position is AnimatableXYZ xyzPosition)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
+                }
+            }
+
             if (offsetExpression != null)
             {
                 offsetExpression.SetReferenceParameter("my", container);
@@ -2176,21 +2207,7 @@ namespace LottieToWinComp
             var initialAnchor = Vector2(anchor.InitialValue);
             var initialPosition = Vector2(position.InitialValue);
 
-            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
-            if (position.IsAnimated)
-            {
-                container.Properties.InsertVector2("Position", initialPosition);
-                if (position is AnimatableXYZ xyzPosition)
-                {
-                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
-                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
-                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
-                }
-                else
-                {
-                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
-                }
-            }
+            var positionIsAnimated = position.IsAnimated;
 
             // The Lottie Anchor is the centerpoint of the object and is used for rotation and scaling.
             if (anchor.IsAnimated)
@@ -2226,7 +2243,27 @@ namespace LottieToWinComp
             else if (position.IsAnimated)
             {
                 // Only position is animated.
-                offsetExpression = CreateExpressionAnimation(Expr.Subtract(MyPosition2, Expr.Vector2(initialAnchor)));
+                if (initialAnchor == Sn.Vector2.Zero)
+                {
+                    // Position and Offset are equivalent because the Anchor is not animated and is 0.
+                    // We don't need to animate a Position property - we can animate Offset directly.
+                    positionIsAnimated = false;
+
+                    if (position is AnimatableXYZ xyzPosition)
+                    {
+                        // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                        ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Offset.X");
+                        ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Offset.Y");
+                    }
+                    else
+                    {
+                        ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Offset");
+                    }
+                }
+                else
+                {
+                    offsetExpression = CreateExpressionAnimation(Expr.Subtract(MyPosition2, Expr.Vector2(initialAnchor)));
+                }
             }
             else if (anchor.IsAnimated)
             {
@@ -2239,8 +2276,25 @@ namespace LottieToWinComp
                 container.Offset = Vector2DefaultIsZero(initialPosition - initialAnchor);
             }
 
+            // Position is a Lottie-only concept. It offsets the object relative to the Anchor.
+            if (positionIsAnimated)
+            {
+                container.Properties.InsertVector2("Position", initialPosition);
+                if (position is AnimatableXYZ xyzPosition)
+                {
+                    // TODO BLOCKED: 14632318 animationGroup Targets can't dot in
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.X, container, targetPropertyName: "Position.X");
+                    ApplyScalarKeyFrameAnimation(context, xyzPosition.Y, container, targetPropertyName: "Position.Y");
+                }
+                else
+                {
+                    ApplyVector2KeyFrameAnimation(context, (AnimatableVector3)position, container, "Position");
+                }
+            }
+
             if (offsetExpression != null)
             {
+                // Start an expression animation that relates Offset to Position and Anchor.
                 offsetExpression.SetReferenceParameter("my", container);
                 StartExpressionAnimation(container, nameof(container.Offset), offsetExpression);
             }
@@ -2489,7 +2543,7 @@ namespace LottieToWinComp
 
                 // The first key frame is after the start of the animation. Create an extra keyframe at 0 to
                 // set and hold an initial value until the first specified keyframe.
-                insertKeyFrame(compositionAnimation, 0 /* progress */, firstKeyFrame.Value, CreateLinearEasingFunction() /* easing */);
+                insertKeyFrame(compositionAnimation, 0 /* progress */, firstKeyFrame.Value, CreateStepThenHoldEasingFunction() /*easing*/);
 
                 animationStartTime = context.StartTime;
             }
@@ -2530,7 +2584,7 @@ namespace LottieToWinComp
                     var cp1 = Vector2(keyFrame.SpatialControlPoint1);
                     var cp2 = Vector2(keyFrame.SpatialControlPoint2);
                     var cp3 = Vector2((Vector3)(object)keyFrame.Value);
-                    CubicBezierFunction cb;
+                    CubicBezierFunction2 cb;
 
                     switch (keyFrame.Easing.Type)
                     {
@@ -2545,7 +2599,7 @@ namespace LottieToWinComp
 #if LinearEasingOnSpatialBeziers
                             cb = CubicBezierFunction.Create(cp0, (cp0 + cp1), (cp2 + cp3), cp3, GetRemappedProgress(previousProgress, adjustedProgress));
 #else
-                            cb = CubicBezierFunction.Create(
+                            cb = CubicBezierFunction2.Create(
                                 cp0,
                                 (cp0 + cp1),
                                 (cp2 + cp3),
@@ -2555,7 +2609,7 @@ namespace LottieToWinComp
                             break;
                         case Easing.EasingType.Hold:
                             // Holds should never have interesting cubic beziers, so replace with one that is definitely colinear.
-                            cb = CubicBezierFunction.Zero;
+                            cb = CubicBezierFunction2.Zero;
                             break;
                         default:
                             throw new InvalidOperationException();
@@ -2574,11 +2628,11 @@ namespace LottieToWinComp
                         {
                             // Ensure the previous expression doesn't continue being evaluated during the current keyframe.
                             // This is necessary because the expression is only defined from the previous progress to the current progress.
-                            insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateJumpStepEasingFunction());
+                            insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateStepThenHoldEasingFunction());
                         }
 
-                        // The easing for a keyframe at 0 is unimportant, so always use linear.
-                        var easing = adjustedProgress == 0 ? LinearEasing.Instance : keyFrame.Easing;
+                        // The easing for a keyframe at 0 is unimportant, so always use Hold.
+                        var easing = adjustedProgress == 0 ?  HoldEasing.Instance : keyFrame.Easing;
 
                         insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(easing));
                         previousKeyFrameWasExpression = false;
@@ -2600,7 +2654,7 @@ namespace LottieToWinComp
                         // Add an animation to map from progress to t over the range of this key frame.
                         if (previousProgress > 0)
                         {
-                            progressMappingAnimation.InsertKeyFrame((float)previousProgress + c_keyFrameProgressEpsilon, 0, CreateJumpStepEasingFunction());
+                            progressMappingAnimation.InsertKeyFrame((float)previousProgress + c_keyFrameProgressEpsilon, 0, CreateStepThenHoldEasingFunction());
                         }
                         progressMappingAnimation.InsertKeyFrame((float)adjustedProgress, 1, CreateCompositionEasingFunction(keyFrame.Easing));
 #endif
@@ -2608,7 +2662,7 @@ namespace LottieToWinComp
                             compositionAnimation,
                             (float)adjustedProgress,
                             cb,                                 // Expression. 
-                            CreateJumpStepEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.
+                            CreateStepThenHoldEasingFunction());    // Jump to the final value so the expression is evaluated all the way through.
                         // Note that a reference to the root Visual is required by the animation because it
                         // is used in the expression.
                         rootReferenceRequired = true;
@@ -2621,7 +2675,7 @@ namespace LottieToWinComp
                     if (previousKeyFrameWasExpression)
                     {
                         // Ensure the previous expression doesn't continue being evaluated during the current keyframe.
-                        insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateJumpStepEasingFunction());
+                        insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, previousValue, CreateStepThenHoldEasingFunction());
                     }
 
                     insertKeyFrame(compositionAnimation, (float)adjustedProgress, keyFrame.Value, CreateCompositionEasingFunction(keyFrame.Easing));
@@ -2635,7 +2689,7 @@ namespace LottieToWinComp
             {
                 // Add a keyframe to hold the final value. Otherwise the expression on the last keyframe
                 // will get evaluated outside the bounds of its keyframe.
-                insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, (T)(object)previousValue, CreateJumpStepEasingFunction());
+                insertKeyFrame(compositionAnimation, (float)previousProgress + c_keyFrameProgressEpsilon, (T)(object)previousValue, CreateStepThenHoldEasingFunction());
             }
 
             // Add a reference to the root Visual if needed (i.e. if an expression keyframe was added).
@@ -2739,7 +2793,7 @@ namespace LottieToWinComp
 
                 // Create a cubic bezier function to map the time using the given control points.
                 var oneOne = Vector2(1);
-                var easing = CubicBezierFunction.Create(Vector2(0), Vector2(controlPoint1), Vector2(controlPoint2), oneOne, remap);
+                var easing = CubicBezierFunction2.Create(Vector2(0), Vector2(controlPoint1), Vector2(controlPoint2), oneOne, remap);
 
                 var animation = CreateExpressionAnimation(Expr.Scalar($"({easing}).Y"));
                 animation.SetReferenceParameter(c_rootName, _rootVisual);
@@ -2929,7 +2983,7 @@ namespace LottieToWinComp
                 case Easing.EasingType.CubicBezier:
                     return CreateCubicBezierEasingFunction((CubicBezierEasing)easingFunction);
                 case Easing.EasingType.Hold:
-                    return CreateHoldStepEasingFunction();
+                    return CreateHoldThenStepEasingFunction();
                 default:
                     throw new InvalidOperationException();
             }
@@ -2958,8 +3012,8 @@ namespace LottieToWinComp
             return result;
         }
 
-        // Returns an easing function that holds its initial value and jumps to the final value at the end.
-        StepEasingFunction CreateHoldStepEasingFunction()
+        // Returns an easing function that holds its initial value and steps to the final value at the end.
+        StepEasingFunction CreateHoldThenStepEasingFunction()
         {
             if (_holdStepEasingFunction == null)
             {
@@ -2969,8 +3023,8 @@ namespace LottieToWinComp
             return _holdStepEasingFunction;
         }
 
-        // Returns an easing function that jumps immediately to its final value.
-        StepEasingFunction CreateJumpStepEasingFunction()
+        // Returns an easing function that steps immediately to its final value.
+        StepEasingFunction CreateStepThenHoldEasingFunction()
         {
             if (_jumpStepEasingFunction == null)
             {

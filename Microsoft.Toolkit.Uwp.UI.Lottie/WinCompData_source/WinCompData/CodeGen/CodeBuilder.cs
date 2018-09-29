@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace WinCompData.CodeGen
@@ -62,6 +63,7 @@ namespace WinCompData.CodeGen
 
         internal void UnIndent()
         {
+            Debug.Assert(_indentCount > 0);
             _indentCount--;
         }
 

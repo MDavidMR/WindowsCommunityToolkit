@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LottieData
 {
@@ -36,6 +38,15 @@ namespace LottieData
         public readonly Color Color;
         public readonly double Offset;
         public readonly double? Opacity;
+
+        /// <summary>
+        /// Returns the first gradient stop in a sequence that is a color. Opacity will always be
+        /// set to 1.
+        /// </summary>
+        public static Color GetFirstColor(IEnumerable<GradientStop> gradientStops)
+        {
+            return gradientStops.Select(stop=>stop.Color).FirstOrDefault(color => color != null);
+        }
 
         public override string ToString()
         {

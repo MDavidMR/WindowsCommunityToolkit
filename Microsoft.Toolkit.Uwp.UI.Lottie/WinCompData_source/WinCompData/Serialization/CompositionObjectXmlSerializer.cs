@@ -620,9 +620,9 @@ namespace WinCompData.Tools
         string GetCompositionObjectName(CompositionObject obj)
         {
             var name = obj.Type.ToString();
-            if (name.StartsWith("CompositionPlayer"))
+            if (name.StartsWith("AnimatedVisualPlayer"))
             {
-                name = name.Substring("CompositionPlayer".Length);
+                name = name.Substring("AnimatedVisualPlayer".Length);
             }
             return name;
         }

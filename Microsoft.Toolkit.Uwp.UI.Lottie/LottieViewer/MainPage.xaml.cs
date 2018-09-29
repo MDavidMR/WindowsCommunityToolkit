@@ -281,7 +281,7 @@ namespace LottieViewer
         async void _playControl_Toggled(object sender, RoutedEventArgs e)
         {
             // If no Lottie is loaded, do nothing.
-            if (!_stage.Player.IsCompositionLoaded)
+            if (!_stage.Player.IsAnimatedVisualLoaded)
             {
                 return;
             }

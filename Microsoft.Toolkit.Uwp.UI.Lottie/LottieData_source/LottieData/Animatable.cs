@@ -36,6 +36,7 @@ namespace LottieData
             InitialValue = initialValue;
             PropertyIndex = propertyIndex;
 
+            Debug.Assert(initialValue != null);
             Debug.Assert(keyFrames.All(kf => kf != null));
         }
 
@@ -67,6 +68,9 @@ namespace LottieData
         // Not a great hash code because it ignore the KeyFrames, but quick.
         public override int GetHashCode() => InitialValue.GetHashCode();
 
-        public override string ToString() => $"{InitialValue}{string.Join("", KeyFrames.Select(kf => $" -> {kf.Value}"))}";
+        public override string ToString() =>
+            IsAnimated
+                ? string.Join(" -> ", KeyFrames.Select(kf => kf.Value.ToString()))
+                : InitialValue.ToString();
     }
 }

@@ -59,7 +59,7 @@ namespace LottieData.Optimization
                         return optimized;
                     }
                 }
-                switch(g.Length)
+                switch (g.Length)
                 {
                     default:
                         return optimized;
@@ -182,10 +182,10 @@ namespace LottieData.Optimization
                     if (currentKeyFrame.Easing.Type != Easing.EasingType.Linear)
                     {
                         currentKeyFrame = new KeyFrame<T>(
-                            currentKeyFrame.Frame, 
-                            currentKeyFrame.Value, 
-                            currentKeyFrame.SpatialControlPoint1, 
-                            currentKeyFrame.SpatialControlPoint2, 
+                            currentKeyFrame.Frame,
+                            currentKeyFrame.Value,
+                            currentKeyFrame.SpatialControlPoint1,
+                            currentKeyFrame.SpatialControlPoint2,
                             LinearEasing.Instance);
                     }
                     yield return currentKeyFrame;
@@ -216,7 +216,7 @@ namespace LottieData.Optimization
             bool previousWasOutputAlready = false;
             foreach (var keyFrame in keyFrames)
             {
-                if (previous != null && keyFrame.Value.Equals(previous.Value) && 
+                if (previous != null && keyFrame.Value.Equals(previous.Value) &&
                     keyFrame.SpatialControlPoint1.Equals(previous.SpatialControlPoint1) &&
                     keyFrame.SpatialControlPoint2.Equals(previous.SpatialControlPoint2))
                 {
@@ -232,7 +232,9 @@ namespace LottieData.Optimization
                     // and the new value.
                     if (previous != null && !previousWasOutputAlready)
                     {
-                        yield return previous;
+                        // Convert the easing to be Hold because seeing as we know
+                        // the value isn't changing from the value before it.
+                        yield return GetKeyFrameWithHoldEasing(previous);
                     }
                     // Output the new value.
                     yield return keyFrame;
@@ -249,12 +251,27 @@ namespace LottieData.Optimization
         }
 
         /// <summary>
+        /// Returns a keyframe that is identical, except the easing function is Hold easing.
+        /// </summary>
+        static KeyFrame<T> GetKeyFrameWithHoldEasing<T>(KeyFrame<T> keyFrame) where T : IEquatable<T>
+        {
+            return keyFrame.Easing.Type == Easing.EasingType.Hold
+                ? keyFrame
+                : new KeyFrame<T>(
+                        keyFrame.Frame, 
+                        keyFrame.Value, 
+                        keyFrame.SpatialControlPoint1, 
+                        keyFrame.SpatialControlPoint2, 
+                        HoldEasing.Instance);
+        }
+
+        /// <summary>
         /// Returns at most 1 key frame with progress less than or equal <paramref name="startFrame"/>, and
         /// at most 1 key frame with progress greater than or equal <paramref name="endFrame"/>.
         /// </summary>
         public static IEnumerable<KeyFrame<T>> GetTrimmed<T>(
-            IEnumerable<KeyFrame<T>> keyFrames, 
-            double startFrame, 
+            IEnumerable<KeyFrame<T>> keyFrames,
+            double startFrame,
             double endFrame) where T : IEquatable<T>
         {
             KeyFrame<T> firstCandidate = null;
