@@ -8244,7 +8244,7 @@ namespace
     };
 } // end namespace
 
-Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::BirthdayCake::TryCreateInstance(
+Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::BirthdayCake::TryCreateAnimatedVisual(
     Compositor^ compositor,
     Object^* diagnostics)
 {

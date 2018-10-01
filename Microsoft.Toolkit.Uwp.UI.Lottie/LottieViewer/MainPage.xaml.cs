@@ -140,7 +140,7 @@ namespace LottieViewer
                     "{",
                     "    public interface class ICompositionSource",
                     "    {",
-                    "        virtual bool TryCreateInstance(",
+                    "        virtual bool TryCreateAnimatedVisual(",
                     "        Windows::UI::Composition::Compositor^ compositor,",
                     "        Windows::UI::Composition::Visual^* rootVisual,",
                     "        Windows::Foundation::Numerics::float2* size,",

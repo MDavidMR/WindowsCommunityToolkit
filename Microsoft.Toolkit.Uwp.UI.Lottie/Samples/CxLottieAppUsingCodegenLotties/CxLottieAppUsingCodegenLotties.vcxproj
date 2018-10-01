@@ -7,8 +7,8 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.17756.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.17756.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.18251.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.14393.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -188,14 +188,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\Microsoft.UI.Xaml.Controls.CompositionPlayer.0.1.1.2\build\native\Microsoft.UI.Xaml.Controls.CompositionPlayer.targets" Condition="Exists('packages\Microsoft.UI.Xaml.Controls.CompositionPlayer.0.1.1.2\build\native\Microsoft.UI.Xaml.Controls.CompositionPlayer.targets')" />
-    <Import Project="packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.4\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets" Condition="Exists('packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.4\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" />
+    <Import Project="..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets" Condition="Exists('..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\Microsoft.UI.Xaml.Controls.CompositionPlayer.0.1.1.2\build\native\Microsoft.UI.Xaml.Controls.CompositionPlayer.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.UI.Xaml.Controls.CompositionPlayer.0.1.1.2\build\native\Microsoft.UI.Xaml.Controls.CompositionPlayer.targets'))" />
-    <Error Condition="!Exists('packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.4\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.4\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets'))" />
   </Target>
 </Project>

@@ -13,6 +13,13 @@
     <Grid Background="Violet">
         <winui:AnimatedVisualPlayer x:Name="Player1">
             <!--<animatedVisuals:BirthdayCake/>-->
+            <winui:AnimatedVisualPlayer.FallbackContent>
+                <DataTemplate>
+                    <Border Background="Yellow">
+                        <TextBlock FontSize="20">Lottie is not supported on this version of Windows.</TextBlock>
+                    </Border>
+                </DataTemplate>
+            </winui:AnimatedVisualPlayer.FallbackContent>
         </winui:AnimatedVisualPlayer>
     </Grid>
 </Page>

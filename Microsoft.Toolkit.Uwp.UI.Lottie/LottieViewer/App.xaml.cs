@@ -131,13 +131,8 @@ namespace LottieViewer
                 =>
             {
                 // Restore the original content.
-
-                // TODO  - simply moving the original content back causes
-                //         the CompositionPlayer on the Page to disappear. Why?
-                //splashGrid.Children.Clear();
-                //Window.Current.Content = originalWindowContent;
-
-                splashGrid.Children.Remove(player);
+                splashGrid.Children.Clear();
+                Window.Current.Content = originalWindowContent;
             };
         }
 

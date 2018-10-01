@@ -73,7 +73,7 @@ namespace WinCompData.CodeGen
             builder.OpenScope();
 
             // Generate the method that creates an instance of the animated visual.
-            builder.WriteLine("public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)");
+            builder.WriteLine("public IAnimatedVisual TryCreateAnimatedVisual(Compositor compositor, out object diagnostics)");
             builder.OpenScope();
             builder.WriteLine("diagnostics = null;");
             builder.WriteLine("if (!IsRuntimeCompatible())");

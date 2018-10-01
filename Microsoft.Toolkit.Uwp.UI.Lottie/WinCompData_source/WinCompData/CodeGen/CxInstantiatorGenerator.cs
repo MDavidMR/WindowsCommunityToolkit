@@ -81,7 +81,7 @@ namespace AnimatedVisuals
 ref class {className} sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisualSource
 {{
 public:
-    virtual Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ TryCreateInstance(
+    virtual Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ TryCreateAnimatedVisual(
         Windows::UI::Composition::Compositor^ compositor,
         Platform::Object^* diagnostics);
 }};
@@ -208,7 +208,7 @@ public:
             builder.WriteLine();
 
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine($"Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::{info.ClassName}::TryCreateInstance(");
+            builder.WriteLine($"Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::{info.ClassName}::TryCreateAnimatedVisual(");
             builder.Indent();
             builder.WriteLine("Compositor^ compositor,");
             builder.WriteLine("Object^* diagnostics)");

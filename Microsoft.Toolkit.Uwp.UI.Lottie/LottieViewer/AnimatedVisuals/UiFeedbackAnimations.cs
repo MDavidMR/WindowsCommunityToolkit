@@ -23,7 +23,7 @@ namespace AnimatedVisuals
             }
         }
 
-        public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)
+        public IAnimatedVisual TryCreateAnimatedVisual(Compositor compositor, out object diagnostics)
         {
             diagnostics = null;
             return new AnimatedVisual

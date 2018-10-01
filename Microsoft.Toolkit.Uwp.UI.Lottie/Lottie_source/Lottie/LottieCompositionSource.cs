@@ -143,8 +143,8 @@ namespace Lottie
         }
 
         // TODO: currently explicitly implemented interfaces are causing a problem with .NET Native. Make them implicit for now.
-        public IAnimatedVisual TryCreateInstance(
-        //bool IAnimatedVisualSource.TryCreateInstance(
+        public IAnimatedVisual TryCreateAnimatedVisual(
+        //bool IAnimatedVisualSource.TryCreateAnimatedVisual(
             Compositor compositor,
             out object diagnostics)
         {
@@ -156,7 +156,7 @@ namespace Lottie
             }
             else
             {
-                return _contentFactory.TryCreateInstance(compositor, out diagnostics);
+                return _contentFactory.TryCreateAnimatedVisual(compositor, out diagnostics);
             }
         }
 
@@ -546,7 +546,7 @@ namespace Lottie
                 return _diagnostics != null ? _diagnostics.Clone() : null;
             }
 
-            public IAnimatedVisual TryCreateInstance(Compositor compositor, out object diagnostics)
+            public IAnimatedVisual TryCreateAnimatedVisual(Compositor compositor, out object diagnostics)
             {
                 var diags = GetDiagnosticsClone();
                 diagnostics = diags;
