@@ -158,7 +158,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="CxLottieAppUsingCodegenLotties_TemporaryKey.pfx" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
@@ -186,14 +185,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj">
+      <Project>{aad726b1-fcde-4847-95d9-298a5a2bebf3}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets" Condition="Exists('..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.0.2.1.7\build\native\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

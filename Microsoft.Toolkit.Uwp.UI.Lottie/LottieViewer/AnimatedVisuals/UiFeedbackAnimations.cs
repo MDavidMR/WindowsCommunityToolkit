@@ -1,7 +1,7 @@
 // Copyright(c) Microsoft Corporation.All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Numerics;

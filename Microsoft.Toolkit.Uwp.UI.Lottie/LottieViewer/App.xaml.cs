@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using AnimatedVisuals;
-using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;

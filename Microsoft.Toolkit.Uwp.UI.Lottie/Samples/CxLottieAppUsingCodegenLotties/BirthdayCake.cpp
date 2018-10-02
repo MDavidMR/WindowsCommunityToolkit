@@ -101,7 +101,7 @@ namespace
         return true;
     }
 
-    ref class AnimatedVisual sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual
+    ref class AnimatedVisual sealed : public Microsoft::UI::Xaml::Controls::IAnimatedVisual
     {
         ComPtr<ID2D1Factory> _d2dFactory;
         const int64_t c_durationTicks = 20000000L;
@@ -8244,7 +8244,7 @@ namespace
     };
 } // end namespace
 
-Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::BirthdayCake::TryCreateAnimatedVisual(
+Microsoft::UI::Xaml::Controls::IAnimatedVisual^ AnimatedVisuals::BirthdayCake::TryCreateAnimatedVisual(
     Compositor^ compositor,
     Object^* diagnostics)
 {

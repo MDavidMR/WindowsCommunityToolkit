@@ -60,7 +60,7 @@ namespace WinCompData.CodeGen
             {
                 builder.WriteLine("using Microsoft.Graphics.Canvas.Geometry;");
             }
-            builder.WriteLine("using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;");
+            builder.WriteLine("using Microsoft.UI.Xaml.Controls;");
             builder.WriteLine("using System;");
             builder.WriteLine("using System.Numerics;");
             builder.WriteLine("using Windows.UI;");

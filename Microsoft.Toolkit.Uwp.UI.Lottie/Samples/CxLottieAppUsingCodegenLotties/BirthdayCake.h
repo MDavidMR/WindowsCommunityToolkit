@@ -10,10 +10,10 @@
 
 namespace AnimatedVisuals
 {
-    ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisualSource
+    ref class BirthdayCake sealed : public Microsoft::UI::Xaml::Controls::IAnimatedVisualSource
     {
     public:
-        virtual Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ TryCreateAnimatedVisual(
+        virtual Microsoft::UI::Xaml::Controls::IAnimatedVisual^ TryCreateAnimatedVisual(
             Windows::UI::Composition::Compositor^ compositor,
             Platform::Object^* diagnostics);
     };

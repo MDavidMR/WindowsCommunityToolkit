@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Lottie;
-using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Linq;
 using Windows.Storage;

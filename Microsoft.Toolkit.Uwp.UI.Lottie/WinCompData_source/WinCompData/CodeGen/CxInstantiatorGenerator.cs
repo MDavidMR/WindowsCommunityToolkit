@@ -78,10 +78,10 @@ $@"#pragma once
 
 namespace AnimatedVisuals 
 {{
-ref class {className} sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisualSource
+ref class {className} sealed : public Microsoft::UI::Xaml::Controls::IAnimatedVisualSource
 {{
 public:
-    virtual Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ TryCreateAnimatedVisual(
+    virtual Microsoft::UI::Xaml::Controls::IAnimatedVisual^ TryCreateAnimatedVisual(
         Windows::UI::Composition::Compositor^ compositor,
         Platform::Object^* diagnostics);
 }};
@@ -131,7 +131,7 @@ public:
         protected override void WriteInstantiatorStart(CodeBuilder builder, CodeGenInfo info)
         {
             // Start writing the instantiator.
-            builder.WriteLine("ref class AnimatedVisual sealed : public Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual");
+            builder.WriteLine("ref class AnimatedVisual sealed : public Microsoft::UI::Xaml::Controls::IAnimatedVisual");
             builder.OpenScope();
 
             // D2D factory field.
@@ -208,7 +208,7 @@ public:
             builder.WriteLine();
 
             // Generate the method that creates an instance of the composition.
-            builder.WriteLine($"Microsoft::UI::Xaml::Controls::AnimatedVisualPlayer::IAnimatedVisual^ AnimatedVisuals::{info.ClassName}::TryCreateAnimatedVisual(");
+            builder.WriteLine($"Microsoft::UI::Xaml::Controls::IAnimatedVisual^ AnimatedVisuals::{info.ClassName}::TryCreateAnimatedVisual(");
             builder.Indent();
             builder.WriteLine("Compositor^ compositor,");
             builder.WriteLine("Object^* diagnostics)");

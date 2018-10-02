@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Numerics;
 using Windows.UI;

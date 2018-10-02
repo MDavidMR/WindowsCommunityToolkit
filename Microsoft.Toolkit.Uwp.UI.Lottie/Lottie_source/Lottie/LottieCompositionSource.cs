@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.UI.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer;
+using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using WinCompData.Tools;
 
