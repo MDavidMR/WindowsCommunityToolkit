@@ -33,9 +33,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lottie_source", "Lottie_sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsDebugging", "AnimationsDebugging\AnimationsDebugging.csproj", "{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer", "dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj", "{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpLottieAppUsingCodegenLotties", "Samples\CSharpLottieAppUsingCodegenLotties\CSharpLottieAppUsingCodegenLotties.csproj", "{6E9AB585-A31E-4AD2-A733-650A1C62F192}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.Controls", "dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj", "{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxLottieAppUsingCodegenLotties", "Samples\CxLottieAppUsingCodegenLotties\CxLottieAppUsingCodegenLotties.vcxproj", "{A17E702C-17B1-470E-9EA3-475303B3F4E1}"
 EndProject
@@ -228,20 +226,6 @@ Global
 		{427814E7-79C7-4862-A26E-FC4F6B3A1794}.Release|x64.Build.0 = Release|Any CPU
 		{427814E7-79C7-4862-A26E-FC4F6B3A1794}.Release|x86.ActiveCfg = Release|Any CPU
 		{427814E7-79C7-4862-A26E-FC4F6B3A1794}.Release|x86.Build.0 = Release|Any CPU
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|ARM.Build.0 = Debug|ARM
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|x64.ActiveCfg = Debug|x64
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|x64.Build.0 = Debug|x64
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|x86.ActiveCfg = Debug|Win32
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Debug|x86.Build.0 = Debug|Win32
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|Any CPU.ActiveCfg = Release|Win32
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|ARM.ActiveCfg = Release|ARM
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|ARM.Build.0 = Release|ARM
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x64.ActiveCfg = Release|x64
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x64.Build.0 = Release|x64
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x86.ActiveCfg = Release|Win32
-		{C7F59620-47AA-4101-83AD-213A6749377E}.Release|x86.Build.0 = Release|Win32
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Debug|ARM.ActiveCfg = Debug|ARM
@@ -272,26 +256,6 @@ Global
 		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x64.Build.0 = Release|x64
 		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x86.ActiveCfg = Release|Win32
 		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x86.Build.0 = Release|Win32
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|ARM.ActiveCfg = Debug|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|ARM.Build.0 = Debug|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|ARM.Deploy.0 = Debug|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x64.ActiveCfg = Debug|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x64.Build.0 = Debug|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x64.Deploy.0 = Debug|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x86.ActiveCfg = Debug|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x86.Build.0 = Debug|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Debug|x86.Deploy.0 = Debug|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|Any CPU.ActiveCfg = Release|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|ARM.ActiveCfg = Release|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|ARM.Build.0 = Release|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|ARM.Deploy.0 = Release|ARM
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x64.ActiveCfg = Release|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x64.Build.0 = Release|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x64.Deploy.0 = Release|x64
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x86.ActiveCfg = Release|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x86.Build.0 = Release|x86
-		{6E9AB585-A31E-4AD2-A733-650A1C62F192}.Release|x86.Deploy.0 = Release|x86
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|ARM.ActiveCfg = Debug|ARM
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|ARM.Build.0 = Debug|ARM

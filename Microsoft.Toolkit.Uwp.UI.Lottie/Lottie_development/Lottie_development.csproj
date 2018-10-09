@@ -114,6 +114,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.0.181008013-prerelease</Version>
+    </PackageReference>
     <PackageReference Include="System.Numerics.Vectors">
       <Version>4.5.0</Version>
     </PackageReference>
@@ -122,10 +125,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj">
-      <Project>{aad726b1-fcde-4847-95d9-298a5a2bebf3}</Project>
-      <Name>Microsoft.UI.Xaml.Controls</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LottieData\LottieData.csproj">
       <Project>{624d8bbc-00e7-4bc8-8c9c-306ec058cb2b}</Project>
       <Name>LottieData</Name>

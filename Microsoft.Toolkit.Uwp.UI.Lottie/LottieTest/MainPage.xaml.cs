@@ -16,7 +16,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using NavigationView = Windows.UI.Xaml.Controls.NavigationView;
+using NavigationViewItem = Windows.UI.Xaml.Controls.NavigationViewItem;
 
 namespace LottieTest
 {
@@ -30,7 +31,7 @@ namespace LottieTest
             this.InitializeComponent();
         }
 
-        void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        void NavView_ItemInvoked(NavigationView sender, Windows.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs args)
         {
             var item = sender.MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
             switch (item.Tag)

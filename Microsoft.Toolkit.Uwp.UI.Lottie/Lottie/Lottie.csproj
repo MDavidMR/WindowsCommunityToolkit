@@ -114,8 +114,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.7</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer">
-      <Version>0.3.2.2</Version>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.0.181008013-prerelease</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
