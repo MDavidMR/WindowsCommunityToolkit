@@ -31,7 +31,7 @@ namespace Lottie
     /// A <see cref="CompositionSource"/> for a Lottie composition. This allows
     /// a Lottie to be specified as the source of a <see cref="Composition"/>.
     /// </summary>
-    public sealed class LottieCompositionSource : DependencyObject, IDynamicAnimatedVisualSource
+    public sealed class LottieVisualSource : DependencyObject, IDynamicAnimatedVisualSource
     {
         readonly StorageFile _storageFile;
         EventRegistrationTokenTable<TypedEventHandler<IDynamicAnimatedVisualSource, object>> _compositionInvalidatedEventTokenTable;
@@ -44,7 +44,7 @@ namespace Lottie
         // the time to translate is too high, but in that case the Lottie is probably going to perform
         // so badly on the machine that it won't really be usable with our without optimization.
         public static DependencyProperty OptionsProperty { get; } =
-            RegisterDP(nameof(Options), LottieCompositionOptions.Optimize);
+            RegisterDP(nameof(Options), LottieVisualOptions.Optimize);
 
         public static DependencyProperty UriSourceProperty { get; } =
             RegisterDP<Uri>(nameof(UriSource), null,
@@ -53,23 +53,23 @@ namespace Lottie
         #region DependencyProperty helpers
 
         static DependencyProperty RegisterDP<T>(string propertyName, T defaultValue) =>
-            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieCompositionSource), new PropertyMetadata(defaultValue));
+            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieVisualSource), new PropertyMetadata(defaultValue));
 
-        static DependencyProperty RegisterDP<T>(string propertyName, T defaultValue, Action<LottieCompositionSource, T, T> callback) =>
-            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieCompositionSource),
-                new PropertyMetadata(defaultValue, (d, e) => callback(((LottieCompositionSource)d), (T)e.OldValue, (T)e.NewValue)));
+        static DependencyProperty RegisterDP<T>(string propertyName, T defaultValue, Action<LottieVisualSource, T, T> callback) =>
+            DependencyProperty.Register(propertyName, typeof(T), typeof(LottieVisualSource),
+                new PropertyMetadata(defaultValue, (d, e) => callback(((LottieVisualSource)d), (T)e.OldValue, (T)e.NewValue)));
 
         #endregion DependencyProperty helpers
 
         /// <summary>
-        /// Constructor to allow a <see cref="LottieCompositionSource"/> to be used in markup.
+        /// Constructor to allow a <see cref="LottieVisualSource"/> to be used in markup.
         /// </summary>
-        public LottieCompositionSource() { }
+        public LottieVisualSource() { }
 
         /// <summary>
         /// Creates a <see cref="CompositionSource"/> from a <see cref="StorageFile"/>.
         /// </summary>
-        public LottieCompositionSource(StorageFile storageFile)
+        public LottieVisualSource(StorageFile storageFile)
         {
             _storageFile = storageFile;
         }
@@ -77,14 +77,14 @@ namespace Lottie
         /// <summary>
         /// Sets options for how the Lottie is loaded.
         /// </summary>
-        public LottieCompositionOptions Options
+        public LottieVisualOptions Options
         {
-            get => (LottieCompositionOptions)GetValue(OptionsProperty);
+            get => (LottieVisualOptions)GetValue(OptionsProperty);
             set => SetValue(OptionsProperty, value);
         }
 
         /// <summary>
-        /// Gets or sets the Uniform Resource Identifier (URI) of the JSON source file for this <see cref="LottieCompositionSource"/>.
+        /// Gets or sets the Uniform Resource Identifier (URI) of the JSON source file for this <see cref="LottieVisualSource"/>.
         /// </summary>
         public Uri UriSource
         {
@@ -95,7 +95,7 @@ namespace Lottie
         /// <summary>
         /// Called by XAML to convert a string to an <see cref="IAnimatedVisualSource"/>.
         /// </summary>
-        public static LottieCompositionSource CreateFromString(string uri)
+        public static LottieVisualSource CreateFromString(string uri)
         {
             var uriUri = StringToUri(uri);
             if (uriUri == null)
@@ -103,7 +103,7 @@ namespace Lottie
                 // TODO - throw?
                 return null;
             }
-            return new LottieCompositionSource { UriSource = uriUri };
+            return new LottieVisualSource { UriSource = uriUri };
         }
 
         // TODO: accept IRandomAccessStream
@@ -240,17 +240,17 @@ namespace Lottie
         // Handles loading a composition from a Lottie file.
         sealed class Loader
         {
-            readonly LottieCompositionSource _owner;
+            readonly LottieVisualSource _owner;
             readonly Uri _uri;
             readonly StorageFile _storageFile;
 
-            internal Loader(LottieCompositionSource owner, Uri uri)
+            internal Loader(LottieVisualSource owner, Uri uri)
             {
                 _owner = owner;
                 _uri = uri;
             }
 
-            internal Loader(LottieCompositionSource owner, StorageFile storageFile)
+            internal Loader(LottieVisualSource owner, StorageFile storageFile)
             {
                 _owner = owner;
                 _storageFile = storageFile;
@@ -260,7 +260,7 @@ namespace Lottie
             internal Loader() { }
 
             // Asynchronously loads WinCompData from a Lottie file.
-            public async Task<ContentFactory> Load(LottieCompositionOptions Options)
+            public async Task<ContentFactory> Load(LottieVisualOptions Options)
             {
                 if (_uri == null && _storageFile == null)
                 {
@@ -268,12 +268,12 @@ namespace Lottie
                     return null;
                 }
 
-                LottieCompositionDiagnostics diagnostics = null;
+                LottieVisualDiagnostics diagnostics = null;
                 Stopwatch sw = null;
-                if (Options.HasFlag(LottieCompositionOptions.IncludeDiagnostics))
+                if (Options.HasFlag(LottieVisualOptions.IncludeDiagnostics))
                 {
                     sw = Stopwatch.StartNew();
-                    diagnostics = new LottieCompositionDiagnostics
+                    diagnostics = new LottieVisualDiagnostics
                     {
                         Options = Options
                     };
@@ -354,7 +354,7 @@ namespace Lottie
                 // Translating large Lotties can take significant time. Do it on another thread.
                 bool translateSucceeded = false;
                 WinCompData.Visual wincompDataRootVisual = null;
-                var optimizationEnabled = _owner.Options.HasFlag(LottieCompositionOptions.Optimize);
+                var optimizationEnabled = _owner.Options.HasFlag(LottieVisualOptions.Optimize);
 
                 await CheckedAwait(Task.Run(() =>
                 {
@@ -504,13 +504,13 @@ namespace Lottie
         // translation of a composition and some metadata.
         sealed class ContentFactory : IAnimatedVisualSource
         {
-            readonly LottieCompositionDiagnostics _diagnostics;
+            readonly LottieVisualDiagnostics _diagnostics;
             WinCompData.Visual _wincompDataRootVisual;
             double _width;
             double _height;
             TimeSpan _duration;
 
-            internal ContentFactory(LottieCompositionDiagnostics diagnostics)
+            internal ContentFactory(LottieVisualDiagnostics diagnostics)
             {
                 _diagnostics = diagnostics;
             }
@@ -541,7 +541,7 @@ namespace Lottie
 
             // Clones a new diagnostics object. Will return null if the factory
             // has no diagnostics object.
-            LottieCompositionDiagnostics GetDiagnosticsClone()
+            LottieVisualDiagnostics GetDiagnosticsClone()
             {
                 return _diagnostics != null ? _diagnostics.Clone() : null;
             }
@@ -578,7 +578,7 @@ namespace Lottie
         {
             // TODO - if there's a _contentFactory, it should store the identity and report here
             var identity = (_storageFile != null) ? _storageFile.Name : _uriSource?.ToString() ?? "";
-            return $"LottieCompositionSource({identity})";
+            return $"LottieVisualSource({identity})";
         }
 
         /// <summary>

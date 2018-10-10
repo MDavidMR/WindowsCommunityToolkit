@@ -11,8 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Lottie\Instantiator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Lottie\Issue.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieCompositionDiagnostics.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieCompositionOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieCompositionSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieVisualDiagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieVisualOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Lottie\LottieVisualSource.cs" />
   </ItemGroup>
 </Project>

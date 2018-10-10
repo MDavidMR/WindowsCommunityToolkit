@@ -13,7 +13,7 @@ namespace Lottie
     /// <summary>
     /// Diagnostics information about a Lottie and its translation.
     /// </summary>
-    public sealed class LottieCompositionDiagnostics
+    public sealed class LottieVisualDiagnostics
     {
         static readonly Issue[] s_emptyIssues = new Issue[0];
         static readonly KeyValuePair<string, double>[] s_emptyMarkers = new KeyValuePair<string, double>[0];
@@ -71,10 +71,10 @@ namespace Lottie
         public string LottieVersion => LottieComposition?.Version.ToString() ?? "";
 
         /// <summary>
-        /// The options that were set on the <see cref="LottieCompositionSource"/> when it 
+        /// The options that were set on the <see cref="LottieVisualSource"/> when it 
         /// produced this diagnostics object.
         /// </summary>
-        public LottieCompositionOptions Options { get; internal set; }
+        public LottieVisualOptions Options { get; internal set; }
 
         public string GenerateLottieXml()
         {
@@ -127,8 +127,8 @@ namespace Lottie
         // Holds the translated Visual. Only used if one of the codgen or XML options was selected.
         internal WinCompData.Visual RootVisual { get; set; }
 
-        internal LottieCompositionDiagnostics Clone() =>
-            new LottieCompositionDiagnostics
+        internal LottieVisualDiagnostics Clone() =>
+            new LottieVisualDiagnostics
             {
                 FileName = FileName,
                 InstantiationTime = InstantiationTime,
@@ -152,7 +152,7 @@ namespace Lottie
 
             var stats = new LottieData.Tools.Stats(LottieComposition);
 
-            return $"LottieCompositionSource w={LottieComposition.Width} h={LottieComposition.Height} " +
+            return $"LottieVisualSource w={LottieComposition.Width} h={LottieComposition.Height} " +
                 $"layers: precomp={stats.PreCompLayerCount} solid={stats.SolidLayerCount} " +
                 $"image={stats.ImageLayerCount} null={stats.NullLayerCount} " +
                 $"shape={stats.ShapeLayerCount} text={stats.TextLayerCount}";

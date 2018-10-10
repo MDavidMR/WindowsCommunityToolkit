@@ -460,7 +460,7 @@ namespace LottieToWinComp
             TranslateTransformOnContainerShapeForLayer(context, layer, out var transformsRoot, out contentsNode);
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
-            // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
+            // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
             if (inProgress > 0 || outProgress < 1)
             {
                 // Create a node to control visibility.
@@ -575,7 +575,7 @@ namespace LottieToWinComp
             TranslateTransformOnContainerVisualForLayer(context, layer, out var transformsRoot, out contentsNode);
 
             // Implement the Visibility for the layer. Only needed if the layer becomes visible after
-            // the LottieCompositionSource's in point, or it becomes invisible before the LottieCompositionSource's out point.
+            // the LottieComposition's in point, or it becomes invisible before the LottieComposition's out point.
             if (inProgress > 0 || outProgress < 1)
             {
                 // Create a node to control visibility.

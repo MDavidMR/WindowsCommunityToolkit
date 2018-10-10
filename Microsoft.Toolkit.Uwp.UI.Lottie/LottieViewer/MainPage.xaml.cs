@@ -32,7 +32,7 @@ namespace LottieViewer
 
         async void SaveFile_Click(object sender, RoutedEventArgs e)
         {
-            var diagnostics = _stage.Player.Diagnostics as LottieCompositionDiagnostics;
+            var diagnostics = _stage.Player.Diagnostics as LottieVisualDiagnostics;
             if (diagnostics == null)
             {
                 return;
@@ -87,7 +87,7 @@ namespace LottieViewer
             }
         }
 
-        async Task GenerateCxCode(LottieCompositionDiagnostics diagnostics, string suggestedClassName, IStorageFile cppFile)
+        async Task GenerateCxCode(LottieVisualDiagnostics diagnostics, string suggestedClassName, IStorageFile cppFile)
         {
             // Ask the user to pick a name for the .h file.
             var filePicker = new FileSavePicker
@@ -355,7 +355,7 @@ namespace LottieViewer
         }
     }
 
-    public sealed class LottieCompositionDiagnosticsFormatter : IValueConverter
+    public sealed class LottieVisualDiagnosticsFormatter : IValueConverter
     {
         static string MSecs(TimeSpan timeSpan) => $"{timeSpan.TotalMilliseconds.ToString("#,##0.0")} mSecs";
 
@@ -366,7 +366,7 @@ namespace LottieViewer
                 return value == null ? Visibility.Collapsed : Visibility.Visible;
             }
 
-            var diagnostics = value as LottieCompositionDiagnostics;
+            var diagnostics = value as LottieVisualDiagnostics;
 
             switch (parameter as string)
             {
@@ -419,7 +419,7 @@ namespace LottieViewer
             return null;
         }
 
-        IEnumerable<Tuple<string, string>> DiagnosticsToProperties(LottieCompositionDiagnostics diagnostics)
+        IEnumerable<Tuple<string, string>> DiagnosticsToProperties(LottieVisualDiagnostics diagnostics)
         {
             yield return Tuple.Create("File name", diagnostics.FileName);
             yield return Tuple.Create("Duration", $"{diagnostics.Duration.TotalSeconds.ToString("#,##0.0##")} secs");

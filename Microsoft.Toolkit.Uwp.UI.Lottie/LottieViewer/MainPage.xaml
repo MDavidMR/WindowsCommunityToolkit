@@ -8,7 +8,7 @@
     mc:Ignorable="d" Visibility="Visible" RequestedTheme="Default">
     <Page.Resources>
         <local:VisiblityConverter x:Key="VisibilityConverter"/>
-        <local:LottieCompositionDiagnosticsFormatter x:Key="formatter"/>
+        <local:LottieVisualDiagnosticsFormatter x:Key="formatter"/>
         <local:FloatFormatter x:Key="floatFormatter"/>
         <SolidColorBrush x:Key="ArtboardBrush" Color="White"/>
     </Page.Resources>

@@ -21,7 +21,7 @@
             <TextBlock x:Name="_txtCurrentFile"></TextBlock>
             <Border BorderThickness="5" BorderBrush="Black">
                 <winui:AnimatedVisualPlayer AutoPlay="False" Width="300" Height="300">
-                    <lottie:LottieCompositionSource x:Name="lottieSource"/>
+                    <lottie:LottieVisualSource x:Name="lottieSource"/>
                 </winui:AnimatedVisualPlayer>
             </Border>
         </StackPanel>

@@ -53,7 +53,7 @@ namespace LottieViewer
             }
             else
             {
-                var diags = (LottieCompositionDiagnostics)diagnostics;
+                var diags = (LottieVisualDiagnostics)diagnostics;
                 _txtFileName.Text = diags.FileName;
                 _txtDuration.Text = $"{diags.Duration.TotalSeconds} secs";
                 var aspectRatio = FloatToRatio(diags.LottieWidth / diags.LottieHeight);
@@ -79,7 +79,7 @@ namespace LottieViewer
             private set => SetValue(PlayerIssuesProperty, value);
         }
 
-        internal LottieCompositionSource Source => _playerSource;
+        internal LottieVisualSource Source => _playerSource;
 
         public Color ArtboardColor
         {

@@ -83,7 +83,7 @@ namespace LottieData.Tools
 
         XElement FromLottieComposition(LottieComposition lottieComposition)
         {
-            return new XElement("LottieCompositionSource", GetContents());
+            return new XElement("LottieComposition", GetContents());
             IEnumerable<XObject> GetContents()
             {
                 yield return new XAttribute(nameof(lottieComposition.Version), lottieComposition.Version.ToString());

@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxLottieAppUsingCodegenLotties", "CxLottieAppUsingCodegenLotties.vcxproj", "{A17E702C-17B1-470E-9EA3-475303B3F4E1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.Controls", "..\..\dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj", "{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

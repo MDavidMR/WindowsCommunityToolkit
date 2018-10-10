@@ -12,16 +12,16 @@
 
     <RelativePanel>
         <winui:AnimatedVisualPlayer x:Name="Player1" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignTopWithPanel="True">
-            <lottie:LottieCompositionSource UriSource="ms-appx:///LottieJson/birthdayCake.json"/>
+            <lottie:LottieVisualSource UriSource="ms-appx:///LottieJson/birthdayCake.json"/>
         </winui:AnimatedVisualPlayer>
         <winui:AnimatedVisualPlayer x:Name="Player2" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True">
-            <lottie:LottieCompositionSource UriSource="ms-appx:///LottieJson/paint.json"/>
+            <lottie:LottieVisualSource UriSource="ms-appx:///LottieJson/paint.json"/>
         </winui:AnimatedVisualPlayer>
         <winui:AnimatedVisualPlayer x:Name="Player3" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-            <lottie:LottieCompositionSource UriSource="ms-appx:///LottieJson/LottieLogo2.json"/>
+            <lottie:LottieVisualSource UriSource="ms-appx:///LottieJson/LottieLogo2.json"/>
         </winui:AnimatedVisualPlayer>
         <winui:AnimatedVisualPlayer x:Name="Player4" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
-            <lottie:LottieCompositionSource UriSource="ms-appx:///LottieJson/2416.gift_popup.json"/>
+            <lottie:LottieVisualSource UriSource="ms-appx:///LottieJson/2416.gift_popup.json"/>
         </winui:AnimatedVisualPlayer>
     </RelativePanel>
 </Page>

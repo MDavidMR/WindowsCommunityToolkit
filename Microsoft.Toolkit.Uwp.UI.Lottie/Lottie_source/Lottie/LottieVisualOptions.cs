@@ -6,10 +6,10 @@ using System;
 namespace Lottie
 {
     /// <summary>
-    /// Options for controlling how the <see cref="LottieCompositionSource"/> processes a Lottie file.
+    /// Options for controlling how the <see cref="LottieVisualSource"/> processes a Lottie file.
     /// </summary>
     [Flags]
-    public enum LottieCompositionOptions
+    public enum LottieVisualOptions
     {
         None = 0,
 

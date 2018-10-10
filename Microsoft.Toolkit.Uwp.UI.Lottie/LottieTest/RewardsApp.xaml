@@ -25,42 +25,42 @@
             <!--<Button x:Name="testButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
                 <winui:AnimatedVisualPlayer x:Name="bannerTest1" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="source1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_06_AmazingXboxOffers_large.json" />
+                    <lottie:LottieVisualSource x:Name="source1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_06_AmazingXboxOffers_large.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
 
             <!--<Button x:Name="testButton2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
                 <winui:AnimatedVisualPlayer x:Name="bannerTest2" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="source2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_14_Smores_Large.json" />
+                    <lottie:LottieVisualSource x:Name="source2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_14_Smores_Large.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
 
             <!--<Button x:Name="testButton3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButton3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
                 <winui:AnimatedVisualPlayer x:Name="bannerTest3" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="source3" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_10_AmazingEdgeOffers_large.json" />
+                    <lottie:LottieVisualSource x:Name="source3" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/Banner_Rewards_10_AmazingEdgeOffers_large.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare1" Grid.Row="3" Grid.Column="0" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare1" Grid.Row="3" Grid.Column="0">
                 <winui:AnimatedVisualPlayer x:Name="squareTest1" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="squareSource1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quest.json" />
+                    <lottie:LottieVisualSource x:Name="squareSource1" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quest.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare2" Grid.Row="3" Grid.Column="1" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare2" Grid.Row="3" Grid.Column="1" >
                 <winui:AnimatedVisualPlayer x:Name="squareTest2" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="squareSource2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quiz_04_warpspeed.json" />
+                    <lottie:LottieVisualSource x:Name="squareSource2" Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/quiz_04_warpspeed.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
 
             <!--<Button x:Name="testButtonSquare3" Grid.Row="3" Grid.Column="2" GettingFocus="AnimatedButton_GettingFocus" LosingFocus="AnimatedButton_LosingFocus">-->
             <Button x:Name="testButtonSquare3" Grid.Row="3" Grid.Column="2" >
                 <winui:AnimatedVisualPlayer x:Name="squareTest3" AutoPlay="True">
-                    <lottie:LottieCompositionSource x:Name="squareSource3"  Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/streak_TreasureChest.json" />
+                    <lottie:LottieVisualSource x:Name="squareSource3"  Options="All" UriSource="http://rewards2017dailyoffer.azurewebsites.net/animation/streak_TreasureChest.json" />
                 </winui:AnimatedVisualPlayer>
             </Button>
         </Grid>
