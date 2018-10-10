@@ -33,8 +33,6 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lottie_source", "Lottie_sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsDebugging", "AnimationsDebugging\AnimationsDebugging.csproj", "{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.UI.Xaml.Controls", "dep.CompositionPlayer\Microsoft.UI.Xaml.Controls.AnimatedVisualPlayer.vcxproj", "{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CxLottieAppUsingCodegenLotties", "Samples\CxLottieAppUsingCodegenLotties\CxLottieAppUsingCodegenLotties.vcxproj", "{A17E702C-17B1-470E-9EA3-475303B3F4E1}"
 EndProject
 Global
@@ -242,20 +240,6 @@ Global
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x64.Build.0 = Release|x64
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x86.ActiveCfg = Release|x86
 		{39FFD915-F7A9-4EC4-B855-00CCD9992C9C}.Release|x86.Build.0 = Release|x86
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|ARM.ActiveCfg = Debug|ARM
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|ARM.Build.0 = Debug|ARM
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|x64.ActiveCfg = Debug|x64
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|x64.Build.0 = Debug|x64
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|x86.ActiveCfg = Debug|Win32
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Debug|x86.Build.0 = Debug|Win32
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|Any CPU.ActiveCfg = Release|Win32
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|ARM.ActiveCfg = Release|ARM
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|ARM.Build.0 = Release|ARM
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x64.ActiveCfg = Release|x64
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x64.Build.0 = Release|x64
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x86.ActiveCfg = Release|Win32
-		{AAD726B1-FCDE-4847-95D9-298A5A2BEBF3}.Release|x86.Build.0 = Release|Win32
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|ARM.ActiveCfg = Debug|ARM
 		{A17E702C-17B1-470E-9EA3-475303B3F4E1}.Debug|ARM.Build.0 = Debug|ARM
