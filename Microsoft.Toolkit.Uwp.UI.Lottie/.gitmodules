@@ -1,0 +1,3 @@
+[submodule "dep.CompositionPlayer"]
+	path = dep.CompositionPlayer
+	url = https://microsoft.visualstudio.com/DefaultCollection/OS/_git/dep.CompositionPlayer
