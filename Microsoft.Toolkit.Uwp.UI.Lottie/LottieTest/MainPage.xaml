@@ -1,0 +1,42 @@
+﻿<Page
+    x:Class="LottieTest.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LottieTest"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:animatedVisuals="using:AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Scrape LottieFiles.com" Tag="ScrapeLottieFiles"/>
+            <NavigationViewItem Content="Scrape Rewards" Tag="ScrapeRewards"/>
+            <NavigationViewItem Content="Audit the Lottie corpus" Tag="AuditCorpus"/>
+            <NavigationViewItem Content="Show MyComposition" Tag="MyComposition"/>
+            <NavigationViewItem Content="Show large (huge, slow) composition" Tag="LargeComposition"/>
+            <NavigationViewItem Content="Rewards App" Tag="RewardsApp"/>
+            <NavigationViewItem Content="Loading perf exerciser" Tag="LoadingPerfExerciser"/>
+        </NavigationView.MenuItems>
+        <StackPanel>
+
+            <Border BorderBrush="Green" BorderThickness="5" x:Name="TheBorder">
+                <winui:AnimatedVisualPlayer Tag="My Player" x:Name="ThePlayer">
+                    <animatedVisuals:MyComposition/>
+                    <winui:AnimatedVisualPlayer.FallbackContent>
+                        <DataTemplate>
+                            <StackPanel Background="PaleVioletRed" HorizontalAlignment="Stretch">
+                                <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">We couldn't load the Lottie that's supposed to be here.</TextBlock>
+                                <TextBlock FontSize="16" HorizontalAlignment="Center">This is expected - for testing purposes the code is designed to fail loading randomly.</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </winui:AnimatedVisualPlayer.FallbackContent>
+                </winui:AnimatedVisualPlayer>
+            </Border>
+            <Frame x:Name="ContentFrame">
+                <Button Margin="5,5,5,5" HorizontalAlignment="Center" Click="Button_Click" >Push me</Button>
+            </Frame>
+        </StackPanel>
+    </NavigationView>
+</Page>
